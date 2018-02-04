@@ -1,0 +1,4 @@
+﻿  TestWrapper.cpp
+c:\users\tvshkrcommon\desktop\automaticprojecttesting_aug2015_vs2015\emptygeneraltesting\autotester\source\testwrapper.cpp(11): warning C4356: 'AbstractWrapper::GlobalStop': static data member cannot be initialized via derived class
+  AutoTester.vcxproj -> C:\Users\tvshkrCommon\Desktop\AutomaticProjectTesting_Aug2015_VS2015\EmptyGeneralTesting\Debug\AutoTester.exe
+  AutoTester.vcxproj -> C:\Users\tvshkrCommon\Desktop\AutomaticProjectTesting_Aug2015_VS2015\EmptyGeneralTesting\Debug\AutoTester.pdb (Full PDB)

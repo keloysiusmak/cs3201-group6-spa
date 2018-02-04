@@ -1,0 +1,6 @@
+﻿  stdafx.cpp
+  TestAST.cpp
+c:\users\tvshkrcommon\desktop\automaticprojecttesting_aug2015_vs2015\emptygeneraltesting\unittesting\testast.cpp(15): warning C4101: 'T': unreferenced local variable
+     Creating library C:\Users\tvshkrCommon\Desktop\AutomaticProjectTesting_Aug2015_VS2015\EmptyGeneralTesting\Debug\UnitTesting.lib and object C:\Users\tvshkrCommon\Desktop\AutomaticProjectTesting_Aug2015_VS2015\EmptyGeneralTesting\Debug\UnitTesting.exp
+  UnitTesting.vcxproj -> C:\Users\tvshkrCommon\Desktop\AutomaticProjectTesting_Aug2015_VS2015\EmptyGeneralTesting\Debug\UnitTesting.dll
+  UnitTesting.vcxproj -> C:\Users\tvshkrCommon\Desktop\AutomaticProjectTesting_Aug2015_VS2015\EmptyGeneralTesting\Debug\UnitTesting.pdb (Full PDB)
