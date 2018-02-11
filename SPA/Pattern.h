@@ -13,12 +13,9 @@ private:
 public:
 	//Constructors
 	Pattern();
-	Pattern(string, string, string);
 
 	//Methods
-	void setEntityType(string);
-	void setLeftParam(string);
-	void setRightParam(string);
+	void setPattern(string, string, string);
 
 	string getEntityType();
 	string getLeftParam();

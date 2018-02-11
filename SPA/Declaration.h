@@ -12,11 +12,9 @@ private:
 public:
 	//Constructors
 	Declaration();
-	Declaration(string, string);
 
 	//Methods
-	void setDesignEntity(string);
-	void setSynonym(string);
+	void setDeclaration(string, string);
 
 	string getDesignEntity();
 	string getSynonym();

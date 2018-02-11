@@ -13,12 +13,9 @@ private:
 public:
 	//Constructors
 	SuchThat();
-	SuchThat(string, string, string);
 
 	//Methods
-	void setRelRef(string);
-	void setFirstParam(string);
-	void setSecondParam(string);
+	void setSuchThat(string, string, string);
 
 	string getRelRef();
 	string getFirstParam();
