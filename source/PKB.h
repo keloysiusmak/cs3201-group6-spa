@@ -1,23 +1,18 @@
 #pragma once
 
-#include<stdio.h>
+#include <stdio.h>
 #include <iostream>
 #include <string>
-#include <vector>
 #include <vector>
 #include <unordered_map>
 
 using namespace std::tr1;
-typedef short PROC;
-
-class TNode;
-
-class VarTable;  // no need to #include "VarTable.h" as all I need is pointer
 
 class PKB {
 public:
-	bool addToTable(int table_id, int key_id, string value);
+	bool insertToTable(int table_id, string key_id, std::vector<string> column_id, std::vector<std::vector<string>> value);
+	unordered_map<string, std::vector<string>> getFromTable(int table_id, string key_id);
+	bool modifyTable(int table_id, string key_id, std::vector<string> column_id, std::vector<std::vector<string>> value);
 
-private:
-	std::vector<unordered_map<int, std::vector<string>>> tables;
+	unordered_map<string, unordered_map<string, std::vector<string>>> tables[6];
 };
