@@ -1,19 +1,22 @@
 #pragma once
 
-#include<stdio.h>
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
 #include "PKB.h"
-#include "TNode.h"
 
-int PKB::setProcToAST(PROC p, TNode* r) {
-	return NULL;
+bool PKB::addToTable(int table_id, int key_id, string value)
+{
+	return true;
 }
 
-TNode* PKB::getRootAST (PROC p){
-	return NULL;
-}
+int main()
+{
+	PKB pkb;
+	pkb.addToTable(1, 1, "A");
+};
