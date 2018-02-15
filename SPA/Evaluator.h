@@ -4,19 +4,6 @@
 #include <list>
 #include "QueryObject.h"
 
-using namespace std;
-
-class Evaluator {
-public:
-	Evaluator(QueryObject queryObj);
-	list<string> evaluateQuery();
-	ClauseResults evaluateClause(Clause);
-	ClauseResults evaluateFollows();
-	ClauseResults evaluateFollowsStar();
-private:
-	QueryObject queryObject;
-};
-
 struct ClauseResults {
 	string lhsType;
 	string rhsType;
@@ -24,4 +11,15 @@ struct ClauseResults {
 	string rhsArg;
 	vector<string> lhsAnswers;
 	vector<string> rhsAnswers;
+};
+
+class Evaluator {
+public:
+	Evaluator(QueryObject);
+	list<string> evaluateQuery();
+	ClauseResults evaluateClause(Clause);
+	ClauseResults evaluateFollows(Clause);
+	ClauseResults evaluateFollowStar(Clause);
+private:
+	QueryObject queryObject;
 };

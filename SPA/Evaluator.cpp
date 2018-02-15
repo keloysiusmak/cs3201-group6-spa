@@ -18,15 +18,24 @@ list<string> Evaluator::evaluateQuery() {
 
 ClauseResults Evaluator::evaluateClause(Clause clause) {
 	ClauseResults clauseResults = ClauseResults();
+	string relation = clause.getRelRef();
+	if (relation == FOLLOWS) {
+		clauseResults = evaluateFollows(clause);
+	} else if (relation == FOLLOWSTAR) {
+		clauseResults = evaluateFollowStar(clause);
+	}
+	else {
+	}
+
 	return clauseResults;
 };
 
-ClauseResults Evaluator::evaluateFollows() {
+ClauseResults Evaluator::evaluateFollows(Clause clause) {
 	ClauseResults FollowsResults = ClauseResults();
 	return FollowsResults;
 };
 
-ClauseResults Evaluator::evaluateFollowsStar() {
+ClauseResults Evaluator::evaluateFollowStar(Clause clause) {
 	ClauseResults followStarResults = ClauseResults();
 	return followStarResults;
 };
