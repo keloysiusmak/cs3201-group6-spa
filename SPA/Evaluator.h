@@ -4,24 +4,20 @@
 #include <list>
 #include "QueryObject.h"
 
-using namespace std;
+struct ClauseResults {
+	Param lhs;
+	Param rhs;
+	vector<string> lhsAnswers;
+	vector<string> rhsAnswers;
+};
 
 class Evaluator {
 public:
-	Evaluator(QueryObject queryObj);
+	Evaluator(QueryObject);
 	list<string> evaluateQuery();
 	ClauseResults evaluateClause(Clause);
-	ClauseResults evaluateFollows();
-	ClauseResults evaluateFollowsStar();
+	ClauseResults evaluateFollows(Clause);
+	ClauseResults evaluateFollowStar(Clause);
 private:
 	QueryObject queryObject;
-};
-
-struct ClauseResults {
-	string lhsType;
-	string rhsType;
-	string lhsArg;
-	string rhsArg;
-	vector<string> lhsAnswers;
-	vector<string> rhsAnswers;
 };

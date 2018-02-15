@@ -9,6 +9,10 @@ QueryObject::QueryObject() {
 
 }
 
+QueryObject::QueryObject(string query) {
+
+}
+
 void QueryObject::insertDeclaration(string designEntity, string synonym) {
 
 }

@@ -4,20 +4,25 @@
 
 using namespace std;
 
+struct Param {
+	string type;
+	string name;
+};
+
 class Clause {
 private:
 	string _relRef;
-	string _firstParam;
-	string _secondParam;
+	Param _firstParam;
+	Param _secondParam;
 
 public:
 	//Constructors
 	Clause();
 
 	//Methods
-	void setClause(string, string, string);
+	void setClause(string, Param, Param);
 
 	string getRelRef();
-	string getFirstParam();
-	string getSecondParam();
+	Param getFirstParam();
+	Param getSecondParam();
 };

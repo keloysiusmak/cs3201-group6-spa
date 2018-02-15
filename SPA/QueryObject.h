@@ -17,6 +17,7 @@ private:
 
 public:
 	QueryObject();
+	QueryObject(string);
 
 	void insertDeclaration(string, string);
 	void insertClause(string, string, string);
