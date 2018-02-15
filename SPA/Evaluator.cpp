@@ -24,8 +24,7 @@ ClauseResults Evaluator::evaluateClause(Clause clause) {
 	} else if (relation == FOLLOWSTAR) {
 		clauseResults = evaluateFollowStar(clause);
 	}
-	else {
-	}
+	else {}
 
 	return clauseResults;
 };

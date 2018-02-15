@@ -5,10 +5,8 @@
 #include "QueryObject.h"
 
 struct ClauseResults {
-	string lhsType;
-	string rhsType;
-	string lhsArg;
-	string rhsArg;
+	Param lhs;
+	Param rhs;
 	vector<string> lhsAnswers;
 	vector<string> rhsAnswers;
 };
