@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SuchThat.h"
+#include "Clause.h"
 
 using namespace std;
 

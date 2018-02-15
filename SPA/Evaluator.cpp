@@ -1,8 +1,32 @@
 #include "Evaluator.h"
-#include "../SPA/QueryObject.h"
 
 using namespace std;
 
-list<string> evaluateQuery(QueryObject queryObj) {
-	return{ "Evaluate query answer" };
+string FOLLOWS = "follows";
+string FOLLOWSTAR = "followstar";
+
+Evaluator::Evaluator(QueryObject queryObj) {
+	queryObject = queryObj;
+};
+
+list<string> Evaluator::evaluateQuery() {
+	for (Clause clause : queryObject.getClauses()) {
+		evaluateClause(clause);
+	}
+	return{ "Evaluating query " };
+};
+
+ClauseResults Evaluator::evaluateClause(Clause clause) {
+	ClauseResults clauseResults = ClauseResults();
+	return clauseResults;
+};
+
+ClauseResults Evaluator::evaluateFollows() {
+	ClauseResults FollowsResults = ClauseResults();
+	return FollowsResults;
+};
+
+ClauseResults Evaluator::evaluateFollowsStar() {
+	ClauseResults followStarResults = ClauseResults();
+	return followStarResults;
 };
