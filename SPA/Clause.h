@@ -4,7 +4,7 @@
 
 using namespace std;
 
-class SuchThat {
+class Clause {
 private:
 	string _relRef;
 	string _firstParam;
@@ -12,10 +12,10 @@ private:
 
 public:
 	//Constructors
-	SuchThat();
+	Clause();
 
 	//Methods
-	void setSuchThat(string, string, string);
+	void setClause(string, string, string);
 
 	string getRelRef();
 	string getFirstParam();

@@ -13,7 +13,7 @@ void QueryObject::insertDeclaration(string designEntity, string synonym) {
 
 }
 
-void QueryObject::insertSuchThat(string relRef, string firstParam, string secondParam) {
+void QueryObject::insertClause(string relRef, string firstParam, string secondParam) {
 
 }
 
@@ -29,8 +29,8 @@ vector<Declaration> QueryObject::getDeclarations() {
 	return _declarations;
 }
 
-vector<SuchThat> QueryObject::getSuchThats() {
-	return _suchThats;
+vector<Clause> QueryObject::getClauses() {
+	return _clauses;
 }
 
 vector<Pattern> QueryObject::getPatterns() {
