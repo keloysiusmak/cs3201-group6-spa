@@ -6,7 +6,7 @@ using namespace std;
 
 struct Param {
 	string type;
-	string name;
+	string value;
 };
 
 class Clause {
