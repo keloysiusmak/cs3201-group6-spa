@@ -59,6 +59,22 @@ ClauseResults Evaluator::evaluateFollows(Clause clause) {
 };
 
 ClauseResults Evaluator::evaluateFollowStar(Clause clause) {
-	ClauseResults followStarResults = ClauseResults();
+	ClauseResults followStarResults = ClauseResults(clause);
+	if (clause.getFirstParam().type == STMT_SYN) {
+		if (clause.getSecondParam().type == STMT_SYN) {
+			//getAllFollowsStar()
+		}
+		else if (clause.getSecondParam().type == STMT_NUM) {
+			//getFollowsStarBefore(secondParam.value)
+		} else {}
+	}
+	else if (clause.getFirstParam().type == STMT_NUM) {
+		if (clause.getSecondParam().type == STMT_SYN) {
+			//getFollowsStarAfter(firstParam.value)
+		}
+		else if (clause.getSecondParam().type == STMT_NUM) {
+			//checkFollowsStar(firstParam.value, secondParam.value)
+		} else {}
+	} else {}
 	return followStarResults;
 };
