@@ -34,7 +34,7 @@ ClauseResults Evaluator::evaluateClause(Clause clause) {
 
 ClauseResults Evaluator::evaluateFollows(Clause clause) {
 
-	ClauseResults FollowsResults = ClauseResults();
+	ClauseResults FollowsResults = ClauseResults(clause);
 	Param firstParam = clause.getFirstParam();
 	Param secondParam = clause.getSecondParam();
 
