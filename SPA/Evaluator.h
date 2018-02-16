@@ -9,6 +9,11 @@ struct ClauseResults {
 	Param rhs;
 	vector<string> lhsAnswers;
 	vector<string> rhsAnswers;
+
+	ClauseResults(Clause clause) {
+		lhs = clause.getFirstParam();
+		rhs = clause.getSecondParam();
+	};
 };
 
 class Evaluator {
