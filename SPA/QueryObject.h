@@ -4,27 +4,28 @@
 #include <vector>
 #include "Pattern.h"
 #include "Declaration.h"
-#include "SuchThat.h"
+#include "Clause.h"
 
 using namespace std;
 
 class QueryObject {
 private:
 	vector<Declaration> _declarations;
-	vector<SuchThat> _suchThats;
+	vector<Clause> _clauses;
 	vector<Pattern> _Patterns;
 	string _selectStatement;
 
 public:
 	QueryObject();
+	QueryObject(string);
 
 	void insertDeclaration(string, string);
-	void insertSuchThat(string, string, string);
+	void insertClause(string, string, string);
 	void insertPattern(string, string, string);
 	void insertSelectStatement(string);
 
 	vector<Declaration> getDeclarations();
-	vector<SuchThat> getSuchThats();
+	vector<Clause> getClauses();
 	vector<Pattern> getPatterns();
 	string getSelectStatement();
 };
