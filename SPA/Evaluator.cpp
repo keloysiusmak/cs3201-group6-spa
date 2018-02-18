@@ -4,6 +4,8 @@ using namespace std;
 
 string FOLLOWS = "follows";
 string FOLLOWSTAR = "followstar";
+string PARENT = "parent";
+string PARENTSTAR = "parentstar";
 
 string STMT_SYN = "stmtSyn";
 string STMT_NUM = "stmtNumber";
@@ -27,7 +29,12 @@ ClauseResults Evaluator::evaluateClause(Clause clause) {
 	} else if (relation == FOLLOWSTAR) {
 		clauseResults = evaluateFollowStar(clause);
 	}
-	else {}
+	else if (relation == PARENT) {
+		clauseResults = evaluateParent(clause);
+	}
+	else if (relation == PARENTSTAR) {
+		clauseResults = evaluateParentStar(clause);
+	} else {}
 
 	return clauseResults;
 };
@@ -78,3 +85,60 @@ ClauseResults Evaluator::evaluateFollowStar(Clause clause) {
 	} else {}
 	return followStarResults;
 };
+
+
+ClauseResults Evaluator::evaluateParent(Clause clause) {
+
+	ClauseResults ParentResults = ClauseResults(clause);
+	Param firstParam = clause.getFirstParam();
+	Param secondParam = clause.getSecondParam();
+
+	if (clause.getFirstParam().type == STMT_SYN) {
+		if (clause.getSecondParam().type == STMT_SYN) {
+			//Parent::getAllParents() if select firstParam
+			//Parent::getAllChildren() if select secondParam
+		}
+		else if (clause.getSecondParam().type == STMT_NUM) {
+			//Parent::getParent(clause.getSecondParam());
+		}
+		else {}
+	}
+	else if (clause.getFirstParam().type == STMT_NUM) {
+		if (clause.getSecondParam().type == STMT_SYN) {
+			//Parent::getChildren(clause.getFirstParam());
+		}
+		else if (clause.getSecondParam().type == STMT_NUM) {
+			//Parentt::isParent(clause.getFirstParam(), clause.getSecondParam());
+		}
+		else {}
+	}
+	else {}
+
+	return ParentResults;
+};
+
+ClauseResults Evaluator::evaluateParentStar(Clause clause) {
+	ClauseResults ParentStarResults = ClauseResults(clause);
+	if (clause.getFirstParam().type == STMT_SYN) {
+		if (clause.getSecondParam().type == STMT_SYN) {
+			//Parent::getAllParentsStar() if select firstParam
+			//Parent::getAllChildrenStar() if select secondParam
+		}
+		else if (clause.getSecondParam().type == STMT_NUM) {
+			//Parent::getParentStar(clause.getSecondParam());
+		}
+		else {}
+	}
+	else if (clause.getFirstParam().type == STMT_NUM) {
+		if (clause.getSecondParam().type == STMT_SYN) {
+			//Parent::getChildrenStar(clause.getFirstParam());
+		}
+		else if (clause.getSecondParam().type == STMT_NUM) {
+			//Parentt::isParentStar(clause.getFirstParam(), clause.getSecondParam());
+		}
+		else {}
+	}
+	else {}
+	return ParentStarResults;
+};
+

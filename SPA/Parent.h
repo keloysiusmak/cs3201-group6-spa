@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <array>
+#include <list>
 
 using namespace std;
 
@@ -8,14 +10,15 @@ class Parent
 {
 public:
 	Parent();
-	array<int, vector<int>> getParentTable();
+	array<int, list<int>> getParentTable();
 	bool isFirstParamValid(int, int);
-	bool isParent(int, vector<int>);
-	vector<int> getChildren(int);
+	bool isParent(int, list<int>);
+	list<int> getChildren(int);
 	int getParent(int);
-	vector<int, int> getAllParentPairs();
+	list<int, int> getAllParentPairs();
 
 private:
-	array<int, vector<int>> tableOne;
+	array<int, list<int>> tableOne;
+	array<int, list<int>> tableOneReverse;
 
 };

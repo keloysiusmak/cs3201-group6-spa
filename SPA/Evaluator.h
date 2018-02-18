@@ -23,6 +23,8 @@ public:
 	ClauseResults evaluateClause(Clause);
 	ClauseResults evaluateFollows(Clause);
 	ClauseResults evaluateFollowStar(Clause);
+	ClauseResults evaluateParent(Clause);
+	ClauseResults evaluateParentStar(Clause);
 private:
 	QueryObject queryObject;
 };
