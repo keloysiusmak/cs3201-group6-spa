@@ -22,7 +22,7 @@ list<string> Evaluator::evaluateQuery() {
 };
 
 ClauseResults Evaluator::evaluateClause(Clause clause) {
-	ClauseResults clauseResults = ClauseResults();
+	ClauseResults clauseResults = ClauseResults(clause);
 	string relation = clause.getRelRef();
 	if (relation == FOLLOWS) {
 		clauseResults = evaluateFollows(clause);
