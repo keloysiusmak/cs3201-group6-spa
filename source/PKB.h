@@ -6,6 +6,8 @@
 #include <vector>
 #include <unordered_map>
 
+#include "Pattern.h"
+
 using namespace std::tr1;
 
 class PKB {
@@ -36,5 +38,23 @@ public:
 	bool checkParentStar(std::string, std::string);
 	std::vector<std::string[2]> getAllParent();
 	unordered_map<std::string, std::vector<std::string>> getAllParentStar();
+
+	/* Uses Operations */
+	std::vector<std::string> getUsesVariablesFromStatement(std::string);
+	std::vector<std::string> getStatementFromUsesVariables(std::string);
+	unordered_map<std::string, std::vector<std::string>> getAllStatementUsesVariables();
+	unordered_map<std::string, std::vector<std::string>> getAllUsesVariableStatements();
+	bool checkStatementUsesVariable(std::string, std::string);
+
+	/* Modifies Operations */
+	std::vector<std::string> getModifiesVariablesFromStatement(std::string);
+	std::vector<std::string> getStatementFromModifiesVariables(std::string);
+	unordered_map<std::string, std::vector<std::string>> getAllStatementModifiesVariables();
+	unordered_map<std::string, std::vector<std::string>> getAllModifiesVariableStatements();
+	bool checkStatementModifiesVariable(std::string, std::string);
+
+	/* Pattern Operations */
+	std::vector<std::string> getStatementsWithPattern(Pattern);
+	bool checkStatementsWithPattern(Pattern);
 
 };
