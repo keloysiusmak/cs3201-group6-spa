@@ -14,13 +14,13 @@ class PKB {
 public:
 	/*  PKB Structure*/
 	unordered_map<int, std::vector<std::vector<int>>> tables[7];
-	unordered_map<int, std::vector<std::vector<std::string>>> nameTables[2];
+	unordered_map<int, std::string> nameTables[2];
 
 	/* PKB Operations */
 	bool insertToTable(int, int, std::vector<std::vector<int>>);
-	bool insertToNameTable(int, int, std::vector<std::vector<std::string>>);
+	int insertToNameTable(int, std::string);
 	std::vector<std::vector<int>> getFromTable(int, int);
-	std::vector<std::vector<std::string>> getFromNameTable(int, int);
+	std::string getFromNameTable(int, int);
 
 	/* Accessor Operations */
 	std::string getProcedureName(int);

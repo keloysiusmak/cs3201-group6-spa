@@ -7,7 +7,7 @@ using namespace std;
 /* PKB Operations */
 bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> value)
 {
-	unordered_map<int, std::vector<std::vector<int>>> table = tables[table_id];
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[table_id - 1];
 	unordered_map<int, std::vector<std::vector<int>>>::const_iterator got = table.find(key_id);
 
 	/* Row does not exist */
@@ -49,7 +49,7 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 			tableValues.push_back(value[i]);
 		}
 		
-		tables[table_id].insert({ key_id, tableValues });
+		tables[table_id - 1].insert({ key_id, tableValues });
 	}
 	/* Row exists */
 	else {
@@ -66,104 +66,54 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 			tableValues[i] = data;
 		}
 
-		tables[table_id].insert({ key_id, tableValues });
+		tables[table_id - 1].insert({ key_id, tableValues });
 	}
 	return true;
 }
 
-bool PKB::insertToNameTable(int table_id, int key_id, std::vector<std::vector<std::string>> value)
+int PKB::insertToNameTable(int table_id, string value)
 {
-	unordered_map<int, std::vector<std::vector<std::string>>> table = nameTables[table_id];
-	unordered_map<int, std::vector<std::vector<std::string>>>::const_iterator got = table.find(key_id);
-
-	/* Row does not exist */
-	if (got == table.end()) {
-
-		if (table_id != 8 && table_id != 9) {
-			return false;
-		}
-		int tableValuesCount = 1;
-
-		/* Return false if the supplied arguments does not equal to the number of columns specified in the PKB documentation*/
-		if (static_cast<int>(value.size()) != tableValuesCount)
-			return false;
-
-		std::vector<std::vector<std::string>> tableValues;
-		for (int i = 0; i < tableValuesCount; i++) {
-			tableValues.push_back(value[i]);
-		}
-
-		nameTables[table_id].insert({ key_id, tableValues });
+	unordered_map<int, string> table = nameTables[table_id - 8];
+	if (table_id != 8 && table_id != 9) {
+		return 0;
 	}
-	/* Row exists */
-	else {
-		std::vector<std::vector<std::string>> tableValues = got->second;
-		std::vector<std::string> data;
-
-		for (unsigned int i = 0; i < static_cast<int>(value.size()); i++) {
-			data = tableValues[i];
-
-			/* Insert every element in vector */
-			for (unsigned int j = 0; j < static_cast<int>(value[i].size()); j++) {
-				data.push_back(value[i][j]);
-			}
-			tableValues[i] = data;
-		}
-
-		nameTables[table_id].insert({ key_id, tableValues });
+	else if (table_id == 8 && PKB::getProcedureId(value) != 0) {
+		return PKB::getProcedureId(value);
 	}
-	return true;
+	else if (table_id == 9 && PKB::getVariableId(value) != 0) {
+		return PKB::getVariableId(value);
+	}
+
+	/* Variable does not exist */
+	int size = static_cast<int>(table.size()) + 1;
+	nameTables[table_id - 8].insert({ size , value });
+	
+	return size;
 }
 
 std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 {
-	unordered_map<int, std::vector<std::vector<int>>> table = tables[table_id - 1];
-	std::unordered_map<int, std::vector<std::vector<int>>>::const_iterator got = table.find(key_id);
-
-	/* Row does not exist */
-	if (got == table.end()) {
-		std::vector<std::vector<int>> data;
-		return data;
-	}
-	else {
-		return got->second;
-	}
+	return tables[table_id - 1][key_id];
 }
 
-std::vector<std::vector<std::string>> PKB::getFromNameTable(int table_id, int key_id)
+string PKB::getFromNameTable(int table_id, int key_id)
 {
-	unordered_map<int, std::vector<std::vector<std::string>>> table = nameTables[table_id - 8];
-	std::unordered_map<int, std::vector<std::vector<std::string>>>::const_iterator got = table.find(key_id);
-
-	/* Row does not exist */
-	if (got == table.end()) {
-		std::vector<std::vector<std::string>> data;
-		return data;
-	}
-	else {
-		return got->second;
-	}
+	return nameTables[table_id - 8][key_id];
 }
 
 /* Accessor Operations */
 std::string PKB::getProcedureName(int proc_id) {
-	std::vector<std::vector<std::string>> data;
-	data = PKB::getFromNameTable(8, proc_id);
-
-	return data[0][0];
+	return PKB::getFromNameTable(8, proc_id);
 }
 
 std::string PKB::getVariableName(int var_id) {
-	std::vector<std::vector<std::string>> data;
-	data = PKB::getFromNameTable(9, var_id);
-
-	return data[0][0];
+	return PKB::getFromNameTable(9, var_id);
 }
 
 int PKB::getProcedureId(std::string proc_name) {
-	unordered_map<int, std::vector<std::vector<std::string>>> table = nameTables[0];
+	unordered_map<int, string> table = nameTables[0];
 	for (auto it = table.begin(); it != table.end(); ++it) {
-		if (it->second[0][0] == proc_name) {
+		if (it->second == proc_name) {
 			return it->first;
 		}
 	}
@@ -172,9 +122,9 @@ int PKB::getProcedureId(std::string proc_name) {
 }
 
 int PKB::getVariableId(std::string var_name) {
-	unordered_map<int, std::vector<std::vector<std::string>>> table = nameTables[1];
+	unordered_map<int, string> table = nameTables[1];
 	for (auto it = table.begin(); it != table.end(); ++it) {
-		if (it->second[0][0] == var_name) {
+		if (it->second == var_name) {
 			return it->first;
 		}
 	}
@@ -186,12 +136,12 @@ int PKB::getVariableId(std::string var_name) {
 int PKB::getFollowsBefore(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(1, stmt);
-	int parentID = data[0][0];
-	data = PKB::getFromTable(2, parentID);
+	int stmtListID = data[0][0];
+	data = PKB::getFromTable(2, stmtListID);
 	
-	for (unsigned int i = 0; i < static_cast<int>(data[0].size()); i++) {
-		if (data[0][i] == stmt) {
-			return ((i - 1) < 0) ? 0 : data[0][i - 1];
+	for (unsigned int i = 0; i < static_cast<int>(data[1].size()); i++) {
+		if (data[1][i] == stmt) {
+			return ((i - 1) < 0) ? 0 : data[1][i - 1];
 			break;
 		}
 	}
@@ -202,12 +152,12 @@ int PKB::getFollowsBefore(int stmt) {
 int PKB::getFollowsAfter(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(1, stmt);
-	int parentID = data[0][0];
-	data = PKB::getFromTable(2, parentID);
+	int stmtListID = data[0][0];
+	data = PKB::getFromTable(2, stmtListID);
 	
-	for (unsigned int i = 0; i < static_cast<int>(data[0].size()); i++) {
-		if (data[0][i] == stmt) {
-			return ((i + 1) == static_cast<int>(data[0].size())) ? 0 : data[0][i + 1];
+	for (unsigned int i = 0; i < static_cast<int>(data[1].size()); i++) {
+		if (data[1][i] == stmt) {
+			return ((i + 1) == static_cast<int>(data[1].size())) ? 0 : data[1][i + 1];
 			break;
 		}
 	}
@@ -218,31 +168,37 @@ int PKB::getFollowsAfter(int stmt) {
 std::vector<int> PKB::getFollowsBeforeStar(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(1, stmt);
-	int parentID = data[0][0];
-	data = PKB::getFromTable(2, parentID);
+	int stmtListID = data[0][0];
+	data = PKB::getFromTable(2, stmtListID);
 
-	for (unsigned int i = 0; i < static_cast<int>(data[0].size()); i++) {
-		if (data[0][i] == stmt) {
-			data[0].erase(data[0].begin() + i, data[0].begin() + static_cast<int>(data[0].size()));
-			return data[0];
+	for (unsigned int i = 0; i < static_cast<int>(data[1].size()); i++) {
+		if (data[1][i] == stmt) {
+			data[1].erase(data[1].begin() + i, data[1].begin() + static_cast<int>(data[1].size()));
+			return data[1];
 			break;
 		}
 	}
+
+	std::vector<int> blank_data;
+	return blank_data;
 }
 
 std::vector<int> PKB::getFollowsAfterStar(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(1, stmt);
-	int parentID = data[0][0];
-	data = PKB::getFromTable(2, parentID);
+	int stmtListID = data[0][0];
+	data = PKB::getFromTable(2, stmtListID);
 
-	for (unsigned int i = 0; i < static_cast<int>(data[0].size()); i++) {
-		if (data[0][i] == stmt) {
-			data[0].erase(data[0].begin(), data[0].begin() + i);
-			return data[0];
+	for (unsigned int i = 0; i < static_cast<int>(data[1].size()); i++) {
+		if (data[1][i] == stmt) {
+			data[1].erase(data[1].begin(), data[1].begin() + i + 1);
+			return data[1];
 			break;
 		}
 	}
+
+	std::vector<int> blank_data;
+	return blank_data;
 }
 
 bool PKB::checkFollows(int stmt1, int stmt2) {
@@ -264,14 +220,14 @@ bool PKB::checkFollowsStar(int stmt1, int stmt2) {
 std::vector<std::vector<int>> PKB::getAllFollows() {
 
 	std::vector<std::vector<int>> output;
-	unordered_map<int, std::vector<std::vector<int>>> table = tables[2];
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[1];
 
 	for (auto it = table.begin(); it != table.end(); ++it) {
-		std::vector<int> stmtList = it->second[0];
+		std::vector<int> stmtList = it->second[1];
 		for (unsigned int i = 0; i < static_cast<unsigned int>(stmtList.size()) - 1; i++) {
 			std::vector<int> newOutput;
-			newOutput.push_back(it->second[0][i]);
-			newOutput.push_back(it->second[0][i + 1]);
+			newOutput.push_back(it->second[1][i]);
+			newOutput.push_back(it->second[1][i + 1]);
 			output.push_back(newOutput);
 		}
 	}
@@ -282,14 +238,14 @@ std::vector<std::vector<int>> PKB::getAllFollows() {
 unordered_map<int, std::vector<int>> PKB::getAllFollowsStar() {
 
 	unordered_map<int, std::vector<int>> output;
-	unordered_map<int, std::vector<std::vector<int>>> table = tables[2];
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[1];
 
 	for (auto it = table.begin(); it != table.end(); ++it) {
-		std::vector<int> stmtList = it->second[0];
+		std::vector<int> stmtList = it->second[1];
 		std::vector<int> output_stmt;
 
 		for (unsigned int i = 0; i < static_cast<unsigned int>(stmtList.size()) - 1; i++) {
-			for (unsigned int j = i; j < static_cast<int>(stmtList.size()); j++) {
+			for (unsigned int j = i + 1; j < static_cast<int>(stmtList.size()); j++) {
 				output_stmt.push_back(stmtList[i]);
 			}
 			output.insert({stmtList[i], output_stmt});
