@@ -26,7 +26,7 @@ public:
 	std::vector<std::string> getFollowsAfterStar(std::string);
 	bool checkFollows(std::string, std::string);
 	bool checkFollowsStar(std::string, std::string);
-	std::vector<std::string[2]> getAllFollows();
+	std::vector<std::string> getAllFollows();
 	unordered_map<std::string, std::vector<std::string>> getAllFollowsStar();
 
 	/* Parent Operations */
@@ -36,7 +36,7 @@ public:
 	std::vector<std::string> getChildrenStar(std::string);
 	bool checkParent(std::string, std::string);
 	bool checkParentStar(std::string, std::string);
-	std::vector<std::string[2]> getAllParent();
+	std::vector<std::string> getAllParent();
 	unordered_map<std::string, std::vector<std::string>> getAllParentStar();
 
 	/* Uses Operations */
