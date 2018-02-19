@@ -156,16 +156,16 @@ bool PKB::checkFollowsStar(std::string stmt1, std::string stmt2) {
 	return false;
 }
 
-std::vector<std::string[2]> PKB::getAllFollows() {
+std::vector<std::string> PKB::getAllFollows() {
 
-	std::vector<std::string[2]> output;
+	std::vector<std::string> output;
 	unordered_map<std::string, std::vector<std::vector<std::string>>> table = tables[2];
 
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		std::vector<std::string> stmtList = it->second[0];
 		for (unsigned int i = 0; i < stmtList.size() - 1; i++) {
 			string newOutput[2] = {it->second[0][i], it->second[0][i+1]};
-			output.push_back(newOutput);
+			//output.push_back(newOutput);
 		}
 	}
 
@@ -260,16 +260,16 @@ bool PKB::checkParentStar(std::string stmt1, std::string stmt2) {
 	return false;
 }
 
-std::vector<std::string[2]> PKB::getAllParent() {
+std::vector<std::string> PKB::getAllParent() {
 
-	std::vector<std::string[2]> output;
+	std::vector<std::string> output;
 	unordered_map<std::string, std::vector<std::vector<std::string>>> table = tables[2];
 
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		std::vector<std::string> stmtList = it->second[0];
 		for (unsigned int i = 0; i < stmtList.size(); i++) {
 			string newOutput[2] = { it->first, it->second[0][i] };
-			output.push_back(newOutput);
+			//output.push_back(newOutput);
 		}
 	}
 
@@ -285,5 +285,6 @@ unordered_map<std::string, std::vector<std::string>> PKB::getAllParentStar() {
 		std::vector<std::string> stmtList = PKB::getChildrenStar(it->first);
 		output.insert({ it->first, stmtList });
 	}
-
+	//Need to change the code below
+	return output;
 }

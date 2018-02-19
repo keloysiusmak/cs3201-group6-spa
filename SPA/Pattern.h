@@ -1,23 +1,24 @@
 #pragma once
 
 #include <string>
+#include "Param.h"
 
 using namespace std;
 
 class Pattern {
 private:
 	string _entityType;
-	string _leftParam;
-	string _rightParam;
+	Param _leftParam;
+	Param _rightParam;
 
 public:
 	//Constructors
 	Pattern();
 
 	//Methods
-	void setPattern(string, string, string);
+	void setPattern(string, Param, Param);
 
 	string getEntityType();
-	string getLeftParam();
-	string getRightParam();
+	Param getLeftParam();
+	Param getRightParam();
 };
