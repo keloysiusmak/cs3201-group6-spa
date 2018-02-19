@@ -188,6 +188,102 @@ unordered_map<std::string, std::vector<std::string>> PKB::getAllFollowsStar() {
 			output.insert({stmtList[i], output_stmt});
 			output_stmt.erase;
 		}
-
 	}
+
+	return output;
+}
+
+/* Parent Operations */
+std::string PKB::getParent(std::string stmt) {
+	std::vector<std::vector<std::string>> data;
+	data = PKB::getFromTable(1, stmt);
+	return data[0][0];
+}
+
+std::vector<std::string> PKB::getParentStar(std::string stmt) {
+	std::vector<std::string> output;
+	string parent = PKB::getParent(stmt);
+	
+	while (parent != "0") {
+		output.push_back(parent);
+		parent = PKB::getParent(stmt);
+	}
+
+	return output;
+}
+
+std::vector<std::string> PKB::getChildren(std::string stmt) {
+	std::vector<std::vector<std::string>> data;
+	data = PKB::getFromTable(2, stmt);
+	return data[0];
+}
+
+std::vector<std::string> PKB::getChildrenStar(std::string stmt) {
+	std::vector<std::string> output;
+	std::vector<std::vector<std::string>> data;
+	data = PKB::getFromTable(2, stmt);
+
+	for (int i = 0; i < data[0].size; i++) {
+		output.push_back(data[0][i]);
+		if (PKB::getChildren(data[0][i]).size > 0) {
+			std::vector<std::string> recur_output = PKB::getChildrenStar(data[0][i]);
+			for (int j = 0; j < recur_output.size; j++) {
+				output.push_back(recur_output[j]);
+			}
+		}
+	}
+
+	return output;
+}
+
+bool PKB::checkParent(std::string stmt1, std::string stmt2) {
+	std::vector<std::string> children = PKB::getChildren(stmt1);
+
+	for (int i = 0; i < children.size; i++) {
+		if (stmt2 == children[i]) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool PKB::checkParentStar(std::string stmt1, std::string stmt2) {
+	std::vector<std::string> children = PKB::getChildrenStar(stmt1);
+
+	for (int i = 0; i < children.size; i++) {
+		if (stmt2 == children[i]) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+std::vector<std::string[2]> PKB::getAllParent() {
+
+	std::vector<std::string[2]> output;
+	unordered_map<std::string, std::vector<std::vector<std::string>>> table = tables[2];
+
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		std::vector<std::string> stmtList = it->second[0];
+		for (int i = 0; i < stmtList.size; i++) {
+			string newOutput[2] = { it->first, it->second[0][i] };
+			output.push_back(newOutput);
+		}
+	}
+
+	return output;
+}
+
+unordered_map<std::string, std::vector<std::string>> PKB::getAllParentStar() {
+
+	unordered_map<std::string, std::vector<std::string>> output;
+	unordered_map<std::string, std::vector<std::vector<std::string>>> table = tables[2];
+	
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		std::vector<std::string> stmtList = PKB::getChildrenStar(it->first);
+		output.insert({ it->first, stmtList });
+	}
+
 }
