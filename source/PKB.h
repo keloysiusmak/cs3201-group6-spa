@@ -18,13 +18,23 @@ public:
 	std::vector<std::vector<std::string>> getFromTable(int, std::string);
 	
 	/* Follows Operations */
-	int getFollowsBefore(int);
-	int getFollowsAfter(int);
-	std::vector<int> getFollowsBeforeStar(int);
-	std::vector<int> getFollowsAfterStar(int);
-	bool checkFollows(int, int);
-	bool checkFollowsStar(int, int);
-	std::vector<int[2]> getAllFollows();
-	std::vector<unordered_map<int, std::vector<int>>> getAllFollowsStar();
+	std::string getFollowsBefore(std::string);
+	std::string getFollowsAfter(std::string);
+	std::vector<std::string> getFollowsBeforeStar(std::string);
+	std::vector<std::string> getFollowsAfterStar(std::string);
+	bool checkFollows(std::string, std::string);
+	bool checkFollowsStar(std::string, std::string);
+	std::vector<std::string[2]> getAllFollows();
+	unordered_map<std::string, std::vector<std::string>> getAllFollowsStar();
+
+	/* Parent Operations */
+	std::string getParent(std::string);
+	std::vector<std::string> getParentStar(std::string);
+	std::vector<std::string> getChildren(std::string);
+	std::vector<std::string> getChildrenStar(std::string);
+	bool checkParent(std::string, std::string);
+	bool checkParentStar(std::string, std::string);
+	std::vector<std::string[2]> getAllParent();
+	unordered_map<std::string, std::vector<std::string>> getAllParentStar();
 
 };
