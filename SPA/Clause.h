@@ -1,13 +1,9 @@
 #pragma once
 
 #include <string>
+#include "Param.h"
 
 using namespace std;
-
-struct Param {
-	string type;
-	string value;
-};
 
 class Clause {
 private:
