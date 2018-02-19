@@ -35,12 +35,6 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 			case 7:
 				tableValuesCount = 1;
 				break;
-			case 8:
-				tableValuesCount = 1;
-				break;
-			case 9:
-				tableValuesCount = 1;
-				break;
 			default:
 				return false;
 		}
@@ -55,7 +49,7 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 			tableValues.push_back(value[i]);
 		}
 		
-		table.insert({ key_id, tableValues });
+		tables[table_id].insert({ key_id, tableValues });
 	}
 	/* Row exists */
 	else {
@@ -71,6 +65,8 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 			}
 			tableValues[i] = data;
 		}
+
+		tables[table_id].insert({ key_id, tableValues });
 	}
 	return true;
 }
@@ -97,7 +93,7 @@ bool PKB::insertToNameTable(int table_id, int key_id, std::vector<std::vector<st
 			tableValues.push_back(value[i]);
 		}
 
-		table.insert({ key_id, tableValues });
+		nameTables[table_id].insert({ key_id, tableValues });
 	}
 	/* Row exists */
 	else {
@@ -113,6 +109,8 @@ bool PKB::insertToNameTable(int table_id, int key_id, std::vector<std::vector<st
 			}
 			tableValues[i] = data;
 		}
+
+		nameTables[table_id].insert({ key_id, tableValues });
 	}
 	return true;
 }

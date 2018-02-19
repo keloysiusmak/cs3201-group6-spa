@@ -13,13 +13,21 @@ namespace UnitTesting
 		TEST_METHOD(PKBInsertTest)
 		{
 			PKB pkb;
-			std::vector<std::vector<int>> data = { {1}, {1}, {1}, {1} };
-			
-			Assert::AreEqual(true, pkb.insertToTable(1, 1, data));
+			std::vector<int> innerdata;
+			innerdata.push_back(1);
+			std::vector<std::vector<int>> data;
+			data.push_back(innerdata);
+			data.push_back(innerdata);
+			data.push_back(innerdata);
+			data.push_back(innerdata);
 
-			data = pkb.getFromTable(1, 1);
+			pkb.insertToTable(1, 1, data);
 
-			//Assert::AreEqual(1, data[0][0]);
+			unordered_map<int, std::vector<std::vector<int>>> table = pkb.tables[1];
+			data = table[1];
+			std::vector<std::vector<int>> data2;
+
+			Assert::AreEqual(1, static_cast<int>(pkb.tables[1].size()));
 
 		}
 
