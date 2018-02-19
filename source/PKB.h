@@ -18,6 +18,7 @@ public:
 
 	/* PKB Operations */
 	bool insertToTable(int, int, std::vector<std::vector<int>>);
+	bool insertToNameTable(int, int, std::vector<std::vector<std::string>>);
 	std::vector<std::vector<int>> getFromTable(int, int);
 	std::vector<std::vector<std::string>> getFromNameTable(int, int);
 
