@@ -43,12 +43,13 @@ bool Parent::isParent(int firstParam, list<int> secondParam) {
 	//else {
 		//return false;
 	//}
+	return false;
 }
 
 //if only first param is given
 list<int> Parent::getChildren(int firstParam) {
 	list<int> parentOfList = tableOne.at(firstParam);
-	//return list<int>;
+	return parentOfList;
 }
 
 //if only second param is given
@@ -58,7 +59,7 @@ list<int> Parent::getParent(int secondParam) {
 }
 
 //if none of the params are given
-list<int, int> Parent::getAllParentPairs() {
+//list<int, int> Parent::getAllParentPairs() {
 	//tableOne.begin, tableOne.end
 	//return list of int;
-}
+//}

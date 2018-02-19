@@ -17,7 +17,7 @@ public:
 	bool isParent(int, list<int>);
 	list<int> getChildren(int);
 	list<int> getParent(int);
-	list<int, int> getAllParentPairs();
+	//list<int, int> getAllParentPairs();
 
 private:
 	map<int, list<int>> tableOne;
