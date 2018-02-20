@@ -118,20 +118,24 @@ ClauseResults Evaluator::evaluateParent(Clause clause) {
 
 	if (clause.getFirstParam().type == STMT_SYN) {
 		if (clause.getSecondParam().type == STMT_SYN) {
-			//Parent::getAllParents() if select firstParam
-			//Parent::getAllChildren() if select secondParam
+			/* if (clause.getSelect == clause.getFirstParam()) {
+				//getAllParent() 
+			}
+			else {
+				//getChildren()
+			} */
 		}
 		else if (clause.getSecondParam().type == STMT_NUM) {
-			//Parent::getParent(clause.getSecondParam());
+			//getParent(clause.getSecondParam());
 		}
 		else {}
 	}
 	else if (clause.getFirstParam().type == STMT_NUM) {
 		if (clause.getSecondParam().type == STMT_SYN) {
-			//Parent::getChildren(clause.getFirstParam());
+			//getChildren(clause.getFirstParam());
 		}
 		else if (clause.getSecondParam().type == STMT_NUM) {
-			//Parentt::isParent(clause.getFirstParam(), clause.getSecondParam());
+			//checkParent(clause.getFirstParam(), clause.getSecondParam());
 		}
 		else {}
 	}
@@ -144,20 +148,20 @@ ClauseResults Evaluator::evaluateParentStar(Clause clause) {
 	ClauseResults ParentStarResults = ClauseResults(clause);
 	if (clause.getFirstParam().type == STMT_SYN) {
 		if (clause.getSecondParam().type == STMT_SYN) {
-			//Parent::getAllParentsStar() if select firstParam
-			//Parent::getAllChildrenStar() if select secondParam
+			//getAllParentStar() if select firstParam
+			//getAllChildrenStar() if select secondParam
 		}
 		else if (clause.getSecondParam().type == STMT_NUM) {
-			//Parent::getParentStar(clause.getSecondParam());
+			//getParentStar(clause.getSecondParam());
 		}
 		else {}
 	}
 	else if (clause.getFirstParam().type == STMT_NUM) {
 		if (clause.getSecondParam().type == STMT_SYN) {
-			//Parent::getChildrenStar(clause.getFirstParam());
+			//getChildrenStar(clause.getFirstParam());
 		}
 		else if (clause.getSecondParam().type == STMT_NUM) {
-			//Parentt::isParentStar(clause.getFirstParam(), clause.getSecondParam());
+			//checkParentStar(clause.getFirstParam(), clause.getSecondParam());
 		}
 		else {}
 	}
