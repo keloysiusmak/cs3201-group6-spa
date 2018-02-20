@@ -10,22 +10,19 @@ using namespace std;
 
 class QueryObject {
 private:
-	vector<Declaration> _declarations;
 	vector<Clause> _clauses;
 	vector<Pattern> _Patterns;
-	string _selectStatement;
+	Param _selectStmt;
 
 public:
 	QueryObject();
 	QueryObject(string);
 
-	void insertDeclaration(string, string);
-	void insertClause(string, string, string);
-	void insertPattern(string, string, string);
-	void insertSelectStatement(string);
+	void insertClause(string, string, string, string, string);
+	void insertPattern(string, string, string, string, string, string);
+	void insertSelectStmt(string, string);
 
-	vector<Declaration> getDeclarations();
 	vector<Clause> getClauses();
 	vector<Pattern> getPatterns();
-	string getSelectStatement();
+	Param getSelectStatement();
 };

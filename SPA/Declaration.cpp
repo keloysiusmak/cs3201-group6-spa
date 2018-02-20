@@ -9,7 +9,8 @@ Declaration::Declaration() {
 }
 
 void Declaration::setDeclaration(string designEntity, string synonym) {
-
+	_designEntity = designEntity;
+	_synonym = synonym;
 }
 
 string Declaration::getDesignEntity() {

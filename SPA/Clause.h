@@ -14,6 +14,7 @@ private:
 public:
 	//Constructors
 	Clause();
+	Clause(string, Param, Param);
 
 	//Methods
 	void setClause(string, Param, Param);

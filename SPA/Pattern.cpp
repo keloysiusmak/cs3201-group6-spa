@@ -8,12 +8,18 @@ Pattern::Pattern() {
 
 }
 
-void Pattern::setPattern(string entityType, Param leftParam, Param rightParam) {
+Pattern::Pattern(Param entity, Param leftParam, Param rightParam) {
+	_entity = entity;
+	_leftParam = leftParam;
+	_rightParam = rightParam;
+}
+
+void Pattern::setPattern(Param entity, Param leftParam, Param rightParam) {
 
 }
 
-string Pattern::getEntityType() {
-	return _entityType;
+Param Pattern::getEntity() {
+	return _entity;
 }
 
 Param Pattern::getLeftParam() {
