@@ -20,6 +20,10 @@ class Evaluator {
 public:
 	Evaluator(QueryObject);
 	list<string> evaluateQuery();
+	vector<int> extractDeclaration();
+	vector<int> extractSelect();
+	vector<int> extractSuchThat();
+	vector<int> extractPattern();
 	ClauseResults evaluateClause(Clause);
 	ClauseResults evaluateFollows(Clause);
 	ClauseResults evaluateFollowStar(Clause);

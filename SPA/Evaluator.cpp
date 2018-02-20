@@ -21,6 +21,29 @@ list<string> Evaluator::evaluateQuery() {
 	return{ "Evaluating query " };
 };
 
+vector<int> Evaluator::extractDeclaration() {
+	vector<int> declarationVector;
+	//declarationVector = queryObj.getDeclaration (see preprocessor)
+	return declarationVector;
+}
+
+vector<int> Evaluator::extractSelect() {
+	vector<int> selectVector;
+	//selectVector = queryObj.getSelect (see preprocessor)
+	return selectVector;
+}
+
+vector<int> Evaluator::extractSuchThat() {
+	vector<int> suchThatVector;
+	//suchThatVector = queryObj.getSuchThat (see preprocessor)
+	return suchThatVector;
+}
+
+vector<int> Evaluator::extractPattern() {
+	vector<int> patternVector;
+	//patternVector = queryObj.getPattern (see preprocessor)
+}
+
 ClauseResults Evaluator::evaluateClause(Clause clause) {
 	ClauseResults clauseResults = ClauseResults(clause);
 	string relation = clause.getRelRef();
@@ -141,4 +164,6 @@ ClauseResults Evaluator::evaluateParentStar(Clause clause) {
 	else {}
 	return ParentStarResults;
 };
+
+
 
