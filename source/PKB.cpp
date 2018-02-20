@@ -46,7 +46,7 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 
 		std::vector<std::vector<int>> tableValues;
 		for (int i = 0; i < tableValuesCount; i++) {
-			tableValues.push_back(value[i]);
+			tableValues[i].insert(tableValues.end, value[i].begin, value[i].end);
 		}
 		
 		tables[table_id - 1].insert({ key_id, tableValues });
