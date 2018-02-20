@@ -21,7 +21,7 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 				tableValuesCount = 5;
 				break;
 			case 3:
-				tableValuesCount = 2;
+				tableValuesCount = 3;
 				break;
 			case 4:
 				tableValuesCount = 2;
@@ -99,6 +99,45 @@ std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 string PKB::getFromNameTable(int table_id, int key_id)
 {
 	return nameTables[table_id - 8][key_id];
+}
+
+std::vector<int> PKB::getAllVariables() {
+
+	std::vector<int> data;
+
+	unordered_map<int, string> table = nameTables[1];
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		data.push_back(it->first);
+	}
+
+	return data;
+
+}
+
+std::vector<int> PKB::getAllStatements() {
+
+	std::vector<int> data;
+
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[0];
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		data.push_back(it->first);
+	}
+
+	return data;
+
+}
+
+std::vector<int> PKB::getAllProcedures() {
+
+	std::vector<int> data;
+
+	unordered_map<int, string> table = nameTables[0];
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		data.push_back(it->first);
+	}
+
+	return data;
+
 }
 
 /* Accessor Operations */
@@ -369,4 +408,127 @@ unordered_map<int, std::vector<int>> PKB::getAllParentStar() {
 	}
 
 	return output;
+}
+
+/* Uses Operations */
+std::vector<int> PKB::getUsesVariablesFromStatement(int stmt) {
+
+	std::vector<std::vector<int>> table = PKB::getFromTable(1, stmt);
+	std::vector<int> data;
+	data = table[1];
+	if (table[3][0] == 2 || table[3][0] == 3) {
+		std::vector<int> temp = PKB::getFromTable(2, table[1][0])[2];
+		data.insert(data.end(), temp.begin(), temp.end());
+	}
+	return data;
+
+}
+
+std::vector<int> PKB::getStatementsFromUsesVariable(int varId) {
+
+	std::vector<std::vector<int>> data;
+	data = PKB::getFromTable(4, varId);
+	return data[0];
+
+}
+
+std::vector<int> PKB::getUsesVariablesFromProcedure(int proc) {
+
+	std::vector<std::vector<int>> data;
+	data = PKB::getFromTable(3, proc);
+	return data[1];
+
+}
+
+std::vector<int> PKB::getProceduresFromUsesVariable(int varId) {
+
+	std::vector<std::vector<int>> data;
+	data = PKB::getFromTable(4, varId);
+	return data[1];
+
+}
+
+unordered_map<int, std::vector<int>> PKB::getAllStatementUsesVariables() {
+
+	unordered_map<int, std::vector<int>> output;
+	std::vector<int> stmts = PKB::getAllStatements();
+	std::vector<int> data;
+
+	for (int i = 0; i < static_cast<int>(stmts.size()); i++) {
+		data = PKB::getUsesVariablesFromStatement(stmts[i]);
+		std::vector<std::vector<int>> check = PKB::getFromTable(1, stmts[i]);
+		if (check[3][0] == 2 || check[3][0] == 2) {
+			std::vector<int> temp = PKB::getFromTable(2, check[0][0])[2];
+			data.insert(data.end(), temp.begin(), temp.end());
+		}
+		output.insert({ stmts[i], data });
+	}
+
+	return output;
+
+}
+
+unordered_map<int, std::vector<int>> PKB::getAllVariableUsesStatements() {
+
+	unordered_map<int, std::vector<int>> output;
+	std::vector<int> vars = PKB::getAllVariables();
+
+	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
+		output.insert({ vars[i], PKB::getStatementsFromUsesVariable(vars[i]) });
+	}
+
+	return output;
+
+}
+
+unordered_map<int, std::vector<int>> PKB::getAllProcedureUsesVariables() {
+
+	unordered_map<int, std::vector<int>> output;
+	std::vector<int> procs = PKB::getAllProcedures();
+
+	for (int i = 0; i < static_cast<int>(procs.size()); i++) {
+		output.insert({ procs[i], PKB::getUsesVariablesFromProcedure(procs[i]) });
+	}
+
+	return output;
+
+}
+
+unordered_map<int, std::vector<int>> PKB::getAllVariableUsesProcedures() {
+
+	unordered_map<int, std::vector<int>> output;
+	std::vector<int> vars = PKB::getAllVariables();
+
+	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
+		output.insert({ vars[i], PKB::getProceduresFromUsesVariable(vars[i]) });
+	}
+
+	return output;
+
+}
+
+bool PKB::checkStatementUsesVariable(int stmt, int varId) {
+
+	std::vector<int> vars = PKB::getUsesVariablesFromStatement(stmt);
+	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
+		if (vars[i] == varId) {
+			return true;
+		}
+	}
+
+	return false;
+
+}
+
+bool PKB::checkProcedureUsesVariable(int procId, int varId) {
+
+	std::vector<int> vars = PKB::getUsesVariablesFromProcedure(procId);
+	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
+		if (vars[i] == varId) {
+			return true;
+		}
+	}
+
+	return false;
+
 }

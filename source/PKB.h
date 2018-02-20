@@ -21,6 +21,9 @@ public:
 	int insertToNameTable(int, std::string);
 	std::vector<std::vector<int>> getFromTable(int, int);
 	std::string getFromNameTable(int, int);
+	std::vector<int> getAllVariables();
+	std::vector<int> getAllStatements();
+	std::vector<int> getAllProcedures();
 
 	/* Accessor Operations */
 	std::string getProcedureName(int);
@@ -50,10 +53,15 @@ public:
 
 	/* Uses Operations */
 	std::vector<int> getUsesVariablesFromStatement(int);
-	std::vector<int> getStatementFromUsesVariables(int);
+	std::vector<int> getStatementsFromUsesVariable(int);
+	std::vector<int> getUsesVariablesFromProcedure(int);
+	std::vector<int> getProceduresFromUsesVariable(int);
 	unordered_map<int, std::vector<int>> getAllStatementUsesVariables();
-	unordered_map<int, std::vector<int>> getAllUsesVariableStatements();
+	unordered_map<int, std::vector<int>> getAllVariableUsesStatements();
+	unordered_map<int, std::vector<int>> getAllProcedureUsesVariables();
+	unordered_map<int, std::vector<int>> getAllVariableUsesProcedures();
 	bool checkStatementUsesVariable(int, int);
+	bool checkProcedureUsesVariable(int, int);
 
 	/* Modifies Operations */
 	std::vector<int> getModifiesVariablesFromStatement(int);
