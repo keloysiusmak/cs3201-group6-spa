@@ -167,6 +167,71 @@ namespace UnitTesting
 			}
 			Assert::AreEqual(6, size);
 		}
+
+		TEST_METHOD(PKBParent)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(1, 1, { { 2 },{},{},{ 1 } });
+			pkb.insertToTable(1, 2, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(2, 1, { { 1 },{ 2 },{},{},{ 3 } });
+			pkb.insertToTable(2, 2, { { 0 },{ 1 },{},{},{ 1 } });
+
+			Assert::AreEqual(1, pkb.getParent(2));
+			Assert::AreEqual(0, pkb.getParent(1));
+			Assert::AreEqual(2, pkb.getChildren(1)[0]);
+		}
+
+		TEST_METHOD(PKBParentStar)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(1, 1, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(1, 2, { { 2 },{},{},{ 1 } });
+			pkb.insertToTable(1, 3, { { 3 },{},{},{ 1 } });
+			pkb.insertToTable(2, 1, { { 0 },{ 1 },{},{},{ 1 } });
+			pkb.insertToTable(2, 2, { { 1 },{ 2 },{},{},{ 3 } });
+			pkb.insertToTable(2, 3, { { 2 },{ 3 },{},{},{ 1 } });
+
+			vector<int> parentStar1 = { 2, 1 };
+			vector<int> parentStar2 = { 1 };
+			vector<int> childStar1 = { 2, 3 };
+			Assert::AreEqual(true, (pkb.getParentStar(3) == parentStar1));
+			Assert::AreEqual(true, (pkb.getParentStar(2) == parentStar2));
+			Assert::AreEqual(true, (pkb.getChildrenStar(1) == childStar1));
+		}
+
+		TEST_METHOD(PKBCheckParent)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(1, 1, { { 2 },{},{},{ 1 } });
+			pkb.insertToTable(1, 2, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(2, 1, { { 1 },{ 2 },{},{},{ 3 } });
+			pkb.insertToTable(2, 2, { { 0 },{ 1 },{},{},{ 1 } });
+
+			Assert::AreEqual(true, pkb.checkParent(1,2));
+			Assert::AreEqual(false, pkb.checkParent(2,1));
+		}
+
+		TEST_METHOD(PKBCheckParentStar)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(1, 1, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(1, 2, { { 2 },{},{},{ 1 } });
+			pkb.insertToTable(1, 3, { { 3 },{},{},{ 1 } });
+			pkb.insertToTable(2, 1, { { 0 },{ 1 },{},{},{ 1 } });
+			pkb.insertToTable(2, 2, { { 1 },{ 2 },{},{},{ 3 } });
+			pkb.insertToTable(2, 3, { { 2 },{ 3 },{},{},{ 1 } });
+
+			Assert::AreEqual(true, pkb.checkParentStar(1, 2));
+			Assert::AreEqual(true, pkb.checkParentStar(1, 3));
+			Assert::AreEqual(true, pkb.checkParentStar(2, 3));
+			Assert::AreEqual(false, pkb.checkParentStar(2, 1));
+			Assert::AreEqual(false, pkb.checkParentStar(3, 1));
+			Assert::AreEqual(false, pkb.checkParentStar(3, 2));
+		}
 	};
 
 }

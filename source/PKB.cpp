@@ -260,6 +260,7 @@ unordered_map<int, std::vector<int>> PKB::getAllFollowsStar() {
 int PKB::getParent(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(1, stmt);
+	data = PKB::getFromTable(2, data[0][0]);
 	return data[0][0];
 }
 
@@ -269,29 +270,40 @@ std::vector<int> PKB::getParentStar(int stmt) {
 	
 	while (parent != 0) {
 		output.push_back(parent);
-		parent = PKB::getParent(stmt);
+		parent = PKB::getParent(parent);
 	}
 
 	return output;
 }
 
 std::vector<int> PKB::getChildren(int stmt) {
-	std::vector<std::vector<int>> data;
-	data = PKB::getFromTable(2, stmt);
-	return data[0];
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[1];
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		if (it->second[0][0] == stmt) {
+			return it->second[1];
+		}
+	}
+	std::vector<int> data;
+	return data;
 }
 
 std::vector<int> PKB::getChildrenStar(int stmt) {
 	std::vector<int> output;
 	std::vector<std::vector<int>> data;
-	data = PKB::getFromTable(2, stmt);
-
-	for (unsigned int i = 0; i < static_cast<int>(data[0].size()); i++) {
-		output.push_back(data[0][i]);
-		if (static_cast<int>(PKB::getChildren(data[0][i]).size()) > 0) {
-			std::vector<int> recur_output = PKB::getChildrenStar(data[0][i]);
-			for (unsigned int j = 0; j < static_cast<int>(recur_output.size()); j++) {
-				output.push_back(recur_output[j]);
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[1];
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		if (it->second[0][0] == stmt) {
+			data = it->second;
+		}
+	}
+	if (static_cast<int>(data.size()) > 0) {
+		for (unsigned int i = 0; i < static_cast<int>(data[1].size()); i++) {
+			output.push_back(data[1][i]);
+			if (static_cast<int>(PKB::getChildren(data[1][i]).size()) > 0) {
+				std::vector<int> recur_output = PKB::getChildrenStar(data[1][i]);
+				for (unsigned int j = 0; j < static_cast<int>(recur_output.size()); j++) {
+					output.push_back(recur_output[j]);
+				}
 			}
 		}
 	}
