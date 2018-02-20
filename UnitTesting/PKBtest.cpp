@@ -232,6 +232,38 @@ namespace UnitTesting
 			Assert::AreEqual(false, pkb.checkParentStar(3, 1));
 			Assert::AreEqual(false, pkb.checkParentStar(3, 2));
 		}
+
+		TEST_METHOD(PKBGetAllParent)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(1, 1, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(1, 2, { { 2 },{},{},{ 1 } });
+			pkb.insertToTable(1, 3, { { 3 },{},{},{ 1 } });
+			pkb.insertToTable(2, 1, { { 0 },{ 1 },{},{},{ 1 } });
+			pkb.insertToTable(2, 2, { { 1 },{ 2 },{},{},{ 3 } });
+			pkb.insertToTable(2, 3, { { 2 },{ 3 },{},{},{ 1 } });
+
+			std::vector<std::vector<int>> data = { {1, 2}, {2, 3} };
+			Assert::AreEqual(true, (pkb.getAllParent() == data));
+		}
+
+		TEST_METHOD(PKBGetAllParentStar)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(1, 1, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(1, 2, { { 2 },{},{},{ 1 } });
+			pkb.insertToTable(1, 3, { { 3 },{},{},{ 1 } });
+			pkb.insertToTable(2, 1, { { 0 },{ 1 },{},{},{ 1 } });
+			pkb.insertToTable(2, 2, { { 1 },{ 2 },{},{},{ 3 } });
+			pkb.insertToTable(2, 3, { { 2 },{ 3 },{},{},{ 1 } });
+
+			unordered_map<int, std::vector<int>> data;
+			data.insert({ 1, { 2, 3 } });
+			data.insert({ 2, { 3 } });
+			Assert::AreEqual(true, (pkb.getAllParentStar() == data));
+		}
 	};
 
 }

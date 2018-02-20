@@ -338,15 +338,18 @@ bool PKB::checkParentStar(int stmt1, int stmt2) {
 std::vector<std::vector<int>> PKB::getAllParent() {
 
 	std::vector<std::vector<int>> output;
-	unordered_map<int, std::vector<std::vector<int>>> table = tables[2];
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[1];
+	std::vector<int> newOutput;
 
 	for (auto it = table.begin(); it != table.end(); ++it) {
-		std::vector<int> stmtList = it->second[0];
-		for (unsigned int i = 0; i < static_cast<int>(stmtList.size()); i++) {
-			std::vector<int> newOutput;
-			newOutput.push_back(it->second[0][i]);
-			newOutput.push_back(it->second[0][i + 1]);
-			output.push_back(newOutput);
+		if (it->second[0][0] != 0) {
+			std::vector<int> stmtList = it->second[1];
+			for (unsigned int i = 0; i < static_cast<int>(stmtList.size()); i++) {
+				newOutput.clear();
+				newOutput.push_back(it->second[0][0]);
+				newOutput.push_back(stmtList[i]);
+				output.push_back(newOutput);
+			}
 		}
 	}
 
@@ -356,11 +359,13 @@ std::vector<std::vector<int>> PKB::getAllParent() {
 unordered_map<int, std::vector<int>> PKB::getAllParentStar() {
 
 	unordered_map<int, std::vector<int>> output;
-	unordered_map<int, std::vector<std::vector<int>>> table = tables[2];
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[1];
 	
 	for (auto it = table.begin(); it != table.end(); ++it) {
-		std::vector<int> stmtList = PKB::getChildrenStar(it->first);
-		output.insert({ it->first, stmtList });
+		if (it->second[0][0] != 0) {
+			std::vector<int> stmtList = PKB::getChildrenStar(it->second[0][0]);
+			output.insert({ it->second[0][0], stmtList });
+		}
 	}
 
 	return output;
