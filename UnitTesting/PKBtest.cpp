@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../source/PKB.h"
+#include "../source/PatternObject.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
@@ -520,6 +521,23 @@ namespace UnitTesting
 
 			Assert::AreEqual(true, (pkb.getAllProcedureModifiesVariables() == procs));
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesProcedures() == vars));
+		}
+
+		TEST_METHOD(PKBPattern)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(1, 1, { { 1 },{1},{ 1 },{ 1 } });
+			pkb.insertToTable(4, 1, { { 1 },{} });
+			pkb.insertToTable(5, 1, { { 1 },{ } });
+
+
+			unordered_map<int, std::vector<int>> data;
+			data.insert({ 1,{ 1 } });
+
+			PatternObject p = PatternObject(1, 0, 1, 0);
+
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == data));
 		}
 	};
 

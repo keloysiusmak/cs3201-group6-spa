@@ -8,7 +8,9 @@
 
 using namespace std::tr1;
 
-class Pattern {
+class PatternObject {
 public:
 	int LHS, LHS_type, RHS, RHS_type;
+
+	PatternObject(int, int, int, int);
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 using namespace std;
 
 #include "PKB.h"
@@ -638,6 +640,47 @@ bool PKB::checkProcedureModifiesVariable(int procId, int varId) {
 	std::vector<int> vars = PKB::getModifiesVariablesFromProcedure(procId);
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
 		if (vars[i] == varId) {
+			return true;
+		}
+	}
+
+	return false;
+
+}
+
+std::vector<int> PKB::getStatementsWithPattern(Pattern p) {
+
+	std::vector<int> dataL;
+	if (p.LHS_type == 0) {
+		dataL = PKB::getStatementsFromModifiesVariable(p.LHS);
+	}
+
+	std::vector<int> dataR;
+	if (p.RHS_type == 0) {
+		dataR = PKB::getStatementsFromUsesVariable(p.RHS);
+
+		if (p.LHS_type == 1) {
+			return dataR;
+		}
+		else {
+			std::vector<int> output;
+			set_intersection(dataL.begin(), dataL.end(), dataR.begin(), dataR.end(), output);
+			return output;
+		}
+
+	}
+	else {
+		return dataL;
+	}
+
+
+}
+
+bool PKB::checkStatementWithPattern(int stmt, Pattern p) {
+
+	std::vector<int> stmts = PKB::getStatementsWithPattern(p);
+	for (int i = 0; i < static_cast<int>(stmts.size()); i++) {
+		if (stmts[i] == stmt) {
 			return true;
 		}
 	}

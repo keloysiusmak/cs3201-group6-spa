@@ -77,6 +77,6 @@ public:
 
 	/* Pattern Operations */
 	std::vector<int> getStatementsWithPattern(Pattern);
-	bool checkStatementsWithPattern(Pattern);
+	bool checkStatementWithPattern(int, Pattern);
 
 };
