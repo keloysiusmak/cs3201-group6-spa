@@ -663,8 +663,8 @@ std::vector<int> PKB::getStatementsWithPattern(PatternObject p) {
 			return dataR;
 		}
 		else {
-			std::sort(dataL.begin(), dataL.end());
-			std::sort(dataR.begin(), dataL.end());
+			//std::sort(dataL.begin(), dataL.end());
+			//std::sort(dataR.begin(), dataL.end());
 			std::vector<int> output(dataL.size() + dataR.size());
 			std::vector<int>::iterator it;
 			

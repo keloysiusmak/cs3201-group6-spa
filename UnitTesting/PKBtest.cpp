@@ -523,7 +523,7 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesProcedures() == vars));
 		}
 
-		TEST_METHOD(PKBPattern)
+		TEST_METHOD(PKBPatternNoWildcards)
 		{
 			PKB pkb;
 
@@ -537,7 +537,49 @@ namespace UnitTesting
 
 			PatternObject p = PatternObject(1, 0, 1, 0);
 
-			Assert::AreEqual(1, static_cast<int>(pkb.getStatementsWithPattern(p).size()));
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == data));
+			Assert::AreEqual(true, pkb.checkStatementWithPattern(1, p));
+		}
+
+		TEST_METHOD(PKBPatternRHSWildcard)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(1, 1, { { 1 },{ 1 },{ 1 },{ 1 } });
+			pkb.insertToTable(1, 2, { { 1 },{ 1 },{ 1 },{ 1 } });
+			pkb.insertToTable(4, 1, { { 1, 2 },{} });
+			pkb.insertToTable(5, 1, { { 1, 2 },{} });
+
+
+			std::vector<int> data;
+			data.push_back(1);
+			data.push_back(2);
+
+			PatternObject p = PatternObject(1, 0, 0, 1);
+
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == data));
+			Assert::AreEqual(true, pkb.checkStatementWithPattern(1, p));
+			Assert::AreEqual(true, pkb.checkStatementWithPattern(2, p));
+		}
+
+		TEST_METHOD(PKBPatternLHSWildcard)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(1, 1, { { 1 },{ 1 },{ 1 },{ 1 } });
+			pkb.insertToTable(1, 2, { { 1 },{ 1 },{ 1 },{ 1 } });
+			pkb.insertToTable(4, 1, { { 1, 2 },{} });
+			pkb.insertToTable(5, 1, { { 1, 2 },{} });
+
+			std::vector<int> data;
+			data.push_back(1);
+			data.push_back(2);
+
+			PatternObject p = PatternObject(0, 1, 1, 0);
+
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == data));
+			Assert::AreEqual(true, pkb.checkStatementWithPattern(1, p));
+			Assert::AreEqual(true, pkb.checkStatementWithPattern(2, p));
 		}
 	};
 
