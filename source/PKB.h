@@ -6,7 +6,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "Pattern.h"
+#include "PatternObject.h"
 
 using namespace std::tr1;
 
