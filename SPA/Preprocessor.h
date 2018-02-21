@@ -18,6 +18,8 @@ private:
 
 public:
 	Preprocessor(Evaluator);
+	void insertDeclarationToMap(string synonym, string declaration);
+	unordered_map<string, string> getDeclarationMap();
 	void preprocessQuery(string query);
 	bool isValidDeclaration(string declaration);
 	bool isValidQuery(string query);
@@ -28,6 +30,6 @@ public:
 	bool isDeclarationSynonymExist(string synonym);
 	bool parseClauseArg1(QueryObject qo, string relType, string arg1, string arg2);
 	bool parseClauseArg2(QueryObject qo, string relType, string arg1, string arg2);
-	bool parsePattern(QueryObject qo, string entityType, string entity, string arg1, string arg2);
-	string retrieveArgType(string arg);
+	bool parsePattern(QueryObject qo, ParamType entityType, string entity, string arg1, string arg2);
+	int retrieveArgType(string arg);
 };

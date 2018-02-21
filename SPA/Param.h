@@ -4,7 +4,11 @@
 
 using namespace std;
 
+enum ParamType { assign, stmt, variable, whiles, prog_line, 
+				integer, constant, var_name, 
+				ident, synonym, all };
+
 struct Param {
-	string type;
+	ParamType type;
 	string value;
 };

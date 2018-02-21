@@ -13,7 +13,7 @@ QueryObject::QueryObject(string query) {
 
 }
 
-void QueryObject::insertClause(string relRef, string firstParamType, string firstParam, string secondParamType, string secondParam) {
+void QueryObject::insertClause(string relRef, ParamType firstParamType, string firstParam, ParamType secondParamType, string secondParam) {
 	
 	Param fp;
 	fp.type = firstParamType;
@@ -28,7 +28,7 @@ void QueryObject::insertClause(string relRef, string firstParamType, string firs
 	_clauses.push_back(clause);
 }
 
-void QueryObject::insertPattern(string entityType, string entity, string leftParamType, string leftParam, string rightParamType, string rightParam) {
+void QueryObject::insertPattern(ParamType entityType, string entity, ParamType leftParamType, string leftParam, ParamType rightParamType, string rightParam) {
 
 	Param ep;
 	ep.type = entityType;
@@ -47,7 +47,7 @@ void QueryObject::insertPattern(string entityType, string entity, string leftPar
 	_Patterns.push_back(pattern);
 }
 
-void QueryObject::insertSelectStmt(string selectType, string synonym) {
+void QueryObject::insertSelectStmt(ParamType selectType, string synonym) {
 	_selectStmt.type = selectType;
 	_selectStmt.value = synonym;
 }

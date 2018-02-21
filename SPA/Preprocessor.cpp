@@ -23,10 +23,17 @@ const string IDENT_WORD = "ident";
 const string CONSTANT_WORD = "constant";
 const string VAR_NAME_WORD = "var_name";
 
-const unordered_set<string> KEYWORDS_DECLARATIONS = { "assign", "statement", "variable" };
 const unordered_set<string> KEYWORDS_PATTERN_TYPE = { "assign" };
 const unordered_set<string> KEYWORDS_CLAUSES_1 = { "Modifies", "Uses" };
 const unordered_set<string> KEYWORDS_CLAUSES_2 = { "Parent", "Parent*", "Follows", "Follows*" };
+
+const unordered_map<string, ParamType> KEYWORDS_DECLARATIONS = { { "assign", assign }, { "stmt", stmt },
+																{ "variable", variable }, { "while", whiles },
+																{ "constant", constant }, { "prog_line", prog_line } };
+
+const unordered_map<int, ParamType> NUMBER_MAPPING_REF_TYPE = { { 1, integer }, { 2, constant },
+															{ 3, var_name }, { 4, ident }, { 5, synonym },
+															{ 6, all } };
 
 const regex synonymRegex("(^[a-z]([a-z]|[0-9]|[#])*$)");
 const regex stmtRefRegex("(^(([a-z]([a-z]|[0-9]|[#])*$)|([_]$)|([0-9]+$)))");
@@ -63,7 +70,18 @@ Preprocessor::Preprocessor(Evaluator evaluator) {
 
 }
 
+void Preprocessor::insertDeclarationToMap(string synonym, string declaration) {
+	declarationMap.insert({ synonym, declaration });
+}
+
+unordered_map<string, string> Preprocessor::getDeclarationMap() {
+	return declarationMap;
+}
+
 void Preprocessor::preprocessQuery(string query) {
+
+	//Clear the contents in declarationMap first before processing the query
+	declarationMap.clear();
 
 	//Trim whitespace from a String
 	string q = trim(query);
@@ -95,8 +113,8 @@ void Preprocessor::preprocessQuery(string query) {
 	
 	if (!validQuery) {
 		// insert evaluator invalid query api here
-		return;
-	}
+		
+	}	
 };
 
 bool Preprocessor::isValidDeclaration(string declaration) {
@@ -128,8 +146,7 @@ bool Preprocessor::isValidDeclaration(string declaration) {
 		if (!isValidSynonym(s) || isDeclarationSynonymExist(s)) {
 			return false;
 		}
-
-		declarationMap.insert({ s, declarationArr.at(0) });
+		insertDeclarationToMap(s, declarationArr.at(0));
 	}
 
 	return true;
@@ -151,7 +168,8 @@ bool Preprocessor::isValidQuery(string query) {
 	}
 	//Populate the selectType of QueryObject
 	auto searchSynonym = declarationMap.find(queryArr.at(1));
-	queryObject.insertSelectStmt(searchSynonym->second, searchSynonym->first);
+	auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+	queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
 
 	//Check if there is any such that or pattern clause
 	if (queryArr.size() == 2) {
@@ -217,14 +235,16 @@ bool Preprocessor::isValidQuery(string query) {
 				return false;
 			}
 
-			auto searchSynonym = declarationMap.find(patternType.at(0));
+			searchSynonym = declarationMap.find(patternType.at(0));
 
 			//check whether patternType is valid
 			if (KEYWORDS_PATTERN_TYPE.find(searchSynonym->second) == KEYWORDS_PATTERN_TYPE.end()) {
 				return false;
 			}
 
-			if (!parsePattern(queryObject, searchSynonym->second, patternType.at(0), patternType.at(1), queryArr.at(i + 2))) {
+			searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+
+			if (!parsePattern(queryObject, searchDeclareType->second, patternType.at(0), patternType.at(1), queryArr.at(i + 2))) {
 				return false;
 			}
 
@@ -300,8 +320,11 @@ bool Preprocessor::parseClauseArg1(QueryObject qo, string relType, string arg1, 
 	string leftArg = trim(arg1Split.at(0));
 	string rightArg = trim(arg2Split.at(0));
 
-	qo.insertClause(relType, retrieveArgType(leftArg), leftArg,
-					retrieveArgType(rightArg), rightArg);
+	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
+	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
+
+	qo.insertClause(relType, leftArgType->second, leftArg,
+		rightArgType->second, rightArg);
 
 	return true;
 }
@@ -323,13 +346,16 @@ bool Preprocessor::parseClauseArg2(QueryObject qo, string relType, string arg1, 
 	string leftArg = trim(arg1Split.at(0));
 	string rightArg = trim(arg2Split.at(0));
 
-	qo.insertClause(relType, retrieveArgType(leftArg), leftArg,
-		retrieveArgType(rightArg), rightArg);
+	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
+	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
+
+	qo.insertClause(relType, leftArgType->second, leftArg,
+		rightArgType->second, rightArg);
 
 	return true;
 }
 
-bool Preprocessor::parsePattern(QueryObject qo, string entityType, string entity, string arg1, string arg2) {
+bool Preprocessor::parsePattern(QueryObject qo, ParamType entityType, string entity, string arg1, string arg2) {
 	
 	vector<string> arg1Split = split(arg1, SYMBOL_COMMA);
 
@@ -346,35 +372,38 @@ bool Preprocessor::parsePattern(QueryObject qo, string entityType, string entity
 	string leftArg = trim(arg1Split.at(0));
 	string rightArg = trim(arg2Split.at(0));
 
-	qo.insertPattern(entityType, entity, retrieveArgType(leftArg),
-					leftArg, retrieveArgType(rightArg), rightArg);
+	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
+	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
+
+	qo.insertPattern(entityType, entity, leftArgType->second,
+					leftArg, rightArgType->second, rightArg);
 
 	return true;
 }
 
-string Preprocessor::retrieveArgType(string arg) {
+int Preprocessor::retrieveArgType(string arg) {
 	if (isInteger(arg)) {
-		return INTEGER_WORD;
+		return 1;
 	}
 	else if (arg.find(SYMBOL_UNDERSCORE) != string::npos && arg.find(SYMBOL_DOUBLE_QUOTE) != string::npos) {
 		
 		vector<string> argSplit = split(arg, SYMBOL_DOUBLE_QUOTE);
 
 		if (isInteger(argSplit.at(1))) {
-			return CONSTANT_WORD;
+			return 2;
 		}
 		else {
-			return VAR_NAME_WORD;
+			return 3;
 		}
 	}
 	else if (arg.find(SYMBOL_DOUBLE_QUOTE) != string::npos) {
-		return IDENT_WORD;
+		return 4;
 	}
 	else if (arg.compare(SYMBOL_UNDERSCORE + "") == 0) {
-		return ALL_WORD;
+		return 6;
 	}
 	else {
-		return SYNONYM_WORD;
+		return 5;
 	}
 }
 
