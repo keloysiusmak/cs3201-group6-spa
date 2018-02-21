@@ -13,24 +13,43 @@ QueryObject::QueryObject(string query) {
 
 }
 
-void QueryObject::insertDeclaration(string designEntity, string synonym) {
+void QueryObject::insertClause(string relRef, string firstParamType, string firstParam, string secondParamType, string secondParam) {
+	
+	Param fp;
+	fp.type = firstParamType;
+	fp.value = firstParam;
+	
+	Param sp;
+	sp.type = secondParamType;
+	sp.value = secondParam;
 
+	Clause clause(relRef, fp, sp);
+
+	_clauses.push_back(clause);
 }
 
-void QueryObject::insertClause(string relRef, string firstParam, string secondParam) {
+void QueryObject::insertPattern(string entityType, string entity, string leftParamType, string leftParam, string rightParamType, string rightParam) {
 
+	Param ep;
+	ep.type = entityType;
+	ep.value = entity;
+
+	Param lp;
+	lp.type = leftParamType;
+	lp.value = leftParam;
+
+	Param rp;
+	rp.type = rightParamType;
+	rp.value = rightParam;
+
+	Pattern pattern(ep, lp, rp);
+
+	_Patterns.push_back(pattern);
 }
 
-void QueryObject::insertPattern(string entityType, string leftParam, string rightParam) {
-
-}
-
-void QueryObject::insertSelectStatement(string synonym) {
-
-}
-
-vector<Declaration> QueryObject::getDeclarations() {
-	return _declarations;
+void QueryObject::insertSelectStmt(string selectType, string synonym) {
+	_selectStmt.type = selectType;
+	_selectStmt.value = synonym;
 }
 
 vector<Clause> QueryObject::getClauses() {
@@ -41,6 +60,6 @@ vector<Pattern> QueryObject::getPatterns() {
 	return _Patterns;
 }
 
-string QueryObject::getSelectStatement() {
-	return _selectStatement;
+Param QueryObject::getSelectStatement() {
+	return _selectStmt;
 }
