@@ -18,9 +18,9 @@ public:
 	QueryObject();
 	QueryObject(string);
 
-	void insertClause(string, string, string, string, string);
-	void insertPattern(string, string, string, string, string, string);
-	void insertSelectStmt(string, string);
+	void insertClause(string, ParamType, string, ParamType, string);
+	void insertPattern(ParamType, string, ParamType, string, ParamType, string);
+	void insertSelectStmt(ParamType, string);
 
 	vector<Clause> getClauses();
 	vector<Pattern> getPatterns();

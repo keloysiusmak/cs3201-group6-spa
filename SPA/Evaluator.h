@@ -18,6 +18,7 @@ struct ClauseResults {
 
 class Evaluator {
 public:
+	Evaluator();
 	Evaluator(QueryObject);
 	list<string> evaluateQuery();
 	ClauseResults evaluateClause(Clause);
