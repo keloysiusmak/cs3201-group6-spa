@@ -129,6 +129,21 @@ std::vector<int> PKB::getAllStatements() {
 
 }
 
+std::vector<int> PKB::getAllStatementsWithType(int stmt_type) {
+
+	std::vector<int> data;
+
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[0];
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		if (it->second[3][0] == stmt_type) {
+			data.push_back(it->first);
+		}
+	}
+
+	return data;
+
+}
+
 std::vector<int> PKB::getAllProcedures() {
 
 	std::vector<int> data;
@@ -663,8 +678,6 @@ std::vector<int> PKB::getStatementsWithPattern(PatternObject p) {
 			return dataR;
 		}
 		else {
-			//std::sort(dataL.begin(), dataL.end());
-			//std::sort(dataR.begin(), dataL.end());
 			std::vector<int> output(dataL.size() + dataR.size());
 			std::vector<int>::iterator it;
 			

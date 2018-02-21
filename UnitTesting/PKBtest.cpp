@@ -133,6 +133,18 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getAllStatements() == data));
 		}
 
+		TEST_METHOD(PKBGetAllStatementsWithType)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(1, 1, { { 1 },{},{},{ 3 } });
+			pkb.insertToTable(1, 2, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(1, 3, { { 1 },{},{},{ 3 } });
+			std::vector<int> data = { 1, 3 };
+
+			Assert::AreEqual(true, (pkb.getAllStatementsWithType(3) == data));
+		}
+
 		TEST_METHOD(PKBFollows)
 		{
 			PKB pkb;
