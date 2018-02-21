@@ -430,6 +430,7 @@ namespace UnitTesting
 			Assert::AreEqual(1, pkb.getParent(2));
 			Assert::AreEqual(0, pkb.getParent(1));
 			Assert::AreEqual(2, pkb.getChildren(1)[0]);
+			Assert::AreEqual(true, (pkb.getChildren(2) == data));
 		}
 
 		TEST_METHOD(PKBParentStar)
@@ -458,9 +459,13 @@ namespace UnitTesting
 			vector<int> parentStar1 = { 2, 1 };
 			vector<int> parentStar2 = { 1 };
 			vector<int> childStar1 = { 2, 3 };
+			vector<int> childStar2 = { 3 };
+			Assert::AreEqual(true, (pkb.getParentStar(1) == data));
+			Assert::AreEqual(true, (pkb.getChildrenStar(3) == data));
 			Assert::AreEqual(true, (pkb.getParentStar(3) == parentStar1));
 			Assert::AreEqual(true, (pkb.getParentStar(2) == parentStar2));
 			Assert::AreEqual(true, (pkb.getChildrenStar(1) == childStar1));
+			Assert::AreEqual(true, (pkb.getChildrenStar(2) == childStar2));
 		}
 
 		TEST_METHOD(PKBCheckParent)
@@ -473,6 +478,7 @@ namespace UnitTesting
 
 			pkb.insertToTable(1, 1, { { 2 },{},{},{ 1 } });
 			pkb.insertToTable(1, 2, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(1, 3, { { 3 },{},{},{ 1 } });
 
 			/* Invalid Tests */
 			Assert::AreEqual(false, pkb.checkParent(1, 2));
@@ -480,9 +486,14 @@ namespace UnitTesting
 
 			pkb.insertToTable(2, 1, { { 1 },{ 2 },{},{},{ 3 } });
 			pkb.insertToTable(2, 2, { { 0 },{ 1 },{},{},{ 1 } });
+			pkb.insertToTable(2, 3, { { 0 },{ 3 },{},{},{ 1 } });
 
 			Assert::AreEqual(true, pkb.checkParent(1,2));
 			Assert::AreEqual(false, pkb.checkParent(2,1));
+			Assert::AreEqual(false, pkb.checkParent(3, 1));
+			Assert::AreEqual(false, pkb.checkParent(3, 2));
+			Assert::AreEqual(false, pkb.checkParent(1, 3));
+			Assert::AreEqual(false, pkb.checkParent(2, 3));
 		}
 
 		TEST_METHOD(PKBCheckParentStar)
@@ -500,6 +511,7 @@ namespace UnitTesting
 			pkb.insertToTable(1, 1, { { 1 },{},{},{ 1 } });
 			pkb.insertToTable(1, 2, { { 2 },{},{},{ 1 } });
 			pkb.insertToTable(1, 3, { { 3 },{},{},{ 1 } });
+			pkb.insertToTable(1, 4, { { 4 },{},{},{ 1 } });
 
 			/* Invalid Tests */
 			Assert::AreEqual(false, pkb.checkParentStar(1, 2));
@@ -512,6 +524,7 @@ namespace UnitTesting
 			pkb.insertToTable(2, 1, { { 0 },{ 1 },{},{},{ 1 } });
 			pkb.insertToTable(2, 2, { { 1 },{ 2 },{},{},{ 3 } });
 			pkb.insertToTable(2, 3, { { 2 },{ 3 },{},{},{ 1 } });
+			pkb.insertToTable(2, 4, { { 0 },{ 4 },{},{},{ 1 } });
 
 			Assert::AreEqual(true, pkb.checkParentStar(1, 2));
 			Assert::AreEqual(true, pkb.checkParentStar(1, 3));
@@ -519,6 +532,12 @@ namespace UnitTesting
 			Assert::AreEqual(false, pkb.checkParentStar(2, 1));
 			Assert::AreEqual(false, pkb.checkParentStar(3, 1));
 			Assert::AreEqual(false, pkb.checkParentStar(3, 2));
+			Assert::AreEqual(false, pkb.checkParentStar(4, 1));
+			Assert::AreEqual(false, pkb.checkParentStar(4, 2));
+			Assert::AreEqual(false, pkb.checkParentStar(4, 3));
+			Assert::AreEqual(false, pkb.checkParentStar(1, 4));
+			Assert::AreEqual(false, pkb.checkParentStar(2, 4));
+			Assert::AreEqual(false, pkb.checkParentStar(3, 4));
 		}
 
 		TEST_METHOD(PKBGetAllParent)
@@ -532,6 +551,7 @@ namespace UnitTesting
 			pkb.insertToTable(1, 1, { { 1 },{},{},{ 1 } });
 			pkb.insertToTable(1, 2, { { 2 },{},{},{ 1 } });
 			pkb.insertToTable(1, 3, { { 3 },{},{},{ 1 } });
+			pkb.insertToTable(1, 4, { { 4 },{},{},{ 1 } });
 
 			/* Invalid Test */
 			Assert::AreEqual(true, (pkb.getAllParent() == data));
@@ -539,6 +559,7 @@ namespace UnitTesting
 			pkb.insertToTable(2, 1, { { 0 },{ 1 },{},{},{ 1 } });
 			pkb.insertToTable(2, 2, { { 1 },{ 2 },{},{},{ 3 } });
 			pkb.insertToTable(2, 3, { { 2 },{ 3 },{},{},{ 1 } });
+			pkb.insertToTable(2, 4, { { 0 },{ 4 },{},{},{ 1 } });
 
 			data = { {1, 2}, {2, 3} };
 			Assert::AreEqual(true, (pkb.getAllParent() == data));
@@ -555,6 +576,7 @@ namespace UnitTesting
 			pkb.insertToTable(1, 1, { { 1 },{},{},{ 1 } });
 			pkb.insertToTable(1, 2, { { 2 },{},{},{ 1 } });
 			pkb.insertToTable(1, 3, { { 3 },{},{},{ 1 } });
+			pkb.insertToTable(1, 4, { { 4 },{},{},{ 1 } });
 
 			/* Invalid Test */
 			Assert::AreEqual(true, (pkb.getAllParentStar() == data));
@@ -562,6 +584,7 @@ namespace UnitTesting
 			pkb.insertToTable(2, 1, { { 0 },{ 1 },{},{},{ 1 } });
 			pkb.insertToTable(2, 2, { { 1 },{ 2 },{},{},{ 3 } });
 			pkb.insertToTable(2, 3, { { 2 },{ 3 },{},{},{ 1 } });
+			pkb.insertToTable(2, 4, { { 0 },{ 4 },{},{},{ 1 } });
 
 			data.insert({ 1, { 2, 3 } });
 			data.insert({ 2, { 3 } });
@@ -572,6 +595,7 @@ namespace UnitTesting
 		{
 			PKB pkb;
 			std::vector<int> data;
+			std::vector<int> null_data;
 
 			/* Null Tests */
 			Assert::AreEqual(false, pkb.checkStatementUsesVariable(1, 1));
@@ -579,13 +603,19 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getStatementsFromUsesVariable(1) == data));
 
 			pkb.insertToTable(1, 1, { { 1 },{1},{},{ 1 } });
+			pkb.insertToTable(1, 2, { { 1 },{  },{},{ 1 } });
 			pkb.insertToTable(4, 1, { { 1 },{ } });
+			pkb.insertToTable(4, 2, { { },{} });
 
 			data = { 1 };
+			
 
 			Assert::AreEqual(true, pkb.checkStatementUsesVariable(1, 1));
+			Assert::AreEqual(false, pkb.checkStatementUsesVariable(2, 1));
 			Assert::AreEqual(true, (pkb.getUsesVariablesFromStatement(1) == data));
 			Assert::AreEqual(true, (pkb.getStatementsFromUsesVariable(1) == data));
+			Assert::AreEqual(true, (pkb.getUsesVariablesFromStatement(2) == null_data));
+			Assert::AreEqual(true, (pkb.getStatementsFromUsesVariable(2) == null_data));
 		}
 
 		TEST_METHOD(PKBUsesContainer)
@@ -631,6 +661,7 @@ namespace UnitTesting
 			data = { 1 };
 
 			Assert::AreEqual(true, pkb.checkProcedureUsesVariable(1, 1));
+			Assert::AreEqual(false, pkb.checkProcedureUsesVariable(1, 2));
 			Assert::AreEqual(true, (pkb.getUsesVariablesFromProcedure(1) == data));
 			Assert::AreEqual(true, (pkb.getProceduresFromUsesVariable(1) == data));
 		}
@@ -646,11 +677,24 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getAllVariableUsesStatements() == vars));
 
 			pkb.insertToTable(1, 1, { { 1 },{ 1 },{},{ 1 } });
+			pkb.insertToTable(1, 2, { { 1 }, {},{},{ 1 } });
+			pkb.insertToTable(1, 3, { { 2 },{ 1 },{},{ 3 } });
+			pkb.insertToTable(1, 4, { { 2 },{ 2 },{},{ 1 } });
+			pkb.insertToTable(1, 5, { { 2 },{ 3 },{},{ 1 } });
+			pkb.insertToTable(2, 2, { { 3 },{ 4,5 },{2,3}, {},  { 3 } });
 			pkb.insertToTable(4, 1, { { 1 },{} });
+			pkb.insertToTable(4, 2, { { 3,4 },{} });
+			pkb.insertToTable(4, 3, { { 3,5 },{} });
 			
 			stmts.insert({ 1, {1} });
+			stmts.insert({ 2, { } });
+			stmts.insert({ 3, {1,2, 3} });
+			stmts.insert({ 4, { 2 } });
+			stmts.insert({ 5, { 3 } });
 
 			vars.insert({ pkb.insertToNameTable(9, "a") ,{ 1 } });
+			vars.insert({ pkb.insertToNameTable(9, "b") ,{ 3,4 } });
+			vars.insert({ pkb.insertToNameTable(9, "c") ,{ 3,5 } });
 
 			Assert::AreEqual(true, (pkb.getAllStatementUsesVariables() == stmts));
 			Assert::AreEqual(true, (pkb.getAllVariableUsesStatements() == vars));
@@ -667,16 +711,22 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getAllVariableUsesStatements() == vars));
 
 			pkb.insertToTable(1, 1, { { 1 },{ 1 },{},{ 3 } });
-			pkb.insertToTable(2, 1, { { 1 },{ 2, 3 },{ 2, 3 },{},{ 3 } });
+			pkb.insertToTable(1, 2, { { 2 },{ 2 },{},{ 3 } });
+			pkb.insertToTable(1, 3, { { 3 },{ 3 },{},{ 1 } });
+			pkb.insertToTable(2, 1, { { 0 },{ 1 },{ 2, 3 },{},{ 1 } });
+			pkb.insertToTable(2, 2, { { 1 },{ 2 },{ 3 },{},{ 3 } });
+			pkb.insertToTable(2, 3, { { 2 },{ 3 },{ 3 },{},{ 3 } });
 			pkb.insertToTable(4, 1, { { 1 },{} });
-			pkb.insertToTable(4, 2, { { 2, 1 },{} });
-			pkb.insertToTable(4, 3, { { 3, 1 },{} });
+			pkb.insertToTable(4, 2, { { 1, 2 },{} });
+			pkb.insertToTable(4, 3, { { 1, 2, 3 },{} });
 
 			stmts.insert({ 1,{ 1, 2, 3 } });
+			stmts.insert({ 2,{ 2, 3 } });
+			stmts.insert({ 3,{ 3 } });
 
 			vars.insert({ pkb.insertToNameTable(9, "a") ,{ 1 } });
-			vars.insert({ pkb.insertToNameTable(9, "b") ,{ 2, 1 } });
-			vars.insert({ pkb.insertToNameTable(9, "c") ,{ 3, 1 } });
+			vars.insert({ pkb.insertToNameTable(9, "b") ,{ 1, 2 } });
+			vars.insert({ pkb.insertToNameTable(9, "c") ,{ 1, 2, 3 } });
 
 			Assert::AreEqual(true, (pkb.getAllStatementUsesVariables() == stmts));
 			Assert::AreEqual(true, (pkb.getAllVariableUsesStatements() == vars));
@@ -693,12 +743,15 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getAllVariableUsesProcedures() == vars));
 
 			pkb.insertToTable(1, 1, { { 1 },{ 1 },{},{ 1 } });
-			pkb.insertToTable(3, 1, { {  },{1}, {} });
-			pkb.insertToTable(4, 1, { {}, {1} });
+			pkb.insertToTable(1, 2, { { 2 },{ 1 },{},{ 1 } });
+			pkb.insertToTable(3, 1, { { 1},{1}, {} });
+			pkb.insertToTable(3, 2, { { 2},{ 1 },{} });
+			pkb.insertToTable(4, 1, { {}, {1, 2} });
 
 			procs.insert({ pkb.insertToNameTable(8, "abc"),{ 1 } });
+			procs.insert({ pkb.insertToNameTable(8, "abd"),{ 1 } });
 
-			vars.insert({ pkb.insertToNameTable(9, "a") ,{ 1 } });
+			vars.insert({ pkb.insertToNameTable(9, "a") ,{ 1, 2 } });
 
 			Assert::AreEqual(true, (pkb.getAllProcedureUsesVariables() == procs));
 			Assert::AreEqual(true, (pkb.getAllVariableUsesProcedures() == vars));
@@ -721,6 +774,8 @@ namespace UnitTesting
 			data = { 1 };
 
 			Assert::AreEqual(true, pkb.checkStatementModifiesVariable(1, 1));
+			Assert::AreEqual(false, pkb.checkStatementModifiesVariable(2, 1));
+			Assert::AreEqual(false, pkb.checkStatementModifiesVariable(1, 2));
 			Assert::AreEqual(true, (pkb.getModifiesVariablesFromStatement(1) == data));
 			Assert::AreEqual(true, (pkb.getStatementsFromModifiesVariable(1) == data));
 		}
@@ -763,11 +818,14 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getProceduresFromModifiesVariable(1) == data));
 
 			pkb.insertToTable(3, 1, { {},{ },{1} });
+			pkb.insertToTable(3, 2, { {},{},{ 2 } });
 			pkb.insertToTable(5, 1, { {},{ 1 } });
+			pkb.insertToTable(5, 2, { {},{ 2 } });
 
 			data = { 1 };
 
 			Assert::AreEqual(true, pkb.checkProcedureModifiesVariable(1, 1));
+			Assert::AreEqual(false, pkb.checkProcedureModifiesVariable(2, 1));
 			Assert::AreEqual(true, (pkb.getModifiesVariablesFromProcedure(1) == data));
 			Assert::AreEqual(true, (pkb.getProceduresFromModifiesVariable(1) == data));
 		}
@@ -783,11 +841,15 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesStatements() == vars));
 			
 			pkb.insertToTable(1, 1, { { 1 },{  },{1},{ 1 } });
+			pkb.insertToTable(1, 2, { { 1 },{},{ 2 },{ 1 } });
 			pkb.insertToTable(5, 1, { { 1 },{} });
+			pkb.insertToTable(5, 2, { { 1 },{} });
 
 			stmts.insert({ 1,{ 1 } });
+			stmts.insert({ 2,{ 2 } });
 
 			vars.insert({ pkb.insertToNameTable(9, "a") ,{ 1 } });
+			vars.insert({ pkb.insertToNameTable(9, "a") ,{ 2 } });
 
 			Assert::AreEqual(true, (pkb.getAllStatementModifiesVariables() == stmts));
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesStatements() == vars));
@@ -803,17 +865,19 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getAllStatementModifiesVariables() == stmts));
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesStatements() == vars));
 
-			pkb.insertToTable(1, 1, { { 1 },{  },{1},{ 3 } });
-			pkb.insertToTable(2, 1, { { 1 },{ 2, 3 },{  },{ 2, 3 },{ 3 } });
-			pkb.insertToTable(5, 1, { { 1 },{} });
-			pkb.insertToTable(5, 2, { { 2, 1 },{} });
-			pkb.insertToTable(5, 3, { { 3, 1 },{} });
+			pkb.insertToTable(1, 1, { { 1 },{  },{},{ 3 } });
+			pkb.insertToTable(1, 2, { { 2 },{},{},{ 3 } });
+			pkb.insertToTable(1, 3, { { 3 },{},{1},{ 1 } });
+			pkb.insertToTable(2, 1, { { 0 },{ 1 },{  },{ 1 },{ 3 } });
+			pkb.insertToTable(2, 2, { { 1 },{ 2 },{},{ 1 },{ 3 } });
+			pkb.insertToTable(2, 3, { { 2 },{ 3 },{},{ 1 },{ 3 } });
+			pkb.insertToTable(5, 1, { { 1,2,3 },{} });
 
-			stmts.insert({ 1,{ 1, 2, 3 } });
+			stmts.insert({ 1,{ 1} });
+			stmts.insert({ 2,{ 1 } });
+			stmts.insert({ 3,{ 1 } });
 
-			vars.insert({ pkb.insertToNameTable(9, "a") ,{ 1 } });
-			vars.insert({ pkb.insertToNameTable(9, "b") ,{ 2, 1 } });
-			vars.insert({ pkb.insertToNameTable(9, "c") ,{ 3, 1 } });
+			vars.insert({ pkb.insertToNameTable(9, "a") ,{ 1,2, 3 } });
 
 			Assert::AreEqual(true, (pkb.getAllStatementModifiesVariables() == stmts));
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesStatements() == vars));
@@ -831,22 +895,27 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesProcedures() == vars));
 
 			pkb.insertToTable(1, 1, { { 1 },{ },{1},{ 1 } });
+			pkb.insertToTable(1, 2, { { 2 },{},{ 1 },{ 1 } });
 			pkb.insertToTable(3, 1, { {},{ },{1} });
-			pkb.insertToTable(5, 1, { {},{ 1 } });
+			pkb.insertToTable(3, 2, { {},{},{ 1 } });
+			pkb.insertToTable(5, 1, { {},{ 1,2 } });
 
 
 			procs.insert({ pkb.insertToNameTable(8, "abc"),{ 1 } });
+			procs.insert({ pkb.insertToNameTable(8, "abc"),{ 1 } });
 
-			vars.insert({ pkb.insertToNameTable(9, "a") ,{ 1 } });
+			vars.insert({ pkb.insertToNameTable(9, "a") ,{ 1, 2 } });
 
 			Assert::AreEqual(true, (pkb.getAllProcedureModifiesVariables() == procs));
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesProcedures() == vars));
 		}
 
-		TEST_METHOD(PKBPatternNoWildcards)
+		TEST_METHOD(PKBPatternNoWildcardsVariableVariable)
 		{
 			PKB pkb;
 			std::vector<int> data;
+
+			/* variable - variable */
 			PatternObject p = PatternObject(1, 0, 1, 0);
 
 			/* Null Tests*/
@@ -859,9 +928,36 @@ namespace UnitTesting
 
 			data.push_back(1);
 
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == data));
+			Assert::AreEqual(true, pkb.checkStatementWithPattern(1, p));
+			p = PatternObject(1, 0, 1, 2);
+			Assert::AreEqual(false, (pkb.getStatementsWithPattern(p) == data));
+			Assert::AreEqual(false, pkb.checkStatementWithPattern(1, p));
+		}
+		
+		TEST_METHOD(PKBPatternNoWildcardsVariableConstant)
+		{
+			PKB pkb;
+			std::vector<int> data;
+
+			/* variable - constant */
+			PatternObject p = PatternObject(1, 0, 1, 2);
+
+			/* Null Tests*/
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == data));
+			Assert::AreEqual(false, pkb.checkStatementWithPattern(1, p));
+
+			pkb.insertToTable(1, 1, { { 1 },{ 1 },{ 1 },{ 1 } });
+			pkb.insertToTable(5, 1, { { 1 },{} });
+			pkb.insertToTable(7, 1, { { 1 } });
+
+			data.push_back(1);
 
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == data));
 			Assert::AreEqual(true, pkb.checkStatementWithPattern(1, p));
+			p = PatternObject(1, 0, 1, 0);
+			Assert::AreEqual(false, (pkb.getStatementsWithPattern(p) == data));
+			Assert::AreEqual(false, pkb.checkStatementWithPattern(1, p));
 		}
 
 		TEST_METHOD(PKBPatternRHSWildcard)
@@ -889,7 +985,7 @@ namespace UnitTesting
 			Assert::AreEqual(true, pkb.checkStatementWithPattern(2, p));
 		}
 
-		TEST_METHOD(PKBPatternLHSWildcard)
+		TEST_METHOD(PKBPatternLHSWildcardVariableVariable)
 		{
 			PKB pkb;
 			std::vector<int> data;
@@ -912,6 +1008,29 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == data));
 			Assert::AreEqual(true, pkb.checkStatementWithPattern(1, p));
 			Assert::AreEqual(true, pkb.checkStatementWithPattern(2, p));
+		}
+
+		TEST_METHOD(PKBPatternLHSWildcardVariableConstant)
+		{
+			PKB pkb;
+			std::vector<int> data;
+			PatternObject p = PatternObject(0, 1, 1, 2);
+
+			/* Null Tests */
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == data));
+			Assert::AreEqual(false, pkb.checkStatementWithPattern(1, p));
+			Assert::AreEqual(false, pkb.checkStatementWithPattern(2, p));
+
+			pkb.insertToTable(1, 1, { { 1 },{ 1 },{ 1 },{ 1 } });
+			pkb.insertToTable(2, 1, { { 1 },{ 1 },{ 1 },{ 1 } });
+			pkb.insertToTable(5, 1, { { 1 },{} });
+			pkb.insertToTable(7, 1, { { 1 } });
+
+			data.push_back(1);
+
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == data));
+			Assert::AreEqual(true, pkb.checkStatementWithPattern(1, p));
+			Assert::AreEqual(false, pkb.checkStatementWithPattern(2, p));
 		}
 	};
 
