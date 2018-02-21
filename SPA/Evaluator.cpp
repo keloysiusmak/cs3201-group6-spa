@@ -65,7 +65,7 @@ void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
 		else if (secondParam.type == PROG_LINE) { // Return prog_line directly before second param
 			int result = pkb.getFollowsBefore(stoi(secondParam.value));
 			vector<int> vectorResult = { result };
-			clauseResults.setlhsAnswers(vectorResult);
+			clauseResults.setKeys(vectorResult);
 		}
 		else { ; }
 	}
@@ -73,7 +73,7 @@ void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
 		if (secondParam.type == STMT) { // Return prog_line directly after first param
 			int result = pkb.getFollowsAfter(stoi(firstParam.value));
 			vector<int> vectorResult = { result };
-			clauseResults.setrhsAnswers(vectorResult);
+			clauseResults.setKeys(vectorResult);
 		}
 		else if (secondParam.type == PROG_LINE) { // Boolean value for checking
 			bool result = pkb.checkFollows(stoi(firstParam.value), stoi(secondParam.value));
@@ -84,28 +84,33 @@ void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
 	else { ; }
 };
 
-//ClauseResults Evaluator::evaluateFollowStar(Clause &clause, ClauseResults &clauseResults) {
-//	ClauseResults followStarResults = ClauseResults(clause);
-//	if (clause.getFirstParam().type == STMT_SYN) {
-//		if (clause.getSecondParam().type == STMT_SYN) {
-//			//getAllFollowsStar()
-//		}
-//		else if (clause.getSecondParam().type == STMT_NUM) {
-//			//getFollowsStarBefore(secondParam.value)
-//		} else {}
-//	}
-//	else if (clause.getFirstParam().type == STMT_NUM) {
-//		if (clause.getSecondParam().type == STMT_SYN) {
-//			//getFollowsStarAfter(firstParam.value)
-//		}
-//		else if (clause.getSecondParam().type == STMT_NUM) {
-//			//checkFollowsStar(firstParam.value, secondParam.value)
-//		} else {}
-//	} else {}
-//	return followStarResults;
-//};
-//
-//
+void Evaluator::evaluateFollowStar(Clause &clause, ClauseResults &clauseResults) {
+
+	Param firstParam = clause.getFirstParam();
+	Param secondParam = clause.getSecondParam();
+
+	if (firstParam.type == STMT) {
+		if (secondParam.type == STMT) {
+			unordered_map<int, vector<int>> results = pkb.getAllFollowsStar();
+			storeMapToResults(clauseResults, results);
+		}
+		else if (secondParam.type == PROG_LINE) {
+			vector<int> results = pkb.getFollowsBeforeStar(stoi(secondParam.value));
+		}
+		else { ; }
+	}
+	else if (firstParam.type == PROG_LINE) {
+		if (secondParam.type == STMT) {
+			vector<int> results = pkb.getFollowsAfterStar(stoi(firstParam.value));
+		}
+		else if (secondParam.type == PROG_LINE) {
+			bool result = pkb.checkFollowsStar(stoi(firstParam.value), stoi(secondParam.value));
+		}
+		else { ; }
+	}
+	else { ; }
+};
+
 //ClauseResults Evaluator::evaluateParent(Clause clause) {
 //
 //	ClauseResults ParentResults = ClauseResults(clause);
@@ -160,4 +165,16 @@ void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
 //	else {}
 //	return ParentStarResults;
 //};
+
+/* Iterates through key value pair in unorderedMap and stores the corresponding rows */
+void Evaluator::storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map) {
+	vector<int> keys;
+	vector<vector<int>> values;
+	for (auto row : map) {
+		keys.push_back(row.first);
+		values.push_back(row.second);
+	}
+	clauseResults.setKeys(keys);
+	clauseResults.setValues(values);
+};
 
