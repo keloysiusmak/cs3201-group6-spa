@@ -1,63 +1,11 @@
 #pragma once
-
-#include<stdio.h>
-#include <iostream>
-#include <string>
-#include <vector>
-
-using namespace std;
-
+#include "../SPA/Parser.h"
+#include "../SPA/Utils.h"
 #include "PKB.h"
-#include "TNode.h"
-#include "Parser.h"
 
-int Parse () {
-	//
-	return 0;
-}
-
-
-//#include "stdafx.h"
-#include <fstream>
-#include <sstream>
-#include <stack>
-#include <deque>
-#include <unordered_map>
-
-
-using namespace std;
-
-class Parser {
-public:   int parse(string simpleSource, bool isString, string stringInput);
-		  Parser();
-		  string getTest();
-
-private:	 string nextToken;
-			 stringstream simpleStringStream;
-			 string getToken();
-			 int currentStmNum = 1;
-			 stack<int> stmListIdStack;
-			 int nextStmListId = 1;
-			 unordered_map<int, vector<int>> stmIdMap;
-
-
-			 bool match(string, bool);
-			 void expression();
-			 void statement();
-			 void statementList();
-			 void procedure();
-			 void program();
-			 string test;
-			 struct MyException : public exception {
-				 const char * what() const throw () {
-					 return "Syntax is wrong!";
-				 }
-			 };
-};
 
 
 Parser::Parser() {
-	test = "van";
 	//cout << "Object is being created" << endl;
 }
 
@@ -65,14 +13,23 @@ string Parser::getTest() {
 	return test;
 }
 
+void Parser::tokenize(string content)
+{
+	content = Utils::sanitise(content);
+	tokens = Utils::explode(content, ParserConstants::DELIM_STRING, ParserConstants::DELIMITERS);
+	iter = tokens.begin();
+}
+
 string Parser::getToken(void) {
-	string word;
-	if (simpleStringStream >> word) {
-		//cout << word << " ";
-		return word;
-	}
-	else {
-		return "";
+	{
+		if (iter < tokens.end()) {
+			nextToken = *(iter++);
+		}
+		else {
+			nextToken.clear();
+		}
+		std::cout << nextToken;
+		return nextToken;
 	}
 }
 
@@ -116,6 +73,7 @@ void Parser::statement() {
 	cout << "]\n";
 
 	stmIdMap[curStmListId].push_back(currentStmNum);
+	bool a = pkb.insertToTable(ParserConstants::CONTAINER_TABLE, curStmListId, { {},{ currentStmNum },{},{},{} });
 
 	cout << "vectorAfter: ";
 	for (int m : stmIdMap[curStmListId]) {
@@ -127,6 +85,8 @@ void Parser::statement() {
 	if (nextToken == "if") {
 		int currentIfNum = currentStmNum;
 		stmIdMap.insert({ nextStmListId,{ currentStmNum } });
+		pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { currentStmNum },{},{},{},{} });
+
 		currentStmNum++;
 
 		match("if");
@@ -137,6 +97,7 @@ void Parser::statement() {
 		match("}");
 		// else
 		stmIdMap.insert({ nextStmListId,{ currentIfNum } });
+		pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { currentIfNum },{},{},{},{} });
 		match("else");
 		match("{");
 		statementList();
@@ -144,6 +105,7 @@ void Parser::statement() {
 	}
 	else if (nextToken == "while") {
 		stmIdMap.insert({ nextStmListId,{ currentStmNum } });
+		pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { currentStmNum },{},{},{},{} });
 		currentStmNum++;
 
 		match("while");
@@ -193,10 +155,13 @@ void Parser::procedure() {
 	match("procedure");
 	match("", true);
 	match("{");
-	stmIdMap.insert({ nextStmListId,{ -1 } });
+	stmIdMap.insert({ nextStmListId,{ 0 } });
+	pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { ParserConstants::PROCEDURE_PARENT_ID },{},{},{},{} });
+
 	statementList();
 	match("}");
 }
+
 
 void Parser::program() {
 	procedure();
@@ -215,13 +180,11 @@ void Parser::program() {
 
 
 
-
-// return 0: success, 1: wrong syntax, 2: file not found
-int Parser::parse(string fileName, bool isString = false, string stringInput = "")
+PKB Parser::Parse(string fileName, PKB passedPKB, bool isString, string stringInput)
 {
 	//int i = 1, currentStmNo = 0 , StmListIndex = 0, currentParent = 0, currentIf = 0, nestingLevel = 0;
 
-
+	pkb = passedPKB;
 	if (isString == true) {
 		stringstream stringInputStream(stringInput);
 		simpleStringStream << stringInputStream.rdbuf();
@@ -235,18 +198,19 @@ int Parser::parse(string fileName, bool isString = false, string stringInput = "
 			file.close();
 		}
 		else {
-			return 2;
+			cout << "file not found";
 		}
 	}
 
 	try {
+		tokenize(simpleStringStream.str());
 		nextToken = getToken();
 		program();
 	}
 	catch (MyException& e) {
 		std::cout << "MyException caught" << std::endl;
 		std::cout << e.what() << std::endl;
-		return EXIT_FAILURE;
+		//return EXIT_FAILURE;
 	}
 	std::cout << "success!";
 	for (const auto& n : stmIdMap) {
@@ -257,17 +221,33 @@ int Parser::parse(string fileName, bool isString = false, string stringInput = "
 		}
 		cout << "]\n";
 	}
-	return 0;
+	return pkb;
 }
 
 /*
 int main() {
-
 	Parser parser;
+	PKB pkb;
+	pkb = parser.Parse("subset_if_while_diff_nospace.txt", pkb);
 
-	int c = parser.parse("subset_if_while_diff.txt");
-	std::cout << endl << "result: " << c << endl;
+	std::vector<std::vector<int>> test = pkb.tables[1][3];
 
+	cout << "*** FOLLOWS ***\n";
+	std::vector<std::vector<int>> allFollows = pkb.getAllFollows();
+	for (int i = 0; i< allFollows.size(); i++) {
+		for (int p = 0; p < allFollows[i].size(); p++) {
+			cout << allFollows[i][p] << " ";
+		}
+		cout << endl;
+	}
+	std::vector<std::vector<int>> allParents = pkb.getAllParent();
+	cout << "*** PARENTS ***\n";
+	//cout << allParents.size();
+	for (int i = 0; i< allParents.size(); i++) {
+		for (int p = 0; p < allParents[i].size(); p++) {
+			cout << allParents[i][p] << " ";
+		}
+		cout << endl;
+	}
 	return 0;
-}
 */

@@ -6,7 +6,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "Pattern.h"
+#include "PatternObject.h"
 
 using namespace std::tr1;
 
@@ -23,6 +23,7 @@ public:
 	std::string getFromNameTable(int, int);
 	std::vector<int> getAllVariables();
 	std::vector<int> getAllStatements();
+	std::vector<int> getAllStatementsWithType(int);
 	std::vector<int> getAllProcedures();
 
 	/* Accessor Operations */
@@ -65,13 +66,21 @@ public:
 
 	/* Modifies Operations */
 	std::vector<int> getModifiesVariablesFromStatement(int);
-	std::vector<int> getStatementFromModifiesVariables(int);
+	std::vector<int> getStatementsFromModifiesVariable(int);
+	std::vector<int> getModifiesVariablesFromProcedure(int);
+	std::vector<int> getProceduresFromModifiesVariable(int);
 	unordered_map<int, std::vector<int>> getAllStatementModifiesVariables();
-	unordered_map<int, std::vector<int>> getAllModifiesVariableStatements();
+	unordered_map<int, std::vector<int>> getAllVariableModifiesStatements();
+	unordered_map<int, std::vector<int>> getAllProcedureModifiesVariables();
+	unordered_map<int, std::vector<int>> getAllVariableModifiesProcedures();
 	bool checkStatementModifiesVariable(int, int);
+	bool checkProcedureModifiesVariable(int, int);
 
 	/* Pattern Operations */
-	std::vector<int> getStatementsWithPattern(Pattern);
-	bool checkStatementsWithPattern(Pattern);
+	std::vector<int> getStatementsWithPattern(PatternObject);
+	bool checkStatementWithPattern(int, PatternObject);
+
+	/* Constant Operations */
+	std::vector<int> getStatementsWithConstant(int);
 
 };

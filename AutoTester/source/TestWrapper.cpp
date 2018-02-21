@@ -1,7 +1,8 @@
 #include "TestWrapper.h"
-#include "Parser.h"
+#include "../SPA/Parser.h"
 #include "../SPA/Evaluator.h"
 #include "../SPA/Preprocessor.h"
+#include "PKB.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
 AbstractWrapper* WrapperFactory::wrapper = 0;
@@ -19,10 +20,12 @@ TestWrapper::TestWrapper() {
 }
 
 // method for parsing the SIMPLE source
+
 void TestWrapper::parse(std::string filename) {
 	// call your parser to do the parsing
   // ...rest of your code...
-	Parse();
+	Parser parser;
+	pkb = parser.Parse(filename, pkb);
 }
 
 // method to evaluating a query
