@@ -1,4 +1,5 @@
 #include "Evaluator.h"
+#include <set> 
 
 using namespace std;
 
@@ -35,7 +36,8 @@ list<string> Evaluator::evaluateQuery() {
 	if (queryObject.getPatterns().size() > 0) {
 
 	}
-	return{ "evaluating query " };
+	list<string> ans = resultToString(cResults, selectParam);
+	return ans;
 };
 
 void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
@@ -51,6 +53,33 @@ void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	else if (relation == PARENTSTAR) {
 		evaluateParentStar(clause, clauseResults);
 	} else {}
+};
+
+list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &selected) {
+	Param leftParam = clauseResults.lhs;
+	Param rightParam = clauseResults.rhs;
+	set<int> answerSet;
+	// Retrieve values from nested vectors of values
+	if (selected.value == rightParam.value) {
+		for (auto row : clauseResults.values) {
+			for (auto rowValue : row) {
+				answerSet.insert(rowValue);
+			}
+		}
+	}
+	// Print keys directly
+	else {
+		for (auto key : clauseResults.keys) {
+			answerSet.insert(key);
+		}
+	}
+
+	// Store set of answers into list of strings
+	list<string> stringAns;
+	for (auto key : answerSet) {
+		stringAns.push_back(to_string(key));
+	}
+	return stringAns;
 };
 
 void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
@@ -86,85 +115,30 @@ void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
 
 void Evaluator::evaluateFollowStar(Clause &clause, ClauseResults &clauseResults) {
 
-	Param firstParam = clause.getFirstParam();
-	Param secondParam = clause.getSecondParam();
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
 
-	if (firstParam.type == STMT) {
-		if (secondParam.type == STMT) {
+	if (leftParam.type == STMT) {
+		if (rightParam.type == STMT) {
 			unordered_map<int, vector<int>> results = pkb.getAllFollowsStar();
 			storeMapToResults(clauseResults, results);
 		}
-		else if (secondParam.type == PROG_LINE) {
-			vector<int> results = pkb.getFollowsBeforeStar(stoi(secondParam.value));
+		else if (rightParam.type == PROG_LINE) {
+			vector<int> results = pkb.getFollowsBeforeStar(stoi(rightParam.value));
 		}
 		else { ; }
 	}
-	else if (firstParam.type == PROG_LINE) {
-		if (secondParam.type == STMT) {
-			vector<int> results = pkb.getFollowsAfterStar(stoi(firstParam.value));
+	else if (leftParam.type == PROG_LINE) {
+		if (rightParam.type == STMT) {
+			vector<int> results = pkb.getFollowsAfterStar(stoi(leftParam.value));
 		}
-		else if (secondParam.type == PROG_LINE) {
-			bool result = pkb.checkFollowsStar(stoi(firstParam.value), stoi(secondParam.value));
+		else if (rightParam.type == PROG_LINE) {
+			bool result = pkb.checkFollowsStar(stoi(leftParam.value), stoi(rightParam.value));
 		}
 		else { ; }
 	}
 	else { ; }
 };
-
-//ClauseResults Evaluator::evaluateParent(Clause clause) {
-//
-//	ClauseResults ParentResults = ClauseResults(clause);
-//	Param firstParam = clause.getFirstParam();
-//	Param secondParam = clause.getSecondParam();
-//
-//	if (clause.getFirstParam().type == STMT_SYN) {
-//		if (clause.getSecondParam().type == STMT_SYN) {
-//			//Parent::getAllParents() if select firstParam
-//			//Parent::getAllChildren() if select secondParam
-//		}
-//		else if (clause.getSecondParam().type == STMT_NUM) {
-//			//Parent::getParent(clause.getSecondParam());
-//		}
-//		else {}
-//	}
-//	else if (clause.getFirstParam().type == STMT_NUM) {
-//		if (clause.getSecondParam().type == STMT_SYN) {
-//			//Parent::getChildren(clause.getFirstParam());
-//		}
-//		else if (clause.getSecondParam().type == STMT_NUM) {
-//			//Parentt::isParent(clause.getFirstParam(), clause.getSecondParam());
-//		}
-//		else {}
-//	}
-//	else {}
-//
-//	return ParentResults;
-//};
-//
-//ClauseResults Evaluator::evaluateParentStar(Clause clause) {
-//	ClauseResults ParentStarResults = ClauseResults(clause);
-//	if (clause.getFirstParam().type == STMT_SYN) {
-//		if (clause.getSecondParam().type == STMT_SYN) {
-//			//Parent::getAllParentsStar() if select firstParam
-//			//Parent::getAllChildrenStar() if select secondParam
-//		}
-//		else if (clause.getSecondParam().type == STMT_NUM) {
-//			//Parent::getParentStar(clause.getSecondParam());
-//		}
-//		else {}
-//	}
-//	else if (clause.getFirstParam().type == STMT_NUM) {
-//		if (clause.getSecondParam().type == STMT_SYN) {
-//			//Parent::getChildrenStar(clause.getFirstParam());
-//		}
-//		else if (clause.getSecondParam().type == STMT_NUM) {
-//			//Parentt::isParentStar(clause.getFirstParam(), clause.getSecondParam());
-//		}
-//		else {}
-//	}
-//	else {}
-//	return ParentStarResults;
-//};
 
 /* Iterates through key value pair in unorderedMap and stores the corresponding rows */
 void Evaluator::storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map) {
