@@ -648,7 +648,7 @@ bool PKB::checkProcedureModifiesVariable(int procId, int varId) {
 
 }
 
-std::vector<int> PKB::getStatementsWithPattern(Pattern p) {
+std::vector<int> PKB::getStatementsWithPattern(PatternObject p) {
 
 	std::vector<int> dataL;
 	if (p.LHS_type == 0) {
@@ -663,8 +663,14 @@ std::vector<int> PKB::getStatementsWithPattern(Pattern p) {
 			return dataR;
 		}
 		else {
-			std::vector<int> output;
-			set_intersection(dataL.begin(), dataL.end(), dataR.begin(), dataR.end(), output);
+			std::sort(dataL.begin(), dataL.end());
+			std::sort(dataR.begin(), dataL.end());
+			std::vector<int> output(dataL.size() + dataR.size());
+			std::vector<int>::iterator it;
+			
+			it = std::set_intersection(dataL.begin(), dataL.end(), dataR.begin(), dataR.end(), output.begin());
+			output.resize(it - output.begin());
+
 			return output;
 		}
 
@@ -676,7 +682,7 @@ std::vector<int> PKB::getStatementsWithPattern(Pattern p) {
 
 }
 
-bool PKB::checkStatementWithPattern(int stmt, Pattern p) {
+bool PKB::checkStatementWithPattern(int stmt, PatternObject p) {
 
 	std::vector<int> stmts = PKB::getStatementsWithPattern(p);
 	for (int i = 0; i < static_cast<int>(stmts.size()); i++) {

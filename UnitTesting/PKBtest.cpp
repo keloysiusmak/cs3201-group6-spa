@@ -532,12 +532,12 @@ namespace UnitTesting
 			pkb.insertToTable(5, 1, { { 1 },{ } });
 
 
-			unordered_map<int, std::vector<int>> data;
-			data.insert({ 1,{ 1 } });
+			std::vector<int> data;
+			data.push_back(1);
 
 			PatternObject p = PatternObject(1, 0, 1, 0);
 
-			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == data));
+			Assert::AreEqual(1, static_cast<int>(pkb.getStatementsWithPattern(p).size()));
 		}
 	};
 

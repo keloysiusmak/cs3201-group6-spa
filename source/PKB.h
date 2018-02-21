@@ -76,7 +76,7 @@ public:
 	bool checkProcedureModifiesVariable(int, int);
 
 	/* Pattern Operations */
-	std::vector<int> getStatementsWithPattern(Pattern);
-	bool checkStatementWithPattern(int, Pattern);
+	std::vector<int> getStatementsWithPattern(PatternObject);
+	bool checkStatementWithPattern(int, PatternObject);
 
 };
