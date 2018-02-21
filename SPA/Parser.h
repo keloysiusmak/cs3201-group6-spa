@@ -1,27 +1,24 @@
-#include<stdio.h>
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include <vector>
-
-using namespace std;
-
-//#include "stdafx.h"
+#include "PKB.h"
 #include <fstream>
 #include <sstream>
 #include <stack>
 #include <deque>
 #include <unordered_map>
-
-
 using namespace std;
 
+
 class Parser {
-public:   int parse(string simpleSource, bool isString, string stringInput);
+public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stringInput = "");
 		  Parser();
 		  string getTest();
-		  void tokenize(stringstream content);
+		  void tokenize(string);
 
-private:	 string nextToken;
+private:	 PKB pkb;
+			 string nextToken;
 			 stringstream simpleStringStream;
 			 string getToken();
 			 vector<string> tokens;
@@ -45,8 +42,9 @@ private:	 string nextToken;
 				 }
 			 };
 };
-
 namespace ParserConstants {
 	const string DELIM_STRING = " ;={}+*-() ";
 	const vector<char> DELIMITERS{ ';', '=', '{', '}', '+', '*', '-', '(', ')' };
+	const int CONTAINER_TABLE = 2;
+	const int PROCEDURE_PARENT_ID = 0;
 }

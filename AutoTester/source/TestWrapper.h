@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <list>
+#include "PKB.h"
 
 // include your other headers here
 #include "AbstractWrapper.h"
@@ -15,6 +16,8 @@ class TestWrapper : public AbstractWrapper {
   
   // destructor
   ~TestWrapper();
+
+	PKB pkb;
   
   // method for parsing the SIMPLE source
   virtual void parse(std::string filename);
