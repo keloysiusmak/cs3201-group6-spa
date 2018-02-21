@@ -27,13 +27,13 @@ const unordered_set<string> KEYWORDS_PATTERN_TYPE = { "assign" };
 const unordered_set<string> KEYWORDS_CLAUSES_1 = { "Modifies", "Uses" };
 const unordered_set<string> KEYWORDS_CLAUSES_2 = { "Parent", "Parent*", "Follows", "Follows*" };
 
-const unordered_map<string, ParamType> KEYWORDS_DECLARATIONS = { { "assign", assign }, { "stmt", stmt },
-																{ "variable", variable }, { "while", whiles },
-																{ "constant", constant }, { "prog_line", prog_line } };
+const unordered_map<string, ParamType> KEYWORDS_DECLARATIONS = { { "assign", ASSIGN }, { "stmt", STMT },
+																{ "variable", VARIABLE }, { "while", WHILE },
+																{ "constant", CONSTANT }, { "prog_line", PROG_LINE } };
 
-const unordered_map<int, ParamType> NUMBER_MAPPING_REF_TYPE = { { 1, integer }, { 2, constant },
-															{ 3, var_name }, { 4, ident }, { 5, synonym },
-															{ 6, all } };
+const unordered_map<int, ParamType> NUMBER_MAPPING_REF_TYPE = { { 1, INTEGER }, { 2, CONSTANT },
+															{ 3, VAR_NAME }, { 4, IDENT }, { 5, SYNONYM },
+															{ 6, ALL } };
 
 const regex synonymRegex("(^[a-z]([a-z]|[0-9]|[#])*$)");
 const regex stmtRefRegex("(^(([a-z]([a-z]|[0-9]|[#])*$)|([_]$)|([0-9]+$)))");
