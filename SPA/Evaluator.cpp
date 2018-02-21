@@ -26,6 +26,10 @@ void Evaluator::setQueryObject(QueryObject queryObj) {
 	queryObject = queryObj;
 };
 
+list<string> Evaluator::invalidQuery(string invalidQueryMessage) {
+	return{ invalidQueryMessage };
+}
+
 list<string> Evaluator::evaluateQuery() {
 	Param selectParam = queryObject.getSelectStatement();
 	ClauseResults cResults = ClauseResults();
