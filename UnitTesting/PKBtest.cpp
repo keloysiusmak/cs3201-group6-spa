@@ -246,11 +246,14 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getAllStatementsWithType(3) == data));
 
 			pkb.insertToTable(1, 1, { { 1 },{},{},{ 3 } });
-			pkb.insertToTable(1, 2, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(1, 2, { { 1 },{},{},{ 2 } });
 			pkb.insertToTable(1, 3, { { 1 },{},{},{ 3 } });
-			data = { 1, 3 };
 
+			data = { 1, 3 };
 			Assert::AreEqual(true, (pkb.getAllStatementsWithType(3) == data));
+
+			data = { 2 };
+			Assert::AreEqual(true, (pkb.getAllStatementsWithType(2) == data));
 		}
 
 		TEST_METHOD(PKBFollows)
@@ -272,6 +275,8 @@ namespace UnitTesting
 
 			Assert::AreEqual(1, pkb.getFollowsBefore(2));
 			Assert::AreEqual(2, pkb.getFollowsAfter(1));
+			Assert::AreEqual(0, pkb.getFollowsAfter(2));
+			Assert::AreEqual(0, pkb.getFollowsBefore(0));
 		}
 
 		TEST_METHOD(PKBFollowsStar)
@@ -295,6 +300,9 @@ namespace UnitTesting
 
 			std::vector<int> dataBeforeStar = {1, 2};
 			std::vector<int> dataAfterStar = {2, 3};
+			std::vector<int> nullData;
+			Assert::AreEqual(true, (pkb.getFollowsBeforeStar(1) == nullData));
+			Assert::AreEqual(true, (pkb.getFollowsAfterStar(3) == nullData));
 			Assert::AreEqual(true, (pkb.getFollowsBeforeStar(3) == dataBeforeStar));
 			Assert::AreEqual(true, (pkb.getFollowsAfterStar(1) == dataAfterStar));
 		}
@@ -308,13 +316,18 @@ namespace UnitTesting
 
 			pkb.insertToTable(1, 1, { { 1 },{},{},{ 1 } });
 			pkb.insertToTable(1, 2, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(1, 3, { { 2 },{},{},{ 1 } });
 
 			/* Invalid Test */
 			Assert::AreEqual(false, pkb.checkFollows(1, 2));
 
 			pkb.insertToTable(2, 1, { { 0 },{ 1, 2 },{},{},{ 1 } });
+			pkb.insertToTable(2, 2, { { 0 },{ 3 },{},{},{ 1 } });
 
 			Assert::AreEqual(true, pkb.checkFollows(1, 2));
+			Assert::AreEqual(false, pkb.checkFollows(2, 1));
+			Assert::AreEqual(false, pkb.checkFollows(1, 3));
+			Assert::AreEqual(false, pkb.checkFollows(3, 1));
 		}
 
 		TEST_METHOD(PKBCheckFollowsStar)
@@ -327,13 +340,20 @@ namespace UnitTesting
 			pkb.insertToTable(1, 1, { { 1 },{},{},{ 1 } });
 			pkb.insertToTable(1, 2, { { 1 },{},{},{ 1 } });
 			pkb.insertToTable(1, 3, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(1, 4, { { 2 },{},{},{ 1 } });
 
 			/* Invalid Test */
 			Assert::AreEqual(false, pkb.checkFollows(1, 3));
 
 			pkb.insertToTable(2, 1, { { 0 },{ 1, 2, 3 },{},{},{ 1 } });
+			pkb.insertToTable(2, 2, { { 0 },{ 4 },{},{},{ 1 } });
 
 			Assert::AreEqual(true, pkb.checkFollowsStar(1, 3));
+			Assert::AreEqual(true, pkb.checkFollowsStar(2, 3));
+			Assert::AreEqual(false, pkb.checkFollowsStar(3, 1));
+			Assert::AreEqual(false, pkb.checkFollowsStar(3, 2));
+			Assert::AreEqual(false, pkb.checkFollowsStar(1, 4));
+			Assert::AreEqual(false, pkb.checkFollowsStar(4, 1));
 		}
 
 		TEST_METHOD(PKBGetAllFollows)
@@ -347,13 +367,16 @@ namespace UnitTesting
 			pkb.insertToTable(1, 2, { { 1 },{},{},{ 1 } });
 			pkb.insertToTable(1, 3, { { 1 },{},{},{ 1 } });
 			pkb.insertToTable(1, 4, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(1, 5, { { 2 },{},{},{ 1 } });
 
 			/* Invalid Test */
 			Assert::AreEqual(0, static_cast<int>(pkb.getAllFollows().size()));
 
 			pkb.insertToTable(2, 1, { { 0 },{ 1, 2, 3, 4 },{},{},{ 1 } });
+			pkb.insertToTable(2, 2, { { 0 },{ 5 },{},{},{ 1 } });
 
-			Assert::AreEqual(3, static_cast<int>(pkb.getAllFollows().size()));
+			std::vector<std::vector<int>> data = { {1,2}, {2,3}, {3,4} };
+			Assert::AreEqual(true, (pkb.getAllFollows() == data));
 		}
 
 		TEST_METHOD(PKBGetAllFollowsStar)
@@ -374,11 +397,13 @@ namespace UnitTesting
 			pkb.insertToTable(2, 1, { { 0 },{ 1, 2, 3, 4 },{},{},{ 1 } });
 			
 			unordered_map<int, std::vector<int>> follows = pkb.getAllFollowsStar();
-			int size = 0;
+			std::vector<std::vector<int>> data = { {2,3,4}, {3,4}, {4} };
+			int i = 0;
 			for (auto it = follows.begin(); it != follows.end(); ++it) {
-				size += it->second.size();
+				Assert::AreEqual(true, (it->second == data[i]));
+				i++;
 			}
-			Assert::AreEqual(6, size);
+
 		}
 
 		TEST_METHOD(PKBParent)
