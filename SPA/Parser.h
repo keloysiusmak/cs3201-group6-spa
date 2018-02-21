@@ -19,7 +19,7 @@ class Parser {
 public:   int parse(string simpleSource, bool isString, string stringInput);
 		  Parser();
 		  string getTest();
-		  void tokenize(stringstream content);
+		  void tokenize(string content);
 
 private:	 string nextToken;
 			 stringstream simpleStringStream;

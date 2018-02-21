@@ -1,6 +1,6 @@
 #pragma once
-#include <Parser.h>
-#include <Utils.h>
+#include "Parser.h"
+#include "Utils.h"
 
 int Parse() {
 	//
@@ -16,11 +16,10 @@ string Parser::getTest() {
 	return test;
 }
 
-void Parser::tokenize(stringstream content)
+void Parser::tokenize(string content)
 {
-	string streamcontent = content.str();
-	streamcontent = Utils::sanitise(streamcontent);
-	tokens = Utils::explode(streamcontent, ParserConstants::DELIM_STRING, ParserConstants::DELIMITERS);
+	content = Utils::sanitise(content);
+	tokens = Utils::explode(content, ParserConstants::DELIM_STRING, ParserConstants::DELIMITERS);
 	iter = tokens.begin();
 }
 
@@ -32,6 +31,7 @@ string Parser::getToken(void) {
 		else {
 			nextToken.clear();
 		}
+		//std::cout << nextToken;
 		return nextToken;
 	}
 }
@@ -200,6 +200,7 @@ int Parser::parse(string fileName, bool isString = false, string stringInput = "
 	}
 
 	try {
+		tokenize(simpleStringStream.str());
 		nextToken = getToken();
 		program();
 	}
@@ -210,24 +211,23 @@ int Parser::parse(string fileName, bool isString = false, string stringInput = "
 	}
 	std::cout << "success!";
 	for (const auto& n : stmIdMap) {
-		std::cout << "Key:[" << n.first << "] Value:[";
-		// Iterate and print values of vector
-		for (int m : n.second) {
-			std::cout << m << " ";
-		}
-		cout << "]\n";
+	std::cout << "Key:[" << n.first << "] Value:[";
+	// Iterate and print values of vector
+	for (int m : n.second) {
+	std::cout << m << " ";
 	}
+	cout << "]\n";
 	return 0;
 }
 
 /*
 int main() {
 
-	Parser parser;
+Parser parser;
 
-	int c = parser.parse("subset_if_while_diff.txt");
-	std::cout << endl << "result: " << c << endl;
+int c = parser.parse("subset_if_while_diff.txt");
+std::cout << endl << "result: " << c << endl;
 
-	return 0;
+return 0;
 }
 */
