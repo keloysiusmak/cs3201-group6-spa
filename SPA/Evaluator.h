@@ -9,8 +9,10 @@
 struct ClauseResults {
 	Param lhs;
 	Param rhs;
-	vector<int> lhsAnswers;
-	vector<int> rhsAnswers;
+	/* values are only set if both params are synonyms, otherwise only keys are set to represent 
+	corresponding possible values wrt either lhs||rhs constant*/
+	vector<int> keys;
+	vector<vector<int>> values;
 	bool valid;
 
 	void ClauseResults::instantiateClause(Clause clause) {
@@ -18,12 +20,12 @@ struct ClauseResults {
 		rhs = clause.getSecondParam();
 	};
 
-	void ClauseResults::setlhsAnswers(vector<int> ans) {
-		lhsAnswers = ans;
+	void ClauseResults::setKeys(vector<int> ans) {
+		keys = ans;
 	}
 
-	void ClauseResults::setrhsAnswers(vector<int> ans) {
-		rhsAnswers = ans;
+	void ClauseResults::setValues(vector<vector<int>> ans) {
+		values = ans;
 	}
 
 	void ClauseResults::setValid(bool validity) {
@@ -53,15 +55,15 @@ public:
 	void setQueryObject(QueryObject);
 	void setPKB(PKB);
 
-	// Helper Evaluation Methods
-
-
-	// PKB Evaluation methods
+	// Main Evaluation methods
 	void evaluateClause(Clause &clause, ClauseResults &clauseResults);
 	void evaluateFollows(Clause &clause, ClauseResults &clauseResults);
 	void evaluateFollowStar(Clause &clause, ClauseResults &clauseResults);
 	void evaluateParent(Clause &clause, ClauseResults &clauseResults);
 	void evaluateParentStar(Clause &clause, ClauseResults &clauseResults);
+
+	// Helper Evaluation Methods
+	void storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map);
 private:
 	QueryObject queryObject;
 	PKB pkb;
