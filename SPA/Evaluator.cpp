@@ -11,12 +11,19 @@ string STMT_SYN = "stmtSyn";
 string STMT_NUM = "stmtNumber";
 
 Evaluator::Evaluator() {
-
 }
 
 Evaluator::Evaluator(QueryObject queryObj) {
 	queryObject = queryObj;
 };
+
+void Evaluator::setPKB(PKB generatedPKB) {
+	pkb = generatedPKB;
+}
+
+void Evaluator::setQueryObject(QueryObject queryObj) {
+	queryObject = queryObj;
+}
 
 //list<string> Evaluator::evaluateQuery() {
 //	for (Clause clause : queryObject.getClauses()) {
