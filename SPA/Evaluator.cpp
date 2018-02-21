@@ -84,28 +84,28 @@ list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &sele
 
 void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
 
-	Param firstParam = clause.getFirstParam();
-	Param secondParam = clause.getSecondParam();
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
 
-	if (firstParam.type == STMT) {
-		if (secondParam.type == STMT) { // Return combination of all results
+	if (leftParam.type == STMT) {
+		if (rightParam.type == STMT) {
 			vector<vector<int>> results = pkb.getAllFollows();
 		}
-		else if (secondParam.type == PROG_LINE) { // Return prog_line directly before second param
-			int result = pkb.getFollowsBefore(stoi(secondParam.value));
+		else if (rightParam.type == PROG_LINE) {
+			int result = pkb.getFollowsBefore(stoi(rightParam.value));
 			vector<int> vectorResult = { result };
 			clauseResults.setKeys(vectorResult);
 		}
 		else { ; }
 	}
-	else if (firstParam.type == PROG_LINE) {
-		if (secondParam.type == STMT) { // Return prog_line directly after first param
-			int result = pkb.getFollowsAfter(stoi(firstParam.value));
+	else if (leftParam.type == PROG_LINE) {
+		if (rightParam.type == STMT) {
+			int result = pkb.getFollowsAfter(stoi(leftParam.value));
 			vector<int> vectorResult = { result };
 			clauseResults.setKeys(vectorResult);
 		}
-		else if (secondParam.type == PROG_LINE) { // Boolean value for checking
-			bool result = pkb.checkFollows(stoi(firstParam.value), stoi(secondParam.value));
+		else if (rightParam.type == PROG_LINE) {
+			bool result = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
 		else { ; }
@@ -125,15 +125,78 @@ void Evaluator::evaluateFollowStar(Clause &clause, ClauseResults &clauseResults)
 		}
 		else if (rightParam.type == PROG_LINE) {
 			vector<int> results = pkb.getFollowsBeforeStar(stoi(rightParam.value));
+			clauseResults.setKeys(results);
 		}
 		else { ; }
 	}
 	else if (leftParam.type == PROG_LINE) {
 		if (rightParam.type == STMT) {
 			vector<int> results = pkb.getFollowsAfterStar(stoi(leftParam.value));
+			clauseResults.setKeys(results);
 		}
 		else if (rightParam.type == PROG_LINE) {
 			bool result = pkb.checkFollowsStar(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
+		}
+		else { ; }
+	}
+	else { ; }
+};
+
+void Evaluator::evaluateParent(Clause &clause, ClauseResults &clauseResults) {
+
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (leftParam.type == STMT) {
+		if (rightParam.type == STMT) {
+			vector<vector<int>> results = pkb.getAllParent();
+		}
+		else if (rightParam.type == PROG_LINE) {
+			int result = pkb.getParent(stoi(rightParam.value));
+			vector<int> vectorResult = { result };
+			clauseResults.setKeys(vectorResult);
+		}
+		else { ; }
+	}
+	else if (leftParam.type == PROG_LINE) {
+		if (rightParam.type == STMT) {
+			vector<int> result = pkb.getChildren(stoi(leftParam.value));
+			clauseResults.setKeys(result);
+		}
+		else if (rightParam.type == PROG_LINE) {
+			bool result = pkb.checkParent(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
+		}
+		else { ; }
+	}
+	else { ; }
+};
+
+void Evaluator::evaluateParentStar(Clause &clause, ClauseResults &clauseResults) {
+
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (leftParam.type == STMT) {
+		if (rightParam.type == STMT) {
+			unordered_map<int, vector<int>> results = pkb.getAllParentStar();
+			storeMapToResults(clauseResults, results);
+		}
+		else if (rightParam.type == PROG_LINE) {
+			vector<int> results = pkb.getParentStar(stoi(rightParam.value));
+			clauseResults.setKeys(results);
+		}
+		else { ; }
+	}
+	else if (leftParam.type == PROG_LINE) {
+		if (rightParam.type == STMT) {
+			vector<int> results = pkb.getChildrenStar(stoi(leftParam.value));
+			clauseResults.setKeys = results;
+		}
+		else if (rightParam.type == PROG_LINE) {
+			bool result = pkb.checkParentStar(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
 		}
 		else { ; }
 	}
