@@ -31,7 +31,7 @@ string Parser::getToken(void) {
 		else {
 			nextToken.clear();
 		}
-		//std::cout << nextToken;
+		std::cout << nextToken;
 		return nextToken;
 	}
 }
@@ -211,12 +211,13 @@ int Parser::parse(string fileName, bool isString = false, string stringInput = "
 	}
 	std::cout << "success!";
 	for (const auto& n : stmIdMap) {
-	std::cout << "Key:[" << n.first << "] Value:[";
-	// Iterate and print values of vector
-	for (int m : n.second) {
-	std::cout << m << " ";
+		std::cout << "Key:[" << n.first << "] Value:[";
+		// Iterate and print values of vector
+		for (int m : n.second) {
+			std::cout << m << " ";
+		}
+		cout << "]\n";
 	}
-	cout << "]\n";
 	return 0;
 }
 
