@@ -23,6 +23,7 @@ public:
 	std::string getFromNameTable(int, int);
 	std::vector<int> getAllVariables();
 	std::vector<int> getAllStatements();
+	std::vector<int> getAllStatementsWithType(int);
 	std::vector<int> getAllProcedures();
 
 	/* Accessor Operations */
