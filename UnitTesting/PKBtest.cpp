@@ -1032,6 +1032,24 @@ namespace UnitTesting
 			Assert::AreEqual(true, pkb.checkStatementWithPattern(1, p));
 			Assert::AreEqual(false, pkb.checkStatementWithPattern(2, p));
 		}
+		
+		TEST_METHOD(PKBConstant)
+		{
+			PKB pkb;
+			
+			std::vector<int> initial_data;
+
+			/* Null Tests */
+			Assert::AreEqual(true, (pkb.getStatementsWithConstant(1) == initial_data));
+
+			pkb.insertToTable(7, 1, { { 1 } });
+			std::vector<int> data = {1};
+			Assert::AreEqual(true, (pkb.getStatementsWithConstant(1) == data));
+			Assert::AreEqual(true, (pkb.getStatementsWithConstant(2) == initial_data));
+
+		}
+
+
 	};
 
 }

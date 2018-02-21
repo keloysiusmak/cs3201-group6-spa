@@ -764,7 +764,7 @@ std::vector<int> PKB::getStatementsWithPattern(PatternObject p) {
 			dataR = PKB::getStatementsFromUsesVariable(p.RHS);
 		}
 		else if (p.RHS_type == 2) {
-			dataR = PKB::getStatementsFromConstant(p.RHS);
+			dataR = PKB::getStatementsWithConstant(p.RHS);
 		}
 
 		if (p.LHS_type == 1) {
@@ -801,7 +801,8 @@ bool PKB::checkStatementWithPattern(int stmt, PatternObject p) {
 
 }
 
-std::vector<int> PKB::getStatementsFromConstant(int constant) {
+/* Constant Operations */
+std::vector<int> PKB::getStatementsWithConstant(int constant) {
 
 	std::vector<int> data;
 	std::vector<std::vector<int>> table = PKB::getFromTable(7, constant);
