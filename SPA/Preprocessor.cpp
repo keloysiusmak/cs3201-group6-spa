@@ -1,6 +1,380 @@
 #include "Preprocessor.h"
 
-QueryObject createQueryObject(string query) {
-	QueryObject obj = QueryObject();
-	return obj;
+//All the necessary symbols require to process the query
+const char SYMBOL_SEMICOLON = ';';
+const char SYMBOL_SPACE = ' ';
+const char SYMBOL_COMMA = ',';
+const char SYMBOL_DOUBLE_QUOTE = '\"';
+const char SYMBOL_OPEN_BRACKET = '(';
+const char SYMBOL_CLOSE_BRACKET = ')';
+const char SYMBOL_EQUALS = '=';
+const char SYMBOL_FULL_STOP = '.';
+const char SYMBOL_UNDERSCORE = '_';
+
+const string SELECT_WORD = "Select";
+const string SUCH_WORD = "such";
+const string THAT_WORD = "that";
+const string PATTERN_WORD = "pattern";
+
+const string SYNONYM_WORD = "synonym";
+const string ALL_WORD = "all";
+const string INTEGER_WORD = "integer";
+const string IDENT_WORD = "ident";
+const string CONSTANT_WORD = "constant";
+const string VAR_NAME_WORD = "var_name";
+
+const unordered_set<string> KEYWORDS_DECLARATIONS = { "assign", "statement", "variable" };
+const unordered_set<string> KEYWORDS_PATTERN_TYPE = { "assign" };
+const unordered_set<string> KEYWORDS_CLAUSES_1 = { "Modifies", "Uses" };
+const unordered_set<string> KEYWORDS_CLAUSES_2 = { "Parent", "Parent*", "Follows", "Follows*" };
+
+const regex synonymRegex("(^[a-z]([a-z]|[0-9]|[#])*$)");
+const regex stmtRefRegex("(^(([a-z]([a-z]|[0-9]|[#])*$)|([_]$)|([0-9]+$)))");
+const regex entRefRegex("(^(([a-z]([a-z]|[0-9]|[#])*$)|([_]$)|\"([a-z]([a-z]|[0-9]|[#])*)\"$))");
+const regex expressSpecRegex("(^((_\"(([a-z]([a-z]|[0-9])*)|([0-9]+))\"_$)|[_]$))");
+
+vector<string> split(const string& s, char delimiter) {
+	vector<string> tokens;
+	string token;
+	istringstream tokenStream(s);
+	while (getline(tokenStream, token, delimiter)) {
+		tokens.push_back(token);
+	}
+	return tokens;
+}
+
+string trim(const string& str) {
+	size_t first = str.find_first_not_of(' ');
+	if (string::npos == first)
+	{
+		return str;
+	}
+	size_t last = str.find_last_not_of(' ');
+	return str.substr(first, (last - first + 1));
+}
+
+bool isInteger(const string& s)
+{
+	return !s.empty() && std::find_if(s.begin(),
+		s.end(), [](char c) { return !isdigit(c); }) == s.end();
+}
+
+Preprocessor::Preprocessor(Evaluator evaluator) {
+
+}
+
+void Preprocessor::preprocessQuery(string query) {
+
+	//Trim whitespace from a String
+	string q = trim(query);
+
+	//Split the string into different parts: declarations & query
+	vector<string> declarations = split(q, SYMBOL_SEMICOLON);
+	
+	//The position of the query will always be the last element of the vector
+	int queryIndex = declarations.size() - 1;
+
+	//if queryIndex is 0, means no declarations at all
+	if (queryIndex == 0) {
+		// insert evaluator invalid query api here
+	}
+
+	for (int i = 0; i < queryIndex; i++) {
+		bool validateDeclaration = isValidDeclaration(trim(declarations.at(i)));
+
+		if (!validateDeclaration) {
+			// insert evaluator invalid query api here
+			return;
+		}
+	}
+
+	string queryPortion = trim(declarations.at(queryIndex));
+
+	//validate whether is a valid query
+	bool validQuery = isValidQuery(queryPortion);
+	
+	if (!validQuery) {
+		// insert evaluator invalid query api here
+		return;
+	}
 };
+
+bool Preprocessor::isValidDeclaration(string declaration) {
+
+	vector<string> declarationArr = split(declaration, SYMBOL_SPACE);
+
+	//Check if there is a declarationType and synonym
+	if (declarationArr.size() < 2) {
+		return false;
+	}
+	
+	//Check if declarationType exists and the spelling of it
+	bool checkDeclarationType = KEYWORDS_DECLARATIONS.find(declarationArr.at(0)) != KEYWORDS_DECLARATIONS.end();
+
+	if (!checkDeclarationType) {
+		return false;
+	}
+
+	//Check if there is a synonym exists
+	vector<string> synonyms = split(declarationArr.at(1), SYMBOL_COMMA);
+
+	if (synonyms.size() < 1) {
+		return false;
+	}
+
+	for (int i = 0; i < synonyms.size(); i++) {
+		string s = trim(synonyms.at(i));
+
+		if (!isValidSynonym(s) || isDeclarationSynonymExist(s)) {
+			return false;
+		}
+
+		declarationMap.insert({ s, declarationArr.at(0) });
+	}
+
+	return true;
+}
+
+bool Preprocessor::isValidQuery(string query) {
+
+	QueryObject queryObject;
+	vector<string> queryArr = split(query, SYMBOL_SPACE);
+
+	//Check if Select word exists and if there's at least 2 elements in the query (e.g. "select", "s")
+	if (queryArr.at(0).compare(SELECT_WORD) != 0 || queryArr.size() < 2) {
+		return false;
+	}
+
+	//check if select synonym exist in the declarationMap
+	if (!isDeclarationSynonymExist(queryArr.at(1))) {
+		return false;
+	}
+	//Populate the selectType of QueryObject
+	auto searchSynonym = declarationMap.find(queryArr.at(1));
+	queryObject.insertSelectStmt(searchSynonym->second, searchSynonym->first);
+
+	//Check if there is any such that or pattern clause
+	if (queryArr.size() == 2) {
+		// insert evaluator query api here
+		return true;
+	}
+	
+	for (int i = 2; i < queryArr.size(); i++) {
+
+		//check "such" word exists
+		if (queryArr.at(i).compare(SUCH_WORD) == 0) {
+			// check "that" word exists
+			if ((i + 1) >= queryArr.size() && queryArr.at(i + 1).compare(THAT_WORD) != 0) {
+				return false;
+			}
+
+			//check whether clause and param exists
+			if ((i + 2) >= queryArr.size() && (i + 3) >= queryArr.size()) {
+				return false;
+			}
+
+			//Split the clause from the open bracket e.g. Parent*(4,
+			vector<string> clause = split(queryArr.at(i + 2), SYMBOL_OPEN_BRACKET);
+
+			//Should have two string e.g. {Parent*}, {4,}
+			if (clause.size() != 2) {
+				return false;
+			}
+
+			//Check whether is a valid clause
+			if (KEYWORDS_CLAUSES_1.find(clause.at(0)) != KEYWORDS_CLAUSES_1.end()) {
+				if (!parseClauseArg1(queryObject, clause.at(0), clause.at(1), queryArr.at(i + 3))) {
+					return false;
+				}
+			}
+			else if (KEYWORDS_CLAUSES_2.find(clause.at(0)) != KEYWORDS_CLAUSES_2.end()) {
+				if (!parseClauseArg2(queryObject, clause.at(0), clause.at(1), queryArr.at(i + 3))) {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+
+			//Finish processing this clause
+			i += 3;		
+		}
+		//check wether "pattern" word exists
+		else if (queryArr.at(i).compare(PATTERN_WORD) == 0) {
+
+			//check whether pattern type and param exists
+			if ((i + 1) >= queryArr.size() && (i + 2) >= queryArr.size()) {
+				return false;
+			}
+
+			//Split the pattern type from the open bracket e.g. a(_,
+			vector<string> patternType = split(queryArr.at(i + 1), SYMBOL_OPEN_BRACKET);
+
+			//Should have two string e.g. {a}, {_,}
+			//the patternType should exist in the declarationMap
+			if (patternType.size() != 2 && 
+				!isDeclarationSynonymExist(patternType.at(0))) {
+				return false;
+			}
+
+			auto searchSynonym = declarationMap.find(patternType.at(0));
+
+			//check whether patternType is valid
+			if (KEYWORDS_PATTERN_TYPE.find(searchSynonym->second) == KEYWORDS_PATTERN_TYPE.end()) {
+				return false;
+			}
+
+			if (!parsePattern(queryObject, searchSynonym->second, patternType.at(0), patternType.at(1), queryArr.at(i + 2))) {
+				return false;
+			}
+
+			//Finish processing this pattern
+			i += 2;
+		}
+		else {
+			return false;
+		}
+	}
+
+	// insert evaluator query api here
+
+	return true;
+};
+
+bool Preprocessor::isValidSynonym(string synonym) {
+	if (synonym.length() == 0) {
+		return false;
+	}
+
+	return regex_match(synonym, synonymRegex);
+}
+
+bool Preprocessor::isValidStmtRef(string stmtRef) {
+	if (stmtRef.length() == 0) {
+		return false;
+	}
+
+	return regex_match(stmtRef, stmtRefRegex);
+}
+
+bool Preprocessor::isValidEntRef(string entRef) {
+	if (entRef.length() == 0) {
+		return false;
+	}
+
+	return regex_match(entRef, entRefRegex);
+}
+
+bool Preprocessor::isValidExpressSpec(string expressSpec) {
+	if (expressSpec.length() == 0) {
+		return false;
+	}
+
+	return regex_match(expressSpec, expressSpecRegex);
+}
+
+bool Preprocessor::isDeclarationSynonymExist(string synonym) {
+	//Check if there exist a synonym in the declarationMap
+	auto checkSynonymExist = declarationMap.find(synonym);
+
+	if (checkSynonymExist == declarationMap.end()) {
+		return false;
+	}
+	return true;
+}
+
+bool Preprocessor::parseClauseArg1(QueryObject qo, string relType, string arg1, string arg2) {
+
+	vector<string> arg1Split = split(arg1, SYMBOL_COMMA);
+
+	if (arg1Split.size() < 1 || !isValidStmtRef(trim(arg1Split.at(0)))) {
+		return false;
+	}
+
+	vector<string> arg2Split = split(arg2, SYMBOL_CLOSE_BRACKET);
+
+	if (arg2Split.size() < 1 || !isValidEntRef(trim(arg2Split.at(0)))) {
+		return false;
+	}
+
+	string leftArg = trim(arg1Split.at(0));
+	string rightArg = trim(arg2Split.at(0));
+
+	qo.insertClause(relType, retrieveArgType(leftArg), leftArg,
+					retrieveArgType(rightArg), rightArg);
+
+	return true;
+}
+
+bool Preprocessor::parseClauseArg2(QueryObject qo, string relType, string arg1, string arg2) {
+
+	vector<string> arg1Split = split(arg1, SYMBOL_COMMA);
+
+	if (arg1Split.size() < 1 || !isValidStmtRef(trim(arg1Split.at(0)))) {
+		return false;
+	}
+
+	vector<string> arg2Split = split(arg2, SYMBOL_CLOSE_BRACKET);
+
+	if (arg2Split.size() < 1 || !isValidStmtRef(trim(arg2Split.at(0)))) {
+		return false;
+	}
+
+	string leftArg = trim(arg1Split.at(0));
+	string rightArg = trim(arg2Split.at(0));
+
+	qo.insertClause(relType, retrieveArgType(leftArg), leftArg,
+		retrieveArgType(rightArg), rightArg);
+
+	return true;
+}
+
+bool Preprocessor::parsePattern(QueryObject qo, string entityType, string entity, string arg1, string arg2) {
+	
+	vector<string> arg1Split = split(arg1, SYMBOL_COMMA);
+
+	if (arg1Split.size() < 1 || !isValidEntRef(trim(arg1Split.at(0)))) {
+		return false;
+	}
+
+	vector<string> arg2Split = split(arg2, SYMBOL_CLOSE_BRACKET);
+
+	if (arg2Split.size() < 1 || !isValidExpressSpec(trim(arg2Split.at(0)))) {
+		return false;
+	}
+
+	string leftArg = trim(arg1Split.at(0));
+	string rightArg = trim(arg2Split.at(0));
+
+	qo.insertPattern(entityType, entity, retrieveArgType(leftArg),
+					leftArg, retrieveArgType(rightArg), rightArg);
+
+	return true;
+}
+
+string Preprocessor::retrieveArgType(string arg) {
+	if (isInteger(arg)) {
+		return INTEGER_WORD;
+	}
+	else if (arg.find(SYMBOL_UNDERSCORE) != string::npos && arg.find(SYMBOL_DOUBLE_QUOTE) != string::npos) {
+		
+		vector<string> argSplit = split(arg, SYMBOL_DOUBLE_QUOTE);
+
+		if (isInteger(argSplit.at(1))) {
+			return CONSTANT_WORD;
+		}
+		else {
+			return VAR_NAME_WORD;
+		}
+	}
+	else if (arg.find(SYMBOL_DOUBLE_QUOTE) != string::npos) {
+		return IDENT_WORD;
+	}
+	else if (arg.compare(SYMBOL_UNDERSCORE + "") == 0) {
+		return ALL_WORD;
+	}
+	else {
+		return SYNONYM_WORD;
+	}
+}
+

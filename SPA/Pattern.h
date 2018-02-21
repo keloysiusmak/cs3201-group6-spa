@@ -7,18 +7,19 @@ using namespace std;
 
 class Pattern {
 private:
-	string _entityType;
+	Param _entity;
 	Param _leftParam;
 	Param _rightParam;
 
 public:
 	//Constructors
 	Pattern();
+	Pattern(Param, Param, Param);
 
 	//Methods
-	void setPattern(string, Param, Param);
+	void setPattern(Param, Param, Param);
 
-	string getEntityType();
+	Param getEntity();
 	Param getLeftParam();
 	Param getRightParam();
 };
