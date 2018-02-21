@@ -192,7 +192,7 @@ void Evaluator::evaluateParentStar(Clause &clause, ClauseResults &clauseResults)
 	else if (leftParam.type == PROG_LINE) {
 		if (rightParam.type == STMT) {
 			vector<int> results = pkb.getChildrenStar(stoi(leftParam.value));
-			clauseResults.setKeys = results;
+			clauseResults.setKeys(results);
 		}
 		else if (rightParam.type == PROG_LINE) {
 			bool result = pkb.checkParentStar(stoi(leftParam.value), stoi(rightParam.value));
