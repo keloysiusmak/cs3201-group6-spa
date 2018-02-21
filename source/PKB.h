@@ -80,4 +80,7 @@ public:
 	std::vector<int> getStatementsWithPattern(PatternObject);
 	bool checkStatementWithPattern(int, PatternObject);
 
+	/* Constant Operations */
+	std::vector<int> getStatementsWithConstant(int);
+
 };
