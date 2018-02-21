@@ -32,7 +32,6 @@ string Parser::getToken(void) {
 		else {
 			nextToken.clear();
 		}
-		return nextToken;
 	}
 }
 
