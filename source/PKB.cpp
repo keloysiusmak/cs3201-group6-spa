@@ -12,42 +12,43 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 	unordered_map<int, std::vector<std::vector<int>>> table = tables[table_id - 1];
 	unordered_map<int, std::vector<std::vector<int>>>::const_iterator got = table.find(key_id);
 
+	unsigned int tableValuesCount;
+	switch (table_id) {
+	case 1:
+		tableValuesCount = 4;
+		break;
+	case 2:
+		tableValuesCount = 5;
+		break;
+	case 3:
+		tableValuesCount = 3;
+		break;
+	case 4:
+		tableValuesCount = 2;
+		break;
+	case 5:
+		tableValuesCount = 2;
+		break;
+	case 6:
+		tableValuesCount = 2;
+		break;
+	case 7:
+		tableValuesCount = 1;
+		break;
+	default:
+		return false;
+	}
+
+	/* Return false if the supplied arguments does not equal to the number of columns specified in the PKB documentation*/
+	if (static_cast<int>(value.size()) != tableValuesCount) {
+		return false;
+	}
+
 	/* Row does not exist */
 	if (got == table.end()) {
-		int tableValuesCount;
-		switch (table_id) {
-			case 1:
-				tableValuesCount = 4;
-				break;
-			case 2:
-				tableValuesCount = 5;
-				break;
-			case 3:
-				tableValuesCount = 3;
-				break;
-			case 4:
-				tableValuesCount = 2;
-				break;
-			case 5:
-				tableValuesCount = 2;
-				break;
-			case 6:
-				tableValuesCount = 2;
-				break;
-			case 7:
-				tableValuesCount = 1;
-				break;
-			default:
-				return false;
-		}
-
-		/* Return false if the supplied arguments does not equal to the number of columns specified in the PKB documentation*/
-		if (static_cast<int>(value.size()) != tableValuesCount) {
-			return false;
-		}
-
+		
 		std::vector<std::vector<int>> tableValues;
-		for (int i = 0; i < tableValuesCount; i++) {
+		for (unsigned int i = 0; i < tableValuesCount; i++) {
 			tableValues.push_back(value[i]);
 		}
 		
@@ -55,10 +56,11 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 	}
 	/* Row exists */
 	else {
+
 		std::vector<std::vector<int>> tableValues = got->second;
 		std::vector<int> data;
 
-		for (unsigned int i = 0; i < static_cast<int>(value.size()); i++) {
+		for (unsigned int i = 0; i < tableValuesCount; i++) {
 			data = tableValues[i];
 
 			/* Insert every element in vector */
@@ -85,12 +87,14 @@ int PKB::insertToNameTable(int table_id, string value)
 	else if (table_id == 9 && PKB::getVariableId(value) != 0) {
 		return PKB::getVariableId(value);
 	}
+	else {
 
-	/* Variable does not exist */
-	int size = static_cast<int>(table.size()) + 1;
-	nameTables[table_id - 8].insert({ size , value });
-	
-	return size;
+		/* Variable does not exist */
+		int size = static_cast<int>(table.size()) + 1;
+		nameTables[table_id - 8].insert({ size , value });
+
+		return size;
+	}
 }
 
 std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
@@ -105,7 +109,8 @@ std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 
 string PKB::getFromNameTable(int table_id, int key_id)
 {
-	if (nameTables[table_id - 8][key_id] == "") {
+	std::unordered_map<int, string>::const_iterator got = nameTables[table_id - 8].find(key_id);
+	if (got == nameTables[table_id - 8].end()) {
 		return "";
 	}
 	return nameTables[table_id - 8][key_id];

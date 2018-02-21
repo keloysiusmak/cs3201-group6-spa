@@ -57,7 +57,66 @@ namespace UnitTesting
 			}
 		}
 
+
+		TEST_METHOD(PKBInvalidTableInsertTest)
+		{
+			PKB pkb;
+
+			std::vector<std::vector<int>> data;
+
+			/* Null Test */
+			Assert::AreEqual(true, (pkb.getFromTable(1, 1) == data));
+
+			int tableValuesCount;
+
+			for (int i = 1; i < 8; i++) {
+				switch (i) {
+				case 1:
+					tableValuesCount = 4;
+					break;
+				case 2:
+					tableValuesCount = 5;
+					break;
+				case 3:
+					tableValuesCount = 3;
+					break;
+				case 4:
+					tableValuesCount = 2;
+					break;
+				case 5:
+					tableValuesCount = 2;
+					break;
+				case 6:
+					tableValuesCount = 2;
+					break;
+				case 7:
+					tableValuesCount = 1;
+					break;
+				}
+				data.clear();
+				for (int j = 0; j <= tableValuesCount; j++) {
+					data.push_back({ 1 });
+				}
+				pkb.insertToTable(i, 1, data);
+				Assert::AreEqual(0, static_cast<int>(pkb.getFromTable(i, 1).size()));
+				Assert::AreEqual(false, (pkb.getFromTable(i, 1) == data));
+			}
+		}
+
 		TEST_METHOD(PKBMultipleTableInsertTest)
+		{
+			PKB pkb;
+
+			std::vector<std::vector<int>> data = { {1}, {}, {}, {1} };
+			pkb.insertToTable(1, 1, data);
+			Assert::AreEqual(true, (pkb.getFromTable(1, 1) == data));
+			data = { {},{1},{},{} };
+			std::vector<std::vector<int>> dataFinal = { {1}, {1}, {}, {1} };
+			pkb.insertToTable(1, 1, data);
+			Assert::AreEqual(true, (pkb.getFromTable(1, 1) == dataFinal));
+		}
+
+		TEST_METHOD(PKBInvalidMultipleTableInsertTest)
 		{
 			PKB pkb;
 
@@ -74,7 +133,6 @@ namespace UnitTesting
 		{
 			PKB pkb;
 
-
 			string data = "x";
 
 			for (int i = 8; i < 10; i++) {
@@ -82,6 +140,24 @@ namespace UnitTesting
 				Assert::AreEqual(string(""), pkb.getFromNameTable(i, 1));
 
 				Assert::AreEqual(string("x"), pkb.getFromNameTable(i, pkb.insertToNameTable(i, data)));
+			}
+		}
+
+		TEST_METHOD(PKBNameTableAlreadyInsertedTest)
+		{
+			PKB pkb;
+
+			string data = "x";
+
+			for (int i = 8; i < 10; i++) {
+				/* Null Test */
+				Assert::AreEqual(string(""), pkb.getFromNameTable(i, 1));
+
+				Assert::AreEqual(0, static_cast<int>(pkb.nameTables[i - 8].size()));
+				Assert::AreEqual(1, pkb.insertToNameTable(i, data));
+				Assert::AreEqual(1, static_cast<int>(pkb.nameTables[i - 8].size()));
+				Assert::AreEqual(1, pkb.insertToNameTable(i, data));
+				Assert::AreEqual(1, static_cast<int>(pkb.nameTables[i - 8].size()));
 			}
 		}
 
