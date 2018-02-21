@@ -15,7 +15,7 @@ class Parser {
 public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stringInput = "");
 		  Parser();
 		  string getTest();
-		  void tokenize(string);
+		  void tokenize(string content);
 
 private:	 PKB pkb;
 			 string nextToken;

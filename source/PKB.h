@@ -23,6 +23,7 @@ public:
 	std::string getFromNameTable(int, int);
 	std::vector<int> getAllVariables();
 	std::vector<int> getAllStatements();
+	std::vector<int> getAllStatementsWithType(int);
 	std::vector<int> getAllProcedures();
 
 	/* Accessor Operations */
@@ -78,5 +79,8 @@ public:
 	/* Pattern Operations */
 	std::vector<int> getStatementsWithPattern(PatternObject);
 	bool checkStatementWithPattern(int, PatternObject);
+
+	/* Constant Operations */
+	std::vector<int> getStatementsWithConstant(int);
 
 };

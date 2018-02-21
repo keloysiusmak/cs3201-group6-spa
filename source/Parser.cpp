@@ -4,6 +4,7 @@
 #include "PKB.h"
 
 
+
 Parser::Parser() {
 	//cout << "Object is being created" << endl;
 }
@@ -225,9 +226,7 @@ PKB Parser::Parse(string fileName, PKB passedPKB, bool isString, string stringIn
 
 /*
 int main() {
-
 	Parser parser;
-
 	PKB pkb;
 	pkb = parser.Parse("subset_if_while_diff_nospace.txt", pkb);
 
@@ -251,5 +250,4 @@ int main() {
 		cout << endl;
 	}
 	return 0;
-}
 */
