@@ -93,7 +93,7 @@ void Preprocessor::preprocessQuery(string query) {
 	int queryIndex = declarations.size() - 1;
 
 	//if queryIndex is 0, means no declarations at all
-	if (queryIndex == 0) {
+	if (queryIndex <= 0) {
 		// insert evaluator invalid query api here
 	}
 
@@ -182,12 +182,12 @@ bool Preprocessor::isValidQuery(string query) {
 		//check "such" word exists
 		if (queryArr.at(i).compare(SUCH_WORD) == 0) {
 			// check "that" word exists
-			if ((i + 1) >= queryArr.size() && queryArr.at(i + 1).compare(THAT_WORD) != 0) {
+			if ((i + 1) >= queryArr.size() || queryArr.at(i + 1).compare(THAT_WORD) != 0) {
 				return false;
 			}
 
 			//check whether clause and param exists
-			if ((i + 2) >= queryArr.size() && (i + 3) >= queryArr.size()) {
+			if ((i + 2) >= queryArr.size() || (i + 3) >= queryArr.size()) {
 				return false;
 			}
 
@@ -230,7 +230,7 @@ bool Preprocessor::isValidQuery(string query) {
 
 			//Should have two string e.g. {a}, {_,}
 			//the patternType should exist in the declarationMap
-			if (patternType.size() != 2 && 
+			if (patternType.size() != 2 ||  
 				!isDeclarationSynonymExist(patternType.at(0))) {
 				return false;
 			}
@@ -303,7 +303,7 @@ bool Preprocessor::isDeclarationSynonymExist(string synonym) {
 	return true;
 }
 
-bool Preprocessor::parseClauseArg1(QueryObject qo, string relType, string arg1, string arg2) {
+bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1, string arg2) {
 
 	vector<string> arg1Split = split(arg1, SYMBOL_COMMA);
 
@@ -329,7 +329,7 @@ bool Preprocessor::parseClauseArg1(QueryObject qo, string relType, string arg1, 
 	return true;
 }
 
-bool Preprocessor::parseClauseArg2(QueryObject qo, string relType, string arg1, string arg2) {
+bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1, string arg2) {
 
 	vector<string> arg1Split = split(arg1, SYMBOL_COMMA);
 
@@ -355,7 +355,7 @@ bool Preprocessor::parseClauseArg2(QueryObject qo, string relType, string arg1, 
 	return true;
 }
 
-bool Preprocessor::parsePattern(QueryObject qo, ParamType entityType, string entity, string arg1, string arg2) {
+bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2) {
 	
 	vector<string> arg1Split = split(arg1, SYMBOL_COMMA);
 
@@ -399,7 +399,7 @@ int Preprocessor::retrieveArgType(string arg) {
 	else if (arg.find(SYMBOL_DOUBLE_QUOTE) != string::npos) {
 		return 4;
 	}
-	else if (arg.compare(SYMBOL_UNDERSCORE + "") == 0) {
+	else if (arg.size() == 1 && arg.find(SYMBOL_UNDERSCORE) != string::npos) {
 		return 6;
 	}
 	else {

@@ -1,0 +1,86 @@
+#include "stdafx.h"
+#include "CppUnitTest.h"
+#include "../SPA/QueryObject.h"
+
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+using namespace std;
+
+namespace UnitTesting {
+	TEST_CLASS(QueryObjectTest) {
+	public:
+		TEST_METHOD(QueryObjectInsertSelectStmt) {
+			QueryObject queryObject;
+			queryObject.insertSelectStmt(assign, "a");
+
+			Param testParam;
+			testParam.type = assign;
+			testParam.value = "a";
+
+			Assert::AreEqual(static_cast<int>(testParam.type), static_cast<int>(queryObject.getSelectStatement().type));
+			Assert::AreEqual(testParam.value, queryObject.getSelectStatement().value);
+		}
+
+		TEST_METHOD(QueryObjectInsertClause) {
+			QueryObject queryObject;
+			queryObject.insertClause("Parent", integer, "1", assign, "a");
+
+			Assert::AreEqual(1, static_cast<int>(queryObject.getClauses().size()));
+
+			Param leftArg;
+			leftArg.type = integer;
+			leftArg.value = "1";
+
+			Param rightArg;
+			rightArg.type = assign;
+			rightArg.value = "a";
+
+			Clause testClause("Parent", leftArg, rightArg);
+
+			Clause fromQueryObject = queryObject.getClauses().at(0);
+
+			Assert::AreEqual(testClause.getRelRef(), fromQueryObject.getRelRef());
+			Assert::AreEqual(static_cast<int>(testClause.getFirstParam().type), 
+						static_cast<int>(fromQueryObject.getFirstParam().type));
+			Assert::AreEqual(testClause.getFirstParam().value, fromQueryObject.getFirstParam().value);
+			Assert::AreEqual(static_cast<int>(testClause.getSecondParam().type),
+				static_cast<int>(fromQueryObject.getSecondParam().type));
+			Assert::AreEqual(testClause.getSecondParam().value, fromQueryObject.getSecondParam().value);
+
+		}
+
+		TEST_METHOD(QueryObjectInsertPattern) {
+			QueryObject queryObject;
+			queryObject.insertPattern(assign, "a", variable, "v", var_name, "_\"a\"_");
+
+			Assert::AreEqual(1, static_cast<int>(queryObject.getPatterns().size()));
+
+			Param pattern;
+			pattern.type = assign;
+			pattern.value = "a";
+
+			Param leftArg;
+			leftArg.type = variable;
+			leftArg.value = "v";
+
+			Param rightArg;
+			rightArg.type = var_name;
+			rightArg.value = "_\"a\"_";
+
+			Pattern testPattern(pattern, leftArg, rightArg);
+
+			Pattern fromQueryObject = queryObject.getPatterns().at(0);
+
+			Assert::AreEqual(static_cast<int>(testPattern.getEntity().type),
+				static_cast<int>(fromQueryObject.getEntity().type));
+			Assert::AreEqual(testPattern.getEntity().value,
+				fromQueryObject.getEntity().value);
+			Assert::AreEqual(static_cast<int>(testPattern.getLeftParam().type),
+				static_cast<int>(fromQueryObject.getLeftParam().type));
+			Assert::AreEqual(testPattern.getLeftParam().value, fromQueryObject.getLeftParam().value);
+			Assert::AreEqual(static_cast<int>(testPattern.getRightParam().type),
+				static_cast<int>(fromQueryObject.getRightParam().type));
+			Assert::AreEqual(testPattern.getRightParam().value, fromQueryObject.getRightParam().value);
+
+		}
+	};
+}
