@@ -417,7 +417,7 @@ std::vector<int> PKB::getUsesVariablesFromStatement(int stmt) {
 	std::vector<int> data;
 	data = table[1];
 	if (table[3][0] == 2 || table[3][0] == 3) {
-		std::vector<int> temp = PKB::getFromTable(2, table[1][0])[2];
+		std::vector<int> temp = PKB::getFromTable(2, table[0][0])[2];
 		data.insert(data.end(), temp.begin(), temp.end());
 	}
 	return data;
@@ -456,11 +456,6 @@ unordered_map<int, std::vector<int>> PKB::getAllStatementUsesVariables() {
 
 	for (int i = 0; i < static_cast<int>(stmts.size()); i++) {
 		data = PKB::getUsesVariablesFromStatement(stmts[i]);
-		std::vector<std::vector<int>> check = PKB::getFromTable(1, stmts[i]);
-		if (check[3][0] == 2 || check[3][0] == 2) {
-			std::vector<int> temp = PKB::getFromTable(2, check[0][0])[2];
-			data.insert(data.end(), temp.begin(), temp.end());
-		}
 		output.insert({ stmts[i], data });
 	}
 
@@ -523,6 +518,124 @@ bool PKB::checkStatementUsesVariable(int stmt, int varId) {
 bool PKB::checkProcedureUsesVariable(int procId, int varId) {
 
 	std::vector<int> vars = PKB::getUsesVariablesFromProcedure(procId);
+	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
+		if (vars[i] == varId) {
+			return true;
+		}
+	}
+
+	return false;
+
+}
+
+/* Modifies Operations */
+std::vector<int> PKB::getModifiesVariablesFromStatement(int stmt) {
+
+	std::vector<std::vector<int>> table = PKB::getFromTable(1, stmt);
+	std::vector<int> data;
+	data = table[2];
+	if (table[3][0] == 2 || table[3][0] == 3) {
+		std::vector<int> temp = PKB::getFromTable(2, table[0][0])[3];
+		data.insert(data.end(), temp.begin(), temp.end());
+	}
+	return data;
+
+}
+
+std::vector<int> PKB::getStatementsFromModifiesVariable(int varId) {
+
+	std::vector<std::vector<int>> data;
+	data = PKB::getFromTable(5, varId);
+	return data[0];
+
+}
+
+std::vector<int> PKB::getModifiesVariablesFromProcedure(int proc) {
+
+	std::vector<std::vector<int>> data;
+	data = PKB::getFromTable(3, proc);
+	return data[2];
+
+}
+
+std::vector<int> PKB::getProceduresFromModifiesVariable(int varId) {
+
+	std::vector<std::vector<int>> data;
+	data = PKB::getFromTable(5, varId);
+	return data[1];
+
+}
+
+unordered_map<int, std::vector<int>> PKB::getAllStatementModifiesVariables() {
+
+	unordered_map<int, std::vector<int>> output;
+	std::vector<int> stmts = PKB::getAllStatements();
+	std::vector<int> data;
+
+	for (int i = 0; i < static_cast<int>(stmts.size()); i++) {
+		data = PKB::getModifiesVariablesFromStatement(stmts[i]);
+		output.insert({ stmts[i], data });
+	}
+
+	return output;
+
+}
+
+unordered_map<int, std::vector<int>> PKB::getAllVariableModifiesStatements() {
+
+	unordered_map<int, std::vector<int>> output;
+	std::vector<int> vars = PKB::getAllVariables();
+
+	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
+		output.insert({ vars[i], PKB::getStatementsFromModifiesVariable(vars[i]) });
+	}
+
+	return output;
+
+}
+
+unordered_map<int, std::vector<int>> PKB::getAllProcedureModifiesVariables() {
+
+	unordered_map<int, std::vector<int>> output;
+	std::vector<int> procs = PKB::getAllProcedures();
+
+	for (int i = 0; i < static_cast<int>(procs.size()); i++) {
+		output.insert({ procs[i], PKB::getModifiesVariablesFromProcedure(procs[i]) });
+	}
+
+	return output;
+
+}
+
+unordered_map<int, std::vector<int>> PKB::getAllVariableModifiesProcedures() {
+
+	unordered_map<int, std::vector<int>> output;
+	std::vector<int> vars = PKB::getAllVariables();
+
+	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
+		output.insert({ vars[i], PKB::getProceduresFromModifiesVariable(vars[i]) });
+	}
+
+	return output;
+
+}
+
+bool PKB::checkStatementModifiesVariable(int stmt, int varId) {
+
+	std::vector<int> vars = PKB::getModifiesVariablesFromStatement(stmt);
+	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
+		if (vars[i] == varId) {
+			return true;
+		}
+	}
+
+	return false;
+
+}
+
+bool PKB::checkProcedureModifiesVariable(int procId, int varId) {
+
+	std::vector<int> vars = PKB::getModifiesVariablesFromProcedure(procId);
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
 		if (vars[i] == varId) {
 			return true;
