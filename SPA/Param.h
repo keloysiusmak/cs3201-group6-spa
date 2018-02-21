@@ -4,9 +4,9 @@
 
 using namespace std;
 
-enum ParamType { assign, stmt, variable, whiles, prog_line, 
-				integer, constant, var_name, 
-				ident, synonym, all };
+enum ParamType { ASSIGN, STMT, VARIABLE, WHILE, PROG_LINE, 
+				INTEGER, CONSTANT, VAR_NAME, 
+				IDENT, SYNONYM, ALL };
 
 struct Param {
 	ParamType type;
