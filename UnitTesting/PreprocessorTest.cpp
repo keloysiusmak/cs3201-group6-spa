@@ -41,13 +41,15 @@ namespace UnitTesting {
 				Preprocessor preprocessor(evaluatorStub);
 
 				//Populate the declarationMap
-				preprocessor.isValidDeclaration("assign a");
-				preprocessor.isValidDeclaration("while w");
+				preprocessor.insertDeclarationToMap("a", "assign");
+				preprocessor.insertDeclarationToMap("w", "while");
 
 				string query1 = "Select a";
 				string query2 = "Select a pattern a(\"x\", _\"y\"_)";
-				string query3 = "Select a such that Follows*(a, 2)";
-				string query4 = "Select a such that Follows(w, a) pattern a(\"x\", _)";
+				string query3 = "Select a pattern a(_, _\"5\"_)";
+				string query4 = "Select a such that Follows*(a, 2)";
+				string query5 = "Select a such that Follows(w, a) pattern a(\"x\", _)";
+				string query6 = "Select a such that Uses(a, \"x\")";
 
 				string invalidQuery1 = "Selecta";
 				string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)";
@@ -58,6 +60,8 @@ namespace UnitTesting {
 				Assert::AreEqual(true, preprocessor.isValidQuery(query2));
 				Assert::AreEqual(true, preprocessor.isValidQuery(query3));
 				Assert::AreEqual(true, preprocessor.isValidQuery(query4));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query5));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query6));
 
 				Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
 				Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery2));
@@ -151,6 +155,9 @@ namespace UnitTesting {
 				Evaluator evaluatorStub;
 				Preprocessor preprocessor(evaluatorStub);
 
+				//Populate the declarationMap
+				preprocessor.insertDeclarationToMap("w", "while");
+
 				QueryObject qo;
 
 				string relType = "Modifies";
@@ -161,21 +168,22 @@ namespace UnitTesting {
 				firstParamValue += arg1.at(0);
 
 				string secondParamValue;
-				secondParamValue += "\"";
 				secondParamValue += arg2.at(1);
-				secondParamValue += "\"";
 				
 				Assert::AreEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, arg2));
 				Assert::AreEqual(relType, qo.getClauses().at(0).getRelRef());
-				Assert::AreEqual(static_cast<int>(synonym), static_cast<int>(qo.getClauses().at(0).getFirstParam().type));
+				Assert::AreEqual(static_cast<int>(SYNONYM), static_cast<int>(qo.getClauses().at(0).getFirstParam().type));
 				Assert::AreEqual(firstParamValue, qo.getClauses().at(0).getFirstParam().value);
-				Assert::AreEqual(static_cast<int>(ident), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
+				Assert::AreEqual(static_cast<int>(IDENT), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
 				Assert::AreEqual(secondParamValue, qo.getClauses().at(0).getSecondParam().value);
 			}
 
 			TEST_METHOD(parseClauseArg2Test) {
 				Evaluator evaluatorStub;
 				Preprocessor preprocessor(evaluatorStub);
+
+				//Populate the declarationMap
+				preprocessor.insertDeclarationToMap("v", "variable");
 
 				QueryObject qo;
 
@@ -191,9 +199,9 @@ namespace UnitTesting {
 
 				Assert::AreEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, arg2));
 				Assert::AreEqual(relType, qo.getClauses().at(0).getRelRef());
-				Assert::AreEqual(static_cast<int>(integer), static_cast<int>(qo.getClauses().at(0).getFirstParam().type));
+				Assert::AreEqual(static_cast<int>(INTEGER), static_cast<int>(qo.getClauses().at(0).getFirstParam().type));
 				Assert::AreEqual(firstParamValue, qo.getClauses().at(0).getFirstParam().value);
-				Assert::AreEqual(static_cast<int>(synonym), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
+				Assert::AreEqual(static_cast<int>(SYNONYM), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
 				Assert::AreEqual(secondParamValue, qo.getClauses().at(0).getSecondParam().value);
 			}
 
@@ -208,21 +216,17 @@ namespace UnitTesting {
 				string arg2 = "_\"3\"_)";
 
 				string firstParamValue;
-				firstParamValue += "\"";
 				firstParamValue += arg1.at(1);
-				firstParamValue += "\"";
 
 				string secondParamValue;
-				secondParamValue += "_\"";
 				secondParamValue += arg2.at(2);
-				secondParamValue += "\"_";
 
-				Assert::AreEqual(true, preprocessor.parsePattern(qo, assign, entity, arg1, arg2));
-				Assert::AreEqual(static_cast<int>(assign), static_cast<int>(qo.getPatterns().at(0).getEntity().type));
+				Assert::AreEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, arg2));
+				Assert::AreEqual(static_cast<int>(ASSIGN), static_cast<int>(qo.getPatterns().at(0).getEntity().type));
 				Assert::AreEqual(entity, qo.getPatterns().at(0).getEntity().value);
-				Assert::AreEqual(static_cast<int>(ident), static_cast<int>(qo.getPatterns().at(0).getLeftParam().type));
+				Assert::AreEqual(static_cast<int>(IDENT), static_cast<int>(qo.getPatterns().at(0).getLeftParam().type));
 				Assert::AreEqual(firstParamValue, qo.getPatterns().at(0).getLeftParam().value);
-				Assert::AreEqual(static_cast<int>(constant), static_cast<int>(qo.getPatterns().at(0).getRightParam().type));
+				Assert::AreEqual(static_cast<int>(CONSTANT), static_cast<int>(qo.getPatterns().at(0).getRightParam().type));
 				Assert::AreEqual(secondParamValue, qo.getPatterns().at(0).getRightParam().value);
 			}
 
