@@ -3,11 +3,11 @@
 #include "QueryObject.h"
 #include "Evaluator.h"
 #include "QueryObject.h"
+#include "Utils.h"
 #include <string>
 #include <vector>
 #include <unordered_set>
 #include <unordered_map>
-#include <sstream>
 #include <regex>
 
 using namespace std;

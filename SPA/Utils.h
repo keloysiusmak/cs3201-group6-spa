@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <regex>
+#include <sstream>
 
 using namespace std;
 
@@ -10,8 +11,9 @@ public:
 	static string sanitise(string str);
 	static vector<string> explode(const string&, const string, const vector<char>);
 	static bool isValidName(string);
-
-
+	static vector<string> split(const string& s, char delimiter);
+	static string trim(const string& str);
+	static bool isInteger(const string& s);
 };
 
 namespace UtilsConstants {

@@ -40,32 +40,6 @@ const regex stmtRefRegex("(^(([a-z]([a-z]|[0-9]|[#])*$)|([_]$)|([0-9]+$)))");
 const regex entRefRegex("(^(([a-z]([a-z]|[0-9]|[#])*$)|([_]$)|\"([a-z]([a-z]|[0-9]|[#])*)\"$))");
 const regex expressSpecRegex("(^((_\"(([a-z]([a-z]|[0-9])*)|([0-9]+))\"_$)|[_]$))");
 
-vector<string> split(const string& s, char delimiter) {
-	vector<string> tokens;
-	string token;
-	istringstream tokenStream(s);
-	while (getline(tokenStream, token, delimiter)) {
-		tokens.push_back(token);
-	}
-	return tokens;
-}
-
-string trim(const string& str) {
-	size_t first = str.find_first_not_of(' ');
-	if (string::npos == first)
-	{
-		return str;
-	}
-	size_t last = str.find_last_not_of(' ');
-	return str.substr(first, (last - first + 1));
-}
-
-bool isInteger(const string& s)
-{
-	return !s.empty() && std::find_if(s.begin(),
-		s.end(), [](char c) { return !isdigit(c); }) == s.end();
-}
-
 Preprocessor::Preprocessor(Evaluator evaluator) {
 
 }
@@ -84,10 +58,10 @@ void Preprocessor::preprocessQuery(string query) {
 	declarationMap.clear();
 
 	//Trim whitespace from a String
-	string q = trim(query);
+	string q = Utils::trim(query);
 
 	//Split the string into different parts: declarations & query
-	vector<string> declarations = split(q, SYMBOL_SEMICOLON);
+	vector<string> declarations = Utils::split(q, SYMBOL_SEMICOLON);
 	
 	//The position of the query will always be the last element of the vector
 	int queryIndex = declarations.size() - 1;
@@ -98,7 +72,7 @@ void Preprocessor::preprocessQuery(string query) {
 	}
 
 	for (int i = 0; i < queryIndex; i++) {
-		bool validateDeclaration = isValidDeclaration(trim(declarations.at(i)));
+		bool validateDeclaration = isValidDeclaration(Utils::trim(declarations.at(i)));
 
 		if (!validateDeclaration) {
 			// insert evaluator invalid query api here
@@ -106,7 +80,7 @@ void Preprocessor::preprocessQuery(string query) {
 		}
 	}
 
-	string queryPortion = trim(declarations.at(queryIndex));
+	string queryPortion = Utils::trim(declarations.at(queryIndex));
 
 	//validate whether is a valid query
 	bool validQuery = isValidQuery(queryPortion);
@@ -119,7 +93,7 @@ void Preprocessor::preprocessQuery(string query) {
 
 bool Preprocessor::isValidDeclaration(string declaration) {
 
-	vector<string> declarationArr = split(declaration, SYMBOL_SPACE);
+	vector<string> declarationArr = Utils::split(declaration, SYMBOL_SPACE);
 
 	//Check if there is a declarationType and synonym
 	if (declarationArr.size() < 2) {
@@ -134,14 +108,14 @@ bool Preprocessor::isValidDeclaration(string declaration) {
 	}
 
 	//Check if there is a synonym exists
-	vector<string> synonyms = split(declarationArr.at(1), SYMBOL_COMMA);
+	vector<string> synonyms = Utils::split(declarationArr.at(1), SYMBOL_COMMA);
 
 	if (synonyms.size() < 1) {
 		return false;
 	}
 
 	for (int i = 0; i < synonyms.size(); i++) {
-		string s = trim(synonyms.at(i));
+		string s = Utils::trim(synonyms.at(i));
 
 		if (!isValidSynonym(s) || isDeclarationSynonymExist(s)) {
 			return false;
@@ -155,7 +129,7 @@ bool Preprocessor::isValidDeclaration(string declaration) {
 bool Preprocessor::isValidQuery(string query) {
 
 	QueryObject queryObject;
-	vector<string> queryArr = split(query, SYMBOL_SPACE);
+	vector<string> queryArr = Utils::split(query, SYMBOL_SPACE);
 
 	//Check if Select word exists and if there's at least 2 elements in the query (e.g. "select", "s")
 	if (queryArr.at(0).compare(SELECT_WORD) != 0 || queryArr.size() < 2) {
@@ -192,7 +166,7 @@ bool Preprocessor::isValidQuery(string query) {
 			}
 
 			//Split the clause from the open bracket e.g. Parent*(4,
-			vector<string> clause = split(queryArr.at(i + 2), SYMBOL_OPEN_BRACKET);
+			vector<string> clause = Utils::split(queryArr.at(i + 2), SYMBOL_OPEN_BRACKET);
 
 			//Should have two string e.g. {Parent*}, {4,}
 			if (clause.size() != 2) {
@@ -226,7 +200,7 @@ bool Preprocessor::isValidQuery(string query) {
 			}
 
 			//Split the pattern type from the open bracket e.g. a(_,
-			vector<string> patternType = split(queryArr.at(i + 1), SYMBOL_OPEN_BRACKET);
+			vector<string> patternType = Utils::split(queryArr.at(i + 1), SYMBOL_OPEN_BRACKET);
 
 			//Should have two string e.g. {a}, {_,}
 			//the patternType should exist in the declarationMap
@@ -305,23 +279,42 @@ bool Preprocessor::isDeclarationSynonymExist(string synonym) {
 
 bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1, string arg2) {
 
-	vector<string> arg1Split = split(arg1, SYMBOL_COMMA);
+	vector<string> arg1Split = Utils::split(arg1, SYMBOL_COMMA);
 
-	if (arg1Split.size() < 1 || !isValidStmtRef(trim(arg1Split.at(0)))) {
+	if (arg1Split.size() < 1 || !isValidStmtRef(Utils::trim(arg1Split.at(0)))) {
 		return false;
 	}
 
-	vector<string> arg2Split = split(arg2, SYMBOL_CLOSE_BRACKET);
+	vector<string> arg2Split = Utils::split(arg2, SYMBOL_CLOSE_BRACKET);
 
-	if (arg2Split.size() < 1 || !isValidEntRef(trim(arg2Split.at(0)))) {
+	if (arg2Split.size() < 1 || !isValidEntRef(Utils::trim(arg2Split.at(0)))) {
 		return false;
 	}
 
-	string leftArg = trim(arg1Split.at(0));
-	string rightArg = trim(arg2Split.at(0));
+	string leftArg = Utils::trim(arg1Split.at(0));
+	string rightArg = Utils::trim(arg2Split.at(0));
 
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
+
+	//Check if is synonym and whether the synonym exists in declarationMap
+	if (leftArgType->second == SYNONYM) {
+		if (!isDeclarationSynonymExist(leftArg)) {
+			return false;
+		}
+	}
+
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
+
+	//Check if is synonym and whether the synonym exists in declarationMap
+	if (rightArgType->second == SYNONYM) {
+		if (!isDeclarationSynonymExist(rightArg)) {
+			return false;
+		}
+	}
+	//Check if is Ident and store the content between the double quotes
+	else if (rightArgType->second == IDENT) {
+		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+	}
 
 	qo.insertClause(relType, leftArgType->second, leftArg,
 		rightArgType->second, rightArg);
@@ -331,23 +324,38 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 
 bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1, string arg2) {
 
-	vector<string> arg1Split = split(arg1, SYMBOL_COMMA);
+	vector<string> arg1Split = Utils::split(arg1, SYMBOL_COMMA);
 
-	if (arg1Split.size() < 1 || !isValidStmtRef(trim(arg1Split.at(0)))) {
+	if (arg1Split.size() < 1 || !isValidStmtRef(Utils::trim(arg1Split.at(0)))) {
 		return false;
 	}
 
-	vector<string> arg2Split = split(arg2, SYMBOL_CLOSE_BRACKET);
+	vector<string> arg2Split = Utils::split(arg2, SYMBOL_CLOSE_BRACKET);
 
-	if (arg2Split.size() < 1 || !isValidStmtRef(trim(arg2Split.at(0)))) {
+	if (arg2Split.size() < 1 || !isValidStmtRef(Utils::trim(arg2Split.at(0)))) {
 		return false;
 	}
 
-	string leftArg = trim(arg1Split.at(0));
-	string rightArg = trim(arg2Split.at(0));
+	string leftArg = Utils::trim(arg1Split.at(0));
+	string rightArg = Utils::trim(arg2Split.at(0));
 
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
+
+	//Check if is synonym and whether the synonym exists in declarationMap
+	if (leftArgType->second == SYNONYM) {
+		if (!isDeclarationSynonymExist(leftArg)) {
+			return false;
+		}
+	}
+
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
+
+	//Check if is synonym and whether the synonym exists in declarationMap
+	if (rightArgType->second == SYNONYM) {
+		if (!isDeclarationSynonymExist(rightArg)) {
+			return false;
+		}
+	}
 
 	qo.insertClause(relType, leftArgType->second, leftArg,
 		rightArgType->second, rightArg);
@@ -357,23 +365,40 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 
 bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2) {
 	
-	vector<string> arg1Split = split(arg1, SYMBOL_COMMA);
+	vector<string> arg1Split = Utils::split(arg1, SYMBOL_COMMA);
 
-	if (arg1Split.size() < 1 || !isValidEntRef(trim(arg1Split.at(0)))) {
+	if (arg1Split.size() < 1 || !isValidEntRef(Utils::trim(arg1Split.at(0)))) {
 		return false;
 	}
 
-	vector<string> arg2Split = split(arg2, SYMBOL_CLOSE_BRACKET);
+	vector<string> arg2Split = Utils::split(arg2, SYMBOL_CLOSE_BRACKET);
 
-	if (arg2Split.size() < 1 || !isValidExpressSpec(trim(arg2Split.at(0)))) {
+	if (arg2Split.size() < 1 || !isValidExpressSpec(Utils::trim(arg2Split.at(0)))) {
 		return false;
 	}
 
-	string leftArg = trim(arg1Split.at(0));
-	string rightArg = trim(arg2Split.at(0));
+	string leftArg = Utils::trim(arg1Split.at(0));
+	string rightArg = Utils::trim(arg2Split.at(0));
 
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
+
+	//Check if is synonym and whether the synonym exists in declarationMap
+	if (leftArgType->second == SYNONYM) {
+		if (!isDeclarationSynonymExist(leftArg)) {
+			return false;
+		}
+	}
+	//Check if is Ident and store the content between the double quotes
+	else if (leftArgType->second == IDENT) {
+		leftArg = (Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+	}
+
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
+
+	//Check if is factor expresson-spec and store the content between the double quotes
+	if (rightArgType->second == VAR_NAME || rightArgType->second == CONSTANT) {
+		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+	}
 
 	qo.insertPattern(entityType, entity, leftArgType->second,
 					leftArg, rightArgType->second, rightArg);
@@ -382,14 +407,14 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 }
 
 int Preprocessor::retrieveArgType(string arg) {
-	if (isInteger(arg)) {
+	if (Utils::isInteger(arg)) {
 		return 1;
 	}
 	else if (arg.find(SYMBOL_UNDERSCORE) != string::npos && arg.find(SYMBOL_DOUBLE_QUOTE) != string::npos) {
 		
-		vector<string> argSplit = split(arg, SYMBOL_DOUBLE_QUOTE);
+		vector<string> argSplit = Utils::split(arg, SYMBOL_DOUBLE_QUOTE);
 
-		if (isInteger(argSplit.at(1))) {
+		if (Utils::isInteger(argSplit.at(1))) {
 			return 2;
 		}
 		else {
