@@ -10,10 +10,10 @@ namespace UnitTesting {
 	public:
 		TEST_METHOD(QueryObjectInsertSelectStmt) {
 			QueryObject queryObject;
-			queryObject.insertSelectStmt(assign, "a");
+			queryObject.insertSelectStmt(ASSIGN, "a");
 
 			Param testParam;
-			testParam.type = assign;
+			testParam.type = ASSIGN;
 			testParam.value = "a";
 
 			Assert::AreEqual(static_cast<int>(testParam.type), static_cast<int>(queryObject.getSelectStatement().type));
@@ -22,16 +22,16 @@ namespace UnitTesting {
 
 		TEST_METHOD(QueryObjectInsertClause) {
 			QueryObject queryObject;
-			queryObject.insertClause("Parent", integer, "1", assign, "a");
+			queryObject.insertClause("Parent", INTEGER, "1", ASSIGN, "a");
 
 			Assert::AreEqual(1, static_cast<int>(queryObject.getClauses().size()));
 
 			Param leftArg;
-			leftArg.type = integer;
+			leftArg.type = INTEGER;
 			leftArg.value = "1";
 
 			Param rightArg;
-			rightArg.type = assign;
+			rightArg.type = ASSIGN;
 			rightArg.value = "a";
 
 			Clause testClause("Parent", leftArg, rightArg);
@@ -50,20 +50,20 @@ namespace UnitTesting {
 
 		TEST_METHOD(QueryObjectInsertPattern) {
 			QueryObject queryObject;
-			queryObject.insertPattern(assign, "a", variable, "v", var_name, "_\"a\"_");
+			queryObject.insertPattern(ASSIGN, "a", VARIABLE, "v", VAR_NAME, "_\"a\"_");
 
 			Assert::AreEqual(1, static_cast<int>(queryObject.getPatterns().size()));
 
 			Param pattern;
-			pattern.type = assign;
+			pattern.type = ASSIGN;
 			pattern.value = "a";
 
 			Param leftArg;
-			leftArg.type = variable;
+			leftArg.type = VARIABLE;
 			leftArg.value = "v";
 
 			Param rightArg;
-			rightArg.type = var_name;
+			rightArg.type = VAR_NAME;
 			rightArg.value = "_\"a\"_";
 
 			Pattern testPattern(pattern, leftArg, rightArg);
