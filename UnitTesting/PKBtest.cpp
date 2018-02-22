@@ -664,6 +664,32 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getStatementsFromUsesVariable(2) == null_data));
 		}
 
+		TEST_METHOD(PKBUsesProcedure)
+		{
+			PKB pkb;
+
+			std::vector<int> data;
+			std::vector<int> data2;
+
+			/* Null Tests */
+			Assert::AreEqual(false, pkb.checkProcedureUsesVariable(1, 1));
+			Assert::AreEqual(true, (pkb.getUsesVariablesFromProcedure(1) == data));
+			Assert::AreEqual(true, (pkb.getProceduresFromUsesVariable(1) == data));
+
+			pkb.insertToTable(3, 1, { {}, {1},{ } });
+			pkb.insertToTable(3, 2, { {}, {1},{ } });
+			pkb.insertToTable(4, 1, { {},{1,2} });
+
+			data = { 1 };
+			data2 = { 1, 2 };
+
+			Assert::AreEqual(true, pkb.checkProcedureUsesVariable(1, 1));
+			Assert::AreEqual(true, pkb.checkProcedureUsesVariable(2, 1));
+			Assert::AreEqual(false, pkb.checkProcedureUsesVariable(1, 2));
+			Assert::AreEqual(true, (pkb.getUsesVariablesFromProcedure(1) == data));
+			Assert::AreEqual(true, (pkb.getProceduresFromUsesVariable(1) == data2));
+		}
+
 		TEST_METHOD(PKBUsesContainer)
 		{
 			PKB pkb;
@@ -705,27 +731,6 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getUsesVariablesFromStatement(1) == data));
 			Assert::AreEqual(true, (pkb.getStatementsFromUsesVariable(3) == data2));
 			Assert::AreEqual(true, (pkb.getStatementsFromUsesVariable(7) == data3));
-		}
-
-		TEST_METHOD(PKBUsesProcedure)
-		{
-			PKB pkb;
-			std::vector<int> data;
-
-			/* Null Tests */
-			Assert::AreEqual(false, pkb.checkProcedureUsesVariable(1, 1));
-			Assert::AreEqual(true, (pkb.getUsesVariablesFromProcedure(1) == data));
-			Assert::AreEqual(true, (pkb.getProceduresFromUsesVariable(1) == data));
-
-			pkb.insertToTable(3, 1, { { },{ 1 },{} });
-			pkb.insertToTable(4, 1, { { }, { 1} });
-
-			data = { 1 };
-
-			Assert::AreEqual(true, pkb.checkProcedureUsesVariable(1, 1));
-			Assert::AreEqual(false, pkb.checkProcedureUsesVariable(1, 2));
-			Assert::AreEqual(true, (pkb.getUsesVariablesFromProcedure(1) == data));
-			Assert::AreEqual(true, (pkb.getProceduresFromUsesVariable(1) == data));
 		}
 
 		TEST_METHOD(PKBGetAllUsesStatement)
@@ -905,6 +910,7 @@ namespace UnitTesting
 		{
 			PKB pkb;
 			std::vector<int> data;
+			std::vector<int> data2;
 
 			/* Null Tests */
 			Assert::AreEqual(false, pkb.checkProcedureModifiesVariable(1, 1));
@@ -912,16 +918,17 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getProceduresFromModifiesVariable(1) == data));
 
 			pkb.insertToTable(3, 1, { {},{ },{1} });
-			pkb.insertToTable(3, 2, { {},{},{ 2 } });
-			pkb.insertToTable(5, 1, { {},{ 1 } });
-			pkb.insertToTable(5, 2, { {},{ 2 } });
+			pkb.insertToTable(3, 2, { {},{},{ 1 } });
+			pkb.insertToTable(5, 1, { {},{ 1, 2 } });
 
 			data = { 1 };
+			data2 = { 1, 2 };
 
 			Assert::AreEqual(true, pkb.checkProcedureModifiesVariable(1, 1));
-			Assert::AreEqual(false, pkb.checkProcedureModifiesVariable(2, 1));
+			Assert::AreEqual(true, pkb.checkProcedureModifiesVariable(2, 1));
+			Assert::AreEqual(false, pkb.checkProcedureModifiesVariable(1, 2));
 			Assert::AreEqual(true, (pkb.getModifiesVariablesFromProcedure(1) == data));
-			Assert::AreEqual(true, (pkb.getProceduresFromModifiesVariable(1) == data));
+			Assert::AreEqual(true, (pkb.getProceduresFromModifiesVariable(1) == data2));
 		}
 
 		TEST_METHOD(PKBGetAllModifiesStatement)
