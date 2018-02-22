@@ -10,6 +10,7 @@ string FOLLOWSTAR = "followstar";
 string PARENT = "parent";
 string PARENTSTAR = "parentstar";
 //string USES = "uses";
+//string MODIFIES = "modifies";
 
 string STMT_SYN = "stmtSyn";
 string STMT_NUM = "stmtNumber";
@@ -79,6 +80,9 @@ void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	//} 
 	//else if (relation == USES) {
 		//evaluateUses(clause, clauseResults);
+	//}
+	//else if (relation == MODIFIES) {
+		//evaluateModifies(clause, clauseResults);
 	} else {}
 };
 
@@ -241,11 +245,11 @@ void Evaluator::evaluateUses(Clause &clause, ClauseResults &clauseResults) {
 			clauseResults.setKeys(result);
 		}
 		else if (leftParam.type == PROG_LINE) {
-			bool result = pkb.checkStatementModifiesVariable(stoi(leftParam.value), stoi(rightParam.value));
+			bool result = pkb.checkStatementUsesVariable(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
 		else if (leftParam.type == PROCEDURE) {
-			bool result = pkb.checkProcedureModifiesVariable(stoi(leftParam.value), stoi(rightParam.value));
+			bool result = pkb.checkProcedureUsesVariable(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
 		else if (leftParam.type == PROC_SYN) {
@@ -256,11 +260,11 @@ void Evaluator::evaluateUses(Clause &clause, ClauseResults &clauseResults) {
 	}
 	else if (rightParam.type == VAR_SYN) {
 		if (leftParam.type == STMT) {
-			if (selectType == leftParam.type) {
+			if (selectParam == leftParam.type) {
 				unordered_map<int, vector<int>> results = pkb.getAllStatementUsesVariables();
 				storeMapToResults(clauseResults, results);
 			}
-			else if (selectType == rightParam.type) {
+			else if (selectParam == rightParam.type) {
 				unordered_map<int, vector<int>> results = pkb.getAllVariablesUsesStatements();
 				storeMapToResults(clauseResults, results);
 			}
@@ -275,12 +279,72 @@ void Evaluator::evaluateUses(Clause &clause, ClauseResults &clauseResults) {
 			clauseResults.setKeys(result);
 		}
 		else if (leftParam.type == PROC_SYN) {
-			if (selectType == leftParam.type) {
+			if (selectParam == leftParam.type) {
 				unordered_map<int, vector<int>> results = pkb.getAllProceduresUsesVariables();
 				storeMapToResults(clauseResults, results);
 			}
-			else if (selectType == rightParam.type) {
+			else if (selectParam == rightParam.type) {
 				unordered_map<int, vector<int>> results = pkb.getAllProceduresUsesVariables();
+				storeMapToResults(clauseResults, results);
+			}
+			else { ; }
+		}
+		else { ; }
+	}
+	else { ; } */
+};
+
+void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
+
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	/* if (rightParam.type == VARIABLE) {
+		if (leftParam.type == STMT) {
+			vector<int> result = pkb.getStatementsFromModifiesVariables(stoi(rightParam.value));
+			clauseResults.setKeys(result);
+		}
+		else if (leftParam.type == PROG_LINE) {
+			bool result = pkb.checkStatementModifiesVariable(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
+		}
+		else if (leftParam.type == PROCEDURE) {
+			bool result = pkb.checkProcedureModifiesVariable(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
+		}
+		else if (leftParam.type == PROC_SYN) {
+			vector<int> result = pkb.getProceduresFromModifiesVariables(stoi(rightParam.value));
+			clauseResults.setKeys(result);
+		}
+		else { ; }
+	}
+	else if (rightParam.type == VAR_SYN) {
+		if (leftParam.type == STMT) {
+			if (selectParam == leftParam.type) {
+				unordered_map<int, vector<int>> results = pkb.getAllStatementModifiesVariables();
+				storeMapToResults(clauseResults, results);
+			}
+			else if (selectParam == rightParam.type) {
+				unordered_map<int, vector<int>> results = pkb.getAllVariablesModifiesStatements();
+				storeMapToResults(clauseResults, results);
+			}
+			else { ; }
+		}
+		else if (leftParam.type == PROG_LINE) {
+			vector<int> result = pkb.getModifiesVariablesFromStatement(stoi(leftParam.value));
+			clauseResults.setKeys(result);
+		}
+		else if (leftParam.type == PROCEDURE) {
+			vector <int> result = pkb.getProceduresFromModifiesVariables(stoi(leftParam.value));
+			clauseResults.setKeys(result);
+		}
+		else if (leftParam.type == PROC_SYN) {
+			if (selectParam == leftParam.type) {
+				unordered_map<int, vector<int>> results = pkb.getAllProceduresModifiesVariables();
+				storeMapToResults(clauseResults, results);
+			}
+			else if (selectParam == rightParam.type) {
+				unordered_map<int, vector<int>> results = pkb.getAllProceduresModifiesVariables();
 				storeMapToResults(clauseResults, results);
 			}
 			else { ; }
