@@ -18,7 +18,9 @@ private:
 	Evaluator * _evaluator;
 
 public:
+	Preprocessor();
 	Preprocessor(Evaluator &evaluator);
+	void setEvaluator(Evaluator &evaluator);
 	void insertDeclarationToMap(string synonym, string declaration);
 	unordered_map<string, string> getDeclarationMap();
 	void preprocessQuery(string query);
