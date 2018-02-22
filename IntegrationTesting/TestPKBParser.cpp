@@ -39,21 +39,35 @@ namespace PKBParserIntegrationTesting
 				10.	a = b;
 				11.	while a {
 				12.		while b {
-				13.			a = 1;
-				14.		}
-				15.	}
+				13.			a = 1; }}
 			
 			*/
 			testString = "procedure a {a = 7; while c { b = a; d = 7; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { a = 1; }} }";
 			pkb = parser.Parse(simpleSource, pkb, true, testString);
 		}
 		/*
-		TEST_METHOD(PKBParserGetFollowsAfter)
+
+		TEST_METHOD(PKBParserGetFollowsBeforeInvalid)
 		{
-			Assert::AreEqual(15, static_cast<int>(pkb.tables[0].size()));
+			Assert::AreEqual(0, pkb.checkFollowsAfter(1));
 		}
 
-		TEST_METHOD(PKBParserCheckFollowsValid)
+		TEST_METHOD(PKBParserGetFollowsBefore)
+		{
+			Assert::AreEqual(1, pkb.checkFollowsAfter(2));
+		}
+
+		TEST_METHOD(PKBParserGetFollowsAfter)
+		{
+			Assert::AreEqual(2, pkb.checkFollowsAfter(1));
+		}
+
+		TEST_METHOD(PKBParserGetFollowsAfterInvalid)
+		{
+			Assert::AreEqual(0, pkb.checkFollowsAfter(13));
+		}
+
+		TEST_METHOD(PKBParserCheckFollows)
 		{
 			Assert::AreEqual(true, pkb.checkFollows(1, 2));
 		}
