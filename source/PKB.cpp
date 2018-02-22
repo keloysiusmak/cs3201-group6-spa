@@ -215,7 +215,7 @@ int PKB::getFollowsBefore(int stmt) {
 
 			for (unsigned int i = 0; i < static_cast<int>(data[1].size()); i++) {
 				if (data[1][i] == stmt) {
-					return ((i - 1) < 0) ? 0 : data[1][i - 1];
+					return i == 0 ? 0 : data[1][i - 1];
 					break;
 				}
 			}
