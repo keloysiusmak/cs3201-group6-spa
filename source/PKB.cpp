@@ -67,6 +67,8 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 			for (unsigned int j = 0; j < static_cast<int>(value[i].size()); j++) {
 				data.push_back(value[i][j]);
 			}
+			std::sort(data.begin(), data.end());
+			data.erase(unique(data.begin(), data.end()), data.end());
 			tableValues[i] = data;
 		}
 		tables[table_id - 1].erase(key_id);
@@ -376,12 +378,14 @@ std::vector<int> PKB::getParentStar(int stmt) {
 
 std::vector<int> PKB::getChildren(int stmt) {
 	unordered_map<int, std::vector<std::vector<int>>> table = tables[1];
+
+	std::vector<int> data;
+
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		if (it->second[0][0] == stmt) {
-			return it->second[1];
+			data.insert(data.end(), it->second[1].begin(), it->second[1].end());
 		}
 	}
-	std::vector<int> data;
 	return data;
 }
 
@@ -391,7 +395,14 @@ std::vector<int> PKB::getChildrenStar(int stmt) {
 	unordered_map<int, std::vector<std::vector<int>>> table = tables[1];
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		if (it->second[0][0] == stmt) {
-			data = it->second;
+			if (static_cast<int>(data.size()) == 0) {
+				data = it->second;
+			}
+			else {
+				for (int i = 0; i < static_cast<int>(data.size()); i++) {
+					data[i].insert(data[i].end(), it->second[i].begin(), it->second[i].end());
+				}
+			}
 		}
 	}
 	if (static_cast<int>(data.size()) > 0) {
@@ -477,9 +488,19 @@ std::vector<int> PKB::getUsesVariablesFromStatement(int stmt) {
 
 	if (static_cast<int>(table.size()) > 0) {
 		data = table[1];
-		if (table[3][0] == 2 || table[3][0] == 3) {
+		if (table[3][0] == 2) {
 			std::vector<int> temp = PKB::getFromTable(2, table[0][0])[2];
 			data.insert(data.end(), temp.begin(), temp.end());
+		} else if (table[3][0] == 3 && static_cast<int>(table[0].size()) == 2) {
+			std::vector<int> temp = PKB::getFromTable(2, table[0][0])[2];
+			data.insert(data.end(), temp.begin(), temp.end());
+			temp = PKB::getFromTable(2, table[0][1])[2];
+			data.insert(data.end(), temp.begin(), temp.end());
+			std::sort(data.begin(), data.end());
+			data.erase(unique(data.begin(), data.end()), data.end());
+		}
+		else if (table[3][0] == 3 && static_cast<int>(table[0].size()) != 2) {
+			data.clear();
 		}
 	}
 	return data;
@@ -536,7 +557,9 @@ unordered_map<int, std::vector<int>> PKB::getAllStatementUsesVariables() {
 
 	for (int i = 0; i < static_cast<int>(stmts.size()); i++) {
 		data = PKB::getUsesVariablesFromStatement(stmts[i]);
-		output.insert({ stmts[i], data });
+		if (data.size() > 0) {
+			output.insert({ stmts[i], data });
+		}
 	}
 
 	return output;
@@ -616,9 +639,20 @@ std::vector<int> PKB::getModifiesVariablesFromStatement(int stmt) {
 
 	if (static_cast<int>(table.size()) > 0) {
 		data = table[2];
-		if (table[3][0] == 2 || table[3][0] == 3) {
+		if (table[3][0] == 2) {
 			std::vector<int> temp = PKB::getFromTable(2, table[0][0])[3];
 			data.insert(data.end(), temp.begin(), temp.end());
+		}
+		else if (table[3][0] == 3 && static_cast<int>(table[0].size()) == 2) {
+			std::vector<int> temp = PKB::getFromTable(2, table[0][0])[3];
+			data.insert(data.end(), temp.begin(), temp.end());
+			temp = PKB::getFromTable(2, table[0][1])[3];
+			data.insert(data.end(), temp.begin(), temp.end());
+			std::sort(data.begin(), data.end());
+			data.erase(unique(data.begin(), data.end()), data.end());
+		}
+		else if (table[3][0] == 3 && static_cast<int>(table[0].size()) != 2) {
+			data.clear();
 		}
 	}
 
@@ -679,7 +713,9 @@ unordered_map<int, std::vector<int>> PKB::getAllStatementModifiesVariables() {
 
 	for (int i = 0; i < static_cast<int>(stmts.size()); i++) {
 		data = PKB::getModifiesVariablesFromStatement(stmts[i]);
-		output.insert({ stmts[i], data });
+		if (data.size() > 0) {
+			output.insert({ stmts[i], data });
+		}
 	}
 
 	return output;
