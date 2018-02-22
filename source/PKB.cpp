@@ -18,7 +18,7 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 		tableValuesCount = 4;
 		break;
 	case 2:
-		tableValuesCount = 5;
+		tableValuesCount = 3;
 		break;
 	case 3:
 		tableValuesCount = 3;
@@ -488,21 +488,6 @@ std::vector<int> PKB::getUsesVariablesFromStatement(int stmt) {
 
 	if (static_cast<int>(table.size()) > 0) {
 		data = table[1];
-		if (table[3][0] == 2 && static_cast<int>(table[0].size()) == 2) {
-			std::vector<int> temp = PKB::getFromTable(2, table[0][1])[2];
-			data.insert(data.end(), temp.begin(), temp.end());
-		} else if (table[3][0] == 2 && static_cast<int>(table[0].size()) != 2) {
-			data.clear();
-		} else if (table[3][0] == 3 && static_cast<int>(table[0].size()) == 3) {
-			std::vector<int> temp = PKB::getFromTable(2, table[0][1])[2];
-			data.insert(data.end(), temp.begin(), temp.end());
-			temp = PKB::getFromTable(2, table[0][2])[2];
-			data.insert(data.end(), temp.begin(), temp.end());
-			std::sort(data.begin(), data.end());
-			data.erase(unique(data.begin(), data.end()), data.end());
-		} else if (table[3][0] == 3 && static_cast<int>(table[0].size()) != 3) {
-			data.clear();
-		}
 	}
 	return data;
 
@@ -640,21 +625,6 @@ std::vector<int> PKB::getModifiesVariablesFromStatement(int stmt) {
 
 	if (static_cast<int>(table.size()) > 0) {
 		data = table[2];
-		if (table[3][0] == 2 && static_cast<int>(table[0].size()) == 2) {
-			std::vector<int> temp = PKB::getFromTable(2, table[0][1])[3];
-			data.insert(data.end(), temp.begin(), temp.end());
-		} else if (table[3][0] == 2 && static_cast<int>(table[0].size()) != 2) {
-			data.clear();
-		} else if (table[3][0] == 3 && static_cast<int>(table[0].size()) == 3) {
-			std::vector<int> temp = PKB::getFromTable(2, table[0][1])[3];
-			data.insert(data.end(), temp.begin(), temp.end());
-			temp = PKB::getFromTable(2, table[0][2])[3];
-			data.insert(data.end(), temp.begin(), temp.end());
-			std::sort(data.begin(), data.end());
-			data.erase(unique(data.begin(), data.end()), data.end());
-		} else if (table[3][0] == 3 && static_cast<int>(table[0].size()) != 3) {
-			data.clear();
-		}
 	}
 
 	return data;
