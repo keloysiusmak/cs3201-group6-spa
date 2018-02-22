@@ -40,7 +40,15 @@ const regex stmtRefRegex("(^(([a-z]([a-z]|[0-9]|[#])*$)|([_]$)|([0-9]+$)))");
 const regex entRefRegex("(^(([a-z]([a-z]|[0-9]|[#])*$)|([_]$)|\"([a-z]([a-z]|[0-9]|[#])*)\"$))");
 const regex expressSpecRegex("(^((_\"(([a-z]([a-z]|[0-9])*)|([0-9]+))\"_$)|[_]$))");
 
+Preprocessor::Preprocessor() {
+
+}
+
 Preprocessor::Preprocessor(Evaluator &evaluator) {
+	_evaluator = &evaluator;
+}
+
+void Preprocessor::setEvaluator(Evaluator &evaluator) {
 	_evaluator = &evaluator;
 }
 

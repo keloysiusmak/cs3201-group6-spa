@@ -6,12 +6,18 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
 namespace UnitTesting {
+
+	Evaluator evaluatorStub;
+	Preprocessor preprocessor;
+
 	TEST_CLASS(PreprocessorTest) {
 		public:
 
-			TEST_METHOD(isValidDeclarationTest) {
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor(evaluatorStub);
+			TEST_CLASS_INITIALIZE(setup) {
+				preprocessor.setEvaluator(evaluatorStub);
+			}
+
+			TEST_METHOD(isValidDeclarationTest) {		
 
 				string declaration1 = "assign a";
 				string declaration2 = "variable v1";
@@ -37,8 +43,6 @@ namespace UnitTesting {
 			}
 
 			TEST_METHOD(isValidQueryTest) {
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor(evaluatorStub);
 
 				//Populate the declarationMap
 				preprocessor.insertDeclarationToMap("a", "assign");
@@ -70,8 +74,6 @@ namespace UnitTesting {
 			}
 
 			TEST_METHOD(isValidSynonymTest) {
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor(evaluatorStub);
 
 				Assert::AreEqual(true, preprocessor.isValidSynonym("a"));
 				Assert::AreEqual(true, preprocessor.isValidSynonym("ab"));
@@ -85,8 +87,6 @@ namespace UnitTesting {
 			}
 
 			TEST_METHOD(isValidStmtRefTest) {
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor(evaluatorStub);
 
 				Assert::AreEqual(true, preprocessor.isValidStmtRef("a"));
 				Assert::AreEqual(true, preprocessor.isValidStmtRef("ab"));
@@ -102,8 +102,6 @@ namespace UnitTesting {
 			}
 
 			TEST_METHOD(isValidEntRefTest) {
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor(evaluatorStub);
 
 				Assert::AreEqual(true, preprocessor.isValidEntRef("a"));
 				Assert::AreEqual(true, preprocessor.isValidEntRef("ab"));
@@ -126,8 +124,6 @@ namespace UnitTesting {
 			}
 
 			TEST_METHOD(isValidExpressSpecTest) {
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor(evaluatorStub);
 
 				Assert::AreEqual(true, preprocessor.isValidExpressSpec("_"));
 				Assert::AreEqual(true, preprocessor.isValidExpressSpec("_\"x\"_"));
@@ -141,8 +137,6 @@ namespace UnitTesting {
 			}
 
 			TEST_METHOD(isDeclarationSynonymExistTest) {
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor(evaluatorStub);
 
 				preprocessor.insertDeclarationToMap("a", "assign");
 				preprocessor.insertDeclarationToMap("s", "stmt");
@@ -152,8 +146,6 @@ namespace UnitTesting {
 			}
 
 			TEST_METHOD(parseClauseArg1Test) {
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor(evaluatorStub);
 
 				//Populate the declarationMap
 				preprocessor.insertDeclarationToMap("w", "while");
@@ -179,8 +171,6 @@ namespace UnitTesting {
 			}
 
 			TEST_METHOD(parseClauseArg2Test) {
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor(evaluatorStub);
 
 				//Populate the declarationMap
 				preprocessor.insertDeclarationToMap("v", "variable");
@@ -231,8 +221,6 @@ namespace UnitTesting {
 			}
 
 			TEST_METHOD(retrieveArgTypeTest) {
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor(evaluatorStub);
 
 				string refInteger = "5";
 				string refConstValue = "_\"2\"_";
