@@ -45,26 +45,50 @@ namespace PKBParserIntegrationTesting
 			testString = "procedure a {a = 7; while c { b = a; d = 7; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { a = 1; }} }";
 			pkb = parser.Parse(simpleSource, pkb, true, testString);
 		}
-		/*
 
 		TEST_METHOD(PKBParserGetFollowsBeforeInvalid)
 		{
-			Assert::AreEqual(0, pkb.checkFollowsAfter(1));
+			Assert::AreEqual(0, pkb.getFollowsBefore(1));
 		}
 
 		TEST_METHOD(PKBParserGetFollowsBefore)
 		{
-			Assert::AreEqual(1, pkb.checkFollowsAfter(2));
+			Assert::AreEqual(1, pkb.getFollowsBefore(2));
 		}
 
 		TEST_METHOD(PKBParserGetFollowsAfter)
 		{
-			Assert::AreEqual(2, pkb.checkFollowsAfter(1));
+			Assert::AreEqual(2, pkb.getFollowsAfter(1));
 		}
 
 		TEST_METHOD(PKBParserGetFollowsAfterInvalid)
 		{
-			Assert::AreEqual(0, pkb.checkFollowsAfter(13));
+			Assert::AreEqual(0, pkb.getFollowsAfter(13));
+		}
+
+
+		TEST_METHOD(PKBParserGetFollowsBeforeStarInvalid)
+		{
+			std::vector<int> data = { };
+			Assert::AreEqual(true, (data == pkb.getFollowsBeforeStar(1)));
+		}
+
+		TEST_METHOD(PKBParserGetFollowsBeforeStar)
+		{
+			std::vector<int> data = { 1,2,5 };
+			Assert::AreEqual(true, (data == pkb.getFollowsBeforeStar(9)));
+		}
+
+		TEST_METHOD(PKBParserGetFollowsAfterStar)
+		{
+			std::vector<int> data = { 5, 9 };
+			Assert::AreEqual(true, (data == pkb.getFollowsAfterStar(2)));
+		}
+
+		TEST_METHOD(PKBParserGetFollowsAfterStarInvalid)
+		{
+			std::vector<int> data = { };
+			Assert::AreEqual(true, (data == pkb.getFollowsAfterStar(9)));
 		}
 
 		TEST_METHOD(PKBParserCheckFollows)
@@ -72,10 +96,20 @@ namespace PKBParserIntegrationTesting
 			Assert::AreEqual(true, pkb.checkFollows(1, 2));
 		}
 
-		TEST_METHOD(PKBParserCheckFollowsInValid)
+		TEST_METHOD(PKBParserCheckFollowsInvalid)
 		{
 			Assert::AreEqual(false, pkb.checkFollows(2, 3));
-		}*/
+		}
+
+		TEST_METHOD(PKBParserCheckFollowsStar)
+		{
+			Assert::AreEqual(true, pkb.checkFollowsStar(1, 9));
+		}
+
+		TEST_METHOD(PKBParserCheckFollowsStarInvalid)
+		{
+			Assert::AreEqual(false, pkb.checkFollowsStar(9, 2));
+		}
 
 		TEST_METHOD(PKBParserGetAllFollows)
 		{
@@ -98,6 +132,73 @@ namespace PKBParserIntegrationTesting
 			for (auto it = output.begin(); it != output.end(); ++it) {
 				Assert::AreEqual(true, (data[it->first] == it->second));
 			}
+		}
+
+		TEST_METHOD(PKBParserGetParentInvalid)
+		{
+			Assert::AreEqual(0, pkb.getParent(1));
+		}
+
+		TEST_METHOD(PKBParserGetParent)
+		{
+			Assert::AreEqual(2, pkb.getParent(3));
+		}
+
+		TEST_METHOD(PKBParserGetChildren)
+		{
+			std::vector<int> data = {3, 4};
+			Assert::AreEqual(true, (data == pkb.getChildren(2)));
+		}
+
+		TEST_METHOD(PKBParserGetChildrenInvalid)
+		{
+			std::vector<int> data = { };
+			Assert::AreEqual(true, (data == pkb.getChildren(1)));
+		}
+
+
+		TEST_METHOD(PKBParserGetParentStarInvalid)
+		{
+			std::vector<int> data = {};
+			Assert::AreEqual(true, (data == pkb.getParentStar(1)));
+		}
+
+		TEST_METHOD(PKBParserGetParentStar)
+		{
+			std::vector<int> data = { 6, 5 };
+			Assert::AreEqual(true, (data == pkb.getParentStar(7)));
+		}
+
+		TEST_METHOD(PKBParserGetChildrenStar)
+		{
+			std::vector<int> data = { 6, 7, 8 };
+			Assert::AreEqual(true, (data == pkb.getChildrenStar(5)));
+		}
+
+		TEST_METHOD(PKBParserGetChildrenStarInvalid)
+		{
+			std::vector<int> data = {};
+			Assert::AreEqual(true, (data == pkb.getChildrenStar(1)));
+		}
+
+		TEST_METHOD(PKBParserCheckParent)
+		{
+			Assert::AreEqual(true, pkb.checkParent(2, 3));
+		}
+
+		TEST_METHOD(PKBParserCheckParentInvalid)
+		{
+			Assert::AreEqual(false, pkb.checkParent(1, 2));
+		}
+
+		TEST_METHOD(PKBParserCheckParentStar)
+		{
+			Assert::AreEqual(true, pkb.checkParentStar(5, 7));
+		}
+
+		TEST_METHOD(PKBParserCheckParentStarInvalid)
+		{
+			Assert::AreEqual(false, pkb.checkParentStar(7, 5));
 		}
 
 		TEST_METHOD(PKBParserGetAllParent)
