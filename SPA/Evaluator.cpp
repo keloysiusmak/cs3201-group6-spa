@@ -54,6 +54,7 @@ list<string> Evaluator::evaluateQuery() {
 		if (queryObject.getPatterns().size() > 0) {
 
 		}
+
 		list<string> ans = resultToString(cResults, selectParam);
 		return ans;
 	}
