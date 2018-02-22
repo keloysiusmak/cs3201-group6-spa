@@ -65,6 +65,7 @@ public:
 	void evaluateFollowStar(Clause &clause, ClauseResults &clauseResults);
 	void evaluateParent(Clause &clause, ClauseResults &clauseResults);
 	void evaluateParentStar(Clause &clause, ClauseResults &clauseResults);
+	void evaluateUses(Clause &clause, ClauseResults &clauseResults);
 	list<string> resultToString(ClauseResults &clauseResults, Param &selected);
 
 	// Helper Evaluation Methods
