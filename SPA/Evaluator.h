@@ -50,6 +50,9 @@ public:
 	Evaluator();
 	Evaluator(QueryObject);
 	list<string> evaluateQuery();
+	list<string> invalidQuery(string);
+
+	QueryObject getQueryObject();
 	
 	// Linkage to other components
 	void setQueryObject(QueryObject);

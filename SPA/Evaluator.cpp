@@ -19,7 +19,7 @@ Evaluator::Evaluator() {
 };
 
 Evaluator::Evaluator(QueryObject queryObj) {
-	queryObject = queryObj;
+	//queryObject = queryObj;
 };
 
 void Evaluator::setPKB(PKB generatedPKB) {
@@ -29,6 +29,14 @@ void Evaluator::setPKB(PKB generatedPKB) {
 void Evaluator::setQueryObject(QueryObject queryObj) {
 	queryObject = queryObj;
 };
+
+QueryObject Evaluator::getQueryObject() {
+	return queryObject;
+}
+
+list<string> Evaluator::invalidQuery(string invalidQueryMessage) {
+	return{ invalidQueryMessage };
+}
 
 void Evaluator::setInvalidQuery(string message) {
 	validQuery = false;

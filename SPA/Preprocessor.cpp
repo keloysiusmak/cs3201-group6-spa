@@ -40,8 +40,8 @@ const regex stmtRefRegex("(^(([a-z]([a-z]|[0-9]|[#])*$)|([_]$)|([0-9]+$)))");
 const regex entRefRegex("(^(([a-z]([a-z]|[0-9]|[#])*$)|([_]$)|\"([a-z]([a-z]|[0-9]|[#])*)\"$))");
 const regex expressSpecRegex("(^((_\"(([a-z]([a-z]|[0-9])*)|([0-9]+))\"_$)|[_]$))");
 
-Preprocessor::Preprocessor(Evaluator evaluator) {
-
+Preprocessor::Preprocessor(Evaluator &evaluator) {
+	_evaluator = &evaluator;
 }
 
 void Preprocessor::insertDeclarationToMap(string synonym, string declaration) {
@@ -69,6 +69,7 @@ void Preprocessor::preprocessQuery(string query) {
 	//if queryIndex is 0, means no declarations at all
 	if (queryIndex <= 0) {
 		// insert evaluator invalid query api here
+		(*_evaluator).invalidQuery("Invalid Query");
 	}
 
 	for (int i = 0; i < queryIndex; i++) {
@@ -76,6 +77,7 @@ void Preprocessor::preprocessQuery(string query) {
 
 		if (!validateDeclaration) {
 			// insert evaluator invalid query api here
+			(*_evaluator).invalidQuery("Invalid Query");
 			return;
 		}
 	}
@@ -87,7 +89,7 @@ void Preprocessor::preprocessQuery(string query) {
 	
 	if (!validQuery) {
 		// insert evaluator invalid query api here
-		
+		(*_evaluator).invalidQuery("Invalid Query");
 	}	
 };
 
@@ -148,6 +150,7 @@ bool Preprocessor::isValidQuery(string query) {
 	//Check if there is any such that or pattern clause
 	if (queryArr.size() == 2) {
 		// insert evaluator query api here
+		(*_evaluator).setQueryObject(queryObject);
 		return true;
 	}
 	
@@ -231,7 +234,7 @@ bool Preprocessor::isValidQuery(string query) {
 	}
 
 	// insert evaluator query api here
-
+	(*_evaluator).setQueryObject(queryObject);
 	return true;
 };
 
