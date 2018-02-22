@@ -67,6 +67,8 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 			for (unsigned int j = 0; j < static_cast<int>(value[i].size()); j++) {
 				data.push_back(value[i][j]);
 			}
+			std::sort(data.begin(), data.end());
+			data.erase(unique(data.begin(), data.end()), data.end());
 			tableValues[i] = data;
 		}
 		tables[table_id - 1].erase(key_id);
