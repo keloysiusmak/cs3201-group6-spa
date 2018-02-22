@@ -110,8 +110,31 @@ namespace UnitTesting
 			std::vector<std::vector<int>> data = { {1}, {}, {}, {1} };
 			pkb.insertToTable(1, 1, data);
 			Assert::AreEqual(true, (pkb.getFromTable(1, 1) == data));
+
 			data = { {},{1},{},{} };
 			std::vector<std::vector<int>> dataFinal = { {1}, {1}, {}, {1} };
+			pkb.insertToTable(1, 1, data);
+			Assert::AreEqual(true, (pkb.getFromTable(1, 1) == dataFinal));
+
+			data = { {},{ 2 },{},{} };
+			dataFinal = { { 1 },{ 1, 2 },{},{ 1 } };
+			pkb.insertToTable(1, 1, data);
+			Assert::AreEqual(true, (pkb.getFromTable(1, 1) == dataFinal));
+		}
+
+		TEST_METHOD(PKBMultipleTableInsertTestSameValue)
+		{
+			PKB pkb;
+
+			std::vector<std::vector<int>> data = { { 1 },{},{},{ 1 } };
+			pkb.insertToTable(1, 1, data);
+			Assert::AreEqual(true, (pkb.getFromTable(1, 1) == data));
+
+			data = { {},{ 1 },{},{} };
+			pkb.insertToTable(1, 1, data);
+
+			data = { {},{ 1 },{},{} };
+			std::vector<std::vector<int>> dataFinal = { { 1 },{ 1 },{},{ 1 } };
 			pkb.insertToTable(1, 1, data);
 			Assert::AreEqual(true, (pkb.getFromTable(1, 1) == dataFinal));
 		}
