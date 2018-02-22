@@ -50,10 +50,10 @@ public:
 	Evaluator();
 	Evaluator(QueryObject);
 	list<string> evaluateQuery();
-	list<string> invalidQuery(string);
 	
 	// Linkage to other components
 	void setQueryObject(QueryObject);
+	void setInvalidQuery(string);
 	void setPKB(PKB);
 
 	// Main Evaluation methods
@@ -70,4 +70,6 @@ public:
 private:
 	QueryObject queryObject;
 	PKB pkb;
+	bool validQuery;
+	string invalidQueryMessage;
 };

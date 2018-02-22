@@ -3,6 +3,8 @@
 
 using namespace std;
 
+string VALID_QUERY = "Query is valid";
+
 string FOLLOWS = "follows";
 string FOLLOWSTAR = "followstar";
 string PARENT = "parent";
@@ -12,6 +14,8 @@ string STMT_SYN = "stmtSyn";
 string STMT_NUM = "stmtNumber";
 
 Evaluator::Evaluator() {
+	// Defaults true
+	validQuery = true;
 };
 
 Evaluator::Evaluator(QueryObject queryObj) {
@@ -26,22 +30,29 @@ void Evaluator::setQueryObject(QueryObject queryObj) {
 	queryObject = queryObj;
 };
 
-list<string> Evaluator::invalidQuery(string invalidQueryMessage) {
-	return{ invalidQueryMessage };
-}
+void Evaluator::setInvalidQuery(string message) {
+	validQuery = false;
+	invalidQueryMessage = message;
+};
 
 list<string> Evaluator::evaluateQuery() {
-	Param selectParam = queryObject.getSelectStatement();
-	ClauseResults cResults = ClauseResults();
-	PatternResults pResults = PatternResults();
-	if (queryObject.getClauses().size() > 0) {
-		cResults.instantiateClause(queryObject.getClauses()[0]);
-	}
-	if (queryObject.getPatterns().size() > 0) {
+	if (validQuery) {
+		Param selectParam = queryObject.getSelectStatement();
+		ClauseResults cResults = ClauseResults();
+		PatternResults pResults = PatternResults();
+		if (queryObject.getClauses().size() > 0) {
+			cResults.instantiateClause(queryObject.getClauses()[0]);
+		}
+		if (queryObject.getPatterns().size() > 0) {
 
+		}
+		list<string> ans = resultToString(cResults, selectParam);
+		return ans;
 	}
-	list<string> ans = resultToString(cResults, selectParam);
-	return ans;
+	else {
+		list<string> invalidQuery = { invalidQueryMessage };
+		return invalidQuery;
+	}
 };
 
 void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
