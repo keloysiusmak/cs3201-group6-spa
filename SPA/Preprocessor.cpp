@@ -306,29 +306,41 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 	string rightArg = Utils::trim(arg2Split.at(0));
 
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
+	ParamType insertLeftType = leftArgType->second;
 
 	//Check if is synonym and whether the synonym exists in declarationMap
-	if (leftArgType->second == SYNONYM) {
+	if (insertLeftType == SYNONYM) {
 		if (!isDeclarationSynonymExist(leftArg)) {
 			return false;
 		}
+		
+		//Change the synonym to the declaration type with reference to the declarationMap
+		auto searchSynonym = declarationMap.find(leftArg);
+		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+		insertLeftType = searchDeclareType->second;
 	}
 
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
+	ParamType insertRightType = rightArgType->second;
 
 	//Check if is synonym and whether the synonym exists in declarationMap
-	if (rightArgType->second == SYNONYM) {
+	if (insertRightType == SYNONYM) {
 		if (!isDeclarationSynonymExist(rightArg)) {
 			return false;
 		}
+
+		//Change the synonym to the declaration type with reference to the declarationMap
+		auto searchSynonym = declarationMap.find(rightArg);
+		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+		insertRightType = searchDeclareType->second;
 	}
 	//Check if is Ident and store the content between the double quotes
-	else if (rightArgType->second == IDENT) {
+	else if (insertRightType == IDENT) {
 		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
 	}
 
-	qo.insertClause(relType, leftArgType->second, leftArg,
-		rightArgType->second, rightArg);
+	qo.insertClause(relType, insertLeftType, leftArg,
+		insertRightType, rightArg);
 
 	return true;
 }
@@ -351,25 +363,41 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 	string rightArg = Utils::trim(arg2Split.at(0));
 
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
+	ParamType insertLeftType = leftArgType->second;
 
 	//Check if is synonym and whether the synonym exists in declarationMap
-	if (leftArgType->second == SYNONYM) {
+	if (insertLeftType == SYNONYM) {
 		if (!isDeclarationSynonymExist(leftArg)) {
 			return false;
 		}
+
+		//Change the synonym to the declaration type with reference to the declarationMap
+		auto searchSynonym = declarationMap.find(leftArg);
+		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+		insertLeftType = searchDeclareType->second;
 	}
 
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
+	ParamType insertRightType = rightArgType->second;
 
 	//Check if is synonym and whether the synonym exists in declarationMap
-	if (rightArgType->second == SYNONYM) {
+	if (insertRightType == SYNONYM) {
 		if (!isDeclarationSynonymExist(rightArg)) {
 			return false;
 		}
+
+		//Change the synonym to the declaration type with reference to the declarationMap
+		auto searchSynonym = declarationMap.find(rightArg);
+		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+		insertRightType = searchDeclareType->second;
+	}
+	//Check if is Ident and store the content between the double quotes
+	else if (insertRightType == IDENT) {
+		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
 	}
 
-	qo.insertClause(relType, leftArgType->second, leftArg,
-		rightArgType->second, rightArg);
+	qo.insertClause(relType, insertLeftType, leftArg,
+		insertRightType, rightArg);
 
 	return true;
 }
@@ -392,12 +420,18 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	string rightArg = Utils::trim(arg2Split.at(0));
 
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
+	ParamType insertLeftArgType = leftArgType->second;
 
 	//Check if is synonym and whether the synonym exists in declarationMap
-	if (leftArgType->second == SYNONYM) {
+	if (insertLeftArgType == SYNONYM) {
 		if (!isDeclarationSynonymExist(leftArg)) {
 			return false;
 		}
+
+		//Change the synonym to the declaration type with reference to the declarationMap
+		auto searchSynonym = declarationMap.find(leftArg);
+		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+		insertLeftArgType = searchDeclareType->second;
 	}
 	//Check if is Ident and store the content between the double quotes
 	else if (leftArgType->second == IDENT) {
@@ -411,7 +445,7 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
 	}
 
-	qo.insertPattern(entityType, entity, leftArgType->second,
+	qo.insertPattern(entityType, entity, insertLeftArgType,
 					leftArg, rightArgType->second, rightArg);
 
 	return true;

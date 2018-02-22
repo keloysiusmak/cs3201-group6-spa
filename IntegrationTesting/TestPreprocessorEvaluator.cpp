@@ -7,15 +7,20 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace IntegrationTesting
 {
+	Evaluator evaluator;
+	Preprocessor preprocessor;
+
 	TEST_CLASS(PreprocessorEvaluatorTest) {
 		public:
+
+			TEST_CLASS_INITIALIZE(setup) {
+				preprocessor.setEvaluator(evaluator);
+			}
 
 			//This test method will take in an actual test query
 			//and validate & deconstruct the query into a QueryObject.
 			//Once the QueryObject is ready, it will be passed to Evaluator
-			TEST_METHOD(TestValidPreprocessQuery) {
-				Evaluator evaluator;
-				Preprocessor preprocessor(evaluator);
+			TEST_METHOD(TestValidPreprocessQuery) {		
 
 				string query1 = "assign a; Select a";
 				string query2 = "assign a; Select a pattern a(\"x\", _\"y\"_)";
@@ -32,15 +37,15 @@ namespace IntegrationTesting
 
 				QueryObject expectedQo3;
 				expectedQo3.insertSelectStmt(STMT, "s");
-				expectedQo3.insertClause("Follows*", SYNONYM, "a", INTEGER, "2");
+				expectedQo3.insertClause("Follows*", ASSIGN, "a", INTEGER, "2");
 
 				QueryObject expectedQo4;
 				expectedQo4.insertSelectStmt(STMT, "s");
-				expectedQo4.insertClause("Modifies", SYNONYM, "s", SYNONYM, "v");
+				expectedQo4.insertClause("Modifies", STMT, "s", VARIABLE, "v");
 
 				QueryObject expectedQo5;
 				expectedQo5.insertSelectStmt(ASSIGN, "a");
-				expectedQo5.insertClause("Follows", SYNONYM, "w", SYNONYM, "a");
+				expectedQo5.insertClause("Follows", WHILE, "w", ASSIGN, "a");
 				expectedQo5.insertPattern(ASSIGN, "a", IDENT, "x", ALL, "_");
 
 				preprocessor.preprocessQuery(query1);
