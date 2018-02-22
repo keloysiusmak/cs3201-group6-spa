@@ -5,25 +5,23 @@ using namespace std;
 
 string VALID_QUERY = "Query is valid";
 
-string FOLLOWS = "follows";
-string FOLLOWSTAR = "followstar";
-string PARENT = "parent";
-string PARENTSTAR = "parentstar";
+string FOLLOWS = "Follows";
+string FOLLOWSTAR = "Followstar";
+string PARENT = "Parent";
+string PARENTSTAR = "Parentstar";
 //string USES = "uses";
 //string MODIFIES = "modifies";
 
 string STMT_SYN = "stmtSyn";
 string STMT_NUM = "stmtNumber";
 
+/* Constructor */
 Evaluator::Evaluator() {
 	// Defaults true
 	validQuery = true;
 };
 
-Evaluator::Evaluator(QueryObject queryObj) {
-	//queryObject = queryObj;
-};
-
+/* getters and setter Methods */
 void Evaluator::setPKB(PKB generatedPKB) {
 	pkb = generatedPKB;
 };
@@ -36,6 +34,7 @@ QueryObject Evaluator::getQueryObject() {
 	return queryObject;
 }
 
+/* Invalid Query Methods */
 list<string> Evaluator::invalidQuery(string invalidQueryMessage) {
 	return{ invalidQueryMessage };
 }
@@ -45,6 +44,7 @@ void Evaluator::setInvalidQuery(string message) {
 	invalidQueryMessage = message;
 };
 
+/* Main evaluator */
 list<string> Evaluator::evaluateQuery() {
 	if (validQuery) {
 		Param selectParam = queryObject.getSelectStatement();
@@ -52,6 +52,7 @@ list<string> Evaluator::evaluateQuery() {
 		PatternResults pResults = PatternResults();
 		if (queryObject.getClauses().size() > 0) {
 			cResults.instantiateClause(queryObject.getClauses()[0]);
+			evaluateClause(queryObject.getClauses()[0], cResults);
 		}
 		if (queryObject.getPatterns().size() > 0) {
 
@@ -92,7 +93,7 @@ list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &sele
 	Param rightParam = clauseResults.rhs;
 	set<int> answerSet;
 	// Retrieve values from nested vectors of values
-	if (selected.value == rightParam.value) {
+	if (selected.value == rightParam.value && leftParam.type != INTEGER) {
 		for (auto row : clauseResults.values) {
 			for (auto rowValue : row) {
 				answerSet.insert(rowValue);
@@ -123,20 +124,20 @@ void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
 		if (rightParam.type == STMT) {
 			vector<vector<int>> results = pkb.getAllFollows();
 		}
-		else if (rightParam.type == PROG_LINE) {
+		else if (rightParam.type == INTEGER) {
 			int result = pkb.getFollowsBefore(stoi(rightParam.value));
 			vector<int> vectorResult = { result };
 			clauseResults.setKeys(vectorResult);
 		}
 		else { ; }
 	}
-	else if (leftParam.type == PROG_LINE) {
+	else if (leftParam.type == INTEGER) {
 		if (rightParam.type == STMT) {
 			int result = pkb.getFollowsAfter(stoi(leftParam.value));
 			vector<int> vectorResult = { result };
 			clauseResults.setKeys(vectorResult);
 		}
-		else if (rightParam.type == PROG_LINE) {
+		else if (rightParam.type == INTEGER) {
 			bool result = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
@@ -155,18 +156,18 @@ void Evaluator::evaluateFollowStar(Clause &clause, ClauseResults &clauseResults)
 			unordered_map<int, vector<int>> results = pkb.getAllFollowsStar();
 			storeMapToResults(clauseResults, results);
 		}
-		else if (rightParam.type == PROG_LINE) {
+		else if (rightParam.type == INTEGER) {
 			vector<int> results = pkb.getFollowsBeforeStar(stoi(rightParam.value));
 			clauseResults.setKeys(results);
 		}
 		else { ; }
 	}
-	else if (leftParam.type == PROG_LINE) {
+	else if (leftParam.type == INTEGER) {
 		if (rightParam.type == STMT) {
 			vector<int> results = pkb.getFollowsAfterStar(stoi(leftParam.value));
 			clauseResults.setKeys(results);
 		}
-		else if (rightParam.type == PROG_LINE) {
+		else if (rightParam.type == INTEGER) {
 			bool result = pkb.checkFollowsStar(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
@@ -184,19 +185,19 @@ void Evaluator::evaluateParent(Clause &clause, ClauseResults &clauseResults) {
 		if (rightParam.type == STMT) {
 			vector<vector<int>> results = pkb.getAllParent();
 		}
-		else if (rightParam.type == PROG_LINE) {
+		else if (rightParam.type == INTEGER) {
 			int result = pkb.getParent(stoi(rightParam.value));
 			vector<int> vectorResult = { result };
 			clauseResults.setKeys(vectorResult);
 		}
 		else { ; }
 	}
-	else if (leftParam.type == PROG_LINE) {
+	else if (leftParam.type == INTEGER) {
 		if (rightParam.type == STMT) {
 			vector<int> result = pkb.getChildren(stoi(leftParam.value));
 			clauseResults.setKeys(result);
 		}
-		else if (rightParam.type == PROG_LINE) {
+		else if (rightParam.type == INTEGER) {
 			bool result = pkb.checkParent(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
@@ -215,18 +216,18 @@ void Evaluator::evaluateParentStar(Clause &clause, ClauseResults &clauseResults)
 			unordered_map<int, vector<int>> results = pkb.getAllParentStar();
 			storeMapToResults(clauseResults, results);
 		}
-		else if (rightParam.type == PROG_LINE) {
+		else if (rightParam.type == INTEGER) {
 			vector<int> results = pkb.getParentStar(stoi(rightParam.value));
 			clauseResults.setKeys(results);
 		}
 		else { ; }
 	}
-	else if (leftParam.type == PROG_LINE) {
+	else if (leftParam.type == INTEGER) {
 		if (rightParam.type == STMT) {
 			vector<int> results = pkb.getChildrenStar(stoi(leftParam.value));
 			clauseResults.setKeys(results);
 		}
-		else if (rightParam.type == PROG_LINE) {
+		else if (rightParam.type == INTEGER) {
 			bool result = pkb.checkParentStar(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
