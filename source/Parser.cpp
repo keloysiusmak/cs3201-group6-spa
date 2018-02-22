@@ -85,6 +85,7 @@ void Parser::statement() {
 	if (nextToken == "if") {
 		int currentIfNum = currentStmNum;
 		stmIdMap.insert({ nextStmListId,{ currentStmNum } });
+		pkb.insertToTable(ParserConstants::STATEMENT_TABLE, currentStmNum, { { curStmListId },{},{},{ ParserConstants::IF_TYPE } });
 		pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { currentStmNum },{},{},{},{} });
 
 		currentStmNum++;
@@ -105,6 +106,7 @@ void Parser::statement() {
 	}
 	else if (nextToken == "while") {
 		stmIdMap.insert({ nextStmListId,{ currentStmNum } });
+		pkb.insertToTable(ParserConstants::STATEMENT_TABLE, currentStmNum, { { curStmListId },{},{},{ ParserConstants::WHILE_TYPE } });
 		pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { currentStmNum },{},{},{},{} });
 		currentStmNum++;
 
@@ -115,6 +117,7 @@ void Parser::statement() {
 		match("}");
 	}
 	else {
+		pkb.insertToTable(ParserConstants::STATEMENT_TABLE, currentStmNum, { { curStmListId },{},{},{ ParserConstants::ASSIGNMENT_TYPE } });
 		match("", true);
 		match("=");
 		//expression();
@@ -224,30 +227,39 @@ PKB Parser::Parse(string fileName, PKB passedPKB, bool isString, string stringIn
 	return pkb;
 }
 
+void printTable(unordered_map<int, std::vector<std::vector<int>>> table) {
+	for (const auto& element : table) {
+		std::cout << "Key:[" << element.first;
+
+		// Iterate and print values of vector
+		cout << "], ";
+		std::vector<std::vector<int>> VinV = element.second;
+		for (int i = 0; i< VinV.size(); i++) {
+			for (int p = 0; p < VinV[i].size(); p++) {
+				cout << VinV[i][p] << " ";
+			}
+			cout << ";";
+		}
+		cout << "]\n";
+	}
+}
+
 /*
 int main() {
+
 	Parser parser;
+
 	PKB pkb;
 	pkb = parser.Parse("subset_if_while_diff_nospace.txt", pkb);
 
-	std::vector<std::vector<int>> test = pkb.tables[1][3];
+	cout << "*** TABLE 1 ***\n";
+	unordered_map<int, std::vector<std::vector<int>>> table1 = pkb.tables[0];
+	printTable(table1);
 
-	cout << "*** FOLLOWS ***\n";
-	std::vector<std::vector<int>> allFollows = pkb.getAllFollows();
-	for (int i = 0; i< allFollows.size(); i++) {
-		for (int p = 0; p < allFollows[i].size(); p++) {
-			cout << allFollows[i][p] << " ";
-		}
-		cout << endl;
-	}
-	std::vector<std::vector<int>> allParents = pkb.getAllParent();
-	cout << "*** PARENTS ***\n";
-	//cout << allParents.size();
-	for (int i = 0; i< allParents.size(); i++) {
-		for (int p = 0; p < allParents[i].size(); p++) {
-			cout << allParents[i][p] << " ";
-		}
-		cout << endl;
-	}
+	cout << "*** TABLE 2 ***\n";
+	unordered_map<int, std::vector<std::vector<int>>> table2 = pkb.tables[1];
+	printTable(table2);
+
 	return 0;
+}
 */

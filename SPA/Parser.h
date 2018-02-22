@@ -42,9 +42,14 @@ private:	 PKB pkb;
 				 }
 			 };
 };
+
 namespace ParserConstants {
 	const string DELIM_STRING = " ;={}+*-() ";
 	const vector<char> DELIMITERS{ ';', '=', '{', '}', '+', '*', '-', '(', ')' };
+	const int STATEMENT_TABLE = 1;
+	const int ASSIGNMENT_TYPE = 1;
+	const int WHILE_TYPE = 2;
+	const int IF_TYPE = 3;
 	const int CONTAINER_TABLE = 2;
 	const int PROCEDURE_PARENT_ID = 0;
 }
