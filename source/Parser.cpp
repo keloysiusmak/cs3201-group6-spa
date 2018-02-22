@@ -73,7 +73,7 @@ void Parser::statement() {
 	cout << "]\n";
 
 	stmIdMap[curStmListId].push_back(currentStmNum);
-	bool a = pkb.insertToTable(ParserConstants::CONTAINER_TABLE, curStmListId, { {},{ currentStmNum },{},{},{} });
+	bool a = pkb.insertToTable(ParserConstants::CONTAINER_TABLE, curStmListId, { {},{ currentStmNum },{} });
 
 	cout << "vectorAfter: ";
 	for (int m : stmIdMap[curStmListId]) {
@@ -86,7 +86,7 @@ void Parser::statement() {
 		int currentIfNum = currentStmNum;
 		stmIdMap.insert({ nextStmListId,{ currentStmNum } });
 		pkb.insertToTable(ParserConstants::STATEMENT_TABLE, currentStmNum, { { curStmListId },{},{},{ ParserConstants::IF_TYPE } });
-		pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { currentStmNum },{},{},{},{} });
+		pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { currentStmNum },{},{} });
 
 		currentStmNum++;
 
@@ -98,7 +98,7 @@ void Parser::statement() {
 		match("}");
 		// else
 		stmIdMap.insert({ nextStmListId,{ currentIfNum } });
-		pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { currentIfNum },{},{},{},{} });
+		pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { currentIfNum },{},{} });
 		match("else");
 		match("{");
 		statementList();
@@ -107,7 +107,7 @@ void Parser::statement() {
 	else if (nextToken == "while") {
 		stmIdMap.insert({ nextStmListId,{ currentStmNum } });
 		pkb.insertToTable(ParserConstants::STATEMENT_TABLE, currentStmNum, { { curStmListId },{},{},{ ParserConstants::WHILE_TYPE } });
-		pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { currentStmNum },{},{},{},{} });
+		pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { currentStmNum },{},{} });
 		currentStmNum++;
 
 		match("while");
@@ -159,7 +159,7 @@ void Parser::procedure() {
 	match("", true);
 	match("{");
 	stmIdMap.insert({ nextStmListId,{ 0 } });
-	pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { ParserConstants::PROCEDURE_PARENT_ID },{},{},{},{} });
+	pkb.insertToTable(ParserConstants::CONTAINER_TABLE, nextStmListId, { { ParserConstants::PROCEDURE_PARENT_ID },{},{} });
 
 	statementList();
 	match("}");
