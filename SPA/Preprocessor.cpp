@@ -30,7 +30,8 @@ const unordered_map<string, RelRef> KEYWORDS_CLAUSES_2 = { { "Parent", Parent },
 
 const unordered_map<string, ParamType> KEYWORDS_DECLARATIONS = { { "assign", ASSIGN }, { "stmt", STMT },
 																{ "variable", VARIABLE }, { "while", WHILE },
-																{ "constant", CONSTANT }, { "prog_line", PROG_LINE } };
+																{ "constant", CONSTANT }, { "prog_line", PROG_LINE },
+																{ "if", IF } };
 
 const unordered_map<int, ParamType> NUMBER_MAPPING_REF_TYPE = { { 1, INTEGER }, { 2, CONSTANT },
 															{ 3, VAR_NAME }, { 4, IDENT }, { 5, SYNONYM },
