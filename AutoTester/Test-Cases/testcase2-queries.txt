@@ -591,32 +591,32 @@ Select s1 such that Uses(s1, _)
 119 - Uses(a1, v)
 assign a1; variable v;
 Select a1 such that Uses(a1, v)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+1,4,5,7,8,11,13,14,15
 5000
 120 - Uses(a1, _)
 assign a1;
 Select a1 such that Uses(a1, _)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+1,4,5,7,8,11,13,14,15
 5000
 121 - Uses(if1, v)
 if if1; variable v;
 Select if1 such that Uses(if1, v)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+2,3,12
 5000
 122 - Uses(if1, _)
 if if1;
 Select if1 such that Uses(if1, _)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+2,3,12
 5000
 123 - Uses(w1, v)
 while w1; variable v;
 Select w1 such that Uses(w1, v)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+6,9,10
 5000
 124 - Uses(w1, _)
 while w1;
 Select w1 such that Uses(w1, _)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+6,9,10
 5000
 125 - Uses(n1, v)
 prog_line n1; variable v;
@@ -631,17 +631,17 @@ Select n1 such that Uses(n1, _)
 127 - Uses(p, v)
 proc p; variable v;
 Select p such that Uses(p, v)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+a
 5000
 128 - Uses(p, _)
 proc p;
 Select p such that Uses(p, _)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+a
 5000
 129 - Uses(_, v)
 variable v;
 Select v such that Uses(_, v)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+x
 5000
 130 - Modifies(s1, v)
 stmt s1; variable v;
@@ -656,12 +656,12 @@ Select s1 such that Modifies(s1, _)
 132 - Modifies(a1, v)
 assign a1; variable v;
 Select a1 such that Modifies(a1, v)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+1,4,5,7,8,11,13,14,15
 5000
 133 - Modifies(a1, _)
 assign a1;
 Select a1 such that Modifies(a1, _)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+1,4,5,7,8,11,13,14,15
 5000
 134 - Modifies(n1, v)
 prog_line n1; variable v;
@@ -676,17 +676,17 @@ Select n1 such that Modifies(n1, _)
 136 - Modifies(p, v)
 proc p; variable v;
 Select p such that Modifies(p, v)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+a
 5000
 137 - Modifies(p, _)
 proc p;
 Select p such that Modifies(p, _)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+a
 5000
 138 - Modifies(_, v)
 variable v;
 Select v such that Modifies(_, v)
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+x
 5000
 139 - pattern a(v, _v_)
 assign a; variable v;
@@ -881,5 +881,40 @@ a
 177 - prog_line n
 prog_line n; assign a;
 Select n such that Modifies(1, "x") pattern a("x", _"x"_);
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+178 - no clause(1)
+variable v;
+Select v;
+x
+5000
+179 - no clause(2)
+assign a;
+Select a;
+1,4,5,7,8,11,13,14,15
+5000
+180 - no clause(3)
+stmt s;
+Select s;
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+181 - no clause(4)
+if ifs;
+Select ifs;
+2,3,12
+5000
+182 - no clause(5)
+while w;
+Select w;
+6,9,10
+5000
+183 - no clause(6)
+proc p;
+Select p;
+a
+5000
+184 - no clause(7)
+prog_line n;
+Select n;
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
