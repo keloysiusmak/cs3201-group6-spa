@@ -5,7 +5,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace IntegrationTesting
+namespace PreprocessorEvaluatorIntegrationTesting
 {
 	Evaluator evaluator;
 	Preprocessor preprocessor;
