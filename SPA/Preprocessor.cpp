@@ -24,8 +24,9 @@ const string CONSTANT_WORD = "constant";
 const string VAR_NAME_WORD = "var_name";
 
 const unordered_set<string> KEYWORDS_PATTERN_TYPE = { "assign" };
-const unordered_set<string> KEYWORDS_CLAUSES_1 = { "Modifies", "Uses" };
-const unordered_set<string> KEYWORDS_CLAUSES_2 = { "Parent", "Parent*", "Follows", "Follows*" };
+const unordered_map<string, RelRef> KEYWORDS_CLAUSES_1 = { { "Modifies", ModifiesS },{ "Uses", UsesS } };
+const unordered_map<string, RelRef> KEYWORDS_CLAUSES_2 = { { "Parent", Parent }, { "Parent*", ParentT },
+															{ "Follows", Follows }, { "Follows*", FollowsT } };
 
 const unordered_map<string, ParamType> KEYWORDS_DECLARATIONS = { { "assign", ASSIGN }, { "stmt", STMT },
 																{ "variable", VARIABLE }, { "while", WHILE },
@@ -339,7 +340,8 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
 	}
 
-	qo.insertClause(relType, insertLeftType, leftArg,
+	auto searchRelType = KEYWORDS_CLAUSES_1.find(relType);
+	qo.insertClause(searchRelType->second, insertLeftType, leftArg,
 		insertRightType, rightArg);
 
 	return true;
@@ -396,7 +398,8 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
 	}
 
-	qo.insertClause(relType, insertLeftType, leftArg,
+	auto searchRelType = KEYWORDS_CLAUSES_2.find(relType);
+	qo.insertClause(searchRelType->second, insertLeftType, leftArg,
 		insertRightType, rightArg);
 
 	return true;

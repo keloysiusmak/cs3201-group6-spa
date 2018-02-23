@@ -13,7 +13,7 @@ QueryObject::QueryObject(string query) {
 
 }
 
-void QueryObject::insertClause(string relRef, ParamType firstParamType, string firstParam, ParamType secondParamType, string secondParam) {
+void QueryObject::insertClause(RelRef relRef, ParamType firstParamType, string firstParam, ParamType secondParamType, string secondParam) {
 	
 	Param fp;
 	fp.type = firstParamType;

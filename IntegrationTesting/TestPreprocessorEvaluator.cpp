@@ -37,15 +37,15 @@ namespace IntegrationTesting
 
 				QueryObject expectedQo3;
 				expectedQo3.insertSelectStmt(STMT, "s");
-				expectedQo3.insertClause("Follows*", ASSIGN, "a", INTEGER, "2");
+				expectedQo3.insertClause(FollowsT, ASSIGN, "a", INTEGER, "2");
 
 				QueryObject expectedQo4;
 				expectedQo4.insertSelectStmt(STMT, "s");
-				expectedQo4.insertClause("Modifies", STMT, "s", VARIABLE, "v");
+				expectedQo4.insertClause(ModifiesS, STMT, "s", VARIABLE, "v");
 
 				QueryObject expectedQo5;
 				expectedQo5.insertSelectStmt(ASSIGN, "a");
-				expectedQo5.insertClause("Follows", WHILE, "w", ASSIGN, "a");
+				expectedQo5.insertClause(Follows, WHILE, "w", ASSIGN, "a");
 				expectedQo5.insertPattern(ASSIGN, "a", IDENT, "x", ALL, "_");
 
 				preprocessor.preprocessQuery(query1);
@@ -80,7 +80,7 @@ namespace IntegrationTesting
 						Clause c1 = qo1.getClauses().at(i);
 						Clause c2 = qo2.getClauses().at(i);
 
-						if (c1.getRelRef().compare(c2.getRelRef()) != 0 ||
+						if (c1.getRelRef() != c2.getRelRef() ||
 							c1.getFirstParam().type != c2.getFirstParam().type ||
 							c1.getFirstParam().value.compare(c2.getFirstParam().value) != 0 ||
 							c1.getSecondParam().type != c2.getSecondParam().type ||

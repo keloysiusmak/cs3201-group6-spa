@@ -22,7 +22,7 @@ namespace UnitTesting {
 
 		TEST_METHOD(QueryObjectInsertClause) {
 			QueryObject queryObject;
-			queryObject.insertClause("Parent", INTEGER, "1", ASSIGN, "a");
+			queryObject.insertClause(Parent, INTEGER, "1", ASSIGN, "a");
 
 			Assert::AreEqual(1, static_cast<int>(queryObject.getClauses().size()));
 
@@ -34,11 +34,12 @@ namespace UnitTesting {
 			rightArg.type = ASSIGN;
 			rightArg.value = "a";
 
-			Clause testClause("Parent", leftArg, rightArg);
+			Clause testClause(Parent, leftArg, rightArg);
 
 			Clause fromQueryObject = queryObject.getClauses().at(0);
 
-			Assert::AreEqual(testClause.getRelRef(), fromQueryObject.getRelRef());
+			Assert::AreEqual(static_cast<int>(testClause.getRelRef()), 
+				static_cast<int>(fromQueryObject.getRelRef()));
 			Assert::AreEqual(static_cast<int>(testClause.getFirstParam().type), 
 						static_cast<int>(fromQueryObject.getFirstParam().type));
 			Assert::AreEqual(testClause.getFirstParam().value, fromQueryObject.getFirstParam().value);

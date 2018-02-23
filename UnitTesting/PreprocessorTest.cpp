@@ -163,7 +163,7 @@ namespace UnitTesting {
 				secondParamValue += arg2.at(1);
 				
 				Assert::AreEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, arg2));
-				Assert::AreEqual(relType, qo.getClauses().at(0).getRelRef());
+				Assert::AreEqual(static_cast<int>(ModifiesS), static_cast<int>(qo.getClauses().at(0).getRelRef()));
 				Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qo.getClauses().at(0).getFirstParam().type));
 				Assert::AreEqual(firstParamValue, qo.getClauses().at(0).getFirstParam().value);
 				Assert::AreEqual(static_cast<int>(IDENT), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
@@ -188,7 +188,7 @@ namespace UnitTesting {
 				secondParamValue += arg2.at(0);
 
 				Assert::AreEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, arg2));
-				Assert::AreEqual(relType, qo.getClauses().at(0).getRelRef());
+				Assert::AreEqual(static_cast<int>(ParentT), static_cast<int>(qo.getClauses().at(0).getRelRef()));
 				Assert::AreEqual(static_cast<int>(INTEGER), static_cast<int>(qo.getClauses().at(0).getFirstParam().type));
 				Assert::AreEqual(firstParamValue, qo.getClauses().at(0).getFirstParam().value);
 				Assert::AreEqual(static_cast<int>(VARIABLE), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));

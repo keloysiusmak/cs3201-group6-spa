@@ -8,17 +8,17 @@ Clause::Clause() {
 
 }
 
-Clause::Clause(string relRef, Param firstParam, Param secondParam) {
+Clause::Clause(RelRef relRef, Param firstParam, Param secondParam) {
 	_relRef = relRef;
 	_firstParam = firstParam;
 	_secondParam = secondParam;
 }
 
-void Clause::setClause(string relRef, Param firstParam, Param secondParam) {
+void Clause::setClause(RelRef relRef, Param firstParam, Param secondParam) {
 
 }
 
-string Clause::getRelRef() {
+RelRef Clause::getRelRef() {
 	return _relRef;
 }
 
