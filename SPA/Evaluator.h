@@ -85,6 +85,10 @@ public:
 	void intersectDouble(ClauseResults &clauseResults);
 
 	// Helper Methods
+	bool selectParamInClause(QueryObject &queryObj);
+	bool hasClauseResults(ClauseResults &clauseResults);
+	bool hasPatternResults(PatternResults &patternResults);
+	list<string> getAllSelectedParam(Param p);
 	int typeToIntMap(ParamType t);
 	void storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map);
 
