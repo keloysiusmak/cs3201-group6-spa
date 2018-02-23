@@ -70,3 +70,16 @@ bool Utils::isInteger(const string& s)
 	return !s.empty() && std::find_if(s.begin(),
 		s.end(), [](char c) { return !isdigit(c); }) == s.end();
 }
+
+bool Utils::isSynonym(ParamType type) {
+	switch (type) {
+	case INTEGER:
+		return false;
+	case CONSTANT:
+		return false;
+	case VAR_NAME:
+		return false;
+	default:
+		return true;
+	}
+};

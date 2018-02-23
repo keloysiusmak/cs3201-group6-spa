@@ -4,6 +4,8 @@
 #include <regex>
 #include <sstream>
 
+#include "Param.h"
+
 using namespace std;
 
 class Utils {
@@ -14,6 +16,7 @@ public:
 	static vector<string> split(const string& s, char delimiter);
 	static string trim(const string& str);
 	static bool isInteger(const string& s);
+	static bool isSynonym(ParamType type);
 };
 
 namespace UtilsConstants {

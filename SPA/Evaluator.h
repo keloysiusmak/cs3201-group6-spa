@@ -5,14 +5,16 @@
 #include <list>
 #include "QueryObject.h"
 #include "../source/PKB.h"
+#include "Utils.h"
 
 struct ClauseResults {
 	Param lhs;
 	Param rhs;
-	/* values are only set if both params are synonyms, otherwise only keys are set to represent 
-	corresponding possible values wrt either lhs||rhs constant*/
-	vector<int> keys;
-	vector<vector<int>> values;
+	/* Key Values Hash for queries with 2 synonyms
+		Vector of int values for queries with only 1 synonym */
+	unordered_map<int, vector<int>> keyValues;
+	vector<int> values;
+	/* Boolean for when both params are concrete */
 	bool valid;
 
 	void ClauseResults::instantiateClause(Clause clause) {
@@ -20,12 +22,21 @@ struct ClauseResults {
 		rhs = clause.getSecondParam();
 	};
 
-	void ClauseResults::setKeys(vector<int> ans) {
-		keys = ans;
+	void ClauseResults::setkeyValues(unordered_map<int, vector<int>> &results) {
+		keyValues = results;
 	}
 
-	void ClauseResults::setValues(vector<vector<int>> ans) {
-		values = ans;
+	void ClauseResults::setkeyValues(vector<vector<int>> &results) {
+		for (auto pair : results) {
+			int key = pair.at(0);
+			vector<int> value;
+			value.push_back(pair.at(1));
+			keyValues.insert({ key, value });
+		}
+	}
+
+	void ClauseResults::setValues(vector<int> &results) {
+		values = results;
 	}
 
 	void ClauseResults::setValid(bool validity) {
@@ -69,7 +80,12 @@ public:
 	void evaluateModifies(Clause &clause, ClauseResults &clauseResults);
 	list<string> resultToString(ClauseResults &clauseResults, Param &selected);
 
-	// Helper Evaluation Methods
+	// Intersection Helpers
+	void intersectSingle(ClauseResults &clauseResults);
+	void intersectDouble(ClauseResults &clauseResults);
+
+	// Helper Methods
+	int typeToIntMap(ParamType t);
 	void storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map);
 
 private:
