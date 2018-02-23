@@ -96,7 +96,8 @@ bool Evaluator::hasClauseResults(ClauseResults &clauseResults) {
 	return false;
 };
 bool Evaluator::hasPatternResults(PatternResults &patternResults) {
-
+	// To be implemented
+	return true;
 };
 
 /* Get all selected params */
