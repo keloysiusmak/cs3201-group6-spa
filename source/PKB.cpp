@@ -758,56 +758,6 @@ bool PKB::checkProcedureModifiesVariable(int procId, int varId) {
 
 }
 
-std::vector<int> PKB::getStatementsWithPattern(PatternObject p) {
-
-	std::vector<int> dataL;
-	if (p.LHS_type == 0) {
-		dataL = PKB::getStatementsFromModifiesVariable(p.LHS);
-	}
-
-	std::vector<int> dataR;
-	if (p.RHS_type != 1) {
-		if (p.RHS_type == 0) {
-			dataR = PKB::getStatementsFromUsesVariable(p.RHS);
-		}
-		else if (p.RHS_type == 2) {
-			dataR = PKB::getStatementsWithConstant(p.RHS);
-		}
-
-		if (p.LHS_type == 1) {
-			return dataR;
-		}
-		else {
-			std::vector<int> output(dataL.size() + dataR.size());
-			std::vector<int>::iterator it;
-			
-			it = std::set_intersection(dataL.begin(), dataL.end(), dataR.begin(), dataR.end(), output.begin());
-			output.resize(it - output.begin());
-
-			return output;
-		}
-
-	}
-	else {
-		return dataL;
-	}
-
-
-}
-
-bool PKB::checkStatementWithPattern(int stmt, PatternObject p) {
-
-	std::vector<int> stmts = PKB::getStatementsWithPattern(p);
-	for (int i = 0; i < static_cast<int>(stmts.size()); i++) {
-		if (stmts[i] == stmt) {
-			return true;
-		}
-	}
-
-	return false;
-
-}
-
 /* Constant Operations */
 std::vector<int> PKB::getStatementsWithConstant(int constant) {
 
