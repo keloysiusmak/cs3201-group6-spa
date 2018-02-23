@@ -398,6 +398,66 @@ void Evaluator::evaluateParentStar(Clause &clause, ClauseResults &clauseResults)
 //};
 //
 
+void Evaluator::evaluatePattern(PatternObject &pattern, PatternResults &patternResults) {
+
+	//int leftParam = pattern.LHSid();
+	//int rightParam = pattern.RHSid();
+
+	//if (Utils::isSynonym(leftParam)) { // (syn, smth)
+		//if (pattern.RHS_type == 0) { // pattern a(syn, variable)
+			//vector<int> vectorResult = pkb.getStatementsWithVariable(pattern.RHS);
+			//patternResults.setValues(vectorResult);
+			//intersectSingle(patternResults);
+		//}
+		//else if (pattern.RHS_type == 1) { // (syn, concrete)
+			//vector<int> vectorResult = pkb.getAllStatementModifiesVariables(pattern.RHS);
+			//patternResults.setValues(vectorResult);
+			//intersectSingle(patternResults);
+		//}
+		//else if (pattern.RHS_type == 2) {
+			//vector<int> result = pkb.getStatementsWithConstants(pattern.RHS); //intersect with assignment statements
+			//patternResults.setValues(result);
+			//intersectSingle(patternResults);
+		//}
+	//}
+	//else if (pattern.getLHStype == 0) { // first param is variable
+		//if (pattern.RHS_type == 0) { // (concrete, syn)
+			//bool result = pkb.checkVariableModifiesVariable(stoi(pattern.LHS.value), stoi(pattern.RHS.value));
+			//patternResults.setValues(result);
+		//}
+		//else if (pattern.RHS_type == 1) { // (concrete, conrete)
+			//vector<int> result = pkb.getStatementsFromUsesVariables(stoi(pattern.RHS.value));
+			//patternResults.setValues(result);
+			//intersectSingle(patternResults);
+		//
+		//else if (pattern.RHS_type == 2) {
+			//vector<int> result = pkb.getStatementsWithConstants(pattern.RHS); //intersect with statements modifies LHS
+			//patternResults.setValid(result);
+			//intersectSingle(patternResults); //but supposed to return boolean
+		//}
+	//}
+	//else { //first param is blank
+		//if (pattern.RHS_type == 0) {
+			////(_,_"VARIABLE"_)
+			//vector<int> result = pkb.getStatementsWithVariable(pattern.RHS);
+			//patternResults.setValues(result);
+			//intersectSingle(patternResults);
+		//}
+		//else if (pattern.RHS_type == 1) {
+			////(_,_);
+			//vector<int> result = pkb.getAllStatementsWithType(1);
+			//patternResults.setValues(result);
+			//intersectDouble(patternResults);
+		//}
+		//else if (pattern.RHS_type == 2) {
+			////(_,_"CONSTANT")
+			//vector<int> result = pkb.getStatementsWithConstant(stoi(rightParam.value));
+			//patternResults.setValues(result);
+			//intersectSingle(patternResults);
+		//}
+	//}
+};
+
 /* Iterates through key value pair in unorderedMap and stores the corresponding rows */
 void Evaluator::storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map) {
 	vector<int> keys;
