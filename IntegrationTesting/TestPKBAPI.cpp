@@ -11,25 +11,25 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-namespace PKBPQLIntegrationTesting
+namespace PKBAPIIntegrationTesting
 {
 	PKB pkb;
 	Evaluator evaluator;
 	list<string> _variableID;
 
-	TEST_CLASS(PKBPQLIntegration)
+	TEST_CLASS(PKBAPIIntegration)
 	{
 	public:
 		
 
 		TEST_CLASS_INITIALIZE(setup)
 		{
-			_variableID.push_back(std::to_string(pkb.insertToNameTable(9, "x")));
 			evaluator.setPKB(pkb);
 		}
 
-		TEST_METHOD(PKBPQLFollows)
+		TEST_METHOD(PKBAPIEvaluate)
 		{
+			evaluator.evaluateQuery();
 		}
 
 	};

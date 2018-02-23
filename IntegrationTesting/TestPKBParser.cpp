@@ -224,5 +224,167 @@ namespace PKBParserIntegrationTesting
 			}
 		}
 
+		TEST_METHOD(PKBParserGetUsesVariablesFromStatement)
+		{
+			std::vector<int> data = {2};
+			Assert::AreEqual(true, (pkb.getUsesVariablesFromStatement(1) == data));
+		}
+
+		TEST_METHOD(PKBParserGetStatementsFromUsesVariables)
+		{
+			std::vector<int> data = { 3,5,11 };
+			Assert::AreEqual(true, (pkb.getStatementsFromUsesVariable(1) == data));
+		}
+
+		TEST_METHOD(PKBParserGetUsesVariablesFromProcedure)
+		{
+			std::vector<int> data = { 1,2,3,4,5 };
+			Assert::AreEqual(true, (pkb.getUsesVariablesFromProcedure(1) == data));
+		}
+
+		TEST_METHOD(PKBParserGetProceduresFromUsesVariable)
+		{
+			std::vector<int> data = { 1,2 };
+			Assert::AreEqual(true, (pkb.getProceduresFromUsesVariable(1) == data));
+		}
+
+		TEST_METHOD(PKBParserGetAllStatementUsesVariables)
+		{
+			unordered_map<int, std::vector<int>> data;
+			data.insert({ 1, {2} });
+			data.insert({ 2,{ 3 } });
+			data.insert({ 3,{ 1 } });
+			data.insert({ 5,{ 1 } });
+			data.insert({ 6,{ 5 } });
+			data.insert({ 10,{ 2 } });
+			data.insert({ 11,{ 1 } });
+			data.insert({ 12,{ 2 } });
+			Assert::AreEqual(true, (pkb.getAllStatementUsesVariables() == data));
+		}
+
+		TEST_METHOD(PKBParserGetAllVariableUsesStatements)
+		{
+			unordered_map<int, std::vector<int>> data;
+			data.insert({ 1,{ 3,5,11 } });
+			data.insert({ 2,{ 1,10,12 } });
+			data.insert({ 3,{ 2 } });
+			Assert::AreEqual(true, (pkb.getAllVariableUsesStatements() == data));
+		}
+
+		TEST_METHOD(PKBParserGetAllProcedureUsesVariables)
+		{
+			unordered_map<int, std::vector<int>> data;
+			data.insert({ 1,{ 1,2,3,5 } });
+			data.insert({ 2,{ 1,2 } });
+			Assert::AreEqual(true, (pkb.getAllProcedureUsesVariables() == data));
+		}
+
+		TEST_METHOD(PKBParserGetAllVariableUsesProcedures)
+		{
+			unordered_map<int, std::vector<int>> data;
+			data.insert({ 1,{ 1,2 } });
+			data.insert({ 2,{ 1,2 } });
+			data.insert({ 3,{ 1 } });
+			data.insert({ 5,{ 1 } });
+			Assert::AreEqual(true, (pkb.getAllVariableUsesProcedures() == data));
+		}
+
+		TEST_METHOD(PKBParserCheckStatementUsesVariable)
+		{
+			Assert::AreEqual(true, pkb.checkStatementUsesVariable(1, 2));
+			Assert::AreEqual(false, pkb.checkStatementUsesVariable(1, 3));
+		}
+
+		TEST_METHOD(PKBParserCheckProcedureUsesVariable)
+		{
+			Assert::AreEqual(true, pkb.checkProcedureUsesVariable(1, 2));
+			Assert::AreEqual(false, pkb.checkProcedureUsesVariable(2, 3));
+		}
+
+		TEST_METHOD(PKBParserGetModifiesVariablesFromStatement)
+		{
+			std::vector<int> data = { 1 };
+			Assert::AreEqual(true, (pkb.getModifiesVariablesFromStatement(1) == data));
+		}
+
+		TEST_METHOD(PKBParserGetStatementsFromModifiesVariables)
+		{
+			std::vector<int> data = { 1,10 };
+			Assert::AreEqual(true, (pkb.getStatementsFromModifiesVariable(1) == data));
+		}
+
+		TEST_METHOD(PKBParserGetModifiesVariablesFromProcedure)
+		{
+			std::vector<int> data = { 1,2,3,4,5 };
+			Assert::AreEqual(true, (pkb.getModifiesVariablesFromProcedure(1) == data));
+		}
+
+		TEST_METHOD(PKBParserGetProceduresFromModifiesVariable)
+		{
+			std::vector<int> data = { 1,2 };
+			Assert::AreEqual(true, (pkb.getProceduresFromModifiesVariable(1) == data));
+		}
+
+		TEST_METHOD(PKBParserGetAllStatementModifiesVariables)
+		{
+			unordered_map<int, std::vector<int>> data;
+			data.insert({ 1,{ 1 } });
+			data.insert({ 3,{ 2 } });
+			data.insert({ 4,{ 4 } });
+			data.insert({ 7,{ 3 } });
+			data.insert({ 8,{ 4 } });
+			data.insert({ 9,{ 5 } });
+			data.insert({ 10,{ 1 } });
+			data.insert({ 13,{ 1 } });
+			Assert::AreEqual(true, (pkb.getAllStatementModifiesVariables() == data));
+		}
+
+		TEST_METHOD(PKBParserGetAllVariableModifiesStatements)
+		{
+			unordered_map<int, std::vector<int>> data;
+			data.insert({ 1,{ 1,10,13 } });
+			data.insert({ 2,{ 3 } });
+			data.insert({ 3,{ 7 } });
+			data.insert({ 4,{ 4, 8 } });
+			data.insert({ 5,{ 9 } });
+			Assert::AreEqual(true, (pkb.getAllVariableModifiesStatements() == data));
+		}
+
+		TEST_METHOD(PKBParserGetAllProcedureModifiesVariables)
+		{
+			unordered_map<int, std::vector<int>> data;
+			data.insert({ 1,{ 1,2,3,4,5 } });
+			data.insert({ 2,{ 1 } });
+			Assert::AreEqual(true, (pkb.getAllProcedureModifiesVariables() == data));
+		}
+
+		TEST_METHOD(PKBParserGetAllVariableModifiesProcedures)
+		{
+			unordered_map<int, std::vector<int>> data;
+			data.insert({ 1,{ 1,2 } });
+			data.insert({ 2,{ 1 } });
+			data.insert({ 3,{ 1 } });
+			data.insert({ 4,{ 1 } });
+			data.insert({ 5,{ 1 } });
+			Assert::AreEqual(true, (pkb.getAllVariableModifiesProcedures() == data));
+		}
+
+		TEST_METHOD(PKBParserCheckStatementModifiesVariable)
+		{
+			Assert::AreEqual(true, pkb.checkStatementModifiesVariable(1, 1));
+			Assert::AreEqual(false, pkb.checkStatementModifiesVariable(1, 2));
+		}
+
+		TEST_METHOD(PKBParserCheckProcedureModifiesVariable)
+		{
+			Assert::AreEqual(true, pkb.checkProcedureModifiesVariable(1, 2));
+			Assert::AreEqual(false, pkb.checkProcedureModifiesVariable(2, 2));
+		}
+
+		TEST_METHOD(PKBParserGetStatementsWithConstant)
+		{
+			std::vector<int> data = { 8,9,13 };
+			Assert::AreEqual(true, (pkb.getStatementsWithConstant(1) == data));
+		}
 	};
 }

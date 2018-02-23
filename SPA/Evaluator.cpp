@@ -110,8 +110,16 @@ void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	RelRef relation = clause.getRelRef();
 	if (relation == Follows) {
 		evaluateFollows(clause, clauseResults);
-	} else if (relation == FollowsT) {
+	}
+	else if (relation == FollowsT) {
 		evaluateFollowStar(clause, clauseResults);
+	}
+	else if (relation == Parent) {
+		evaluateParent(clause, clauseResults);
+	}
+	else if (relation == ParentT) {
+		evaluateParentStar(clause, clauseResults);
+	}
 	//else if (relation == PARENT) {
 	//	evaluateParent(clause, clauseResults);
 	//}
@@ -122,8 +130,7 @@ void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	//	//evaluateUses(clause, clauseResults);
 	////}
 	////else if (relation == MODIFIES) {
-	//	//evaluateModifies(clause, clauseResults);
-	} else {}
+	//	//evaluateModifies(clause, clauseResults); else {}
 };
 
 /* Assumes Selected is within ClauseResults */
@@ -208,65 +215,67 @@ void Evaluator::evaluateFollowStar(Clause &clause, ClauseResults &clauseResults)
 	}
 };
 
-//void Evaluator::evaluateParent(Clause &clause, ClauseResults &clauseResults) {
-//
-//	Param leftParam = clause.getFirstParam();
-//	Param rightParam = clause.getSecondParam();
-//
-//	if (leftParam.type == STMT) {
-//		if (rightParam.type == STMT) {
-//			vector<vector<int>> results = pkb.getAllParent();
-//		}
-//		else if (rightParam.type == INTEGER) {
-//			int result = pkb.getParent(stoi(rightParam.value));
-//			vector<int> vectorResult = { result };
-//			clauseResults.setKeys(vectorResult);
-//		}
-//		else { ; }
-//	}
-//	else if (leftParam.type == INTEGER) {
-//		if (rightParam.type == STMT) {
-//			vector<int> result = pkb.getChildren(stoi(leftParam.value));
-//			clauseResults.setKeys(result);
-//		}
-//		else if (rightParam.type == INTEGER) {
-//			bool result = pkb.checkParent(stoi(leftParam.value), stoi(rightParam.value));
-//			clauseResults.setValid(result);
-//		}
-//		else { ; }
-//	}
-//	else { ; }
-//};
-//
-//void Evaluator::evaluateParentStar(Clause &clause, ClauseResults &clauseResults) {
-//
-//	Param leftParam = clause.getFirstParam();
-//	Param rightParam = clause.getSecondParam();
-//
-//	if (leftParam.type == STMT) {
-//		if (rightParam.type == STMT) {
-//			unordered_map<int, vector<int>> results = pkb.getAllParentStar();
-//			storeMapToResults(clauseResults, results);
-//		}
-//		else if (rightParam.type == INTEGER) {
-//			vector<int> results = pkb.getParentStar(stoi(rightParam.value));
-//			clauseResults.setKeys(results);
-//		}
-//		else { ; }
-//	}
-//	else if (leftParam.type == INTEGER) {
-//		if (rightParam.type == STMT) {
-//			vector<int> results = pkb.getChildrenStar(stoi(leftParam.value));
-//			clauseResults.setKeys(results);
-//		}
-//		else if (rightParam.type == INTEGER) {
-//			bool result = pkb.checkParentStar(stoi(leftParam.value), stoi(rightParam.value));
-//			clauseResults.setValid(result);
-//		}
-//		else { ; }
-//	}
-//	else { ; }
-//};
+void Evaluator::evaluateParent(Clause &clause, ClauseResults &clauseResults) {
+
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (Utils::isSynonym(leftParam.type)) { // (syn, syn)
+		if (Utils::isSynonym(rightParam.type)) {
+			vector<vector<int>> results = pkb.getAllParent();
+			clauseResults.setkeyValues(results);
+			intersectDouble(clauseResults);
+		}
+		else { // (syn, concrete)
+			int result = pkb.getParent(stoi(rightParam.value));
+			vector<int> vectorResult = { result };
+			clauseResults.setValues(vectorResult);
+			intersectSingle(clauseResults);
+		}
+	}
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+			vector<int> result = pkb.getChildren(stoi(leftParam.value));
+			clauseResults.setValues(result);
+			intersectSingle(clauseResults);
+
+		}
+		else { // (concrete, conrete)
+			bool result = pkb.checkParent(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
+		}
+	}
+};
+
+void Evaluator::evaluateParentStar(Clause &clause, ClauseResults &clauseResults) {
+
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (Utils::isSynonym(leftParam.type)) {
+		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+			unordered_map<int, vector<int>> results = pkb.getAllParentStar();
+			clauseResults.setkeyValues(results);
+			intersectDouble(clauseResults);
+		}
+		else { // (syn, concrete)
+			vector<int> results = pkb.getParentStar(stoi(rightParam.value));
+			clauseResults.setValues(results);
+			intersectSingle(clauseResults);
+		}
+	}
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+			vector<int> results = pkb.getChildrenStar(stoi(leftParam.value));
+			clauseResults.setValues(results);
+			intersectSingle(clauseResults);
+		}
+		else { // (concrete, concrete)
+			bool result = pkb.checkParentStar(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
+		}
+	}
+};
 
 //void Evaluator::evaluateUses(Clause &clause, ClauseResults &clauseResults) {
 //
