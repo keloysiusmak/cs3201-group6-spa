@@ -116,8 +116,8 @@ namespace PKBEvaluatorIntegrationTesting
 		{
 			QueryObject q;
 			
-			q.insertSelectStmt(VARIABLE, "s");
-			q.insertClause(Parent, INTEGER, "1", STMT, "s");
+			q.insertSelectStmt(STMT, "s");
+			q.insertClause(Follows, INTEGER, "1", STMT, "s");
 
 			evaluator.setQueryObject(q);
 
@@ -125,7 +125,51 @@ namespace PKBEvaluatorIntegrationTesting
 			list<string> expected;
 			expected.push_back("2");
 			Assert::AreEqual(true, (expected == result));
+		}
 
+		TEST_METHOD(PKBEvaluatorParent)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(STMT, "s");
+			q.insertClause(Parent, INTEGER, "2", STMT, "s");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorUses)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(VARIABLE, "v");
+			q.insertClause(UsesS, INTEGER, "1", VARIABLE, "v");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("b");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorModifies)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(VARIABLE, "v");
+			q.insertClause(ModifiesS, INTEGER, "1", VARIABLE, "v");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("a");
+			Assert::AreEqual(true, (expected == result));
 		}
 
 	};
