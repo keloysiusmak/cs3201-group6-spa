@@ -4,7 +4,7 @@
 
 using namespace std;
 
-enum ParamType { ASSIGN, STMT, VARIABLE, WHILE, PROG_LINE, 
+enum ParamType { ASSIGN, STMT, VARIABLE, WHILE, PROG_LINE, IF,
 				INTEGER, CONSTANT, VAR_NAME, 
 				IDENT, SYNONYM, ALL };
 
