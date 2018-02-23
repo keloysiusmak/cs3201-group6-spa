@@ -18,7 +18,7 @@ public:
 	QueryObject();
 	QueryObject(string);
 
-	void insertClause(string, ParamType, string, ParamType, string);
+	void insertClause(RelRef, ParamType, string, ParamType, string);
 	void insertPattern(ParamType, string, ParamType, string, ParamType, string);
 	void insertSelectStmt(ParamType, string);
 

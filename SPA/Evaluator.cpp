@@ -1,16 +1,9 @@
 #include "Evaluator.h"
-#include <set> 
+#include <set>
 
 using namespace std;
 
 string VALID_QUERY = "Query is valid";
-
-string FOLLOWS = "Follows";
-string FOLLOWSTAR = "Followstar";
-string PARENT = "Parent";
-string PARENTSTAR = "Parentstar";
-//string USES = "uses";
-//string MODIFIES = "modifies";
 
 string STMT_SYN = "stmtSyn";
 string STMT_NUM = "stmtNumber";
@@ -20,6 +13,10 @@ Evaluator::Evaluator() {
 	// Defaults true
 	validQuery = true;
 };
+
+Evaluator::Evaluator(QueryObject queryObj) {
+	queryObject = queryObj;
+}
 
 /* getters and setter Methods */
 void Evaluator::setPKB(PKB generatedPKB) {
@@ -70,9 +67,10 @@ list<string> Evaluator::evaluateQuery() {
 };
 
 void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
-	string relation = clause.getRelRef();
-	if (relation == FOLLOWS) {
+	RelRef relation = clause.getRelRef();
+	if (relation == Follows) {
 		evaluateFollows(clause, clauseResults);
+	}
 	//} else if (relation == FOLLOWSTAR) {
 	//	evaluateFollowStar(clause, clauseResults);
 	//}
@@ -81,13 +79,13 @@ void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	//}
 	//else if (relation == PARENTSTAR) {
 	//	evaluateParentStar(clause, clauseResults);
-	//} 
-	//else if (relation == USES) {
-		//evaluateUses(clause, clauseResults);
-	//}
-	//else if (relation == MODIFIES) {
-		//evaluateModifies(clause, clauseResults);
-	} else {}
+	////} 
+	////else if (relation == USES) {
+	//	//evaluateUses(clause, clauseResults);
+	////}
+	////else if (relation == MODIFIES) {
+	//	//evaluateModifies(clause, clauseResults);
+	//} else {}
 };
 
 list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &selected) {

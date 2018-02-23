@@ -5,21 +5,23 @@
 
 using namespace std;
 
+enum RelRef { ModifiesS, UsesS, Parent, ParentT, Follows, FollowsT };
+
 class Clause {
 private:
-	string _relRef;
+	RelRef _relRef;
 	Param _firstParam;
 	Param _secondParam;
 
 public:
 	//Constructors
 	Clause();
-	Clause(string, Param, Param);
+	Clause(RelRef, Param, Param);
 
 	//Methods
-	void setClause(string, Param, Param);
+	void setClause(RelRef, Param, Param);
 
-	string getRelRef();
+	RelRef getRelRef();
 	Param getFirstParam();
 	Param getSecondParam();
 };
