@@ -70,10 +70,8 @@ void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	RelRef relation = clause.getRelRef();
 	if (relation == Follows) {
 		evaluateFollows(clause, clauseResults);
-	}
-	//} else if (relation == FOLLOWSTAR) {
-	//	evaluateFollowStar(clause, clauseResults);
-	//}
+	} else if (relation == FollowsT) {
+		evaluateFollowStar(clause, clauseResults);
 	//else if (relation == PARENT) {
 	//	evaluateParent(clause, clauseResults);
 	//}
@@ -85,7 +83,7 @@ void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	////}
 	////else if (relation == MODIFIES) {
 	//	//evaluateModifies(clause, clauseResults);
-	//} else {}
+	} else {}
 };
 
 list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &selected) {
@@ -138,111 +136,35 @@ void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
 	}
 };
 
-void Evaluator::intersectSingle(ClauseResults &clauseResults) {
-
-	int typeInt;
-	Param leftParam = clauseResults.lhs;
-	Param rightParam = clauseResults.rhs;
-
-	/* Get typeInt for param */
-	(Utils::isSynonym(leftParam.type)) ? typeInt = typeToIntMap(leftParam.type) :
-		typeInt = typeToIntMap(rightParam.type);
-
-	/* Return out if synonym is statement */
-	if (typeInt == 0) return;
-
-	pkb.getAllStatementsWithType(typeInt);
-	vector<int> validTypeStmts = pkb.getAllStatementsWithType(typeInt);
-	vector<int> filtered;
-
-	/* Intersect vectors */
-	for (int stmt1 : clauseResults.values) {
-		for (int stmt2 : validTypeStmts) {
-			if (stmt1 == stmt2) {
-				filtered.push_back(stmt1);
-			}
-		}
-	}
-	clauseResults.setValues(filtered);
-};
-
-void Evaluator::intersectDouble(ClauseResults &clauseResults) {
-
-	Param leftParam = clauseResults.lhs;
-	Param rightParam = clauseResults.rhs;
-	int leftParamIntType = typeToIntMap(leftParam.type);
-	int rightParamIntType = typeToIntMap(rightParam.type);
-		
-	/* Filter Keys */
-	if (leftParamIntType != 0) {
-		unordered_map<int, vector<int>> keyValueTable = clauseResults.keyValues;
-		unordered_map<int, vector<int>> filteredTable;
-		vector<int> leftParamValidStmts = pkb.getAllStatementsWithType(leftParamIntType);
-		for (auto keyValuePair : keyValueTable) {
-			for (int stmt : leftParamValidStmts) {
-				if (stmt == keyValuePair.first) {
-					filteredTable.insert(keyValuePair);
-				}
-			}
-		}
-		clauseResults.setkeyValues(filteredTable);
-	}
-
-	/* Filter values */
-	if (rightParamIntType != 0) {
-		unordered_map<int, vector<int>> keyValueTable = clauseResults.keyValues;
-		vector<int> rightParamValidStmts = pkb.getAllStatementsWithType(rightParamIntType);
-		for (auto keyValuePair : keyValueTable) {
-			for (int validStmt : rightParamValidStmts) {
-				vector<int> filteredStmts;
-				for (int stmt : keyValuePair.second) {
-					if (validStmt == stmt) {
-						filteredStmts.push_back(validStmt);
-					}
-				}
-				keyValuePair.second = filteredStmts;
-			}
-		}
-	}
-}
-
-int Evaluator::typeToIntMap(ParamType t) {
-	switch (t) {
-	case ASSIGN:
-		return 1;
-	case WHILE:
-		return 2;
-	default:
-		return 0;
-	}
-}
 
 void Evaluator::evaluateFollowStar(Clause &clause, ClauseResults &clauseResults) {
 
 	Param leftParam = clause.getFirstParam();
 	Param rightParam = clause.getSecondParam();
 
-	if (leftParam.type == STMT) {
-		if (rightParam.type == STMT) {
+	if (Utils::isSynonym(leftParam.type)) {
+		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
 			unordered_map<int, vector<int>> results = pkb.getAllFollowsStar();
-			storeMapToResults(clauseResults, results);
+			clauseResults.setkeyValues(results);
+			intersectDouble(clauseResults);
 		}
-		else if (rightParam.type == INTEGER) {
+		else { // (syn, concrete)
 			vector<int> results = pkb.getFollowsBeforeStar(stoi(rightParam.value));
+			clauseResults.setValues(results);
+			intersectSingle(clauseResults);
 		}
-		else { ; }
 	}
-	else if (leftParam.type == INTEGER) {
-		if (rightParam.type == STMT) {
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
 			vector<int> results = pkb.getFollowsAfterStar(stoi(leftParam.value));
+			clauseResults.setValues(results);
+			intersectSingle(clauseResults);
 		}
-		else if (rightParam.type == INTEGER) {
+		else { // (concrete, concrete)
 			bool result = pkb.checkFollowsStar(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
-		else { ; }
 	}
-	else { ; }
 };
 
 //void Evaluator::evaluateParent(Clause &clause, ClauseResults &clauseResults) {
@@ -425,6 +347,7 @@ void Evaluator::evaluateFollowStar(Clause &clause, ClauseResults &clauseResults)
 //	else { ; } */
 //};
 //
+
 /* Iterates through key value pair in unorderedMap and stores the corresponding rows */
 void Evaluator::storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map) {
 	vector<int> keys;
@@ -437,3 +360,81 @@ void Evaluator::storeMapToResults(ClauseResults &clauseResults, unordered_map<in
 	//clauseResults.setValues(values);
 };
 
+void Evaluator::intersectSingle(ClauseResults &clauseResults) {
+
+	int typeInt;
+	Param leftParam = clauseResults.lhs;
+	Param rightParam = clauseResults.rhs;
+
+	/* Get typeInt for param */
+	(Utils::isSynonym(leftParam.type)) ? typeInt = typeToIntMap(leftParam.type) :
+		typeInt = typeToIntMap(rightParam.type);
+
+	/* Return out if synonym is statement */
+	if (typeInt == 0) return;
+
+	pkb.getAllStatementsWithType(typeInt);
+	vector<int> validTypeStmts = pkb.getAllStatementsWithType(typeInt);
+	vector<int> filtered;
+
+	/* Intersect vectors */
+	for (int stmt1 : clauseResults.values) {
+		for (int stmt2 : validTypeStmts) {
+			if (stmt1 == stmt2) {
+				filtered.push_back(stmt1);
+			}
+		}
+	}
+	clauseResults.setValues(filtered);
+};
+
+void Evaluator::intersectDouble(ClauseResults &clauseResults) {
+
+	Param leftParam = clauseResults.lhs;
+	Param rightParam = clauseResults.rhs;
+	int leftParamIntType = typeToIntMap(leftParam.type);
+	int rightParamIntType = typeToIntMap(rightParam.type);
+		
+	/* Filter Keys */
+	if (leftParamIntType != 0) {
+		unordered_map<int, vector<int>> keyValueTable = clauseResults.keyValues;
+		unordered_map<int, vector<int>> filteredTable;
+		vector<int> leftParamValidStmts = pkb.getAllStatementsWithType(leftParamIntType);
+		for (auto keyValuePair : keyValueTable) {
+			for (int stmt : leftParamValidStmts) {
+				if (stmt == keyValuePair.first) {
+					filteredTable.insert(keyValuePair);
+				}
+			}
+		}
+		clauseResults.setkeyValues(filteredTable);
+	}
+
+	/* Filter values */
+	if (rightParamIntType != 0) {
+		unordered_map<int, vector<int>> keyValueTable = clauseResults.keyValues;
+		vector<int> rightParamValidStmts = pkb.getAllStatementsWithType(rightParamIntType);
+		for (auto keyValuePair : keyValueTable) {
+			for (int validStmt : rightParamValidStmts) {
+				vector<int> filteredStmts;
+				for (int stmt : keyValuePair.second) {
+					if (validStmt == stmt) {
+						filteredStmts.push_back(validStmt);
+					}
+				}
+				keyValuePair.second = filteredStmts;
+			}
+		}
+	}
+}
+
+int Evaluator::typeToIntMap(ParamType t) {
+	switch (t) {
+	case ASSIGN:
+		return 1;
+	case WHILE:
+		return 2;
+	default:
+		return 0;
+	}
+}
