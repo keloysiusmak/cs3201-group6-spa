@@ -68,24 +68,24 @@ list<string> Evaluator::evaluateQuery() {
 };
 
 void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
-	string relation = clause.getRelRef();
-	if (relation == FOLLOWS) {
-		evaluateFollows(clause, clauseResults);
-	} else if (relation == FOLLOWSTAR) {
-		evaluateFollowStar(clause, clauseResults);
-	}
-	else if (relation == PARENT) {
-		evaluateParent(clause, clauseResults);
-	}
-	else if (relation == PARENTSTAR) {
-		evaluateParentStar(clause, clauseResults);
-	//} 
-	//else if (relation == USES) {
-		//evaluateUses(clause, clauseResults);
+	//string relation = clause.getRelRef();
+	//if (relation == FOLLOWS) {
+	//	evaluateFollows(clause, clauseResults);
+	//} else if (relation == FOLLOWSTAR) {
+	//	evaluateFollowStar(clause, clauseResults);
 	//}
-	//else if (relation == MODIFIES) {
-		//evaluateModifies(clause, clauseResults);
-	} else {}
+	//else if (relation == PARENT) {
+	//	evaluateParent(clause, clauseResults);
+	//}
+	//else if (relation == PARENTSTAR) {
+	//	evaluateParentStar(clause, clauseResults);
+	////} 
+	////else if (relation == USES) {
+	//	//evaluateUses(clause, clauseResults);
+	////}
+	////else if (relation == MODIFIES) {
+	//	//evaluateModifies(clause, clauseResults);
+	//} else {}
 };
 
 list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &selected) {
