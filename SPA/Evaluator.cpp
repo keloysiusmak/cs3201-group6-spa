@@ -168,11 +168,26 @@ list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &sele
 	Param leftParam = clauseResults.lhs;
 	Param rightParam = clauseResults.rhs;
 	set<int> answerSet;
-	// Retrieve values from hashmap vectors of values
-	
-	// Print values directly
-	for (int value : clauseResults.values) {
-		answerSet.insert(value);
+
+	if (clauseResults.values.size()) { // Get selected from values 
+		for (int value : clauseResults.values) {
+			answerSet.insert(value);
+		}
+	}
+	else if (clauseResults.values.size()) { // Get selected from hashtable
+		for (auto pair : clauseResults.keyValues) {
+			if (leftParam.type == selected.type) {
+				answerSet.insert(pair.first);
+			}
+			else {
+				for (int value : pair.second) {
+					answerSet.insert(value);
+				}
+			}
+		}
+	}
+	else {
+		return{ "None" };
 	}
 
 	// Store set of answers into list of strings
