@@ -63,6 +63,7 @@ public:
 	list<string> evaluateQuery();
 	list<string> invalidQuery(string);
 
+	bool isValidQuery();
 	QueryObject getQueryObject();
 	
 	// Linkage to other components
