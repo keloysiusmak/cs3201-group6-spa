@@ -150,12 +150,6 @@ void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	else if (relation == ParentT) {
 		evaluateParentStar(clause, clauseResults);
 	}
-	//else if (relation == PARENT) {
-	//	evaluateParent(clause, clauseResults);
-	//}
-	//else if (relation == PARENTSTAR) {
-	//	evaluateParentStar(clause, clauseResults);
-	////} 
 	////else if (relation == USES) {
 	//	//evaluateUses(clause, clauseResults);
 	////}
@@ -200,6 +194,10 @@ list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &sele
 
 /* Evaluation components */
 
+/* Follows cases:
+lhs: s, a, if, w, int
+rhs: s, a, if, w, int
+*/
 void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
 
 	Param leftParam = clause.getFirstParam();
@@ -232,7 +230,6 @@ void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
 	}
 };
 
-
 void Evaluator::evaluateFollowStar(Clause &clause, ClauseResults &clauseResults) {
 
 	Param leftParam = clause.getFirstParam();
@@ -263,6 +260,10 @@ void Evaluator::evaluateFollowStar(Clause &clause, ClauseResults &clauseResults)
 	}
 };
 
+/* Parent cases:
+lhs: s, a, if, w, int
+rhs: s, a, if, w, int
+*/
 void Evaluator::evaluateParent(Clause &clause, ClauseResults &clauseResults) {
 
 	Param leftParam = clause.getFirstParam();
@@ -325,66 +326,45 @@ void Evaluator::evaluateParentStar(Clause &clause, ClauseResults &clauseResults)
 	}
 };
 
-//void Evaluator::evaluateUses(Clause &clause, ClauseResults &clauseResults) {
-//
-//	Param leftParam = clause.getFirstParam();
-//	Param rightParam = clause.getSecondParam();
-//
-//	if (rightParam.type == VARIABLE) {
-//		if (leftParam.type == STMT) {
-//			vector<int> result = pkb.getStatementsFromUsesVariable(stoi(rightParam.value));
-//			clauseResults.setKeys(result);
-//		}
-//		else if (leftParam.type == PROG_LINE) {
-//			bool result = pkb.checkStatementUsesVariable(stoi(leftParam.value), stoi(rightParam.value));
-//			clauseResults.setValid(result);
-//		}
-//		/* else if (leftParam.type == PROCEDURE) {
-//			bool result = pkb.checkProcedureUsesVariable(stoi(leftParam.value), stoi(rightParam.value));
-//			clauseResults.setValid(result);
-//		}
-//		else if (leftParam.type == PROC_SYN) {
-//			vector<int> result = pkb.getProceduresFromUsesVariable(stoi(rightParam.value));
-//			clauseResults.setKeys(result);
-//		} */
-//		else { ; }
-//	}
-//	/* else if (rightParam.type == VAR_SYN) {
-//		if (leftParam.type == STMT) {
-//			if (selectParam == leftParam.type) {
-//				unordered_map<int, vector<int>> results = pkb.getAllStatementUsesVariables();
-//				storeMapToResults(clauseResults, results);
-//			}
-//			else if (selectParam == rightParam.type) {
-//				unordered_map<int, vector<int>> results = pkb.getAllVariableUsesStatements();
-//				storeMapToResults(clauseResults, results);
-//			}
-//			else { ; }
-//		}
-//		else if (leftParam.type == PROG_LINE) {
-//			vector<int> result = pkb.getUsesVariablesFromStatement(stoi(leftParam.value));
-//			clauseResults.setKeys(result);
-//		}
-//		else if (leftParam.type == PROCEDURE) {
-//			vector <int> result = pkb.getProceduresFromUsesVariable(stoi(leftParam.value));
-//			clauseResults.setKeys(result);
-//		}
-//		else if (leftParam.type == PROC_SYN) {
-//			if (selectParam == leftParam.type) {
-//				unordered_map<int, vector<int>> results = pkb.getAllProcedureUsesVariables();
-//				storeMapToResults(clauseResults, results);
-//			}
-//			else if (selectParam == rightParam.type) {
-//				unordered_map<int, vector<int>> results = pkb.getAllVariableUsesProcedures();
-//				storeMapToResults(clauseResults, results);
-//			}
-//			else { ; }
-//		}
-//		else { ; }
-//	} */
-//	else { ; }
-//};
-//
+/* Uses cases:
+lhs: s, w, if, a, int
+rhs: v, var_name, constant
+*/
+void Evaluator::evaluateUses(Clause &clause, ClauseResults &clauseResults) {
+
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (Utils::isSynonym(leftParam.type)) {
+		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+			unordered_map<int, vector<int>> results = pkb.getAllStatementUsesVariables();
+			clauseResults.setkeyValues(results);
+			intersectDouble(clauseResults);
+		}
+		else { // (syn, concrete)
+			if (rightParam.type == INTEGER) { // RHS is integer constant
+				vector<int> results = pkb.getStatementsWithConstant(stoi(rightParam.value));
+				clauseResults.setValues(results);
+			}
+			else { // LHS is var_name
+				int variableId = pkb.getVariableId(rightParam.value);
+				vector<int> results = pkb.getStatementsFromUsesVariable(variableId);
+				clauseResults.setValues(results);
+			}
+		}
+	}
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+			vector<int> results = pkb.getUsesVariablesFromStatement(stoi(leftParam.value));
+			clauseResults.setValues(results);
+		}
+		else { // (concrete, concrete)
+			bool result = pkb.checkStatementUsesVariable(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
+		}
+	}
+};
+
 //void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
 //
 //	Param leftParam = clause.getFirstParam();
@@ -567,6 +547,9 @@ void Evaluator::intersectDouble(ClauseResults &clauseResults) {
 		}
 		clauseResults.setkeyValues(filteredTable);
 	}
+	
+	/* Short circuit for variable */
+	if (rightParam.type == VARIABLE) return;
 
 	/* Filter values */
 	if (rightParamIntType != 0) {
