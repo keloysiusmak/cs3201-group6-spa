@@ -54,97 +54,91 @@ void Parser::expression() {
 
 }
 
+void Parser::ifStatement() {
+	int currentIfNum = currentStmNum;
+	int curStmListId = stmListIdStack.top();
+	// insert StmtListID to StmtTable1 
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::IF_TYPE } });
+	// insert StmtID to StmtListTable2
+	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentStmNum },{},{ ParserConstants::IF_TYPE } });
+
+	match("if");
+	// insert variable to varTable
+	string var_name = nextToken;
+	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
+	// insert uses to table 1,3,4
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{ var_id },{},{} });
+	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{ var_id },{} });
+	pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { currentStmNum },{ currentProcId } });
+	match("", true);
+	match("then");
+	match("{");
+	statementList();
+	match("}");
+	// else
+	// insert StmtID to StmtListTable2 - new StmtList
+	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentIfNum },{},{ ParserConstants::IF_TYPE } });
+	match("else");
+	match("{");
+	statementList();
+	match("}");
+}
+
+void Parser::whileStatement() {
+	int curStmListId = stmListIdStack.top();
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::WHILE_TYPE } });
+	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentStmNum },{},{ ParserConstants::WHILE_TYPE } });
+
+	match("while");
+	// insert variable
+	string var_name = nextToken;
+	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
+	// insert uses to table 1,3,4
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{ var_id },{},{} });
+	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{ var_id },{} });
+	pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { currentStmNum },{ currentProcId } });
+	match("", true);
+	match("{");
+	statementList();
+	match("}");
+}
+
+void Parser::assignStatement() {
+	int curStmListId = stmListIdStack.top();
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::ASSIGNMENT_TYPE } });
+	// insert variable
+	string var_name = nextToken;
+	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
+	// insert modifies to table 1,3,5
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{},{ var_id },{} });
+	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{},{ var_id } });
+	pkb.insertToTable(ParserConstants::MODIFIES_TABLE_5, var_id, { { currentStmNum },{ currentProcId } });
+	match("", true);
+	match("=");
+	//expression();
+	match("", true);
+	match(";");
+}
+
 void Parser::statement() {
 	string var_name;
 	int var_id;
+	// increate Statement number
 	currentStmNum++;
-	// *** add cur stm to cur stm list ***
 	// need to top
 	int curStmListId = stmListIdStack.top();
-	cout << "curStmListId: " << curStmListId << ". ";
-	cout << "curNum: " << currentStmNum << ". ";
 
-	// Iterate and print values of vector
-	cout << "vectorBefore: ";
-	for (int m : stmIdMap[curStmListId]) {
-		std::cout << m << " ";
-	}
-	cout << "]\n";
-
-	stmIdMap[curStmListId].push_back(currentStmNum);
+	// *** add cur stm to cur stm list ***
 	bool a = pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, curStmListId, { {},{ currentStmNum },{} });
 
-	cout << "vectorAfter: ";
-	for (int m : stmIdMap[curStmListId]) {
-		std::cout << m << " ";
-	}
-	cout << "]\n";
-
-
 	if (nextToken == "if") {
-		int currentIfNum = currentStmNum;
-		stmIdMap.insert({ nextStmListId,{ currentStmNum } });
-		//table 1
-		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::IF_TYPE } });
-		pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentStmNum },{},{ ParserConstants::IF_TYPE } });
-
-
-		match("if");
-		// insert variable
-		var_name = nextToken;
-		var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
-		// insert uses to table 1,3,4
-		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{ var_id },{},{} });
-		pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{ var_id },{} });
-		pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { currentStmNum },{ currentProcId } });
-		match("", true);
-		match("then");
-		match("{");
-		statementList();
-		match("}");
-		// else
-		stmIdMap.insert({ nextStmListId,{ currentIfNum } });
-		pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentIfNum },{},{ ParserConstants::IF_TYPE } });
-		match("else");
-		match("{");
-		statementList();
-		match("}");
+		ifStatement();
 	}
 	else if (nextToken == "while") {
-		stmIdMap.insert({ nextStmListId,{ currentStmNum } });
-		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::WHILE_TYPE } });
-		pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentStmNum },{},{ ParserConstants::WHILE_TYPE } });
-
-		match("while");
-		// insert variable
-		var_name = nextToken;
-		var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
-		// insert uses to table 1,3,4
-		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{ var_id },{},{} });
-		pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{ var_id },{} });
-		pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { currentStmNum },{ currentProcId } });
-		match("", true);
-		match("{");
-		statementList();
-		match("}");
+		whileStatement();
 	}
 	else {
-		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::ASSIGNMENT_TYPE } });
-		// insert variable
-		var_name = nextToken;
-		var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
-		// insert modifies to table 1,3,5
-		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{},{ var_id },{} });
-		pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{},{ var_id } });
-		pkb.insertToTable(ParserConstants::MODIFIES_TABLE_5, var_id, { { currentStmNum },{ currentProcId } });
-
-
-		match("", true);
-		match("=");
-		//expression();
-		match("", true);
-		match(";");
-
+		assignStatement();
 	}
 
 }
@@ -173,7 +167,6 @@ void Parser::procedure() {
 	currentProcId = pkb.insertToNameTable(ParserConstants::PROC_TABLE_8, procName);
 	match("", true);
 	match("{");
-	stmIdMap.insert({ nextStmListId,{ 0 } });
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { ParserConstants::PROCEDURE_PARENT_ID },{},{ ParserConstants::PROCEDURE_PARENT_ID } });
 	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { { nextStmListId },{},{} });
 	statementList();
@@ -231,14 +224,7 @@ PKB Parser::Parse(string fileName, PKB passedPKB, bool isString, string stringIn
 		//return EXIT_FAILURE;
 	}
 	std::cout << "success!";
-	for (const auto& n : stmIdMap) {
-		std::cout << "Key:[" << n.first << "] Value:[";
-		// Iterate and print values of vector
-		for (int m : n.second) {
-			std::cout << m << " ";
-		}
-		cout << "]\n";
-	}
+
 	return pkb;
 }
 

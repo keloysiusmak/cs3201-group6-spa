@@ -26,11 +26,12 @@ private:	 PKB pkb;
 			 stack<int> stmListIdStack;
 			 int nextStmListId = 1;
 			 int currentProcId = 0;
-			 unordered_map<int, vector<int>> stmIdMap;
-
 
 			 bool match(string, bool);
 			 void expression();
+			 void ifStatement();
+			 void whileStatement();
+			 void assignStatement();
 			 void statement();
 			 void statementList();
 			 void procedure();
