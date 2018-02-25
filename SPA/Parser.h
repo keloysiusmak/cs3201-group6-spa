@@ -8,6 +8,7 @@
 #include <stack>
 #include <deque>
 #include <unordered_map>
+#include "../SPA/Utils.h"
 using namespace std;
 
 
@@ -16,10 +17,22 @@ public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stri
 		  Parser();
 		  void tokenize(string content);
 
+
 private:	 PKB pkb;
 			 string nextToken;
 			 stringstream simpleStringStream;
 			 string getToken();
+			 queue<string> getRPN(queue<string>);
+			 queue<string> originalExpression;
+			 string word;
+			 string previousWord;
+			 void parseFactor();
+			 void parseOperator();
+			 void parseOpenBracket();
+			 void parseCloseBracket();
+			 queue<string> getExpression();
+			 stack<string> operationStack;
+			 queue<string> expressionQueue;
 			 vector<string> tokens;
 			 vector<string>::iterator iter;
 			 int currentStmNum = 0;
@@ -36,6 +49,7 @@ private:	 PKB pkb;
 			 void statementList();
 			 void procedure();
 			 void program();
+			 string getWord();
 			 string test;
 			 struct MyException : public exception {
 				 const char * what() const throw () {
