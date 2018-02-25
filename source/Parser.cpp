@@ -41,6 +41,23 @@ queue<string> Parser::getRPN(queue<string> expr)
 		if (Utils::isValidFactor(word)) {
 			//factor either appears at the start of the expression, or it follows an open bracket or operator
 			//cout << "var: " << word;
+			if (Utils::isValidConstant(word)) {
+				cout << "word" << word;
+				int constant = stoi(word);
+				pkb.insertToTable(ParserConstants::CONST_TABLE_7, constant, { { currentStmNum } });
+			}
+			else if (Utils::isValidName(word)) {
+				string var_name = word;
+				int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
+				// insert uses
+				pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{ var_id },{},{} });
+				pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{ var_id },{} });
+				pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { currentStmNum },{ currentProcId } });
+
+			}
+			else {
+				throw InvalidExpressionException("Invalid Expression!");
+			}
 			parseFactor();
 		}
 		else if (Utils::isOpenBracket(word)) {
@@ -172,7 +189,7 @@ void Parser::ifStatement() {
 	int currentIfNum = currentStmNum;
 	int curStmListId = stmListIdStack.top();
 	// insert StmtListID to StmtTable1 
-	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::IF_TYPE } });
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId, nextStmListId },{},{},{ ParserConstants::IF_TYPE } });
 	// insert StmtID to StmtListTable2
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentStmNum },{},{ ParserConstants::IF_TYPE } });
 
@@ -191,6 +208,7 @@ void Parser::ifStatement() {
 	match("}");
 	// else
 	// insert StmtID to StmtListTable2 - new StmtList
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentIfNum, { { nextStmListId },{},{},{} });
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentIfNum },{},{ ParserConstants::IF_TYPE } });
 	match("else");
 	match("{");
@@ -200,7 +218,7 @@ void Parser::ifStatement() {
 
 void Parser::whileStatement() {
 	int curStmListId = stmListIdStack.top();
-	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::WHILE_TYPE } });
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId, nextStmListId },{},{},{ ParserConstants::WHILE_TYPE } });
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentStmNum },{},{ ParserConstants::WHILE_TYPE } });
 
 	match("while");
