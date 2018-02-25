@@ -187,7 +187,8 @@ list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &sele
 	// Store set of answers into list of strings
 	list<string> stringAns;
 	for (auto key : answerSet) {
-		stringAns.push_back(to_string(key));
+		(selected.type != VARIABLE) ? stringAns.push_back(to_string(key)):
+			stringAns.push_back(pkb.getVariableName(key));
 	}
 	return stringAns;
 };
