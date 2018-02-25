@@ -49,24 +49,28 @@ list<string> Evaluator::evaluateQuery() {
 		PatternResults pResults = PatternResults();
 
 		/* Evaluate clauses and store in cResults obj */
-		if (queryObject.getClauses().size() > 0) evaluateClause(queryObject.getClauses()[0], cResults);
+		if (queryHasClause(queryObject)) evaluateClause(queryObject.getClauses()[0], cResults);
 		/* Evaluate pattern and store in pResults obj */
-		if (queryObject.getPatterns().size() > 0) { ; };
+		if (queryHasPattern(queryObject)) { ; };
 
-		/* Check if param in clause*/
-		if (selectParamInClause(queryObject)) {
-				
-		}
-		else {
+		/* Check if param in clause */
+		if (!selectParamInClause(queryObject)) {
 			if (hasClauseResults(cResults) || hasPatternResults(pResults)) {
+				return getAllSelectedParam(selectParam);
+			}
+			else if (!queryHasClause(queryObject) && !queryHasPattern(queryObject)) {
 				return getAllSelectedParam(selectParam);
 			}
 			else {
 				return{ "None" };
 			}
 		}
-		list<string> ans = resultToString(cResults, selectParam);
-		return ans;
+		else {
+			/* Format results to string */
+			list<string> ans = resultToString(cResults, selectParam);
+			return ans;
+		}
+
 	}
 	else {
 		list<string> invalidQuery = { invalidQueryMessage };
@@ -90,6 +94,15 @@ bool Evaluator::selectParamInClause(QueryObject &queryObj) {
 	return false;
 };
 
+/* Check if Clauses or Patterns are present */
+bool Evaluator::queryHasClause(QueryObject &queryObj) {
+	return queryObj.getClauses().size() > 0;
+};
+
+bool Evaluator::queryHasPattern(QueryObject &queryObj) {
+	return queryObj.getPatterns().size() > 0;
+};
+
 /* Check if results exist in clause or pattern */
 bool Evaluator::hasClauseResults(ClauseResults &clauseResults) {
 	if (clauseResults.valid || clauseResults.values.size() || clauseResults.keyValues.size()) return true;
@@ -97,12 +110,29 @@ bool Evaluator::hasClauseResults(ClauseResults &clauseResults) {
 };
 bool Evaluator::hasPatternResults(PatternResults &patternResults) {
 	// To be implemented
-	return true;
+	return false;
 };
 
 /* Get all selected params */
 list<string> Evaluator::getAllSelectedParam(Param p) {
-	return{ "To be implemented" };
+	int paramIntType = typeToIntMap(p.type);
+	vector<int> pkbResults;
+	if (paramIntType != 0) {
+		pkbResults = pkb.getAllStatementsWithType(paramIntType);
+	}
+	else if (p.type == STMT) { 
+		pkbResults = pkb.getAllStatements();
+	}
+	else if (p.type == VARIABLE) {
+		pkbResults = pkb.getAllVariables();
+	}
+
+	list<string> results;
+	for (int ans : pkbResults) {
+		(p.type == VARIABLE) ? results.push_back(pkb.getVariableName(ans)) :
+			results.push_back(to_string(ans));
+	}
+	return results;
 }
 
 void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
@@ -141,6 +171,9 @@ list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &sele
 	// Retrieve values from hashmap vectors of values
 	
 	// Print values directly
+	for (int value : clauseResults.values) {
+		answerSet.insert(value);
+	}
 
 	// Store set of answers into list of strings
 	list<string> stringAns;
@@ -544,6 +577,8 @@ int Evaluator::typeToIntMap(ParamType t) {
 		return 1;
 	case WHILE:
 		return 2;
+	case IF:
+		return 3;
 	default:
 		return 0;
 	}

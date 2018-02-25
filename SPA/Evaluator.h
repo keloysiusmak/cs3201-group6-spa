@@ -87,6 +87,8 @@ public:
 
 	// Helper Methods
 	bool selectParamInClause(QueryObject &queryObj);
+	bool queryHasClause(QueryObject &queryObj);
+	bool queryHasPattern(QueryObject &queryObj);
 	bool hasClauseResults(ClauseResults &clauseResults);
 	bool hasPatternResults(PatternResults &patternResults);
 	list<string> getAllSelectedParam(Param p);
