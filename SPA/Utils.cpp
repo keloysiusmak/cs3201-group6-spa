@@ -45,6 +45,33 @@ bool Utils::isValidName(string name)
 	}
 }
 
+//Check if a string is a valid constant
+bool Utils::isValidConstant(string number) {
+	for (size_t i = 0; i < number.size(); i++) {
+		if (!isdigit(number[i])) {
+			return false;
+		}
+	}
+	return true;
+}
+
+//Check if a string is a valid factor (constant or name)
+bool Utils::isValidFactor(string factor) {
+	return isValidConstant(factor) || isValidName(factor);
+}
+
+bool Utils::isValidOperator(string symbol) {
+	return UtilsConstants::OPERATOR_PRIORITIES.find(symbol) != UtilsConstants::OPERATOR_PRIORITIES.end();
+}
+
+bool Utils::isOpenBracket(string symbol) {
+	return symbol == "(";
+}
+
+bool Utils::isCloseBracket(string symbol) {
+	return symbol == ")";
+}
+
 vector<string> Utils::split(const string& s, char delimiter) {
 	vector<string> tokens;
 	string token;
@@ -65,6 +92,18 @@ string Utils::trim(const string& str) {
 	return str.substr(first, (last - first + 1));
 }
 
+//checks that the queue is not empty, then gets the next element of the queue and pop the head
+string Utils::getWordAndPop(queue<string> &originalExpression) {
+	if (originalExpression.empty()) {
+		throw exception("Invalid Expression!");
+	}
+	else {
+		string word = originalExpression.front();
+		originalExpression.pop();
+		return word;
+	}
+}
+
 bool Utils::isInteger(const string& s)
 {
 	return !s.empty() && std::find_if(s.begin(),
@@ -82,4 +121,5 @@ bool Utils::isSynonym(ParamType type) {
 	default:
 		return true;
 	}
-};
+}
+;

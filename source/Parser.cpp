@@ -1,7 +1,8 @@
 #pragma once
 #include "../SPA/Parser.h"
-#include "../SPA/Utils.h"
-#include "PKB.h"
+#include "../SPA/InvalidExpressionException.h"
+//#include "../SPA/Utils.h"
+//#include "PKB.h"
 
 
 
@@ -16,7 +17,7 @@ void Parser::tokenize(string content)
 	iter = tokens.begin();
 }
 
-string Parser::getToken(void) {
+string Parser::getToken() {
 	{
 		if (iter < tokens.end()) {
 			nextToken = *(iter++);
@@ -24,9 +25,122 @@ string Parser::getToken(void) {
 		else {
 			nextToken.clear();
 		}
-		std::cout << nextToken;
+		//std::cout << "Token: " << nextToken;
 		return nextToken;
 	}
+}
+
+queue<string> Parser::getRPN(queue<string> expr)
+{
+	//cout << "-------- BEGIN RPN -----------\n";
+	originalExpression = expr;
+	//using Shunting-yard algorithm
+	while (!originalExpression.empty()) {
+		word = Utils::getWordAndPop(originalExpression);
+		//parse word if it follows the mathematical rule
+		if (Utils::isValidFactor(word)) {
+			//factor either appears at the start of the expression, or it follows an open bracket or operator
+			//cout << "var: " << word;
+			parseFactor();
+		}
+		else if (Utils::isOpenBracket(word)) {
+			//open bracket either appears at the start of the expression, or it follows an operator
+			parseOpenBracket();
+		}
+		else if (Utils::isCloseBracket(word)) {
+			//close bracket follows a valid factor
+			parseCloseBracket();
+		}
+		else if (Utils::isValidOperator(word)) {
+			//operator follows a valid factor or close bracket
+			parseOperator();
+		}
+		/*
+		else {
+		throw InvalidExpressionException("Invalid Expression!");
+		}*/
+		previousWord = word;
+	}
+
+	//ensure that the last element in the expression is a close bracket or a factor
+
+	if (!(Utils::isCloseBracket(previousWord) || Utils::isValidFactor(previousWord))) {
+		throw InvalidExpressionException("Invalid Expression!");
+	}
+
+	//pop the remaining operators into the expression, as according to the Shunting-yard algorithm
+
+	while (!operationStack.empty()) {
+		if (!Utils::isValidOperator(operationStack.top())) {
+			throw InvalidExpressionException("Invalid Expression!");
+		}
+		expressionQueue.push(operationStack.top());
+		operationStack.pop();
+	}
+	//cout << "--------END RPN------\n";
+	return expressionQueue;
+}
+
+void Parser::parseFactor()
+{
+	expressionQueue.push(word);
+}
+
+void Parser::parseOperator()
+{
+	//while there is an operator token, o2, at the top of the operator stack and the current operator o1 has precedence less than that of o2,
+	while (!operationStack.empty() && Utils::isValidOperator(operationStack.top()) && UtilsConstants::OPERATOR_PRIORITIES.at(word) <= UtilsConstants::OPERATOR_PRIORITIES.at(operationStack.top())) {
+		//then pop o2 off the operator stack, onto the output queue;
+		expressionQueue.push(operationStack.top());
+		operationStack.pop();
+	}
+	//push o1 onto the operator stack.
+	operationStack.push(word);
+}
+
+void Parser::parseOpenBracket()
+{
+	operationStack.push(word);
+}
+
+void Parser::parseCloseBracket()
+{
+	while (!operationStack.empty()) {
+		if (Utils::isOpenBracket(operationStack.top())) {
+			operationStack.pop();
+			return;
+		}
+		else {
+			expressionQueue.push(operationStack.top());
+			operationStack.pop();
+		}
+	}
+	throw InvalidExpressionException("Invalid Expression!");
+}
+
+queue<string> Parser::getExpression()
+{
+	queue<string> originalExpression;
+	string word;
+	while ((word = getWord()) != ";") {
+		//cout << "---- CURRENT WORD: " << word << "-------\n";
+		if (Utils::isValidFactor(word) || Utils::isValidOperator(word) || word == "(" || word == ")") {
+			originalExpression.push(word);
+		}
+		else {
+			throw InvalidExpressionException("Invalid Expression!");
+		}
+	}
+
+	queue<string> rpn;
+	try {
+		rpn = getRPN(originalExpression);
+	}
+	catch (exception) {
+		throw InvalidExpressionException("Invalid Expression!");
+	}
+
+	return rpn;
 }
 
 bool Parser::match(string token, bool isVar = false) {
@@ -51,7 +165,7 @@ bool Parser::match(string token, bool isVar = false) {
 }
 
 void Parser::expression() {
-
+	getExpression();
 }
 
 void Parser::ifStatement() {
@@ -115,9 +229,10 @@ void Parser::assignStatement() {
 	pkb.insertToTable(ParserConstants::MODIFIES_TABLE_5, var_id, { { currentStmNum },{ currentProcId } });
 	match("", true);
 	match("=");
-	//expression();
-	match("", true);
-	match(";");
+	expression();
+	//cout << "\nEND OF EXPRESSION";
+	//match("", true);
+	//match(";");
 }
 
 void Parser::statement() {
@@ -147,7 +262,7 @@ void Parser::statement() {
 void Parser::statementList() {
 	bool first = true;
 	if (first) {
-		cout << "NEW List: " << nextStmListId << ". ";
+		//cout << "NEW List: " << nextStmListId << ". ";
 		stmListIdStack.push(nextStmListId);
 		nextStmListId++;
 		first = false;
@@ -187,6 +302,14 @@ void Parser::program() {
 		cout << "expect 'procedure'" << "but is: " << nextToken << endl;
 		throw MyException();
 	}
+}
+
+string Parser::getWord()
+{
+	string result = nextToken;
+	nextToken = getToken();
+	//cout << "RESULT: " << result;
+	return result;
 }
 
 
@@ -254,39 +377,40 @@ void printNameTable(unordered_map<int, std::string> table) {
 /*
 int main() {
 
-	Parser parser;
+Parser parser;
 
-	PKB pkb;
-	pkb = parser.Parse("subset_if_while_diff_nospace.txt", pkb);
+PKB pkb;
+pkb = parser.Parse("subset_if_while_proc2.txt", pkb);
 
-	cout << "*** TABLE 1 - StmtTable ***\n";
-	unordered_map<int, std::vector<std::vector<int>>> table1 = pkb.tables[0];
-	printTable(table1);
 
-	cout << "*** TABLE 2 - StmtListInfoTable ***\n";
-	unordered_map<int, std::vector<std::vector<int>>> table2 = pkb.tables[1];
-	printTable(table2);
+cout << "*** TABLE 1 - StmtTable ***\n";
+unordered_map<int, std::vector<std::vector<int>>> table1 = pkb.tables[0];
+printTable(table1);
 
-	cout << "*** TABLE 3 - ProcInfoTable ***\n";
-	unordered_map<int, std::vector<std::vector<int>>> table3 = pkb.tables[2];
-	printTable(table3);
+cout << "*** TABLE 2 - StmtListInfoTable ***\n";
+unordered_map<int, std::vector<std::vector<int>>> table2 = pkb.tables[1];
+printTable(table2);
 
-	cout << "*** TABLE 4 - Uses ***\n";
-	unordered_map<int, std::vector<std::vector<int>>> table4 = pkb.tables[3];
-	printTable(table4);
+cout << "*** TABLE 3 - ProcInfoTable ***\n";
+unordered_map<int, std::vector<std::vector<int>>> table3 = pkb.tables[2];
+printTable(table3);
 
-	cout << "*** TABLE 5 - Modifies ***\n";
-	unordered_map<int, std::vector<std::vector<int>>> table5 = pkb.tables[4];
-	printTable(table5);
+cout << "*** TABLE 4 - Uses ***\n";
+unordered_map<int, std::vector<std::vector<int>>> table4 = pkb.tables[3];
+printTable(table4);
 
-	cout << "*** TABLE 8 - ProcTable ***\n";
-	unordered_map<int, std::string> table8 = pkb.nameTables[0];
-	printNameTable(table8);
+cout << "*** TABLE 5 - Modifies ***\n";
+unordered_map<int, std::vector<std::vector<int>>> table5 = pkb.tables[4];
+printTable(table5);
 
-	cout << "*** TABLE 9 - VarTable ***\n";
-	unordered_map<int, std::string> table9 = pkb.nameTables[1];
-	printNameTable(table9);
+cout << "*** TABLE 8 - ProcTable ***\n";
+unordered_map<int, std::string> table8 = pkb.nameTables[0];
+printNameTable(table8);
 
-	return 0;
+cout << "*** TABLE 9 - VarTable ***\n";
+unordered_map<int, std::string> table9 = pkb.nameTables[1];
+printNameTable(table9);
+
+return 0;
 }
 */
