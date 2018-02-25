@@ -122,4 +122,3 @@ bool Utils::isSynonym(ParamType type) {
 		return true;
 	}
 }
-;

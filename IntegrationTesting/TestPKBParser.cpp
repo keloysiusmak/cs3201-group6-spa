@@ -39,10 +39,10 @@ namespace PKBParserIntegrationTesting
 				10.	a = b;
 				11.	while a {
 				12.		while b {
-				13.			a = 1; }}
+				13.			a = 1; }}}
 			
 			*/
-			testString = "procedure a {a = 7; while c { b = a; d = 7; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { a = 1; }} }";
+			testString = "procedure a {a = b; while c { b = a; d = 7; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { a = 1; }} }";
 			pkb = parser.Parse(simpleSource, pkb, true, testString);
 		}
 
@@ -238,7 +238,7 @@ namespace PKBParserIntegrationTesting
 
 		TEST_METHOD(PKBParserGetUsesVariablesFromProcedure)
 		{
-			std::vector<int> data = { 1,2,3,4,5 };
+			std::vector<int> data = { 1,2,3,5 };
 			Assert::AreEqual(true, (pkb.getUsesVariablesFromProcedure(1) == data));
 		}
 
@@ -268,6 +268,8 @@ namespace PKBParserIntegrationTesting
 			data.insert({ 1,{ 3,5,11 } });
 			data.insert({ 2,{ 1,10,12 } });
 			data.insert({ 3,{ 2 } });
+			data.insert({ 5,{ 6 } });
+
 			Assert::AreEqual(true, (pkb.getAllVariableUsesStatements() == data));
 		}
 
@@ -309,7 +311,7 @@ namespace PKBParserIntegrationTesting
 
 		TEST_METHOD(PKBParserGetStatementsFromModifiesVariables)
 		{
-			std::vector<int> data = { 1,10 };
+			std::vector<int> data = { 1,10, 13 };
 			Assert::AreEqual(true, (pkb.getStatementsFromModifiesVariable(1) == data));
 		}
 
