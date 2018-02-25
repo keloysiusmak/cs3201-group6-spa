@@ -31,7 +31,11 @@ QueryObject Evaluator::getQueryObject() {
 	return queryObject;
 }
 
-/* Invalid Query Methods */
+/* Query Methods */
+bool Evaluator::isValidQuery() {
+	return validQuery;
+}
+
 list<string> Evaluator::invalidQuery(string invalidQueryMessage) {
 	return{ invalidQueryMessage };
 }
@@ -43,7 +47,7 @@ void Evaluator::setInvalidQuery(string message) {
 
 /* Main evaluator */
 list<string> Evaluator::evaluateQuery() {
-	if (validQuery) {
+	if (isValidQuery()) {
 		Param selectParam = queryObject.getSelectStatement();
 		ClauseResults cResults = ClauseResults();
 		PatternResults pResults = PatternResults();
@@ -70,7 +74,6 @@ list<string> Evaluator::evaluateQuery() {
 			list<string> ans = resultToString(cResults, selectParam);
 			return ans;
 		}
-
 	}
 	else {
 		list<string> invalidQuery = { invalidQueryMessage };
@@ -168,7 +171,7 @@ list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &sele
 			answerSet.insert(value);
 		}
 	}
-	else if (clauseResults.values.size()) { // Get selected from hashtable
+	else if (clauseResults.keyValues.size()) { // Get selected from hashtable
 		for (auto pair : clauseResults.keyValues) {
 			if (leftParam.type == selected.type) {
 				answerSet.insert(pair.first);
