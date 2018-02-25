@@ -79,7 +79,7 @@ void Preprocessor::preprocessQuery(string query) {
 	//if queryIndex is 0, means no declarations at all
 	if (queryIndex <= 0) {
 		// insert evaluator invalid query api here
-		(*_evaluator).invalidQuery("Invalid Query");
+		(*_evaluator).setInvalidQuery("Invalid Query");
 	}
 
 	for (int i = 0; i < queryIndex; i++) {
@@ -87,7 +87,7 @@ void Preprocessor::preprocessQuery(string query) {
 
 		if (!validateDeclaration) {
 			// insert evaluator invalid query api here
-			(*_evaluator).invalidQuery("Invalid Query");
+			(*_evaluator).setInvalidQuery("Invalid Query");
 			return;
 		}
 	}
@@ -99,7 +99,7 @@ void Preprocessor::preprocessQuery(string query) {
 	
 	if (!validQuery) {
 		// insert evaluator invalid query api here
-		(*_evaluator).invalidQuery("Invalid Query");
+		(*_evaluator).setInvalidQuery("Invalid Query");
 	}	
 };
 
@@ -119,15 +119,10 @@ bool Preprocessor::isValidDeclaration(string declaration) {
 		return false;
 	}
 
-	//Check if there is a synonym exists
-	vector<string> synonyms = Utils::split(declarationArr.at(1), SYMBOL_COMMA);
-
-	if (synonyms.size() < 1) {
-		return false;
-	}
-
-	for (int i = 0; i < synonyms.size(); i++) {
-		string s = Utils::trim(synonyms.at(i));
+	for (int i = 1; i < declarationArr.size(); i++) {
+		//remove comma
+		vector<string> synonym = Utils::split(declarationArr.at(i), SYMBOL_COMMA);
+		string s = Utils::trim(synonym.at(0));
 
 		if (!isValidSynonym(s) || isDeclarationSynonymExist(s)) {
 			return false;

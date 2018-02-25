@@ -1,7 +1,7 @@
-1 - Select all whiles
-while w;
-Select w
-2,6,11,12
+1 - Select follows
+stmt s;
+Select s such that Follows(3, s)
+4
 5000
 2 - Select all ifs
 if ifs;
