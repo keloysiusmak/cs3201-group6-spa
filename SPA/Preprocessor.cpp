@@ -311,9 +311,16 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 			return false;
 		}
 		
-		//Change the synonym to the declaration type with reference to the declarationMap
+		//Check if is a variable declaration
 		auto searchSynonym = declarationMap.find(leftArg);
 		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+
+		// if is a variable declaration for the left Param, return false
+		if (searchDeclareType->second == VARIABLE) {
+			return false;
+		}
+
+		//Change the synonym to the declaration type with reference to the declarationMap
 		insertLeftType = searchDeclareType->second;
 	}
 
@@ -329,6 +336,12 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 		//Change the synonym to the declaration type with reference to the declarationMap
 		auto searchSynonym = declarationMap.find(rightArg);
 		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+
+		// if is not a variable declaration for the right Param, return false
+		if (searchDeclareType->second != VARIABLE) {
+			return false;
+		}
+
 		insertRightType = searchDeclareType->second;
 	}
 	//Check if is Ident and store the content between the double quotes
@@ -372,6 +385,12 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 		//Change the synonym to the declaration type with reference to the declarationMap
 		auto searchSynonym = declarationMap.find(leftArg);
 		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+
+		// if is a variable declaration for the left Param, return false
+		if (searchDeclareType->second == VARIABLE) {
+			return false;
+		}
+
 		insertLeftType = searchDeclareType->second;
 	}
 
@@ -387,6 +406,12 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 		//Change the synonym to the declaration type with reference to the declarationMap
 		auto searchSynonym = declarationMap.find(rightArg);
 		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+
+		// if is a variable declaration for the left Param, return false
+		if (searchDeclareType->second == VARIABLE) {
+			return false;
+		}
+
 		insertRightType = searchDeclareType->second;
 	}
 	//Check if is Ident and store the content between the double quotes
@@ -430,6 +455,12 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 		//Change the synonym to the declaration type with reference to the declarationMap
 		auto searchSynonym = declarationMap.find(leftArg);
 		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+
+		// if is not a variable declaration for the right Param, return false
+		if (searchDeclareType->second != VARIABLE) {
+			return false;
+		}
+
 		insertLeftArgType = searchDeclareType->second;
 	}
 	//Check if is Ident and store the content between the double quotes
@@ -475,4 +506,3 @@ int Preprocessor::retrieveArgType(string arg) {
 		return 5;
 	}
 }
-
