@@ -189,7 +189,7 @@ void Parser::ifStatement() {
 	int currentIfNum = currentStmNum;
 	int curStmListId = stmListIdStack.top();
 	// insert StmtListID to StmtTable1 
-	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::IF_TYPE } });
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId, nextStmListId },{},{},{ ParserConstants::IF_TYPE } });
 	// insert StmtID to StmtListTable2
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentStmNum },{},{ ParserConstants::IF_TYPE } });
 
@@ -208,6 +208,7 @@ void Parser::ifStatement() {
 	match("}");
 	// else
 	// insert StmtID to StmtListTable2 - new StmtList
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentIfNum, { { nextStmListId },{},{},{} });
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentIfNum },{},{ ParserConstants::IF_TYPE } });
 	match("else");
 	match("{");
@@ -217,7 +218,7 @@ void Parser::ifStatement() {
 
 void Parser::whileStatement() {
 	int curStmListId = stmListIdStack.top();
-	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::WHILE_TYPE } });
+	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId, nextStmListId },{},{},{ ParserConstants::WHILE_TYPE } });
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentStmNum },{},{ ParserConstants::WHILE_TYPE } });
 
 	match("while");
