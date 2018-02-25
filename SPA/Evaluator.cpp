@@ -403,65 +403,55 @@ void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
 	}
 };
 
+/* Pattern cases: 
+LHS: _, v, var_name
+RHS: _, v, constant, var_name
+*/
+void Evaluator::evaluatePattern(Pattern &pattern, PatternResults &patternResults) {
 
-void Evaluator::evaluatePattern(PatternObject &pattern, PatternResults &patternResults) {
+	Param leftParam = pattern.getLeftParam();
+	Param rightParam = pattern.getRightParam();
 
-	//int leftParam = pattern.LHSid();
-	//int rightParam = pattern.RHSid();
+	if (Utils::isSynonym(leftParam.type)) {
+		if (Utils::isSynonym(rightParam.type)) { // (v/_, v/_)
+			unordered_map<int, vector<int>> results;
+			// <varId, vector<stmt_no.>>
+			unordered_map<int, vector<int>> modifies = pkb.getAllVariableModifiesStatements();
+			for (auto varStmts : modifies) {
+				vector<int> allUsedVars;
+				for (int stmt : varStmts.second) {
+					vector<int> usedVars = pkb.getUsesVariablesFromStatement(stmt);
+					for (int varId : usedVars) {
+						allUsedVars.push_back(varId);
+					}
+				}
+				results.insert({ varStmts.first, allUsedVars });
+			}
+		}
+		else {
+			vector<int> results;
+			if (rightParam.type == VAR_NAME) { // (v/_, var_name)
+			}
+			else { // (v/_, constant)
 
-	//if (Utils::isSynonym(leftParam)) { // (syn, smth)
-		//if (pattern.RHS_type == 0) { // pattern a(syn, variable)
-			//vector<int> vectorResult = pkb.getStatementsWithVariable(pattern.RHS);
-			//patternResults.setValues(vectorResult);
-			//intersectSingle(patternResults);
-		//}
-		//else if (pattern.RHS_type == 1) { // (syn, concrete)
-			//vector<int> vectorResult = pkb.getAllStatementModifiesVariables(pattern.RHS);
-			//patternResults.setValues(vectorResult);
-			//intersectSingle(patternResults);
-		//}
-		//else if (pattern.RHS_type == 2) {
-			//vector<int> result = pkb.getStatementsWithConstants(pattern.RHS); //intersect with assignment statements
-			//patternResults.setValues(result);
-			//intersectSingle(patternResults);
-		//}
-	//}
-	//else if (pattern.getLHStype == 0) { // first param is variable
-		//if (pattern.RHS_type == 0) { // (concrete, syn)
-			//bool result = pkb.checkVariableModifiesVariable(stoi(pattern.LHS.value), stoi(pattern.RHS.value));
-			//patternResults.setValues(result);
-		//}
-		//else if (pattern.RHS_type == 1) { // (concrete, conrete)
-			//vector<int> result = pkb.getStatementsFromUsesVariables(stoi(pattern.RHS.value));
-			//patternResults.setValues(result);
-			//intersectSingle(patternResults);
-		//
-		//else if (pattern.RHS_type == 2) {
-			//vector<int> result = pkb.getStatementsWithConstants(pattern.RHS); //intersect with statements modifies LHS
-			//patternResults.setValid(result);
-			//intersectSingle(patternResults); //but supposed to return boolean
-		//}
-	//}
-	//else { //first param is blank
-		//if (pattern.RHS_type == 0) {
-			////(_,_"VARIABLE"_)
-			//vector<int> result = pkb.getStatementsWithVariable(pattern.RHS);
-			//patternResults.setValues(result);
-			//intersectSingle(patternResults);
-		//}
-		//else if (pattern.RHS_type == 1) {
-			////(_,_);
-			//vector<int> result = pkb.getAllStatementsWithType(1);
-			//patternResults.setValues(result);
-			//intersectDouble(patternResults);
-		//}
-		//else if (pattern.RHS_type == 2) {
-			////(_,_"CONSTANT")
-			//vector<int> result = pkb.getStatementsWithConstant(stoi(rightParam.value));
-			//patternResults.setValues(result);
-			//intersectSingle(patternResults);
-		//}
-	//}
+			}
+		}
+	}
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (var_name, v/_)
+
+		}
+		else {
+			vector<int> results;
+			if (rightParam.type == VAR_NAME) { // (var_name, var_name)
+
+			}
+			else { // (var_name, constant)
+
+			}
+		}
+	}
+
 };
 
 /* Iterates through key value pair in unorderedMap and stores the corresponding rows */

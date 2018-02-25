@@ -79,7 +79,7 @@ public:
 	void evaluateParentStar(Clause &clause, ClauseResults &clauseResults);
 	void evaluateUses(Clause &clause, ClauseResults &clauseResults);
 	void evaluateModifies(Clause &clause, ClauseResults &clauseResults);
-	void evaluatePattern(PatternObject &pattern, PatternResults &patternResults);
+	void evaluatePattern(Pattern &pattern, PatternResults &patternResults);
 	list<string> resultToString(ClauseResults &clauseResults, Param &selected);
 
 	// Intersection Helpers
