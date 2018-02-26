@@ -356,7 +356,7 @@ Select s1 such that Parent(s1, s2)
 72 - Parent(s1, if2)
 stmt s1; if if2;
 Select s1 such that Parent(s1, if2)
-2
+2,9
 5000
 73 - Parent(s1, w2)
 stmt s1; while w2;
@@ -366,7 +366,7 @@ Select s1 such that Parent(s1, w2)
 74 - Parent(s1, a2)
 stmt s1; assign a2;
 Select s1 such that Parent(s1, a2)
-3,6,10,12
+2,3,6,9,10,12
 5000
 75 - Parent(s1, n2)
 stmt s1; prog_line n2;
@@ -396,7 +396,7 @@ Select if1 such that Parent(if1, w2)
 80 - Parent(if1, a2)
 if if1; assign a2;
 Select if1 such that Parent(if1, a2)
-3,12
+2,3,12
 5000
 81 - Parent(if1, n2)
 if if1; prog_line n2;
@@ -691,7 +691,7 @@ x
 139 - pattern a(v, _v_)
 assign a; variable v;
 Select a pattern a(v, _v_)
-1,4,5,7,8,11,13,14,15
+Invalid Query
 5000
 140 - pattern a(v, _'x'_)
 assign a; variable v;
@@ -711,7 +711,7 @@ Select a pattern a(v, _)
 143 - pattern a('x', _v_)
 assign a; variable v;
 Select a pattern a("x", _v_)
-1,4,5,7,8,11,13,14,15
+Invalid Query
 5000
 144 - pattern a('x', _'x'_)
 assign a;
@@ -731,7 +731,7 @@ Select a pattern a("x", _)
 147 - pattern a(_, _v_)
 assign a; variable v;
 Select a pattern a(_, _v_)
-1,4,5,7,8,11,13,14,15
+Invalid Query
 5000
 148 - pattern a(_, _'x'_)
 assign a;
@@ -785,7 +785,7 @@ x
 5000
 158 - assign a, a1
 assign a, a1;
-Select a1 such that Parent(2, 3) pattern a("x", _"x"_)
+Select a1 such that Parent(2, 3) pattern a('x', _'x'_)
 1,4,5,7,8,11,13,14,15
 5000
 159 - stmt s
@@ -840,7 +840,7 @@ Select w such that Uses(1, "x") pattern a("x", _"x"_)
 5000
 169 - proc p
 proc p; assign a;
-Select p such that Uses(1, "x") pattern a("x", _"x"_)
+Select p such that Uses(1, 'x') pattern a('x', _'x'_)
 a
 5000
 170 - prog_line n
@@ -916,5 +916,65 @@ a
 184 - no clause(7)
 prog_line n;
 Select n;
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+185 - Uses(s, 'x')
+stmt s;
+Select s such that Uses(s, "x")
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+186 - Uses(a, 'x')
+assign a;
+Select a such that Uses(a, "x")
+1,4,5,6,7,8,11,13,14,15
+5000
+187 - Uses(p, 'x')
+proc p;
+Select p such that Uses(p, "x")
+1
+5000
+188 - Uses(if, 'x')
+if ifs;
+Select ifs such that Uses(ifs, "x")
+2,3,12
+5000
+189 - Uses(w, 'x')
+while w;
+Select w such that Uses(w, "x")
+6,9,10
+5000
+190 - Uses(_, 'x')
+assign a;
+Select a such that Uses(_, "x")
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+191 - Modifies(s, 'x')
+stmt s;
+Select s such that Modifies(s, "x")
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+192 - Modifies(a, 'x')
+assign a;
+Select a such that Modifies(a, "x")
+1,4,5,7,8,11,13,14,15
+5000
+193 - Modifies(p, 'x')
+proc p;
+Select p such that Modifies(p, "x")
+1
+5000
+194 - Modifies(if, 'x')
+if ifs;
+Select ifs such that Modifies(ifs, "x")
+2,3,12
+5000
+195 - Modifies(w, 'x')
+while w;
+Select w such that Modifies(w, "x")
+6,9,10
+5000
+196 - Modifies(_, 'x')
+assign a;
+Select a such that Modifies(_, "x")
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
