@@ -25,28 +25,31 @@ namespace UnitTesting {
 		}
 
 		TEST_METHOD(SelectParamInClauseTest) {
+			Param select, lhs, rhs;
+			Clause clause;
+			QueryObject queryObj;
 			/* stmt s; Select s such that Follows(1, s) */
-			Param lhs = createParam(INTEGER, "1");
-			Param rhs = createParam(STMT, "s");
-			Clause clause = createClause(Follows, lhs, rhs);
-			Param select = createParam(STMT, "s");
-			QueryObject queryObj = createQueryObject(select, clause);
+			lhs = createParam(INTEGER, "1");
+			rhs = createParam(STMT, "s");
+			clause = createClause(Follows, lhs, rhs);
+			select = createParam(STMT, "s");
+			queryObj = createQueryObject(select, clause);
 			Assert::AreEqual(true, evaluator.selectParamInClause(queryObj));
 
 			/* while w; Select w such that Follows(w, 2) */
-			Param lhs = createParam(WHILE, "w");
-			Param rhs = createParam(INTEGER, "2");
-			Clause clause = createClause(Follows, lhs, rhs);
-			Param select = createParam(WHILE, "w");
-			QueryObject queryObj = createQueryObject(select, clause);
+			lhs = createParam(WHILE, "w");
+			rhs = createParam(INTEGER, "2");
+			clause = createClause(Follows, lhs, rhs);
+			select = createParam(WHILE, "w");
+			queryObj = createQueryObject(select, clause);
 			Assert::AreEqual(true, evaluator.selectParamInClause(queryObj));
 
 			/* stmt s; while w; Select w such that Follows(w, s) */
-			Param lhs = createParam(WHILE, "w");
-			Param rhs = createParam(STMT, "s");
-			Clause clause = createClause(Follows, lhs, rhs);
-			Param select = createParam(WHILE, "w");
-			QueryObject queryObj = createQueryObject(select, clause);
+			lhs = createParam(WHILE, "w");
+			rhs = createParam(STMT, "s");
+			clause = createClause(Follows, lhs, rhs);
+			select = createParam(WHILE, "w");
+			queryObj = createQueryObject(select, clause);
 			Assert::AreEqual(true, evaluator.selectParamInClause(queryObj));
 		}
 
