@@ -195,26 +195,6 @@ namespace UnitTesting {
 			Assert::AreNotEqual(true, evaluator.hasClauseResults(invalidClauseResult));
 		}
 
-		TEST_METHOD(HasPatternResultsTest) {
-			ClauseResults patternResult1;
-			patternResult1.setValid(true);
-			Assert::AreEqual(true, evaluator.hasPatternResults(patternResult1));
-
-			unordered_map<int, vector<int>> validKeyValues = { { 4,{ 6 } } };
-			ClauseResults patternResult2;
-			patternResult2.setkeyValues(validKeyValues);
-			Assert::AreEqual(true, evaluator.hasClauseResults(patternResult2));
-
-			vector<int> validValues = { 4, 8 };
-			ClauseResults patternResult3;
-			patternResult3.setValues(validValues);
-			Assert::AreEqual(true, evaluator.hasClauseResults(patternResult3));
-
-			ClauseResults invalidPatternResult;
-			invalidPatternResult.setValid(false);
-			Assert::AreNotEqual(true, evaluator.hasClauseResults(invalidPatternResult));
-		}
-
 		TEST_METHOD(StatementTypeToIntMapTest) {
 			//Valid
 			Assert::AreEqual(1, evaluator.statementTypeToIntMap(ASSIGN));
