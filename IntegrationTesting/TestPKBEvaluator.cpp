@@ -5,7 +5,6 @@
 #include "../SPA/Evaluator.h";
 #include "../SPA/QueryObject.h";
 #include "../SPA/Pattern.h";
-#include "../SPA/Declaration.h";
 #include "../SPA/Clause.h";
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

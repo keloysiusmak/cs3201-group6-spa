@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include "Pattern.h"
-#include "Declaration.h"
 #include "Clause.h"
 
 using namespace std;
