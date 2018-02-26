@@ -758,7 +758,7 @@ namespace UnitTesting
 			stmts.insert({ 3,{ 4 } });
 			stmts.insert({ 4,{ 5 } });
 
-			vars.insert({ pkb.insertToNameTable(9, "a") ,{} });
+			pkb.insertToNameTable(9, "a");
 			vars.insert({ pkb.insertToNameTable(9, "b") ,{ 1 } });
 			vars.insert({ pkb.insertToNameTable(9, "c") ,{ 2 } });
 			vars.insert({ pkb.insertToNameTable(9, "d") ,{ 3 } });
@@ -804,7 +804,7 @@ namespace UnitTesting
 			stmts.insert({ 6,{ 6, 7 } });
 			stmts.insert({ 7,{ 7 } });
 
-			vars.insert({ pkb.insertToNameTable(9, "a") ,{ } });
+			pkb.insertToNameTable(9, "a");
 			vars.insert({ pkb.insertToNameTable(9, "b") ,{ 1, 2 } });
 			vars.insert({ pkb.insertToNameTable(9, "c") ,{ 1,3  } });
 			vars.insert({ pkb.insertToNameTable(9, "d") ,{ 1,4  } });

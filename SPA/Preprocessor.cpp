@@ -302,6 +302,9 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 	string leftArg = Utils::trim(arg1Split.at(0));
 	string rightArg = Utils::trim(arg2Split.at(0));
 
+	bool isLeftArgAll = false;
+	bool isRightArgAll = false;
+
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
 	ParamType insertLeftType = leftArgType->second;
 
@@ -322,6 +325,10 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 
 		//Change the synonym to the declaration type with reference to the declarationMap
 		insertLeftType = searchDeclareType->second;
+	} 	
+	// Underscore
+	else if (insertLeftType == ALL) {
+		isLeftArgAll = true;
 	}
 
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
@@ -347,6 +354,15 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 	//Check if is Ident and store the content between the double quotes
 	else if (insertRightType == IDENT) {
 		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+	}
+	// Underscore
+	else {
+		isRightArgAll = true;
+	}
+
+	//Invalid case as both is underscore
+	if (isLeftArgAll && isRightArgAll) {
+		return false;
 	}
 
 	auto searchRelType = KEYWORDS_CLAUSES_1.find(relType);
@@ -373,6 +389,9 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 	string leftArg = Utils::trim(arg1Split.at(0));
 	string rightArg = Utils::trim(arg2Split.at(0));
 
+	bool isLeftArgAll = false;
+	bool isRightArgAll = false;
+
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
 	ParamType insertLeftType = leftArgType->second;
 
@@ -392,6 +411,10 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 		}
 
 		insertLeftType = searchDeclareType->second;
+	}
+	// Underscore
+	else if (insertLeftType == ALL) {
+		isLeftArgAll = true;
 	}
 
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
@@ -414,9 +437,14 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 
 		insertRightType = searchDeclareType->second;
 	}
-	//Check if is Ident and store the content between the double quotes
-	else if (insertRightType == IDENT) {
-		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+	// Underscore
+	else if (insertRightType == ALL) {
+		isRightArgAll = true;
+	}
+
+	//Invalid case as both is underscore
+	if (isLeftArgAll && isRightArgAll) {
+		return false;
 	}
 
 	auto searchRelType = KEYWORDS_CLAUSES_2.find(relType);
@@ -443,6 +471,9 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	string leftArg = Utils::trim(arg1Split.at(0));
 	string rightArg = Utils::trim(arg2Split.at(0));
 
+	bool isLeftArgAll = false;
+	bool isRightArgAll = false;
+
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
 	ParamType insertLeftArgType = leftArgType->second;
 
@@ -467,12 +498,26 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	else if (leftArgType->second == IDENT) {
 		leftArg = (Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1);
 	}
+	// Underscore
+	else {
+		isLeftArgAll = true;
+	}
+	
 
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
 
 	//Check if is factor expresson-spec and store the content between the double quotes
 	if (rightArgType->second == VAR_NAME || rightArgType->second == CONSTANT) {
 		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+	}
+	// Underscore
+	else {
+		isRightArgAll = true;
+	}
+
+	//Invalid case as both is underscore
+	if (isLeftArgAll && isRightArgAll) {
+		return false;
 	}
 
 	qo.insertPattern(entityType, entity, insertLeftArgType,
