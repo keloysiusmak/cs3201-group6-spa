@@ -634,9 +634,9 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q2;
 
 			q2.insertSelectStmt(STMT, "s");
-			q2.insertClause(Parent, STMT, "s", INTEGER, "7");
+			q2.insertClause(Parent, STMT, "s", INTEGER, "9");
 
-			evaluator.setQueryObject(q1);
+			evaluator.setQueryObject(q2);
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
@@ -947,16 +947,11 @@ namespace PKBEvaluatorIntegrationTesting
 			expected.push_back("1");
 			expected.push_back("2");
 			expected.push_back("3");
-			expected.push_back("4");
 			expected.push_back("5");
 			expected.push_back("6");
-			expected.push_back("7");
-			expected.push_back("8");
-			expected.push_back("9");
 			expected.push_back("10");
 			expected.push_back("11");
 			expected.push_back("12");
-			expected.push_back("13");
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q1;
@@ -1036,9 +1031,6 @@ namespace PKBEvaluatorIntegrationTesting
 			list<string> result = evaluator.evaluateQuery();
 			list<string> expected;
 			expected.push_back("2");
-			expected.push_back("6");
-			expected.push_back("11");
-			expected.push_back("12");
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q1;
@@ -1267,13 +1259,9 @@ namespace PKBEvaluatorIntegrationTesting
 			list<string> result = evaluator.evaluateQuery();
 			list<string> expected;
 			expected.push_back("1");
+			expected.push_back("2");
 			expected.push_back("3");
-			expected.push_back("4");
-			expected.push_back("7");
-			expected.push_back("8");
-			expected.push_back("9");
 			expected.push_back("10");
-			expected.push_back("13");
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q1;

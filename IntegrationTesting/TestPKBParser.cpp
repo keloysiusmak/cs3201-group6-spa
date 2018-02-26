@@ -232,7 +232,7 @@ namespace PKBParserIntegrationTesting
 
 		TEST_METHOD(PKBParserGetStatementsFromUsesVariables)
 		{
-			std::vector<int> data = { 3,5,11 };
+			std::vector<int> data = { 2,3,5,11 };
 			Assert::AreEqual(true, (pkb.getStatementsFromUsesVariable(1) == data));
 		}
 
@@ -265,10 +265,10 @@ namespace PKBParserIntegrationTesting
 		TEST_METHOD(PKBParserGetAllVariableUsesStatements)
 		{
 			unordered_map<int, std::vector<int>> data;
-			data.insert({ 1,{ 3,5,11 } });
-			data.insert({ 2,{ 1,10,12 } });
+			data.insert({ 1,{ 2,3,5,11 } });
+			data.insert({ 2,{ 1,10,11,12 } });
 			data.insert({ 3,{ 2 } });
-			data.insert({ 5,{ 6 } });
+			data.insert({ 5,{ 5,6 } });
 
 			Assert::AreEqual(true, (pkb.getAllVariableUsesStatements() == data));
 		}
@@ -311,7 +311,7 @@ namespace PKBParserIntegrationTesting
 
 		TEST_METHOD(PKBParserGetStatementsFromModifiesVariables)
 		{
-			std::vector<int> data = { 1,10, 13 };
+			std::vector<int> data = { 1,10,11,12,13 };
 			Assert::AreEqual(true, (pkb.getStatementsFromModifiesVariable(1) == data));
 		}
 
@@ -331,12 +331,17 @@ namespace PKBParserIntegrationTesting
 		{
 			unordered_map<int, std::vector<int>> data;
 			data.insert({ 1,{ 1 } });
+			data.insert({ 2,{ 2,4 } });
 			data.insert({ 3,{ 2 } });
 			data.insert({ 4,{ 4 } });
+			data.insert({ 5,{ 3,4 } });
+			data.insert({ 6,{ 3 } });
 			data.insert({ 7,{ 3 } });
 			data.insert({ 8,{ 4 } });
 			data.insert({ 9,{ 5 } });
 			data.insert({ 10,{ 1 } });
+			data.insert({ 11,{ 1 } });
+			data.insert({ 12,{ 1 } });
 			data.insert({ 13,{ 1 } });
 			Assert::AreEqual(true, (pkb.getAllStatementModifiesVariables() == data));
 		}
@@ -344,10 +349,10 @@ namespace PKBParserIntegrationTesting
 		TEST_METHOD(PKBParserGetAllVariableModifiesStatements)
 		{
 			unordered_map<int, std::vector<int>> data;
-			data.insert({ 1,{ 1,10,13 } });
-			data.insert({ 2,{ 3 } });
-			data.insert({ 3,{ 7 } });
-			data.insert({ 4,{ 4, 8 } });
+			data.insert({ 1,{ 1,10,11,12,13 } });
+			data.insert({ 2,{ 2,3 } });
+			data.insert({ 3,{ 5,6,7 } });
+			data.insert({ 4,{ 2,4,5,8 } });
 			data.insert({ 5,{ 9 } });
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesStatements() == data));
 		}
