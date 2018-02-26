@@ -297,7 +297,22 @@ void Evaluator::evaluateParent(Clause &clause, ClauseResults &clauseResults) {
 	if (Utils::isSynonym(leftParam.type)) { // (syn, syn)
 		if (Utils::isSynonym(rightParam.type)) {
 			vector<vector<int>> results = pkb.getAllParent();
-			clauseResults.setkeyValues(results);
+
+			/* Consolidate key parent and value vector of children */
+			unordered_map<int, vector<int>> parentResults;
+			for (auto pair : results) {
+				auto it = parentResults.find(pair[0]);
+				if (it != parentResults.end()) {
+					vector<int> *currentChildren = &(it->second);
+					currentChildren->push_back(pair[1]);
+				}
+				else {
+					vector<int> children = { pair[1] };
+					parentResults.insert({ pair[0], children });
+				}
+			}
+
+			clauseResults.setkeyValues(parentResults);
 			intersectDouble(clauseResults);
 		}
 		else { // (syn, concrete)
