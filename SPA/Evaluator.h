@@ -54,8 +54,6 @@ struct PatternResults {
 		lhs = pattern.getLeftParam();
 		rhs = pattern.getRightParam();
 	};
-
-
 };
 
 class Evaluator {
