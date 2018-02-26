@@ -520,6 +520,7 @@ void Evaluator::intersectDouble(ClauseResults &clauseResults) {
 	if (rightParamIntType != 0) {
 		unordered_map<int, vector<int>> keyValueTable = clauseResults.keyValues;
 		vector<int> rightParamValidStmts = pkb.getAllStatementsWithType(rightParamIntType);
+		unordered_map<int, vector<int>> filteredTable;
 		for (auto keyValuePair : keyValueTable) {
 			vector<int> filteredStmts = vector<int>();
 			for (int validStmt : rightParamValidStmts) {
@@ -529,9 +530,9 @@ void Evaluator::intersectDouble(ClauseResults &clauseResults) {
 					}
 				}
 			}
-			vector<int> *keyValueVector = &(keyValuePair.second);
-			keyValueVector = &filteredStmts;
+			if (filteredStmts.size() > 0) filteredTable.insert({keyValuePair.first, filteredStmts});
 		}
+		clauseResults.setkeyValues(filteredTable);
 	}
 }
 
