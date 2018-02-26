@@ -92,6 +92,7 @@ public:
 	bool queryHasPattern(QueryObject &queryObj);
 	bool hasClauseResults(ClauseResults &clauseResults);
 	bool hasPatternResults(PatternResults &patternResults);
+	ClauseResults getIntersectResults(ClauseResults &clauseResults, PatternResults &patternResults);
 	list<string> getAllSelectedParam(Param p);
 	int statementTypeToIntMap(ParamType t);
 	void storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map);

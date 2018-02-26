@@ -16,7 +16,7 @@ Evaluator::Evaluator() {
 
 Evaluator::Evaluator(QueryObject queryObj) {
 	queryObject = queryObj;
-}
+};
 
 /* getters and setter Methods */
 void Evaluator::setPKB(PKB generatedPKB) {
@@ -30,12 +30,12 @@ void Evaluator::setQueryObject(QueryObject queryObj) {
 
 QueryObject Evaluator::getQueryObject() {
 	return queryObject;
-}
+};
 
 /* Query Methods */
 bool Evaluator::isValidQuery() {
 	return validQuery;
-}
+};
 
 void Evaluator::setInvalidQuery(string message) {
 	validQuery = false;
@@ -49,14 +49,12 @@ list<string> Evaluator::evaluateQuery() {
 		ClauseResults cResults = ClauseResults();
 		PatternResults pResults = PatternResults();
 
-		/* Evaluate clauses and store in cResults obj */
 		if (queryHasClause(queryObject)) evaluateClause(queryObject.getClauses()[0], cResults);
-		/* Evaluate pattern and store in pResults obj */
 		if (queryHasPattern(queryObject)) { ; };
 
-		/* Check if param in clause */
+		/* Check if param in clause or pattern */
 		if (!selectParamInClauseOrPattern(queryObject)) {
-			if (hasClauseResults(cResults) || hasPatternResults(pResults)) {
+			if (hasClauseResults(cResults) || hasPatternResults(pResults)) { // Results exists for either
 				return getAllSelectedParam(selectParam);
 			}
 			else if (!queryHasClause(queryObject) && !queryHasPattern(queryObject)) {
@@ -67,6 +65,9 @@ list<string> Evaluator::evaluateQuery() {
 			}
 		}
 		else {
+
+			// ClauseResults finalResults = getIntersectResults(cResults, pResults);
+
 			/* Format results to string */
 			list<string> ans = resultToString(cResults, selectParam);
 			return ans;
@@ -113,7 +114,7 @@ bool Evaluator::hasPatternResults(PatternResults &patternResults) {
 	return false;
 };
 
-/* Get all selected params */
+/* Get all selected params when Select param not in clause/pattern */
 list<string> Evaluator::getAllSelectedParam(Param p) {
 	int paramIntType = statementTypeToIntMap(p.type);
 	vector<int> pkbResults;
@@ -133,7 +134,13 @@ list<string> Evaluator::getAllSelectedParam(Param p) {
 			results.push_back(to_string(ans));
 	}
 	return results;
-}
+};
+
+/* Intersect pattern and clause results */
+ClauseResults Evaluator::getIntersectResults(ClauseResults &clauseResults, PatternResults &patternResults) {
+	ClauseResults finalResults;
+	return finalResults;
+};
 
 void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	clauseResults.instantiateClause(queryObject.getClauses()[0]);
@@ -150,11 +157,13 @@ void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	else if (relation == ParentT) {
 		evaluateParentStar(clause, clauseResults);
 	}
-	////else if (relation == USES) {
-	//	//evaluateUses(clause, clauseResults);
-	////}
-	////else if (relation == MODIFIES) {
-	//	//evaluateModifies(clause, clauseResults); else {}
+	else if (relation == UsesS) {
+		evaluateUses(clause, clauseResults);
+	}
+	else if (relation == ModifiesS) {
+		evaluateModifies(clause, clauseResults);
+	}
+	else { ; }
 };
 
 /* Assumes Selected is within ClauseResults */
@@ -534,7 +543,7 @@ void Evaluator::intersectDouble(ClauseResults &clauseResults) {
 		}
 		clauseResults.setkeyValues(filteredTable);
 	}
-}
+};
 
 int Evaluator::statementTypeToIntMap(ParamType t) {
 	switch (t) {
@@ -547,4 +556,4 @@ int Evaluator::statementTypeToIntMap(ParamType t) {
 	default:
 		return 0;
 	}
-}
+};
