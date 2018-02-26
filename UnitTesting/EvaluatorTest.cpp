@@ -54,6 +54,14 @@ namespace UnitTesting {
 			queryObj = createQueryObject(select, clause);
 			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 
+			/* if ifs; Select ifs such that Follows(ifs, 2) */
+			clauseLHS = createParam(IF, "ifs");
+			clauseRHS = createParam(INTEGER, "2");
+			clause = createClause(Follows, clauseLHS, clauseRHS);
+			select = createParam(IF, "ifs");
+			queryObj = createQueryObject(select, clause);
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
+
 			/* variable v; Select w such that Follows(1, 2)pattern(v, 1) */
 			clauseLHS = createParam(INTEGER, "1");
 			clauseRHS = createParam(INTEGER, "2");
@@ -102,7 +110,7 @@ namespace UnitTesting {
 			queryObj = createQueryObject(select, clause);
 			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 
-			/* variable v; Select w such that Parent(1, 2) pattern(v, 1) */
+			/* variable v; Select v such that Parent(1, 2) pattern a (v, 1) */
 			clauseLHS = createParam(INTEGER, "1");
 			clauseRHS = createParam(INTEGER, "2");
 			clause = createClause(Parent, clauseLHS, clauseRHS);
@@ -114,7 +122,7 @@ namespace UnitTesting {
 			queryObj = createQueryObject(select, clause, pattern);
 			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 
-			/* stmt s; while w; Select w such that Parent(1, 2)pattern("c", v) */
+			/* variable v; Select w such that Parent(1, 2) pattern a ("c", v) */
 			clauseLHS = createParam(INTEGER, "1");
 			clauseRHS = createParam(INTEGER, "2");
 			clause = createClause(Parent, clauseLHS, clauseRHS);
@@ -140,16 +148,7 @@ namespace UnitTesting {
 			select = createParam(WHILE, "w");
 			queryObj = createQueryObject(select, clause);
 			Assert::AreEqual(false, evaluator.selectParamInClauses(queryObj));
-
-			/* stmt s; while w; Select w such that Parent(3, s) */
-			lhs = createParam(INTEGER, "3");
-			rhs = createParam(STMT, "s");
-			clause = createClause(Parent, lhs, rhs);
-			select = createParam(WHILE, "w");
-			queryObj = createQueryObject(select, clause);
-			Assert::AreEqual(false, evaluator.selectParamInClauses(queryObj));
 		}
-
 
 
 		TEST_METHOD(QueryHasClauseTest) {
@@ -162,6 +161,68 @@ namespace UnitTesting {
 			//When there is an existing clause in the QueryObject
 			qo.insertClause(Parent, INTEGER, "2", STMT, "s");
 			Assert::AreEqual(true, evaluator.queryHasClause(qo));
+		}
+
+		TEST_METHOD(QueryHasPatternTest) {
+			Param select = createParam(STMT, "s");
+			QueryObject qo = createQueryObject(select);
+
+			//When there is no pattern in the QueryObject
+			Assert::AreNotEqual(true, evaluator.queryHasPattern(qo));
+
+			//When there is an existing clause in the QueryObject
+			qo.insertPattern(ASSIGN, "a", IDENT, "x", VAR_NAME, "_\"x\"_");
+			Assert::AreEqual(true, evaluator.queryHasPattern(qo));
+		}
+
+		TEST_METHOD(HasClauseResultsTest) {
+			ClauseResults clauseResult1;
+			clauseResult1.setValid(true);
+			Assert::AreEqual(true, evaluator.hasClauseResults(clauseResult1));
+
+			unordered_map<int, vector<int>> validKeyValues = { {4, { 6 } } };
+			ClauseResults clauseResult2;
+			clauseResult2.setkeyValues(validKeyValues);
+			Assert::AreEqual(true, evaluator.hasClauseResults(clauseResult2));
+
+			vector<int> validValues = { 4, 8 };
+			ClauseResults clauseResult3;
+			clauseResult3.setValues(validValues);
+			Assert::AreEqual(true, evaluator.hasClauseResults(clauseResult3));
+
+			ClauseResults invalidClauseResult;
+			invalidClauseResult.setValid(false);
+			Assert::AreNotEqual(true, evaluator.hasClauseResults(invalidClauseResult));
+		}
+
+		TEST_METHOD(HasPatternResultsTest) {
+			ClauseResults patternResult1;
+			patternResult1.setValid(true);
+			Assert::AreEqual(true, evaluator.hasPatternResults(patternResult1));
+
+			unordered_map<int, vector<int>> validKeyValues = { { 4,{ 6 } } };
+			ClauseResults patternResult2;
+			patternResult2.setkeyValues(validKeyValues);
+			Assert::AreEqual(true, evaluator.hasClauseResults(patternResult2));
+
+			vector<int> validValues = { 4, 8 };
+			ClauseResults patternResult3;
+			patternResult3.setValues(validValues);
+			Assert::AreEqual(true, evaluator.hasClauseResults(patternResult3));
+
+			ClauseResults invalidPatternResult;
+			invalidPatternResult.setValid(false);
+			Assert::AreNotEqual(true, evaluator.hasClauseResults(invalidPatternResult));
+		}
+
+		TEST_METHOD(StatementTypeToIntMapTest) {
+			//Valid
+			Assert::AreEqual(1, evaluator.statementTypeToIntMap(ASSIGN));
+			Assert::AreEqual(2, evaluator.statementTypeToIntMap(WHILE));
+			Assert::AreEqual(3, evaluator.statementTypeToIntMap(IF));
+
+			// Invalid
+			Assert::AreEqual(0, evaluator.statementTypeToIntMap(CONSTANT));
 		}
 
 		/* Object creation helpers*/
