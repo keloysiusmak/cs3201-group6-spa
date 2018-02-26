@@ -112,7 +112,34 @@ namespace PKBEvaluatorIntegrationTesting
 			evaluator.setPKB(pkb);
 		}
 
-		TEST_METHOD(PKBEvaluatorFollows)
+		TEST_METHOD(PKBEvaluatorStatementFollowsBefore)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(STMT, "s");
+			q.insertClause(Follows, STMT, "s", INTEGER, "2");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("1");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(STMT, "s");
+			q1.insertClause(Follows, STMT, "s", INTEGER, "1");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorStatementFollowsAfter)
 		{
 			QueryObject q;
 			
@@ -125,9 +152,407 @@ namespace PKBEvaluatorIntegrationTesting
 			list<string> expected;
 			expected.push_back("2");
 			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(STMT, "s");
+			q1.insertClause(Follows, INTEGER, "9", STMT, "s");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
 		}
 
-		TEST_METHOD(PKBEvaluatorParent)
+		TEST_METHOD(PKBEvaluatorProgLineFollowsBefore)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(PROG_LINE, "n");
+			q.insertClause(Follows, PROG_LINE, "n", INTEGER, "2");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("1");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(PROG_LINE, "n");
+			q1.insertClause(Follows, PROG_LINE, "n", INTEGER, "1");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorProgLineFollowsAfter)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(PROG_LINE, "n");
+			q.insertClause(Follows, INTEGER, "1", PROG_LINE, "n");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(PROG_LINE, "n");
+			q1.insertClause(Follows, INTEGER, "9", PROG_LINE, "n");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorWhileFollowsBefore)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(WHILE, "w");
+			q.insertClause(Follows, WHILE, "w", INTEGER, "5");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(WHILE, "w");
+			q1.insertClause(Follows, WHILE, "w", INTEGER, "2");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorWhileFollowsAfter)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(WHILE, "w");
+			q.insertClause(Follows, INTEGER, "1", WHILE, "w");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(WHILE, "w");
+			q1.insertClause(Follows, INTEGER, "5", WHILE, "w");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorIfFollowsBefore)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(IF, "ifs");
+			q.insertClause(Follows, IF, "ifs", INTEGER, "9");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(IF, "ifs");
+			q1.insertClause(Follows, IF, "ifs", INTEGER, "1");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorIfFollowsAfter)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(IF, "ifs");
+			q.insertClause(Follows, INTEGER, "2", IF, "ifs");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(IF, "ifs");
+			q1.insertClause(Follows, INTEGER, "9", IF, "ifs");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorStatementFollowsBeforeStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(STMT, "s");
+			q.insertClause(FollowsT, STMT, "s", INTEGER, "9");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("1");
+			expected.push_back("2");
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(STMT, "s");
+			q1.insertClause(FollowsT, STMT, "s", INTEGER, "1");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorStatementFollowsAfterStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(PROG_LINE, "n");
+			q.insertClause(FollowsT, INTEGER, "1", PROG_LINE, "n");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			expected.push_back("5");
+			expected.push_back("9");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(STMT, "s");
+			q1.insertClause(FollowsT, INTEGER, "9", STMT, "s");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorProgLineFollowsBeforeStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(PROG_LINE, "n");
+			q.insertClause(FollowsT, PROG_LINE, "n", INTEGER, "9");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("1");
+			expected.push_back("2");
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(PROG_LINE, "n");
+			q1.insertClause(FollowsT, PROG_LINE, "n", INTEGER, "1");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorProgLineFollowsAfterStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(STMT, "s");
+			q.insertClause(FollowsT, INTEGER, "1", STMT, "s");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			expected.push_back("5");
+			expected.push_back("9");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(PROG_LINE, "n");
+			q1.insertClause(FollowsT, INTEGER, "9", STMT, "s");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorWhileFollowsBeforeStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(WHILE, "w");
+			q.insertClause(FollowsT, WHILE, "w", INTEGER, "9");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(WHILE, "w");
+			q1.insertClause(FollowsT, WHILE, "w", INTEGER, "2");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorWhileFollowsAfterStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(WHILE, "w");
+			q.insertClause(FollowsT, INTEGER, "1", WHILE, "w");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(WHILE, "w");
+			q1.insertClause(FollowsT, INTEGER, "9", WHILE, "w");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorIfFollowsBeforeStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(IF, "ifs");
+			q.insertClause(FollowsT, IF, "ifs", INTEGER, "9");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(IF, "ifs");
+			q1.insertClause(FollowsT, IF, "ifs", INTEGER, "1");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorIfFollowsAfterStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(IF, "ifs");
+			q.insertClause(FollowsT, INTEGER, "1", IF, "ifs");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(IF, "ifs");
+			q1.insertClause(FollowsT, INTEGER, "9", IF, "ifs");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorChildren)
 		{
 			QueryObject q;
 
@@ -138,7 +563,358 @@ namespace PKBEvaluatorIntegrationTesting
 
 			list<string> result = evaluator.evaluateQuery();
 			list<string> expected;
+			expected.push_back("3");
+			expected.push_back("4");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(STMT, "s");
+			q1.insertClause(Parent, INTEGER, "5", STMT, "s");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("6");
+			expected.push_back("8");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(STMT, "s");
+			q2.insertClause(Parent, INTEGER, "11", STMT, "s");
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("12");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q3;
+
+			q3.insertSelectStmt(STMT, "s");
+			q3.insertClause(Parent, INTEGER, "12", STMT, "s");
+
+			evaluator.setQueryObject(q3);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("13");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorParent)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(STMT, "s");
+			q.insertClause(Parent, STMT, "s", INTEGER, "3");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
 			expected.push_back("2");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(STMT, "s");
+			q1.insertClause(Parent, STMT, "s", INTEGER, "6");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(STMT, "s");
+			q2.insertClause(Parent, STMT, "s", INTEGER, "7");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorParentIf)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(IF, "ifs");
+			q.insertClause(Parent, IF, "ifs", INTEGER, "3");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(IF, "ifs");
+			q1.insertClause(Parent, IF, "ifs", INTEGER, "6");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(IF, "ifs");
+			q2.insertClause(Parent, IF, "ifs", INTEGER, "8");
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q3;
+
+			q3.insertSelectStmt(IF, "ifs");
+			q3.insertClause(Parent, IF, "ifs", INTEGER, "7");
+
+			evaluator.setQueryObject(q3);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorParentWhile)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(WHILE, "w");
+			q.insertClause(Parent, WHILE, "w", INTEGER, "3");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(WHILE, "w");
+			q1.insertClause(Parent, WHILE, "w", INTEGER, "6");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(WHILE, "w");
+			q2.insertClause(Parent, WHILE, "w", INTEGER, "1");
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorChildrenStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(STMT, "s");
+			q.insertClause(ParentT, INTEGER, "2", STMT, "s");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("3");
+			expected.push_back("4");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(STMT, "s");
+			q1.insertClause(ParentT, INTEGER, "5", STMT, "s");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("6");
+			expected.push_back("7");
+			expected.push_back("8");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(STMT, "s");
+			q2.insertClause(ParentT, INTEGER, "11", STMT, "s");
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("12");
+			expected.push_back("13");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q3;
+
+			q3.insertSelectStmt(STMT, "s");
+			q3.insertClause(ParentT, INTEGER, "12", STMT, "s");
+
+			evaluator.setQueryObject(q3);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("13");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q4;
+
+			q4.insertSelectStmt(STMT, "s");
+			q4.insertClause(ParentT, INTEGER, "13", STMT, "s");
+
+			evaluator.setQueryObject(q4);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorParentStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(STMT, "s");
+			q.insertClause(Parent, STMT, "s", INTEGER, "3");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(STMT, "s");
+			q1.insertClause(Parent, STMT, "s", INTEGER, "6");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(STMT, "s");
+			q2.insertClause(Parent, STMT, "s", INTEGER, "10");
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorParentIfStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(IF, "ifs");
+			q.insertClause(Parent, IF, "ifs", INTEGER, "3");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(IF, "ifs");
+			q1.insertClause(Parent, IF, "ifs", INTEGER, "6");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(IF, "ifs");
+			q2.insertClause(Parent, IF, "ifs", INTEGER, "7");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorParentWhileStar)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(WHILE, "w");
+			q.insertClause(Parent, WHILE, "w", INTEGER, "3");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(WHILE, "w");
+			q1.insertClause(Parent, WHILE, "w", INTEGER, "6");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(WHILE, "w");
+			q2.insertClause(Parent, WHILE, "w", INTEGER, "8");
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
