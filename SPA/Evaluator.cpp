@@ -24,6 +24,7 @@ void Evaluator::setPKB(PKB generatedPKB) {
 };
 
 void Evaluator::setQueryObject(QueryObject queryObj) {
+	validQuery = true;
 	queryObject = queryObj;
 };
 
@@ -34,10 +35,6 @@ QueryObject Evaluator::getQueryObject() {
 /* Query Methods */
 bool Evaluator::isValidQuery() {
 	return validQuery;
-}
-
-list<string> Evaluator::invalidQuery(string invalidQueryMessage) {
-	return{ invalidQueryMessage };
 }
 
 void Evaluator::setInvalidQuery(string message) {
