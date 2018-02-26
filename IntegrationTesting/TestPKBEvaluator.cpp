@@ -52,7 +52,7 @@ namespace PKBEvaluatorIntegrationTesting
 			table0.insert({ 7,{ { 4 },{  },{ 3 },{ 1 } } });
 			table0.insert({ 8,{ { 5 }, {},{ 4 },{ 1 } } });
 			table0.insert({ 9,{ { 1 },{},{ 5 },{ 1 } } });
-			table0.insert({ 10,{ { 6 },{1},{ 2},{ 1 } } });
+			table0.insert({ 10,{ { 6 },{2},{ 1},{ 1 } } });
 			table0.insert({ 11,{ { 6,7 },{ 1,2 },{ 1 },{ 2 } } });
 			table0.insert({ 12,{ { 7,8 },{ 2 },{ 1 },{ 2 } } });
 			table0.insert({ 13,{ { 8 },{ },{1 },{ 1 } } });
@@ -957,20 +957,23 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q1;
 
 			q1.insertSelectStmt(STMT, "s");
-			q1.insertClause(UsesS, STMT, "s", VAR_NAME, "b");
+			q1.insertClause(UsesS, STMT, "s", IDENT, "b");
 
 			evaluator.setQueryObject(q1);
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
 			expected.push_back("1");
+			expected.push_back("2");
+			expected.push_back("10");
+			expected.push_back("11");
 			expected.push_back("12");
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q2;
 
 			q2.insertSelectStmt(STMT, "s");
-			q2.insertClause(UsesS, STMT, "s", VAR_NAME, "f");
+			q2.insertClause(UsesS, STMT, "s", IDENT, "f");
 
 			evaluator.setQueryObject(q2);
 
@@ -997,7 +1000,7 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q1;
 
 			q1.insertSelectStmt(IF, "ifs");
-			q1.insertClause(UsesS, IF, "ifs", VAR_NAME, "a");
+			q1.insertClause(UsesS, IF, "ifs", IDENT, "a");
 
 			evaluator.setQueryObject(q1);
 
@@ -1009,7 +1012,7 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q2;
 
 			q2.insertSelectStmt(IF, "ifs");
-			q2.insertClause(UsesS, IF, "ifs", VAR_NAME, "b");
+			q2.insertClause(UsesS, IF, "ifs", IDENT, "b");
 
 			evaluator.setQueryObject(q2);
 
@@ -1031,12 +1034,15 @@ namespace PKBEvaluatorIntegrationTesting
 			list<string> result = evaluator.evaluateQuery();
 			list<string> expected;
 			expected.push_back("2");
+			expected.push_back("6");
+			expected.push_back("11");
+			expected.push_back("12");
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q1;
 
 			q1.insertSelectStmt(WHILE, "w");
-			q1.insertClause(UsesS, WHILE, "w", VAR_NAME, "c");
+			q1.insertClause(UsesS, WHILE, "w", IDENT, "c");
 
 			evaluator.setQueryObject(q1);
 
@@ -1048,7 +1054,7 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q2;
 
 			q2.insertSelectStmt(WHILE, "w");
-			q2.insertClause(UsesS, WHILE, "w", VAR_NAME, "d");
+			q2.insertClause(UsesS, WHILE, "w", IDENT, "d");
 
 			evaluator.setQueryObject(q2);
 
@@ -1077,19 +1083,22 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q1;
 
 			q1.insertSelectStmt(ASSIGN, "a");
-			q1.insertClause(UsesS, ASSIGN, "a", VAR_NAME, "a");
+			q1.insertClause(UsesS, ASSIGN, "a", IDENT, "a");
 
 			evaluator.setQueryObject(q1);
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
 			expected.push_back("3");
+			for (list<string>::const_iterator it = result.begin(); it != result.end(); ++it) {
+				Logger::WriteMessage(it->c_str());
+			}
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q2;
 
 			q2.insertSelectStmt(ASSIGN, "a");
-			q2.insertClause(UsesS, ASSIGN, "a", VAR_NAME, "e");
+			q2.insertClause(UsesS, ASSIGN, "a", IDENT, "e");
 
 			evaluator.setQueryObject(q2);
 
@@ -1144,19 +1153,20 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q1;
 
 			q1.insertSelectStmt(STMT, "s");
-			q1.insertClause(ModifiesS, STMT, "s", VAR_NAME, "b");
+			q1.insertClause(ModifiesS, STMT, "s", IDENT, "b");
 
 			evaluator.setQueryObject(q1);
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
+			expected.push_back("2");
 			expected.push_back("3");
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q2;
 
 			q2.insertSelectStmt(STMT, "s");
-			q2.insertClause(ModifiesS, STMT, "s", VAR_NAME, "f");
+			q2.insertClause(ModifiesS, STMT, "s", IDENT, "f");
 
 			evaluator.setQueryObject(q2);
 
@@ -1183,7 +1193,7 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q1;
 
 			q1.insertSelectStmt(IF, "ifs");
-			q1.insertClause(ModifiesS, IF, "ifs", VAR_NAME, "c");
+			q1.insertClause(ModifiesS, IF, "ifs", IDENT, "c");
 
 			evaluator.setQueryObject(q1);
 
@@ -1195,7 +1205,7 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q2;
 
 			q2.insertSelectStmt(IF, "ifs");
-			q2.insertClause(ModifiesS, IF, "ifs", VAR_NAME, "b");
+			q2.insertClause(ModifiesS, IF, "ifs", IDENT, "b");
 
 			evaluator.setQueryObject(q2);
 
@@ -1225,7 +1235,7 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q1;
 
 			q1.insertSelectStmt(WHILE, "w");
-			q1.insertClause(ModifiesS, WHILE, "w", VAR_NAME, "b");
+			q1.insertClause(ModifiesS, WHILE, "w", IDENT, "b");
 
 			evaluator.setQueryObject(q1);
 
@@ -1237,7 +1247,7 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q2;
 
 			q2.insertSelectStmt(WHILE, "w");
-			q2.insertClause(ModifiesS, WHILE, "w", VAR_NAME, "d");
+			q2.insertClause(ModifiesS, WHILE, "w", IDENT, "d");
 
 			evaluator.setQueryObject(q2);
 
@@ -1259,28 +1269,33 @@ namespace PKBEvaluatorIntegrationTesting
 			list<string> result = evaluator.evaluateQuery();
 			list<string> expected;
 			expected.push_back("1");
-			expected.push_back("2");
 			expected.push_back("3");
+			expected.push_back("4");
+			expected.push_back("7");
+			expected.push_back("8");
+			expected.push_back("9");
 			expected.push_back("10");
+			expected.push_back("13");
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q1;
 
 			q1.insertSelectStmt(ASSIGN, "a");
-			q1.insertClause(ModifiesS, ASSIGN, "a", VAR_NAME, "a");
+			q1.insertClause(ModifiesS, ASSIGN, "a", IDENT, "a");
 
 			evaluator.setQueryObject(q1);
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
 			expected.push_back("1");
-			expected.push_back("3");
+			expected.push_back("10");
+			expected.push_back("13");
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q2;
 
 			q2.insertSelectStmt(ASSIGN, "a");
-			q2.insertClause(ModifiesS, ASSIGN, "a", VAR_NAME, "f");
+			q2.insertClause(ModifiesS, ASSIGN, "a", IDENT, "f");
 
 			evaluator.setQueryObject(q2);
 
