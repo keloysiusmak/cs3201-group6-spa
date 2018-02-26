@@ -423,7 +423,7 @@ void printNameTable(unordered_map<int, std::string> table) {
 		std::cout << "[ " << element.first << " , " << element.second << " ]\n";
 	}
 }
-
+/*
 int main() {
 
 Parser parser;
@@ -466,4 +466,4 @@ unordered_map<int, std::string> table9 = pkb.nameTables[1];
 printNameTable(table9);
 
 return 0;
-}
+}*/
