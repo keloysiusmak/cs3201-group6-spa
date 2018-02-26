@@ -20,6 +20,7 @@ public:
 	static string getWordAndPop(queue<string>&);
 	static bool isInteger(const string& s);
 	static bool isSynonym(ParamType type);
+	static bool isSameParam(Param a, Param b);
 	static bool isValidFactor(string);
 	static bool isValidOperator(string);
 	static bool isValidConstant(string);

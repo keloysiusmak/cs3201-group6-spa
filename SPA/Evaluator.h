@@ -54,8 +54,6 @@ struct PatternResults {
 		lhs = pattern.getLeftParam();
 		rhs = pattern.getRightParam();
 	};
-
-
 };
 
 class Evaluator {
@@ -89,7 +87,7 @@ public:
 	void intersectDouble(ClauseResults &clauseResults);
 
 	// Helper Methods
-	bool selectParamInClause(QueryObject &queryObj);
+	bool selectParamInClauseOrPattern(QueryObject &queryObj);
 	bool queryHasClause(QueryObject &queryObj);
 	bool queryHasPattern(QueryObject &queryObj);
 	bool hasClauseResults(ClauseResults &clauseResults);

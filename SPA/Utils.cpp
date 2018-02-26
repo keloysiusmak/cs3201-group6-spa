@@ -122,3 +122,7 @@ bool Utils::isSynonym(ParamType type) {
 		return true;
 	}
 }
+
+bool Utils::isSameParam(Param a, Param b) {
+	return a.type == b.type && a.value == b.value;
+}

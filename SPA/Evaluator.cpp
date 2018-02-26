@@ -58,7 +58,7 @@ list<string> Evaluator::evaluateQuery() {
 		if (queryHasPattern(queryObject)) { ; };
 
 		/* Check if param in clause */
-		if (!selectParamInClause(queryObject)) {
+		if (!selectParamInClauseOrPattern(queryObject)) {
 			if (hasClauseResults(cResults) || hasPatternResults(pResults)) {
 				return getAllSelectedParam(selectParam);
 			}
@@ -82,17 +82,17 @@ list<string> Evaluator::evaluateQuery() {
 };
 
 /* Check whether selected synonym is used in clauses */
-bool Evaluator::selectParamInClause(QueryObject &queryObj) {
-	string selectParamValue = queryObj.getSelectStatement().value;
+bool Evaluator::selectParamInClauseOrPattern(QueryObject &queryObj) {
+	Param selectParam = queryObj.getSelectStatement();
 	vector<Clause> clauses = queryObj.getClauses();
 	vector<Pattern> patterns = queryObj.getPatterns();
 	if (clauses.size() > 0) {
-		if (clauses[0].getFirstParam().value == selectParamValue) return true;
-		if (clauses[0].getSecondParam().value == selectParamValue) return true;
+		if (Utils::isSameParam(clauses[0].getFirstParam(), selectParam)) return true;
+		if (Utils::isSameParam(clauses[0].getSecondParam(), selectParam)) return true;
 	}
-	if (clauses.size() > 0) {
-		if (patterns[0].getLeftParam().value == selectParamValue) return true;
-		if (patterns[0].getRightParam().value == selectParamValue) return true;
+	if (patterns.size() > 0) {
+		if (Utils::isSameParam(patterns[0].getLeftParam(), selectParam)) return true;
+		if (Utils::isSameParam(patterns[0].getRightParam(), selectParam)) return true;
 	}
 	return false;
 };
@@ -173,7 +173,7 @@ list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &sele
 	}
 	else if (clauseResults.keyValues.size()) { // Get selected from hashtable
 		for (auto pair : clauseResults.keyValues) {
-			if (leftParam.type == selected.type) {
+			if (Utils::isSameParam(selected, leftParam)) {
 				answerSet.insert(pair.first);
 			}
 			else {
@@ -524,15 +524,16 @@ void Evaluator::intersectDouble(ClauseResults &clauseResults) {
 		unordered_map<int, vector<int>> keyValueTable = clauseResults.keyValues;
 		vector<int> rightParamValidStmts = pkb.getAllStatementsWithType(rightParamIntType);
 		for (auto keyValuePair : keyValueTable) {
+			vector<int> filteredStmts = vector<int>();
 			for (int validStmt : rightParamValidStmts) {
-				vector<int> filteredStmts;
 				for (int stmt : keyValuePair.second) {
 					if (validStmt == stmt) {
 						filteredStmts.push_back(validStmt);
 					}
 				}
-				keyValuePair.second = filteredStmts;
 			}
+			vector<int> *keyValueVector = &(keyValuePair.second);
+			keyValueVector = &filteredStmts;
 		}
 	}
 }
