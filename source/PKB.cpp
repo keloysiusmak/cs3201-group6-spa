@@ -556,9 +556,13 @@ unordered_map<int, std::vector<int>> PKB::getAllVariableUsesStatements() {
 
 	unordered_map<int, std::vector<int>> output;
 	std::vector<int> vars = PKB::getAllVariables();
+	std::vector<int> data;
 
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
-		output.insert({ vars[i], PKB::getStatementsFromUsesVariable(vars[i]) });
+		data = PKB::getStatementsFromUsesVariable(vars[i]);
+		if (data.size() > 0) {
+			output.insert({ vars[i],  data});
+		}
 	}
 
 	return output;
@@ -582,9 +586,13 @@ unordered_map<int, std::vector<int>> PKB::getAllVariableUsesProcedures() {
 
 	unordered_map<int, std::vector<int>> output;
 	std::vector<int> vars = PKB::getAllVariables();
+	std::vector<int> data;
 
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
-		output.insert({ vars[i], PKB::getProceduresFromUsesVariable(vars[i]) });
+		data = PKB::getProceduresFromUsesVariable(vars[i]);
+		if (data.size() > 0) {
+			output.insert({ vars[i], data });
+		}
 	}
 
 	return output;
