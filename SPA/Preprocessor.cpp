@@ -325,9 +325,16 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 
 		//Change the synonym to the declaration type with reference to the declarationMap
 		insertLeftType = searchDeclareType->second;
-	} 	
+	}
+	//Check if is Integer
+	else if (insertLeftType == INTEGER) {
+		//invalid if is 0 and below
+		if (stoi(leftArg) < 1) {
+			return false;
+		}
+	}
 	// Underscore
-	else if (insertLeftType == ALL) {
+	else {
 		isLeftArgAll = true;
 	}
 
@@ -412,8 +419,15 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 
 		insertLeftType = searchDeclareType->second;
 	}
+	//Check if is Integer
+	else if (insertLeftType == INTEGER) {
+		//invalid if is 0 and below
+		if (stoi(leftArg) < 1) {
+			return false;
+		}
+	}
 	// Underscore
-	else if (insertLeftType == ALL) {
+	else {
 		isLeftArgAll = true;
 	}
 
@@ -437,8 +451,15 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 
 		insertRightType = searchDeclareType->second;
 	}
+	//Check if is Integer
+	else if (insertRightType == INTEGER) {
+		//invalid if is 0 and below
+		if (stoi(rightArg) < 1) {
+			return false;
+		}
+	}
 	// Underscore
-	else if (insertRightType == ALL) {
+	else {
 		isRightArgAll = true;
 	}
 
