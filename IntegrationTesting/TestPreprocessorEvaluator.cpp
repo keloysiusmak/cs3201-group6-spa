@@ -69,6 +69,28 @@ namespace PreprocessorEvaluatorIntegrationTesting
 				Assert::AreEqual(true, result5);
 			}
 
+			//This test method will take in an invalid test query
+			//and return invalid message
+			TEST_METHOD(TestInvalidPreprocessQuery) {
+
+				string invalidQuery1 = "assign a; Select s";
+				string invalidQuery2 = "assign a; Select a pattern a(_, _)";
+				string invalidQuery3 = "assign a; stmt s; Select s such that Follows*(a, \"x\")";
+				string invalidQuery4 = "stmt s; variable v; Select s such that Modifies(v, v)";
+
+				preprocessor.preprocessQuery(invalidQuery1);
+				Assert::AreNotEqual(true, evaluator.isValidQuery());
+
+				preprocessor.preprocessQuery(invalidQuery2);
+				Assert::AreNotEqual(true, evaluator.isValidQuery());
+
+				preprocessor.preprocessQuery(invalidQuery3);
+				Assert::AreNotEqual(true, evaluator.isValidQuery());
+
+				preprocessor.preprocessQuery(invalidQuery4);
+				Assert::AreNotEqual(true, evaluator.isValidQuery());
+			}
+
 			bool compareQueryObjectProperties(QueryObject qo1, QueryObject qo2) {
 				bool isSameSelectStatement = (qo1.getSelectStatement().type == qo2.getSelectStatement().type) &&
 					(qo1.getSelectStatement().value.compare(qo2.getSelectStatement().value) == 0);
