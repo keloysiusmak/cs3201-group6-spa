@@ -356,7 +356,7 @@ Select s1 such that Parent(s1, s2)
 72 - Parent(s1, if2)
 stmt s1; if if2;
 Select s1 such that Parent(s1, if2)
-2
+2,9
 5000
 73 - Parent(s1, w2)
 stmt s1; while w2;
@@ -366,7 +366,7 @@ Select s1 such that Parent(s1, w2)
 74 - Parent(s1, a2)
 stmt s1; assign a2;
 Select s1 such that Parent(s1, a2)
-3,6,10,12
+2,3,6,9,10,12
 5000
 75 - Parent(s1, n2)
 stmt s1; prog_line n2;
@@ -396,7 +396,7 @@ Select if1 such that Parent(if1, w2)
 80 - Parent(if1, a2)
 if if1; assign a2;
 Select if1 such that Parent(if1, a2)
-3,12
+2,3,12
 5000
 81 - Parent(if1, n2)
 if if1; prog_line n2;
@@ -691,7 +691,7 @@ x
 139 - pattern a(v, _v_)
 assign a; variable v;
 Select a pattern a(v, _v_)
-1,4,5,7,8,11,13,14,15
+Invalid Query
 5000
 140 - pattern a(v, _'x'_)
 assign a; variable v;
@@ -711,7 +711,7 @@ Select a pattern a(v, _)
 143 - pattern a('x', _v_)
 assign a; variable v;
 Select a pattern a("x", _v_)
-1,4,5,7,8,11,13,14,15
+Invalid Query
 5000
 144 - pattern a('x', _'x'_)
 assign a;
@@ -731,7 +731,7 @@ Select a pattern a("x", _)
 147 - pattern a(_, _v_)
 assign a; variable v;
 Select a pattern a(_, _v_)
-1,4,5,7,8,11,13,14,15
+Invalid Query
 5000
 148 - pattern a(_, _'x'_)
 assign a;

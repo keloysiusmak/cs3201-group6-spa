@@ -118,6 +118,8 @@ bool Utils::isSynonym(ParamType type) {
 		return false;
 	case VAR_NAME:
 		return false;
+	case IDENT:
+		return false;
 	default:
 		return true;
 	}
