@@ -386,11 +386,13 @@ void Evaluator::evaluateUses(Clause &clause, ClauseResults &clauseResults) {
 			if (rightParam.type == INTEGER) { // RHS is integer constant
 				vector<int> results = pkb.getStatementsWithConstant(stoi(rightParam.value));
 				clauseResults.setValues(results);
+				intersectSingle(clauseResults);
 			}
 			else { // LHS is var_name
 				int variableId = pkb.getVariableId(rightParam.value);
 				vector<int> results = pkb.getStatementsFromUsesVariable(variableId);
 				clauseResults.setValues(results);
+				intersectSingle(clauseResults);
 			}
 		}
 	}
@@ -432,6 +434,7 @@ void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
 		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
 			vector<int> results = pkb.getModifiesVariablesFromStatement(stoi(leftParam.value));
 			clauseResults.setValues(results);
+			intersectSingle(clauseResults);
 		}
 		else { // (concrete, concrete)
 			bool result = pkb.checkStatementModifiesVariable(stoi(leftParam.value), stoi(rightParam.value));
