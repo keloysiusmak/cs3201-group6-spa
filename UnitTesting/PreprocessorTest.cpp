@@ -196,7 +196,7 @@ namespace UnitTesting {
 				//Invalid
 				string invalidArg1Empty = "";
 				string invalidArg1StmtRef1 = "\"x\"";
-				string invalidArg1StmtRef2 = "v";			
+				string invalidArg1StmtRef2 = "v";	
 				string invalidArg1StmtRefNotExist = "a";
 
 				string invalidArg2Empty = "";
@@ -205,11 +205,13 @@ namespace UnitTesting {
 				string invalidArg2EntRefNotExist = "b";
 
 				string underScore = "_";
+				string integerZero = "0";
 
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1Empty, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1StmtRef1, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1StmtRef2, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1StmtRefNotExist, arg2));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, integerZero, arg2));
 
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2Empty));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2EntRef1));
@@ -263,16 +265,19 @@ namespace UnitTesting {
 				string invalidArg2EntRefNotExist = "b";
 
 				string underScore = "_";
+				string integerZero = "0";
 
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1Empty, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1StmtRef1, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1StmtRef2, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1StmtRefNotExist, arg2));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, integerZero, arg2));
 
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2Empty));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2StmtRef1));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2StmtRef2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2EntRefNotExist));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, integerZero));
 
 				//Both underscore
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, underScore, underScore));
