@@ -118,7 +118,7 @@ bool Evaluator::hasPatternResults(PatternResults &patternResults) {
 
 /* Get all selected params */
 list<string> Evaluator::getAllSelectedParam(Param p) {
-	int paramIntType = typeToIntMap(p.type);
+	int paramIntType = statementTypeToIntMap(p.type);
 	vector<int> pkbResults;
 	if (paramIntType != 0) {
 		pkbResults = pkb.getAllStatementsWithType(paramIntType);
@@ -407,7 +407,7 @@ void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
 LHS: _, v, var_name
 RHS: _, v, constant, var_name
 */
-void Evaluator::evaluatePattern(Pattern &pattern, PatternResults &patternResults) {
+void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults) {
 
 	Param leftParam = pattern.getLeftParam();
 	Param rightParam = pattern.getRightParam();
@@ -473,8 +473,8 @@ void Evaluator::intersectSingle(ClauseResults &clauseResults) {
 	Param rightParam = clauseResults.rhs;
 
 	/* Get typeInt for param */
-	(Utils::isSynonym(leftParam.type)) ? typeInt = typeToIntMap(leftParam.type) :
-		typeInt = typeToIntMap(rightParam.type);
+	(Utils::isSynonym(leftParam.type)) ? typeInt = statementTypeToIntMap(leftParam.type) :
+		typeInt = statementTypeToIntMap(rightParam.type);
 
 	/* Return out if synonym is statement */
 	if (typeInt == 0) return;
@@ -498,8 +498,8 @@ void Evaluator::intersectDouble(ClauseResults &clauseResults) {
 
 	Param leftParam = clauseResults.lhs;
 	Param rightParam = clauseResults.rhs;
-	int leftParamIntType = typeToIntMap(leftParam.type);
-	int rightParamIntType = typeToIntMap(rightParam.type);
+	int leftParamIntType = statementTypeToIntMap(leftParam.type);
+	int rightParamIntType = statementTypeToIntMap(rightParam.type);
 		
 	/* Filter Keys */
 	if (leftParamIntType != 0) {
@@ -537,7 +537,7 @@ void Evaluator::intersectDouble(ClauseResults &clauseResults) {
 	}
 }
 
-int Evaluator::typeToIntMap(ParamType t) {
+int Evaluator::statementTypeToIntMap(ParamType t) {
 	switch (t) {
 	case ASSIGN:
 		return 1;
