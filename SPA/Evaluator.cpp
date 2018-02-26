@@ -47,13 +47,13 @@ list<string> Evaluator::evaluateQuery() {
 	if (isValidQuery()) {
 		Param selectParam = queryObject.getSelectStatement();
 		ClauseResults cResults = ClauseResults();
-		PatternResults pResults = PatternResults();
+		ClauseResults pResults = ClauseResults();
 
 		if (queryHasClause(queryObject)) evaluateClause(queryObject.getClauses()[0], cResults);
 		if (queryHasPattern(queryObject)) { ; };
 
 		/* Check if param in clause or pattern */
-		if (!selectParamInClauseOrPattern(queryObject)) {
+		if (!selectParamInClauses(queryObject)) {
 			if (hasClauseResults(cResults) || hasPatternResults(pResults)) { // Results exists for either
 				return getAllSelectedParam(selectParam);
 			}
@@ -80,7 +80,7 @@ list<string> Evaluator::evaluateQuery() {
 };
 
 /* Check whether selected synonym is used in clauses */
-bool Evaluator::selectParamInClauseOrPattern(QueryObject &queryObj) {
+bool Evaluator::selectParamInClauses(QueryObject &queryObj) {
 	Param selectParam = queryObj.getSelectStatement();
 	vector<Clause> clauses = queryObj.getClauses();
 	vector<Pattern> patterns = queryObj.getPatterns();
@@ -109,7 +109,7 @@ bool Evaluator::hasClauseResults(ClauseResults &clauseResults) {
 	if (clauseResults.valid || clauseResults.values.size() || clauseResults.keyValues.size()) return true;
 	return false;
 };
-bool Evaluator::hasPatternResults(PatternResults &patternResults) {
+bool Evaluator::hasPatternResults(ClauseResults &patternResults) {
 	// To be implemented
 	return false;
 };
@@ -137,7 +137,7 @@ list<string> Evaluator::getAllSelectedParam(Param p) {
 };
 
 /* Intersect pattern and clause results */
-ClauseResults Evaluator::getIntersectResults(ClauseResults &clauseResults, PatternResults &patternResults) {
+ClauseResults Evaluator::getIntersectResults(ClauseResults &clauseResults, ClauseResults &patternResults) {
 	ClauseResults finalResults;
 	return finalResults;
 };

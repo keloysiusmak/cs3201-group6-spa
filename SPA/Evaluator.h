@@ -44,24 +44,11 @@ struct ClauseResults {
 	}
 };
 
-struct PatternResults {
-	Param lhs;
-	Param rhs;
-	vector<string> lhsAnswers;
-	vector<string> rhsAnswers;
-
-	void PatternResults::instantiatePattern(Pattern pattern) {
-		lhs = pattern.getLeftParam();
-		rhs = pattern.getRightParam();
-	};
-};
-
 class Evaluator {
 public:
 	Evaluator();
 	Evaluator(QueryObject);
 	list<string> evaluateQuery();
-	list<string> invalidQuery(string);
 
 	bool isValidQuery();
 	QueryObject getQueryObject();
@@ -87,12 +74,12 @@ public:
 	void intersectDouble(ClauseResults &clauseResults);
 
 	// Helper Methods
-	bool selectParamInClauseOrPattern(QueryObject &queryObj);
+	bool selectParamInClauses(QueryObject &queryObj);
 	bool queryHasClause(QueryObject &queryObj);
 	bool queryHasPattern(QueryObject &queryObj);
 	bool hasClauseResults(ClauseResults &clauseResults);
-	bool hasPatternResults(PatternResults &patternResults);
-	ClauseResults getIntersectResults(ClauseResults &clauseResults, PatternResults &patternResults);
+	bool hasPatternResults(ClauseResults &patternResults);
+	ClauseResults getIntersectResults(ClauseResults &clauseResults, ClauseResults &patternResults);
 	list<string> getAllSelectedParam(Param p);
 	int statementTypeToIntMap(ParamType t);
 	void storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map);
