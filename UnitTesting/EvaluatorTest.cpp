@@ -135,6 +135,37 @@ namespace UnitTesting {
 			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 		}
 
+		TEST_METHOD(SelectParamInTwoClausesTest) {
+			Param select, clauseLHS, clauseRHS, patternEnt, patternLHS, patternRHS;
+			Clause clause;
+			Pattern pattern;
+			QueryObject queryObj;
+
+			/* Select v such that Modifies(1,v) pattern a(v, _"x"_) */
+			clauseLHS = createParam(INTEGER, "1");
+			clauseRHS = createParam(VARIABLE, "v");
+			clause = createClause(ModifiesS, clauseLHS, clauseRHS);
+			patternEnt = createParam(ASSIGN, "a");
+			patternLHS = createParam(VARIABLE, "v");
+			patternRHS = createParam(VAR_NAME, "x");
+			pattern = createPattern(patternEnt, patternLHS, patternRHS);
+			select = createParam(VARIABLE, "v");
+			queryObj = createQueryObject(select, clause, pattern);
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
+
+			/* Select a such that Parent(a, 1) pattern a("x", v) */
+			clauseLHS = createParam(VARIABLE, "a");
+			clauseRHS = createParam(INTEGER, "1");
+			clause = createClause(Parent, clauseLHS, clauseRHS);
+			patternEnt = createParam(ASSIGN, "a");
+			patternLHS = createParam(VAR_NAME, "x");
+			patternRHS = createParam(VARIABLE, "v");
+			pattern = createPattern(patternEnt, patternLHS, patternRHS);
+			select = createParam(ASSIGN, "a");
+			queryObj = createQueryObject(select, clause, pattern);
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
+		}
+
 		TEST_METHOD(SelectParamNotInClauseTest) {
 			Param select, lhs, rhs;
 			Clause clause;
