@@ -188,6 +188,7 @@ list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &
 	set<int> answerSet;
 
 	if (clauseResults.values.size()) { // Get selected from values 
+		if (clauseResults.values[0] == 0) return { "None" };
 		for (int value : clauseResults.values) {
 			answerSet.insert(value);
 		}
