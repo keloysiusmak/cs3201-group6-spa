@@ -36,7 +36,7 @@ namespace UnitTesting {
 			clause = createClause(Follows, clauseLHS, clauseRHS);
 			select = createParam(STMT, "s");
 			queryObj = createQueryObject(select, clause);
-			Assert::AreEqual(true, evaluator.selectParamInClauseOrPattern(queryObj));
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 
 			/* while w; Select w such that Follows(w, 2) */
 			clauseLHS = createParam(WHILE, "w");
@@ -44,7 +44,7 @@ namespace UnitTesting {
 			clause = createClause(Follows, clauseLHS, clauseRHS);
 			select = createParam(WHILE, "w");
 			queryObj = createQueryObject(select, clause);
-			Assert::AreEqual(true, evaluator.selectParamInClauseOrPattern(queryObj));
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 
 			/* stmt s; while w; Select w such that Follows(w, s) */
 			clauseLHS = createParam(WHILE, "w");
@@ -52,7 +52,7 @@ namespace UnitTesting {
 			clause = createClause(Follows, clauseLHS, clauseRHS);
 			select = createParam(WHILE, "w");
 			queryObj = createQueryObject(select, clause);
-			Assert::AreEqual(true, evaluator.selectParamInClauseOrPattern(queryObj));
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 
 			/* variable v; Select w such that Follows(1, 2)pattern(v, 1) */
 			clauseLHS = createParam(INTEGER, "1");
@@ -64,7 +64,7 @@ namespace UnitTesting {
 			pattern = createPattern(patternEnt, patternLHS, patternRHS);
 			select = createParam(VARIABLE, "v");
 			queryObj = createQueryObject(select, clause, pattern);
-			Assert::AreEqual(true, evaluator.selectParamInClauseOrPattern(queryObj));
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 
 			/* stmt s; while w; Select w such that Follows(1, 2)pattern("c", v) */
 			clauseLHS = createParam(INTEGER, "1");
@@ -76,7 +76,7 @@ namespace UnitTesting {
 			pattern = createPattern(patternEnt, patternLHS, patternRHS);
 			select = createParam(VARIABLE, "v");
 			queryObj = createQueryObject(select, clause, pattern);
-			Assert::AreEqual(true, evaluator.selectParamInClauseOrPattern(queryObj));
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 		}
 
 		TEST_METHOD(SelectParamNotInClauseTest) {
@@ -86,7 +86,7 @@ namespace UnitTesting {
 			Clause clause = createClause(Follows, lhs, rhs);
 			Param select = createParam(WHILE, "w");
 			QueryObject queryObj = createQueryObject(select, clause);
-			Assert::AreEqual(false, evaluator.selectParamInClauseOrPattern(queryObj));
+			Assert::AreEqual(false, evaluator.selectParamInClauses(queryObj));
 		}
 
 
