@@ -67,7 +67,6 @@ public:
 	void evaluateUses(Clause &clause, ClauseResults &clauseResults);
 	void evaluateModifies(Clause &clause, ClauseResults &clauseResults);
 	void evaluatePattern(Pattern &pattern, ClauseResults &patternResults);
-	list<string> resultToString(ClauseResults &clauseResults, Param &selected);
 
 	// Intersection Helpers
 	void intersectSingle(ClauseResults &clauseResults);
@@ -75,14 +74,15 @@ public:
 
 	// Helper Methods
 	bool selectParamInClauses(QueryObject &queryObj);
+	bool selectParamInClause(Param select, Clause &clause);
+	bool selectParamInPattern(Param select, Pattern &pattern);
 	bool queryHasClause(QueryObject &queryObj);
 	bool queryHasPattern(QueryObject &queryObj);
 	bool hasClauseResults(ClauseResults &clauseResults);
-	bool hasPatternResults(ClauseResults &patternResults);
-	ClauseResults getIntersectResults(ClauseResults &clauseResults, ClauseResults &patternResults);
 	list<string> getAllSelectedParam(Param p);
+	list<string> resultToStringList(ClauseResults &clauseResults, Param &selected);
+
 	int statementTypeToIntMap(ParamType t);
-	void storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map);
 
 private:
 	QueryObject queryObject;

@@ -53,24 +53,39 @@ list<string> Evaluator::evaluateQuery() {
 		if (queryHasPattern(queryObject)) { ; };
 
 		/* Check if param in clause or pattern */
-		if (!selectParamInClauses(queryObject)) {
-			if (hasClauseResults(cResults) || hasPatternResults(pResults)) { // Results exists for either
+		if (!selectParamInClauses(queryObject)) { // Param independent of clauses
+			if (hasClauseResults(cResults) || hasClauseResults(pResults)) { // Results exists for either
 				return getAllSelectedParam(selectParam);
 			}
-			else if (!queryHasClause(queryObject) && !queryHasPattern(queryObject)) {
+			else if (!queryHasClause(queryObject) && !queryHasPattern(queryObject)) { // No clauses
 				return getAllSelectedParam(selectParam);
 			}
 			else {
 				return{ "None" };
 			}
 		}
-		else {
+		else { // Param within clauses
+			if (queryHasClause(queryObject) &&
+				selectParamInClause(selectParam, queryObject.getClauses()[0])) {
 
-			// ClauseResults finalResults = getIntersectResults(cResults, pResults);
+				list<string> clauseResults = resultToStringList(cResults, selectParam);
 
-			/* Format results to string */
-			list<string> ans = resultToString(cResults, selectParam);
-			return ans;
+				if (queryHasPattern(queryObject) &&
+					selectParamInPattern(selectParam, queryObject.getPatterns()[0])) { // Param in both
+
+					list<string> patternResults = resultToStringList(pResults, selectParam);
+				}
+				else if (queryHasPattern(queryObject)) { // Param present only in clause
+					if (hasClauseResults(pResults)) return clauseResults; // Check if pattern has results
+					else return {};
+				}
+				else {
+					return clauseResults;
+				}
+			} 
+			else {
+				// To be implemented
+			}
 		}
 	}
 	else {
@@ -85,15 +100,25 @@ bool Evaluator::selectParamInClauses(QueryObject &queryObj) {
 	vector<Clause> clauses = queryObj.getClauses();
 	vector<Pattern> patterns = queryObj.getPatterns();
 	if (clauses.size() > 0) {
-		if (Utils::isSameParam(clauses[0].getFirstParam(), selectParam)) return true;
-		if (Utils::isSameParam(clauses[0].getSecondParam(), selectParam)) return true;
+		if (selectParamInClause(selectParam, clauses[0])) return true;
 	}
 	if (patterns.size() > 0) {
-		if (Utils::isSameParam(patterns[0].getLeftParam(), selectParam)) return true;
-		if (Utils::isSameParam(patterns[0].getRightParam(), selectParam)) return true;
+		if (selectParamInPattern(selectParam, patterns[0])) return true;
 	}
 	return false;
 };
+
+bool Evaluator::selectParamInClause(Param select, Clause &clause) {
+	if (Utils::isSameParam(clause.getFirstParam(), select)) return true;
+	if (Utils::isSameParam(clause.getSecondParam(), select)) return true;
+	return false;
+}
+
+bool Evaluator::selectParamInPattern(Param select, Pattern &pattern) {
+	if (Utils::isSameParam(pattern.getLeftParam(), select)) return true;
+	if (Utils::isSameParam(pattern.getRightParam(), select)) return true;
+	return false;
+}
 
 /* Check if Clauses or Patterns are present */
 bool Evaluator::queryHasClause(QueryObject &queryObj) {
@@ -107,10 +132,6 @@ bool Evaluator::queryHasPattern(QueryObject &queryObj) {
 /* Check if results exist in clause or pattern */
 bool Evaluator::hasClauseResults(ClauseResults &clauseResults) {
 	if (clauseResults.valid || clauseResults.values.size() || clauseResults.keyValues.size()) return true;
-	return false;
-};
-bool Evaluator::hasPatternResults(ClauseResults &patternResults) {
-	// To be implemented
 	return false;
 };
 
@@ -136,12 +157,6 @@ list<string> Evaluator::getAllSelectedParam(Param p) {
 	return results;
 };
 
-/* Intersect pattern and clause results */
-ClauseResults Evaluator::getIntersectResults(ClauseResults &clauseResults, ClauseResults &patternResults) {
-	ClauseResults finalResults;
-	return finalResults;
-};
-
 void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	clauseResults.instantiateClause(queryObject.getClauses()[0]);
 	RelRef relation = clause.getRelRef();
@@ -163,11 +178,11 @@ void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	else if (relation == ModifiesS) {
 		evaluateModifies(clause, clauseResults);
 	}
-	else { ; }
+	else { ; } // For extension
 };
 
 /* Assumes Selected is within ClauseResults */
-list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &selected) {
+list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &selected) {
 	Param leftParam = clauseResults.lhs;
 	Param rightParam = clauseResults.rhs;
 	set<int> answerSet;
@@ -458,18 +473,6 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 		}
 	}
 
-};
-
-/* Iterates through key value pair in unorderedMap and stores the corresponding rows */
-void Evaluator::storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map) {
-	vector<int> keys;
-	vector<vector<int>> values;
-	for (auto row : map) {
-		keys.push_back(row.first);
-		values.push_back(row.second);
-	}
-	//clauseResults.setKeys(keys);
-	//clauseResults.setValues(values);
 };
 
 void Evaluator::intersectSingle(ClauseResults &clauseResults) {
