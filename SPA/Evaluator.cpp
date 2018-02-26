@@ -173,7 +173,7 @@ list<string> Evaluator::resultToString(ClauseResults &clauseResults, Param &sele
 	}
 	else if (clauseResults.keyValues.size()) { // Get selected from hashtable
 		for (auto pair : clauseResults.keyValues) {
-			if (leftParam.type == selected.type) {
+			if (Utils::isSameParam(selected, leftParam)) {
 				answerSet.insert(pair.first);
 			}
 			else {
