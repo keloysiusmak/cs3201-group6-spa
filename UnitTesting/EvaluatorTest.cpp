@@ -38,7 +38,7 @@ namespace UnitTesting {
 			queryObj = createQueryObject(select, clause);
 			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 
-			/* while w; Select w such that Follows(w, 2) */
+			///* while w; Select w such that Follows(w, 2) */
 			clauseLHS = createParam(WHILE, "w");
 			clauseRHS = createParam(INTEGER, "2");
 			clause = createClause(Follows, clauseLHS, clauseRHS);
@@ -132,6 +132,7 @@ namespace UnitTesting {
 		/* Clause and Pattern present */
 		QueryObject createQueryObject(Param select, Clause clause, Pattern pattern) {
 			QueryObject queryObj;
+			queryObj.insertSelectStmt(select.type, select.value);
 			queryObj.insertClause(clause.getRelRef(), clause.getFirstParam().type,
 				clause.getFirstParam().value, clause.getSecondParam().type, clause.getSecondParam().value);
 			queryObj.insertPattern(pattern.getEntity().type, pattern.getEntity().value,
