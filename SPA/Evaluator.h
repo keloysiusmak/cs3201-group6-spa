@@ -54,6 +54,8 @@ struct PatternResults {
 		lhs = pattern.getLeftParam();
 		rhs = pattern.getRightParam();
 	};
+
+
 };
 
 class Evaluator {
@@ -79,7 +81,7 @@ public:
 	void evaluateParentStar(Clause &clause, ClauseResults &clauseResults);
 	void evaluateUses(Clause &clause, ClauseResults &clauseResults);
 	void evaluateModifies(Clause &clause, ClauseResults &clauseResults);
-	void evaluatePattern(PatternObject &pattern, PatternResults &patternResults);
+	void evaluatePattern(Pattern &pattern, ClauseResults &patternResults);
 	list<string> resultToString(ClauseResults &clauseResults, Param &selected);
 
 	// Intersection Helpers
@@ -93,7 +95,7 @@ public:
 	bool hasClauseResults(ClauseResults &clauseResults);
 	bool hasPatternResults(PatternResults &patternResults);
 	list<string> getAllSelectedParam(Param p);
-	int typeToIntMap(ParamType t);
+	int statementTypeToIntMap(ParamType t);
 	void storeMapToResults(ClauseResults &clauseResults, unordered_map<int, vector<int>> map);
 
 private:
