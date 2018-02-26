@@ -77,13 +77,69 @@ namespace UnitTesting {
 			select = createParam(VARIABLE, "v");
 			queryObj = createQueryObject(select, clause, pattern);
 			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
+
+			/* stmt s; Select s such that Parent(3, s) */
+			clauseLHS = createParam(INTEGER, "3");
+			clauseRHS = createParam(STMT, "s");
+			clause = createClause(Parent, clauseLHS, clauseRHS);
+			select = createParam(STMT, "s");
+			queryObj = createQueryObject(select, clause);
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
+
+			/* while w; Select w such that Parent(w, 4) */
+			clauseLHS = createParam(WHILE, "w");
+			clauseRHS = createParam(INTEGER, "4");
+			clause = createClause(Parent, clauseLHS, clauseRHS);
+			select = createParam(WHILE, "w");
+			queryObj = createQueryObject(select, clause);
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
+
+			/* stmt s; while w; Select w such that Parent(w, s) */
+			clauseLHS = createParam(WHILE, "w");
+			clauseRHS = createParam(STMT, "s");
+			clause = createClause(Parent, clauseLHS, clauseRHS);
+			select = createParam(WHILE, "w");
+			queryObj = createQueryObject(select, clause);
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
+
+			/* variable v; Select w such that Parent(1, 2) pattern(v, 1) */
+			clauseLHS = createParam(INTEGER, "1");
+			clauseRHS = createParam(INTEGER, "2");
+			clause = createClause(Parent, clauseLHS, clauseRHS);
+			patternEnt = createParam(ASSIGN, "a");
+			patternLHS = createParam(VARIABLE, "v");
+			patternRHS = createParam(CONSTANT, "1");
+			pattern = createPattern(patternEnt, patternLHS, patternRHS);
+			select = createParam(VARIABLE, "v");
+			queryObj = createQueryObject(select, clause, pattern);
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
+
+			/* stmt s; while w; Select w such that Parent(1, 2)pattern("c", v) */
+			clauseLHS = createParam(INTEGER, "1");
+			clauseRHS = createParam(INTEGER, "2");
+			clause = createClause(Parent, clauseLHS, clauseRHS);
+			patternEnt = createParam(ASSIGN, "a");
+			patternLHS = createParam(VAR_NAME, "c");
+			patternRHS = createParam(VARIABLE, "v");
+			pattern = createPattern(patternEnt, patternLHS, patternRHS);
+			select = createParam(VARIABLE, "v");
+			queryObj = createQueryObject(select, clause, pattern);
+			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 		}
 
 		TEST_METHOD(SelectParamNotInClauseTest) {
 			/* stmt s; while w; Select w such that Follows(3, s) */
 			Param lhs = createParam(INTEGER, "3");
 			Param rhs = createParam(STMT, "s");
-			Clause clause = createClause(Follows, lhs, rhs);
+			Clause clause = createClause(Parent, lhs, rhs);
+			Param select = createParam(WHILE, "w");
+			QueryObject queryObj = createQueryObject(select, clause);
+			Assert::AreEqual(false, evaluator.selectParamInClauses(queryObj));
+
+			/* stmt s; while w; Select w such that Parent(3, s) */
+			Param lhs = createParam(INTEGER, "3");
+			Param rhs = createParam(STMT, "s");
+			Clause clause = createClause(Parent, lhs, rhs);
 			Param select = createParam(WHILE, "w");
 			QueryObject queryObj = createQueryObject(select, clause);
 			Assert::AreEqual(false, evaluator.selectParamInClauses(queryObj));
