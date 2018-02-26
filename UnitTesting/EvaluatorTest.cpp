@@ -92,7 +92,15 @@ namespace UnitTesting {
 
 
 		TEST_METHOD(QueryHasClauseTest) {
-			
+			Param select = createParam(ASSIGN, "a");
+			QueryObject qo = createQueryObject(select);
+
+			//When there is no clause in the QueryObject
+			Assert::AreNotEqual(true, evaluator.queryHasClause(qo));
+
+			//When there is an existing clause in the QueryObject
+			qo.insertClause(Parent, INTEGER, "2", STMT, "s");
+			Assert::AreEqual(true, evaluator.queryHasClause(qo));
 		}
 
 		/* Object creation helpers*/
