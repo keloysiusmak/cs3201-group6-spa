@@ -196,13 +196,15 @@ namespace UnitTesting {
 				//Invalid
 				string invalidArg1Empty = "";
 				string invalidArg1StmtRef1 = "\"x\"";
-				string invalidArg1StmtRef2 = "v";
+				string invalidArg1StmtRef2 = "v";			
 				string invalidArg1StmtRefNotExist = "a";
 
 				string invalidArg2Empty = "";
 				string invalidArg2EntRef1 = "3";
-				string invalidArg2EntRef2 = "w";
+				string invalidArg2EntRef2 = "w";			
 				string invalidArg2EntRefNotExist = "b";
+
+				string underScore = "_";
 
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1Empty, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1StmtRef1, arg2));
@@ -213,6 +215,9 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2EntRef1));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2EntRef2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2EntRefNotExist));
+
+				//Both underscore
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, underScore, underScore));
 			}
 
 			TEST_METHOD(parseClauseArg2Test) {
@@ -257,6 +262,8 @@ namespace UnitTesting {
 				string invalidArg2StmtRef2 = "v";
 				string invalidArg2EntRefNotExist = "b";
 
+				string underScore = "_";
+
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1Empty, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1StmtRef1, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1StmtRef2, arg2));
@@ -266,6 +273,9 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2StmtRef1));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2StmtRef2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2EntRefNotExist));
+
+				//Both underscore
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, underScore, underScore));
 			}
 
 			TEST_METHOD(parsePatternTest) {
@@ -305,6 +315,8 @@ namespace UnitTesting {
 				string invalidArg2Empty = "";
 				string invalidArg2ExpressSpec= "_x_"; //without ""
 
+				string underScore = "_";
+
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1Empty, arg2));
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1EntRef1, arg2));
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1EntRef2, arg2));
@@ -312,6 +324,9 @@ namespace UnitTesting {
 
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidArg2Empty));
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidArg2ExpressSpec));
+
+				//Both underscore
+				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, underScore, underScore));
 			}
 
 			TEST_METHOD(retrieveArgTypeTest) {
