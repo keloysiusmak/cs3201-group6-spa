@@ -171,6 +171,7 @@ namespace UnitTesting {
 
 				//Populate the declarationMap
 				preprocessor.insertDeclarationToMap("w", "while");
+				preprocessor.insertDeclarationToMap("v", "variable");
 
 				QueryObject qo;
 
@@ -194,19 +195,23 @@ namespace UnitTesting {
 
 				//Invalid
 				string invalidArg1Empty = "";
-				string invalidArg1StmtRef = "\"x\"";
+				string invalidArg1StmtRef1 = "\"x\"";
+				string invalidArg1StmtRef2 = "v";
 				string invalidArg1StmtRefNotExist = "a";
 
 				string invalidArg2Empty = "";
-				string invalidArg2EntRef = "3";
+				string invalidArg2EntRef1 = "3";
+				string invalidArg2EntRef2 = "w";
 				string invalidArg2EntRefNotExist = "b";
 
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1Empty, arg2));
-				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1StmtRef, arg2));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1StmtRef1, arg2));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1StmtRef2, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1StmtRefNotExist, arg2));
 
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2Empty));
-				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2EntRef));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2EntRef1));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2EntRef2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2EntRefNotExist));
 			}
 
@@ -218,13 +223,14 @@ namespace UnitTesting {
 				preprocessor.setEvaluator(evaluatorStub);
 
 				//Populate the declarationMap
+				preprocessor.insertDeclarationToMap("s", "stmt");
 				preprocessor.insertDeclarationToMap("v", "variable");
 
 				QueryObject qo;
 
 				string relType = "Parent*";
 				string arg1 = "5,";
-				string arg2 = "v)";
+				string arg2 = "s)";
 
 				string firstParamValue;
 				firstParamValue += arg1.at(0);
@@ -237,30 +243,37 @@ namespace UnitTesting {
 				Assert::AreEqual(static_cast<int>(ParentT), static_cast<int>(qo.getClauses().at(0).getRelRef()));
 				Assert::AreEqual(static_cast<int>(INTEGER), static_cast<int>(qo.getClauses().at(0).getFirstParam().type));
 				Assert::AreEqual(firstParamValue, qo.getClauses().at(0).getFirstParam().value);
-				Assert::AreEqual(static_cast<int>(VARIABLE), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
+				Assert::AreEqual(static_cast<int>(STMT), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
 				Assert::AreEqual(secondParamValue, qo.getClauses().at(0).getSecondParam().value);
 
 				//Invalid
 				string invalidArg1Empty = "";
-				string invalidArg1StmtRef = "\"x\"";
+				string invalidArg1StmtRef1 = "\"x\"";
+				string invalidArg1StmtRef2 = "v";
 				string invalidArg1StmtRefNotExist = "a";
 
 				string invalidArg2Empty = "";
-				string invalidArg2StmtRef = "\"x\"";
+				string invalidArg2StmtRef1 = "\"x\"";
+				string invalidArg2StmtRef2 = "v";
 				string invalidArg2EntRefNotExist = "b";
 
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1Empty, arg2));
-				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1StmtRef, arg2));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1StmtRef1, arg2));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1StmtRef2, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1StmtRefNotExist, arg2));
 
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2Empty));
-				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2StmtRef));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2StmtRef1));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2StmtRef2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2EntRefNotExist));
 			}
 
 			TEST_METHOD(parsePatternTest) {
 				Evaluator evaluatorStub;
 				Preprocessor preprocessor(evaluatorStub);
+
+				//Populate the declarationMap
+				preprocessor.insertDeclarationToMap("s", "stmt");
 
 				QueryObject qo;
 
@@ -285,14 +298,16 @@ namespace UnitTesting {
 
 				//Invalid
 				string invalidArg1Empty = "";
-				string invalidArg1EntRef = "2";
+				string invalidArg1EntRef1 = "2";
+				string invalidArg1EntRef2 = "s";
 				string invalidArg1StmtRefNotExist = "b";
 
 				string invalidArg2Empty = "";
 				string invalidArg2ExpressSpec= "_x_"; //without ""
 
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1Empty, arg2));
-				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1EntRef, arg2));
+				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1EntRef1, arg2));
+				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1EntRef2, arg2));
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1StmtRefNotExist, arg2));
 
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidArg2Empty));
