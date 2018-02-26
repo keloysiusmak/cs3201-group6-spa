@@ -252,12 +252,12 @@ namespace PKBParserIntegrationTesting
 		{
 			unordered_map<int, std::vector<int>> data;
 			data.insert({ 1, {2} });
-			data.insert({ 2,{ 3 } });
+			data.insert({ 2,{ 1,3 } });
 			data.insert({ 3,{ 1 } });
-			data.insert({ 5,{ 1 } });
+			data.insert({ 5,{ 1,5 } });
 			data.insert({ 6,{ 5 } });
 			data.insert({ 10,{ 2 } });
-			data.insert({ 11,{ 1 } });
+			data.insert({ 11,{ 1,2 } });
 			data.insert({ 12,{ 2 } });
 			Assert::AreEqual(true, (pkb.getAllStatementUsesVariables() == data));
 		}

@@ -431,6 +431,7 @@ Parser parser;
 
 PKB pkb;
 string testString = "procedure a { x = x + 1; if x then { if x then { x = x + 1; } else { x = x + 1; } while x { x = x + 1; } } else { x = x + 1; } while x { while x { x = x + 1; } if x then { x = x + 1; } else { x = x + 1;} x = x + 1; } }";
+testString = "procedure a {a = b; while c { b = a; d = 7; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { a = 1; }} }";
 pkb = parser.Parse("hell.txt", pkb, true, testString);
 
 std::vector<int> data = pkb.getAllStatementsWithType(2);
