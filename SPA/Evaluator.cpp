@@ -58,7 +58,7 @@ list<string> Evaluator::evaluateQuery() {
 		if (queryHasPattern(queryObject)) { ; };
 
 		/* Check if param in clause */
-		if (!selectParamInClause(queryObject)) {
+		if (!selectParamInClauseOrPattern(queryObject)) {
 			if (hasClauseResults(cResults) || hasPatternResults(pResults)) {
 				return getAllSelectedParam(selectParam);
 			}
@@ -82,7 +82,7 @@ list<string> Evaluator::evaluateQuery() {
 };
 
 /* Check whether selected synonym is used in clauses */
-bool Evaluator::selectParamInClause(QueryObject &queryObj) {
+bool Evaluator::selectParamInClauseOrPattern(QueryObject &queryObj) {
 	Param selectParam = queryObj.getSelectStatement();
 	vector<Clause> clauses = queryObj.getClauses();
 	vector<Pattern> patterns = queryObj.getPatterns();
