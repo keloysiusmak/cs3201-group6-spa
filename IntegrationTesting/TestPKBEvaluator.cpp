@@ -72,10 +72,10 @@ namespace PKBEvaluatorIntegrationTesting
 			table2.insert({ 2,{ { 6 },{ 1,2 },{ 1 } } });
 
 			unordered_map<int, std::vector<std::vector<int>>> table3;
-			table3.insert({ 1, {{2,3,5,12}, {1,2}} });
-			table3.insert({ 2,{ {1,10,11,12},{ 1,2 } } });
-			table3.insert({ 3,{ { 2,5,6,7 },{ 1 } } });
-			table3.insert({ 5,{ {5,6,9},{1} } });
+			table3.insert({ 1, {{2,3,5,11}, {1,2}} });
+			table3.insert({ 2,{ {1,10,11},{ 1,2 } } });
+			table3.insert({ 3,{ { 2 },{ 1 } } });
+			table3.insert({ 5,{ {5,6},{1} } });
 
 			unordered_map<int, std::vector<std::vector<int>>> table4;
 			table4.insert({ 1,{ {1,10,11,12,13},{1,2} } });
@@ -964,7 +964,6 @@ namespace PKBEvaluatorIntegrationTesting
 			result = evaluator.evaluateQuery();
 			expected.clear();
 			expected.push_back("1");
-			expected.push_back("2");
 			expected.push_back("10");
 			expected.push_back("11");
 			expected.push_back("12");
@@ -1090,9 +1089,6 @@ namespace PKBEvaluatorIntegrationTesting
 			result = evaluator.evaluateQuery();
 			expected.clear();
 			expected.push_back("3");
-			for (list<string>::const_iterator it = result.begin(); it != result.end(); ++it) {
-				Logger::WriteMessage(it->c_str());
-			}
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q2;
