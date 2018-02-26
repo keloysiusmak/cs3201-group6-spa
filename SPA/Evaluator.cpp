@@ -110,7 +110,7 @@ bool Evaluator::hasClauseResults(ClauseResults &clauseResults) {
 	return false;
 };
 bool Evaluator::hasPatternResults(ClauseResults &patternResults) {
-	// To be implemented
+	if (patternResults.valid || patternResults.values.size() || patternResults.keyValues.size()) return true;
 	return false;
 };
 
