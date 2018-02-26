@@ -38,7 +38,7 @@ namespace UnitTesting {
 			queryObj = createQueryObject(select, clause);
 			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 
-			/* while w; Select w such that Follows(w, 2) */
+			///* while w; Select w such that Follows(w, 2) */
 			clauseLHS = createParam(WHILE, "w");
 			clauseRHS = createParam(INTEGER, "2");
 			clause = createClause(Follows, clauseLHS, clauseRHS);
@@ -92,7 +92,15 @@ namespace UnitTesting {
 
 
 		TEST_METHOD(QueryHasClauseTest) {
-			
+			Param select = createParam(ASSIGN, "a");
+			QueryObject qo = createQueryObject(select);
+
+			//When there is no clause in the QueryObject
+			Assert::AreNotEqual(true, evaluator.queryHasClause(qo));
+
+			//When there is an existing clause in the QueryObject
+			qo.insertClause(Parent, INTEGER, "2", STMT, "s");
+			Assert::AreEqual(true, evaluator.queryHasClause(qo));
 		}
 
 		/* Object creation helpers*/
@@ -123,6 +131,7 @@ namespace UnitTesting {
 		/* Clause present */
 		QueryObject createQueryObject(Param select, Clause clause) {
 			QueryObject queryObj;
+			queryObj.insertSelectStmt(select.type, select.value);
 			queryObj.insertClause(clause.getRelRef(), clause.getFirstParam().type,
 				clause.getFirstParam().value, clause.getSecondParam().type, clause.getSecondParam().value);
 			return queryObj;
@@ -131,6 +140,7 @@ namespace UnitTesting {
 		/* Clause and Pattern present */
 		QueryObject createQueryObject(Param select, Clause clause, Pattern pattern) {
 			QueryObject queryObj;
+			queryObj.insertSelectStmt(select.type, select.value);
 			queryObj.insertClause(clause.getRelRef(), clause.getFirstParam().type,
 				clause.getFirstParam().value, clause.getSecondParam().type, clause.getSecondParam().value);
 			queryObj.insertPattern(pattern.getEntity().type, pattern.getEntity().value,

@@ -745,142 +745,142 @@ Select a pattern a(_, _"1"_)
 5000
 150 - variable v
 variable v; assign a;
-Select v such that Follows(1,2) pattern a("x", _"x"_);
+Select v such that Follows(1, 2) pattern a("x", _"x"_)
 x
 5000
 151 - assign a, a1
 assign a, a1;
-Select a1 such that Follows(1,2) pattern a("x", _"x"_);
+Select a1 such that Follows(1, 2) pattern a("x", _"x"_)
 1,4,5,7,8,11,13,14,15
 5000
 152 - stmt s
 stmt s; assign a;
-Select s such that Follows(1,2) pattern a("x", _"x"_);
+Select s such that Follows(1, 2) pattern a("x", _"x"_)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
 153 - if ifs
 if ifs; assign a;
-Select ifs such that Follows(1,2) pattern a("x", _"x"_);
+Select ifs such that Follows(1, 2) pattern a("x", _"x"_)
 2,3,12
 5000
 154 - while w
 while w; assign a;
-Select w such that Follows(1,2) pattern a("x", _"x"_);
+Select w such that Follows(1, 2) pattern a("x", _"x"_)
 6,9,10
 5000
 155 - proc p
 proc p; assign a;
-Select p such that Follows(1,2) pattern a("x", _"x"_);
+Select p such that Follows(1, 2) pattern a("x", _"x"_)
 a
 5000
 156 - prog_line n
 prog_line n; assign a;
-Select n such that Follows(1,2) pattern a("x", _"x"_);
+Select n such that Follows(1, 2) pattern a("x", _"x"_)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
 157 - variable v
 variable v; assign a;
-Select v such that Parent(2,3) pattern a("x", _"x"_);
+Select v such that Parent(2, 3) pattern a("x", _"x"_)
 x
 5000
 158 - assign a, a1
 assign a, a1;
-Select a1 such that Parent(2,3) pattern a("x", _"x"_);
+Select a1 such that Parent(2, 3) pattern a("x", _"x"_)
 1,4,5,7,8,11,13,14,15
 5000
 159 - stmt s
 stmt s; assign a;
-Select s such that Parent(2,3) pattern a("x", _"x"_);
+Select s such that Parent(2, 3) pattern a("x", _"x"_)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
 160 - if ifs
 if ifs; assign a;
-Select ifs such that Parent(2,3) pattern a("x", _"x"_);
+Select ifs such that Parent(2, 3) pattern a("x", _"x"_)
 2,3,12
 5000
 161 - while w
 while w; assign a;
-Select w such that Parent(2,3) pattern a("x", _"x"_);
+Select w such that Parent(2, 3) pattern a("x", _"x"_)
 6,9,10
 5000
 162 - proc p
 proc p; assign a;
-Select p such that Parent(2,3) pattern a("x", _"x"_);
+Select p such that Parent(2, 3) pattern a("x", _"x"_)
 a
 5000
 163 - prog_line n
 prog_line n; assign a;
-Select n such that Parent(2,3) pattern a("x", _"x"_);
+Select n such that Parent(2, 3) pattern a("x", _"x"_)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
 164 - variable v
 variable v; assign a;
-Select v such that Uses(1, "x") pattern a("x", _"x"_);
+Select v such that Uses(1, "x") pattern a("x", _"x"_)
 x
 5000
 165 - assign a, a1
 assign a, a1;
-Select a1 such that Uses(1, "x") pattern a("x", _"x"_);
+Select a1 such that Uses(1, "x") pattern a("x", _"x"_)
 1,4,5,7,8,11,13,14,15
 5000
 166 - stmt s
 stmt s; assign a;
-Select s such that Uses(1, "x") pattern a("x", _"x"_);
+Select s such that Uses(1, "x") pattern a("x", _"x"_)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
 167 - if ifs
 if ifs; assign a;
-Select ifs such that Uses(1, "x") pattern a("x", _"x"_);
+Select ifs such that Uses(1, "x") pattern a("x", _"x"_)
 2,3,12
 5000
 168 - while w
 while w; assign a;
-Select w such that Uses(1, "x") pattern a("x", _"x"_);
+Select w such that Uses(1, "x") pattern a("x", _"x"_)
 6,9,10
 5000
 169 - proc p
 proc p; assign a;
-Select p such that Uses(1, "x") pattern a("x", _"x"_);
+Select p such that Uses(1, "x") pattern a("x", _"x"_)
 a
 5000
 170 - prog_line n
 prog_line n; assign a;
-Select n such that Uses(1, "x") pattern a("x", _"x"_);
+Select n such that Uses(1, "x") pattern a("x", _"x"_)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
 171 - variable v
 variable v; assign a;
-Select v such that Modifies(1, "x") pattern a("x", _"x"_);
+Select v such that Modifies(1, "x") pattern a("x", _"x"_)
 x
 5000
 172 - assign a, a1
 assign a, a1;
-Select a1 such that Modifies(1, "x") pattern a("x", _"x"_);
+Select a1 such that Modifies(1, "x") pattern a("x", _"x"_)
 1,4,5,7,8,11,13,14,15
 5000
 173 - stmt s
 stmt s; assign a;
-Select s such that Modifies(1, "x") pattern a("x", _"x"_);
+Select s such that Modifies(1, "x") pattern a("x", _"x"_)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
 174 - if ifs
 if ifs; assign a;
-Select ifs such that Modifies(1, "x") pattern a("x", _"x"_);
+Select ifs such that Modifies(1, "x") pattern a("x", _"x"_)
 2,3,12
 5000
 175 - while w
 while w; assign a;
-Select w such that Modifies(1, "x") pattern a("x", _"x"_);
+Select w such that Modifies(1, "x") pattern a("x", _"x"_)
 6,9,10
 5000
 176 - proc p
 proc p; assign a;
-Select p such that Modifies(1, "x") pattern a("x", _"x"_);
+Select p such that Modifies(1, "x") pattern a("x", _"x"_)
 a
 5000
 177 - prog_line n
 prog_line n; assign a;
-Select n such that Modifies(1, "x") pattern a("x", _"x"_);
+Select n such that Modifies(1, "x") pattern a("x", _"x"_)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
 178 - no clause(1)

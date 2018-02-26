@@ -49,6 +49,14 @@ queue<string> Parser::getRPN(queue<string> expr)
 			else if (Utils::isValidName(word)) {
 				string var_name = word;
 				int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
+
+				// get parents and insert parents
+				std::vector<int> parents = pkb.getParentStar(currentStmNum);
+				for (int i = 0; i < static_cast<int>(parents.size()); i++) {
+					pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{ var_id },{},{} });
+					pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { parents[i] },{} });
+				}
+
 				// insert uses
 				pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{ var_id },{},{} });
 				pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{ var_id },{} });
@@ -197,6 +205,14 @@ void Parser::ifStatement() {
 	// insert variable to varTable
 	string var_name = nextToken;
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
+
+	// get parents and insert parents
+	std::vector<int> parents = pkb.getParentStar(currentStmNum);
+	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
+		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{ var_id },{},{} });
+		pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { parents[i] },{ } });
+	}
+
 	// insert uses to table 1,3,4
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{ var_id },{},{} });
 	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{ var_id },{} });
@@ -225,6 +241,14 @@ void Parser::whileStatement() {
 	// insert variable
 	string var_name = nextToken;
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
+
+	// get parents and insert parents
+	std::vector<int> parents = pkb.getParentStar(currentStmNum);
+	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
+		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{ var_id },{},{} });
+		pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { parents[i] },{} });
+	}
+
 	// insert uses to table 1,3,4
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{ var_id },{},{} });
 	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{ var_id },{} });
@@ -241,6 +265,14 @@ void Parser::assignStatement() {
 	// insert variable
 	string var_name = nextToken;
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
+
+	// get parents and insert parents
+	std::vector<int> parents = pkb.getParentStar(currentStmNum);
+	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
+		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{},{ var_id },{} });
+		pkb.insertToTable(ParserConstants::MODIFIES_TABLE_5, var_id, { { parents[i] },{} });
+	}
+
 	// insert modifies to table 1,3,5
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{},{ var_id },{} });
 	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{},{ var_id } });
@@ -392,13 +424,13 @@ void printNameTable(unordered_map<int, std::string> table) {
 	}
 }
 
-/*
 int main() {
 
 Parser parser;
 
 PKB pkb;
-pkb = parser.Parse("subset_if_while_proc2.txt", pkb);
+string testString = "procedure a {a = b; while c { b = a; d = 7; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { a = 1; }} }";
+pkb = parser.Parse("hell.txt", pkb, true, testString);
 
 
 cout << "*** TABLE 1 - StmtTable ***\n";
@@ -421,6 +453,10 @@ cout << "*** TABLE 5 - Modifies ***\n";
 unordered_map<int, std::vector<std::vector<int>>> table5 = pkb.tables[4];
 printTable(table5);
 
+cout << "*** TABLE 7 - Constants ***\n";
+unordered_map<int, std::vector<std::vector<int>>> table7 = pkb.tables[6];
+printTable(table7);
+
 cout << "*** TABLE 8 - ProcTable ***\n";
 unordered_map<int, std::string> table8 = pkb.nameTables[0];
 printNameTable(table8);
@@ -431,4 +467,3 @@ printNameTable(table9);
 
 return 0;
 }
-*/
