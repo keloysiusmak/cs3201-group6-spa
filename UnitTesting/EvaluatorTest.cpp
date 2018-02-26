@@ -123,6 +123,7 @@ namespace UnitTesting {
 		/* Clause present */
 		QueryObject createQueryObject(Param select, Clause clause) {
 			QueryObject queryObj;
+			queryObj.insertSelectStmt(select.type, select.value);
 			queryObj.insertClause(clause.getRelRef(), clause.getFirstParam().type,
 				clause.getFirstParam().value, clause.getSecondParam().type, clause.getSecondParam().value);
 			return queryObj;
