@@ -51,11 +51,16 @@ private:	 PKB pkb;
 			 void program();
 			 string getWord();
 			 string test;
-			 struct MyException : public exception {
+			 struct MySyntaxException : public exception {
 				 const char * what() const throw () {
 					 return "Syntax is wrong!";
 				 }
-			 };
+			 } InvalidSyntaxException;
+			 struct MyNameException : public exception {
+				 const char * what() const throw () {
+					 return "Name is invalid!";
+				 }
+			 } InvalidNameException;
 };
 
 namespace ParserConstants {
