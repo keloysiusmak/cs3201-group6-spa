@@ -61,7 +61,7 @@ list<string> Evaluator::evaluateQuery() {
 				return getAllSelectedParam(selectParam);
 			}
 			else {
-				return{ "None" };
+				return{};
 			}
 		}
 		else { // Param within clauses
@@ -88,9 +88,8 @@ list<string> Evaluator::evaluateQuery() {
 			}
 		}
 	}
-	else {
-		list<string> invalidQuery = { invalidQueryMessage };
-		return invalidQuery;
+	else { // Invalid query
+		return{};
 	}
 };
 
@@ -188,7 +187,7 @@ list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &
 	set<int> answerSet;
 
 	if (clauseResults.values.size()) { // Get selected from values 
-		if (clauseResults.values[0] == 0) return { "None" };
+		if (clauseResults.values[0] == 0) return {};
 		for (int value : clauseResults.values) {
 			answerSet.insert(value);
 		}
@@ -444,8 +443,8 @@ void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
 };
 
 /* Pattern cases: 
-LHS: _, v, var_name
-RHS: _, v, constant, var_name
+LHS: _, VARIABLE, IDENT
+RHS: _, VARIABLE, CONSTANT
 */
 void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults) {
 
@@ -453,20 +452,8 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 	Param rightParam = pattern.getRightParam();
 
 	if (Utils::isSynonym(leftParam.type)) {
-		if (Utils::isSynonym(rightParam.type)) { // (v/_, v/_)
-			unordered_map<int, vector<int>> results;
-			// <varId, vector<stmt_no.>>
-			unordered_map<int, vector<int>> modifies = pkb.getAllVariableModifiesStatements();
-			for (auto varStmts : modifies) {
-				vector<int> allUsedVars;
-				for (int stmt : varStmts.second) {
-					vector<int> usedVars = pkb.getUsesVariablesFromStatement(stmt);
-					for (int varId : usedVars) {
-						allUsedVars.push_back(varId);
-					}
-				}
-				results.insert({ varStmts.first, allUsedVars });
-			}
+		if (Utils::isSynonym(rightParam.type)) { // Case non-applicable
+			; 
 		}
 		else {
 			vector<int> results;
@@ -478,15 +465,15 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (var_name, v/_)
+		if (Utils::isSynonym(rightParam.type)) { // Case non-applicable
 
 		}
 		else {
 			vector<int> results;
-			if (rightParam.type == VAR_NAME) { // (var_name, var_name)
+			if (rightParam.type == VAR_NAME) { // (IDENT, var_name)
 
 			}
-			else { // (var_name, constant)
+			else { // (IDENT, constant)
 
 			}
 		}
