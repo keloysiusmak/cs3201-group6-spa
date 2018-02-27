@@ -1,0 +1,810 @@
+1 - Follows(1, 1)
+stmt s;
+Select s such that Follows(1, 1)
+
+5000
+2 - Follows(1, 2)
+stmt s;
+Select s such that Follows(1, 2)
+
+5000
+3 - Follows(1, 3)
+stmt s;
+Select s such that Follows(1, 3)
+
+5000
+4 - Follows(1, 4)
+stmt s;
+Select s such that Follows(1, 4)
+
+5000
+5 - Follows(1, 5)
+stmt s;
+Select s such that Follows(1, 5)
+
+5000
+6 - Follows(1, 6)
+stmt s;
+Select s such that Follows(1, 6)
+
+5000
+7 - Follows(2, 1)
+stmt s;
+Select s such that Follows(2, 1)
+
+5000
+8 - Follows(2, 2)
+stmt s;
+Select s such that Follows(2, 2)
+
+5000
+9 - Follows(2, 3)
+stmt s;
+Select s such that Follows(2, 3)
+
+5000
+10 - Follows(2, 4)
+stmt s;
+Select s such that Follows(2, 4)
+
+5000
+11 - Follows(2, 5)
+stmt s;
+Select s such that Follows(2, 5)
+
+5000
+12 - Follows(2, 6)
+stmt s;
+Select s such that Follows(2, 6)
+
+5000
+13 - Follows(3, 1)
+stmt s;
+Select s such that Follows(3, 1)
+
+5000
+14 - Follows(3, 2)
+stmt s;
+Select s such that Follows(3, 2)
+
+5000
+15 - Follows(3, 3)
+stmt s;
+Select s such that Follows(3, 3)
+
+5000
+16 - Follows(3, 4)
+stmt s;
+Select s such that Follows(3, 4)
+1,2,3,4,5,6
+5000
+17 - Follows(3, 5)
+stmt s;
+Select s such that Follows(3, 5)
+
+5000
+18 - Follows(3, 6)
+stmt s;
+Select s such that Follows(3, 6)
+
+5000
+19 - Follows(4, 1)
+stmt s;
+Select s such that Follows(4, 1)
+
+5000
+20 - Follows(4, 2)
+stmt s;
+Select s such that Follows(4, 2)
+
+5000
+21 - Follows(4, 3)
+stmt s;
+Select s such that Follows(4, 3)
+
+5000
+22 - Follows(4, 4)
+stmt s;
+Select s such that Follows(4, 4)
+
+5000
+23 - Follows(4, 5)
+stmt s;
+Select s such that Follows(4, 5)
+1,2,3,4,5,6
+5000
+24 - Follows(4, 6)
+stmt s;
+Select s such that Follows(4, 6)
+
+5000
+25 - Follows(5, 1)
+stmt s;
+Select s such that Follows(5, 1)
+
+5000
+26 - Follows(5, 2)
+stmt s;
+Select s such that Follows(5, 2)
+
+5000
+27 - Follows(5, 3)
+stmt s;
+Select s such that Follows(5, 3)
+
+5000
+28 - Follows(5, 4)
+stmt s;
+Select s such that Follows(5, 4)
+
+5000
+29 - Follows(5, 5)
+stmt s;
+Select s such that Follows(5, 5)
+
+5000
+30 - Follows(5, 6)
+stmt s;
+Select s such that Follows(5, 6)
+1,2,3,4,5,6
+5000
+31 - Follows(6, 1)
+stmt s;
+Select s such that Follows(6, 1)
+
+5000
+32 - Follows(6, 2)
+stmt s;
+Select s such that Follows(6, 2)
+
+5000
+33 - Follows(6, 3)
+stmt s;
+Select s such that Follows(6, 3)
+
+5000
+34 - Follows(6, 4)
+stmt s;
+Select s such that Follows(6, 4)
+
+5000
+35 - Follows(6, 5)
+stmt s;
+Select s such that Follows(6, 5)
+
+5000
+36 - Follows(6, 6)
+stmt s;
+Select s such that Follows(6, 6)
+
+5000
+37 - Follows*(1, 1)
+stmt s;
+Select s such that Follows*(1, 1)
+
+5000
+38 - Follows*(1, 2)
+stmt s;
+Select s such that Follows*(1, 2)
+
+5000
+39 - Follows*(1, 3)
+stmt s;
+Select s such that Follows*(1, 3)
+
+5000
+40 - Follows*(1, 4)
+stmt s;
+Select s such that Follows*(1, 4)
+
+5000
+41 - Follows*(1, 5)
+stmt s;
+Select s such that Follows*(1, 5)
+
+5000
+42 - Follows*(1, 6)
+stmt s;
+Select s such that Follows*(1, 6)
+
+5000
+43 - Follows*(2, 1)
+stmt s;
+Select s such that Follows*(2, 1)
+
+5000
+44 - Follows*(2, 2)
+stmt s;
+Select s such that Follows*(2, 2)
+
+5000
+45 - Follows*(2, 3)
+stmt s;
+Select s such that Follows*(2, 3)
+
+5000
+46 - Follows*(2, 4)
+stmt s;
+Select s such that Follows*(2, 4)
+
+5000
+47 - Follows*(2, 5)
+stmt s;
+Select s such that Follows*(2, 5)
+
+5000
+48 - Follows*(2, 6)
+stmt s;
+Select s such that Follows*(2, 6)
+
+5000
+49 - Follows*(3, 1)
+stmt s;
+Select s such that Follows*(3, 1)
+
+5000
+50 - Follows*(3, 2)
+stmt s;
+Select s such that Follows*(3, 2)
+
+5000
+51 - Follows*(3, 3)
+stmt s;
+Select s such that Follows*(3, 3)
+
+5000
+52 - Follows*(3, 4)
+stmt s;
+Select s such that Follows*(3, 4)
+1,2,3,4,5,6
+5000
+53 - Follows*(3, 5)
+stmt s;
+Select s such that Follows*(3, 5)
+1,2,3,4,5,6
+5000
+54 - Follows*(3, 6)
+stmt s;
+Select s such that Follows*(3, 6)
+1,2,3,4,5,6
+5000
+55 - Follows*(4, 1)
+stmt s;
+Select s such that Follows*(4, 1)
+
+5000
+56 - Follows*(4, 2)
+stmt s;
+Select s such that Follows*(4, 2)
+
+5000
+57 - Follows*(4, 3)
+stmt s;
+Select s such that Follows*(4, 3)
+
+5000
+58 - Follows*(4, 4)
+stmt s;
+Select s such that Follows*(4, 4)
+
+5000
+59 - Follows*(4, 5)
+stmt s;
+Select s such that Follows*(4, 5)
+1,2,3,4,5,6
+5000
+60 - Follows*(4, 6)
+stmt s;
+Select s such that Follows*(4, 6)
+1,2,3,4,5,6
+5000
+61 - Follows*(5, 1)
+stmt s;
+Select s such that Follows*(5, 1)
+
+5000
+62 - Follows*(5, 2)
+stmt s;
+Select s such that Follows*(5, 2)
+
+5000
+63 - Follows*(5, 3)
+stmt s;
+Select s such that Follows*(5, 3)
+
+5000
+64 - Follows*(5, 4)
+stmt s;
+Select s such that Follows*(5, 4)
+
+5000
+65 - Follows*(5, 5)
+stmt s;
+Select s such that Follows*(5, 5)
+
+5000
+66 - Follows*(5, 6)
+stmt s;
+Select s such that Follows*(5, 6)
+1,2,3,4,5,6
+5000
+67 - Follows*(6, 1)
+stmt s;
+Select s such that Follows*(6, 1)
+
+5000
+68 - Follows*(6, 2)
+stmt s;
+Select s such that Follows*(6, 2)
+
+5000
+69 - Follows*(6, 3)
+stmt s;
+Select s such that Follows*(6, 3)
+
+5000
+70 - Follows*(6, 4)
+stmt s;
+Select s such that Follows*(6, 4)
+
+5000
+71 - Follows*(6, 5)
+stmt s;
+Select s such that Follows*(6, 5)
+
+5000
+72 - Follows*(6, 6)
+stmt s;
+Select s such that Follows*(6, 6)
+
+5000
+73 - Parent(1, 1)
+stmt s;
+Select s such that Parent(1, 1)
+
+5000
+74 - Parent(1, 2)
+stmt s;
+Select s such that Parent(1, 2)
+1,2,3,4,5,6
+5000
+75 - Parent(1, 3)
+stmt s;
+Select s such that Parent(1, 3)
+
+5000
+76 - Parent(1, 4)
+stmt s;
+Select s such that Parent(1, 4)
+
+5000
+77 - Parent(1, 5)
+stmt s;
+Select s such that Parent(1, 5)
+
+5000
+78 - Parent(1, 6)
+stmt s;
+Select s such that Parent(1, 6)
+
+5000
+79 - Parent(2, 1)
+stmt s;
+Select s such that Parent(2, 1)
+
+5000
+80 - Parent(2, 2)
+stmt s;
+Select s such that Parent(2, 2)
+
+5000
+81 - Parent(2, 3)
+stmt s;
+Select s such that Parent(2, 3)
+1,2,3,4,5,6
+5000
+82 - Parent(2, 4)
+stmt s;
+Select s such that Parent(2, 4)
+1,2,3,4,5,6
+5000
+83 - Parent(2, 5)
+stmt s;
+Select s such that Parent(2, 5)
+1,2,3,4,5,6
+5000
+84 - Parent(2, 6)
+stmt s;
+Select s such that Parent(2, 6)
+1,2,3,4,5,6
+5000
+85 - Parent(3, 1)
+stmt s;
+Select s such that Parent(3, 1)
+
+5000
+86 - Parent(3, 2)
+stmt s;
+Select s such that Parent(3, 2)
+
+5000
+87 - Parent(3, 3)
+stmt s;
+Select s such that Parent(3, 3)
+
+5000
+88 - Parent(3, 4)
+stmt s;
+Select s such that Parent(3, 4)
+
+5000
+89 - Parent(3, 5)
+stmt s;
+Select s such that Parent(3, 5)
+
+5000
+90 - Parent(3, 6)
+stmt s;
+Select s such that Parent(3, 6)
+
+5000
+91 - Parent(4, 1)
+stmt s;
+Select s such that Parent(4, 1)
+
+5000
+92 - Parent(4, 2)
+stmt s;
+Select s such that Parent(4, 2)
+
+5000
+93 - Parent(4, 3)
+stmt s;
+Select s such that Parent(4, 3)
+
+5000
+94 - Parent(4, 4)
+stmt s;
+Select s such that Parent(4, 4)
+
+5000
+95 - Parent(4, 5)
+stmt s;
+Select s such that Parent(4, 5)
+
+5000
+96 - Parent(4, 6)
+stmt s;
+Select s such that Parent(4, 6)
+
+5000
+97 - Parent(5, 1)
+stmt s;
+Select s such that Parent(5, 1)
+
+5000
+98 - Parent(5, 2)
+stmt s;
+Select s such that Parent(5, 2)
+
+5000
+99 - Parent(5, 3)
+stmt s;
+Select s such that Parent(5, 3)
+
+5000
+100 - Parent(5, 4)
+stmt s;
+Select s such that Parent(5, 4)
+
+5000
+101 - Parent(5, 5)
+stmt s;
+Select s such that Parent(5, 5)
+
+5000
+102 - Parent(5, 6)
+stmt s;
+Select s such that Parent(5, 6)
+
+5000
+103 - Parent(6, 1)
+stmt s;
+Select s such that Parent(6, 1)
+
+5000
+104 - Parent(6, 2)
+stmt s;
+Select s such that Parent(6, 2)
+
+5000
+105 - Parent(6, 3)
+stmt s;
+Select s such that Parent(6, 3)
+
+5000
+106 - Parent(6, 4)
+stmt s;
+Select s such that Parent(6, 4)
+
+5000
+107 - Parent(6, 5)
+stmt s;
+Select s such that Parent(6, 5)
+
+5000
+108 - Parent(6, 6)
+stmt s;
+Select s such that Parent(6, 6)
+
+5000
+109 - Parent*(1, 1)
+stmt s;
+Select s such that Parent*(1, 1)
+
+5000
+110 - Parent*(1, 2)
+stmt s;
+Select s such that Parent*(1, 2)
+1,2,3,4,5,6
+5000
+111 - Parent*(1, 3)
+stmt s;
+Select s such that Parent*(1, 3)
+1,2,3,4,5,6
+5000
+112 - Parent*(1, 4)
+stmt s;
+Select s such that Parent*(1, 4)
+1,2,3,4,5,6
+5000
+113 - Parent*(1, 5)
+stmt s;
+Select s such that Parent*(1, 5)
+1,2,3,4,5,6
+5000
+114 - Parent*(1, 6)
+stmt s;
+Select s such that Parent*(1, 6)
+1,2,3,4,5,6
+5000
+115 - Parent*(2, 1)
+stmt s;
+Select s such that Parent*(2, 1)
+
+5000
+116 - Parent*(2, 2)
+stmt s;
+Select s such that Parent*(2, 2)
+
+5000
+117 - Parent*(2, 3)
+stmt s;
+Select s such that Parent*(2, 3)
+1,2,3,4,5,6
+5000
+118 - Parent*(2, 4)
+stmt s;
+Select s such that Parent*(2, 4)
+1,2,3,4,5,6
+5000
+119 - Parent*(2, 5)
+stmt s;
+Select s such that Parent*(2, 5)
+1,2,3,4,5,6
+5000
+120 - Parent*(2, 6)
+stmt s;
+Select s such that Parent*(2, 6)
+1,2,3,4,5,6
+5000
+121 - Parent*(3, 1)
+stmt s;
+Select s such that Parent*(3, 1)
+
+5000
+122 - Parent*(3, 2)
+stmt s;
+Select s such that Parent*(3, 2)
+
+5000
+123 - Parent*(3, 3)
+stmt s;
+Select s such that Parent*(3, 3)
+
+5000
+124 - Parent*(3, 4)
+stmt s;
+Select s such that Parent*(3, 4)
+
+5000
+125 - Parent*(3, 5)
+stmt s;
+Select s such that Parent*(3, 5)
+
+5000
+126 - Parent*(3, 6)
+stmt s;
+Select s such that Parent*(3, 6)
+
+5000
+127 - Parent*(4, 1)
+stmt s;
+Select s such that Parent*(4, 1)
+
+5000
+128 - Parent*(4, 2)
+stmt s;
+Select s such that Parent*(4, 2)
+
+5000
+129 - Parent*(4, 3)
+stmt s;
+Select s such that Parent*(4, 3)
+
+5000
+130 - Parent*(4, 4)
+stmt s;
+Select s such that Parent*(4, 4)
+
+5000
+131 - Parent*(4, 5)
+stmt s;
+Select s such that Parent*(4, 5)
+
+5000
+132 - Parent*(4, 6)
+stmt s;
+Select s such that Parent*(4, 6)
+
+5000
+133 - Parent*(5, 1)
+stmt s;
+Select s such that Parent*(5, 1)
+
+5000
+134 - Parent*(5, 2)
+stmt s;
+Select s such that Parent*(5, 2)
+
+5000
+135 - Parent*(5, 3)
+stmt s;
+Select s such that Parent*(5, 3)
+
+5000
+136 - Parent*(5, 4)
+stmt s;
+Select s such that Parent*(5, 4)
+
+5000
+137 - Parent*(5, 5)
+stmt s;
+Select s such that Parent*(5, 5)
+
+5000
+138 - Parent*(5, 6)
+stmt s;
+Select s such that Parent*(5, 6)
+
+5000
+139 - Parent*(6, 1)
+stmt s;
+Select s such that Parent*(6, 1)
+
+5000
+140 - Parent*(6, 2)
+stmt s;
+Select s such that Parent*(6, 2)
+
+5000
+141 - Parent*(6, 3)
+stmt s;
+Select s such that Parent*(6, 3)
+
+5000
+142 - Parent*(6, 4)
+stmt s;
+Select s such that Parent*(6, 4)
+
+5000
+143 - Parent*(6, 5)
+stmt s;
+Select s such that Parent*(6, 5)
+
+5000
+144 - Parent*(6, 6)
+stmt s;
+Select s such that Parent*(6, 6)
+
+5000
+145 - Uses(1, 7)
+stmt s;
+Select s such that Uses(1, "x")
+1,2,3,4,5,6
+5000
+146 - Uses(2, 7)
+stmt s;
+Select s such that Uses(2, "x")
+1,2,3,4,5,6
+5000
+147 - Uses(3, 7)
+stmt s;
+Select s such that Uses(3, "x")
+1,2,3,4,5,6
+5000
+148 - Uses(4, 7)
+stmt s;
+Select s such that Uses(4, "x")
+
+5000
+149 - Uses(5, 7)
+stmt s;
+Select s such that Uses(5, "x")
+1,2,3,4,5,6
+5000
+150 - Uses(6, 7)
+stmt s;
+Select s such that Uses(6, "x")
+
+5000
+151 - Modifies(1, 7)
+stmt s;
+Select s such that Modifies(1, "x")
+1,2,3,4,5,6
+5000
+152 - Modifies(2, 7)
+stmt s;
+Select s such that Modifies(2, "x")
+1,2,3,4,5,6
+5000
+153 - Modifies(3, 7)
+stmt s;
+Select s such that Modifies(3, "x")
+1,2,3,4,5,6
+5000
+154 - Modifies(4, 7)
+stmt s;
+Select s such that Modifies(4, "x")
+1,2,3,4,5,6
+5000
+155 - Modifies(5, 7)
+stmt s;
+Select s such that Modifies(5, "x")
+1,2,3,4,5,6
+5000
+156 - Modifies(6, 7)
+stmt s;
+Select s such that Modifies(6, "x")
+1,2,3,4,5,6
+5000
+157 - Uses(0, 7)
+assign a; variable v;
+Select a such that Uses(a,v) pattern a(v, _"1"_)
+3,4,5,6
+5000
+158 - Uses(1, 7)
+assign a; variable v;
+Select a such that Uses(a,v) pattern a(v, _"x"_)
+3,5
+5000
+159 - Uses(2, 7)
+assign a; variable v;
+Select a such that Uses(a,v) pattern a(v, _)
+3,4,5,6
+5000
+160 - Modifies(0, 7)
+assign a; variable v;
+Select a such that Modifies(a,v) pattern a(v, _"1"_)
+3,4,5,6
+5000
+161 - Modifies(1, 7)
+assign a; variable v;
+Select a such that Modifies(a,v) pattern a(v, _"x"_)
+3,5
+5000
+162 - Modifies(2, 7)
+assign a; variable v;
+Select a such that Modifies(a,v) pattern a(v, _)
+3,4,5,6
+5000

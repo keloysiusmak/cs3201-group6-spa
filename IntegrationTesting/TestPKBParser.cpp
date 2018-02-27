@@ -14,7 +14,7 @@ namespace PKBParserIntegrationTesting
 	string simpleSource;
 	string testString;
 
-	TEST_CLASS(PKBParserIntegrationFollowsParent)
+	TEST_CLASS(PKBParserIntegration)
 	{
 	public:
 
