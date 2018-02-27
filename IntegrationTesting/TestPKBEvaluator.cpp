@@ -72,7 +72,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			unordered_map<int, std::vector<std::vector<int>>> table3;
 			table3.insert({ 1, {{2,3,5,11}, {1,2}} });
-			table3.insert({ 2,{ {1,10,11},{ 1,2 } } });
+			table3.insert({ 2,{ {1,10,11, 12},{ 1,2 } } });
 			table3.insert({ 3,{ { 2 },{ 1 } } });
 			table3.insert({ 5,{ {5,6},{1} } });
 
@@ -134,7 +134,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -161,7 +160,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -188,7 +186,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -215,7 +212,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -439,7 +435,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -639,7 +634,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -835,7 +829,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -966,9 +959,6 @@ namespace PKBEvaluatorIntegrationTesting
 			expected.push_back("10");
 			expected.push_back("11");
 			expected.push_back("12");
-			for (list<string>::const_iterator it = result.begin(); it != result.end(); ++it) {
-				Logger::WriteMessage(it->c_str());
-			}
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q2;
@@ -980,7 +970,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
