@@ -247,133 +247,133 @@ namespace UnitTesting {
 			Assert::AreEqual(0, evaluator.statementTypeToIntMap(CONSTANT));
 		}
 
-		TEST_METHOD(getAllSelectedParamTest) {
+		//TEST_METHOD(getAllSelectedParamTest) {
 
-		}
+		//}
 
-		TEST_METHOD(evaluateParentTest) {
-			Clause clause;
-			ClauseResults clauseResult1;
-			//QueryObject queryObject;
-			QueryObject qo;
-			Param select;
-			clauseResult1.instantiateClause(qo.getClauses()[0]);
-			qo.insertClause(Parent, STMT, "s", INTEGER, "4");
-			select = createParam(STMT, "s");
-			pkbStub.getParent = 1;
-			int result = pkbStub.getParent;
-			vector<int> vectorResult = { result };
-			clauseResult1.setValues(vectorResult);
-			evaluator.intersectSingle(clauseResult1);
-			list<string> results = pkbStub.getParent;
-			Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
-		}
+		//TEST_METHOD(evaluateParentTest) {
+		//	Clause clause;
+		//	ClauseResults clauseResult1;
+		//	//QueryObject queryObject;
+		//	QueryObject qo;
+		//	Param select;
+		//	clauseResult1.instantiateClause(qo.getClauses()[0]);
+		//	qo.insertClause(Parent, STMT, "s", INTEGER, "4");
+		//	select = createParam(STMT, "s");
+		//	pkbStub.getParent = 1;
+		//	int result = pkbStub.getParent;
+		//	vector<int> vectorResult = { result };
+		//	clauseResult1.setValues(vectorResult);
+		//	evaluator.intersectSingle(clauseResult1);
+		//	list<string> results = pkbStub.getParent;
+		//	Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
+		//}
 
-		TEST_METHOD(evaluateParentTTest) {
-			Clause clause;
-			ClauseResults clauseResult1;
-			QueryObject qo;
-			Param select;
-			clauseResult1.instantiateClause(qo.getClauses()[0]);
-			qo.insertClause(ParentT, STMT, "s", INTEGER, "4");
-			select = createParam(STMT, "s");
-			pkbStub.getParentStar = { 1,2,3 };
-			int result = pkbStub.getParent;
-			vector<int> vectorResult = { result };
-			clauseResult1.setValues(vectorResult);
-			evaluator.intersectSingle(clauseResult1);
-			list<string> results = pkbStub.getParentStar;
-			Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
-		}
+		//TEST_METHOD(evaluateParentTTest) {
+		//	Clause clause;
+		//	ClauseResults clauseResult1;
+		//	QueryObject qo;
+		//	Param select;
+		//	clauseResult1.instantiateClause(qo.getClauses()[0]);
+		//	qo.insertClause(ParentT, STMT, "s", INTEGER, "4");
+		//	select = createParam(STMT, "s");
+		//	pkbStub.getParentStar = { 1,2,3 };
+		//	int result = pkbStub.getParent;
+		//	vector<int> vectorResult = { result };
+		//	clauseResult1.setValues(vectorResult);
+		//	evaluator.intersectSingle(clauseResult1);
+		//	list<string> results = pkbStub.getParentStar;
+		//	Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
+		//}
 
-		TEST_METHOD(evaluateFollowsTest) {
-			Clause clause;
-			ClauseResults clauseResult1;
-			QueryObject qo;
-			Param select;
-			clauseResult1.instantiateClause(qo.getClauses()[0]);
-			qo.insertClause(Follows, STMT, "s", INTEGER, "4");
-			select = createParam(STMT, "s");
-			pkbStub.getFollowsBefore = { 3 };
-			int result = pkbStub.getFollowsBefore;
-			vector<int> vectorResult = { result };
-			clauseResult1.setValues(vectorResult);
-			evaluator.intersectSingle(clauseResult1);
-			list<string> results = pkbStub.getFollowsBefore;
-			Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
-		}
+		//TEST_METHOD(evaluateFollowsTest) {
+		//	Clause clause;
+		//	ClauseResults clauseResult1;
+		//	QueryObject qo;
+		//	Param select;
+		//	clauseResult1.instantiateClause(qo.getClauses()[0]);
+		//	qo.insertClause(Follows, STMT, "s", INTEGER, "4");
+		//	select = createParam(STMT, "s");
+		//	pkbStub.getFollowsBefore = { 3 };
+		//	int result = pkbStub.getFollowsBefore;
+		//	vector<int> vectorResult = { result };
+		//	clauseResult1.setValues(vectorResult);
+		//	evaluator.intersectSingle(clauseResult1);
+		//	list<string> results = pkbStub.getFollowsBefore;
+		//	Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
+		//}
 
-		TEST_METHOD(evaluateFollowsTTest) {
-			Clause clause;
-			ClauseResults clauseResult1;
-			QueryObject qo;
-			Param select;
-			clauseResult1.instantiateClause(qo.getClauses()[0]);
-			qo.insertClause(FollowsT, STMT, "s", INTEGER, "4");
-			select = createParam(STMT, "s");
-			pkbStub.getFollowsBeforeStar = { 1,2,3 };
-			int result = pkbStub.getFollowsBeforeStar;
-			vector<int> vectorResult = { result };
-			clauseResult1.setValues(vectorResult);
-			evaluator.intersectSingle(clauseResult1);
-			list<string> results = pkbStub.getFollowsBeforeStar;
-			Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
-		}
+		//TEST_METHOD(evaluateFollowsTTest) {
+		//	Clause clause;
+		//	ClauseResults clauseResult1;
+		//	QueryObject qo;
+		//	Param select;
+		//	clauseResult1.instantiateClause(qo.getClauses()[0]);
+		//	qo.insertClause(FollowsT, STMT, "s", INTEGER, "4");
+		//	select = createParam(STMT, "s");
+		//	pkbStub.getFollowsBeforeStar = { 1,2,3 };
+		//	int result = pkbStub.getFollowsBeforeStar;
+		//	vector<int> vectorResult = { result };
+		//	clauseResult1.setValues(vectorResult);
+		//	evaluator.intersectSingle(clauseResult1);
+		//	list<string> results = pkbStub.getFollowsBeforeStar;
+		//	Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
+		//}
 
-		TEST_METHOD(evaluateUsesTest) {
-			Clause clause;
-			ClauseResults clauseResult1;
-			QueryObject qo;
-			Param select;
-			clauseResult1.instantiateClause(qo.getClauses()[0]);
-			qo.insertClause(UsesS, STMT, "s", VAR_NAME, "x");
-			select = createParam(STMT, "s");
-			pkbStub.getStatementsFromUsesVariable = { 1,2,3,4 };
-			int result = pkbStub.getStatementsFromUsesVariable;
-			vector<int> vectorResult = { result };
-			clauseResult1.setValues(vectorResult);
-			evaluator.intersectSingle(clauseResult1);
-			list<string> results = pkbStub.getStatementsFromUsesVariable;
-			Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
-		}
+		//TEST_METHOD(evaluateUsesTest) {
+		//	Clause clause;
+		//	ClauseResults clauseResult1;
+		//	QueryObject qo;
+		//	Param select;
+		//	clauseResult1.instantiateClause(qo.getClauses()[0]);
+		//	qo.insertClause(UsesS, STMT, "s", VAR_NAME, "x");
+		//	select = createParam(STMT, "s");
+		//	pkbStub.getStatementsFromUsesVariable = { 1,2,3,4 };
+		//	int result = pkbStub.getStatementsFromUsesVariable;
+		//	vector<int> vectorResult = { result };
+		//	clauseResult1.setValues(vectorResult);
+		//	evaluator.intersectSingle(clauseResult1);
+		//	list<string> results = pkbStub.getStatementsFromUsesVariable;
+		//	Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
+		//}
 
-		TEST_METHOD(evaluateModifiesTest) {
-			Clause clause;
-			ClauseResults clauseResult1;
-			QueryObject qo;
-			Param select;
-			clauseResult1.instantiateClause(qo.getClauses()[0]);
-			qo.insertClause(ModifiesS, STMT, "s", VAR_NAME, "a");
-			select = createParam(STMT, "s");
-			pkbStub.getStatementsFromModifiesVariable = { 1,2,3 };
-			int result = pkbStub.getStatementsFromModifiesVariable;
-			vector<int> vectorResult = { result };
-			clauseResult1.setValues(vectorResult);
-			evaluator.intersectSingle(clauseResult1);
-			list<string> results = pkbStub.getStatementsFromModifiesVariable;
-			Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
-		}
+		//TEST_METHOD(evaluateModifiesTest) {
+		//	Clause clause;
+		//	ClauseResults clauseResult1;
+		//	QueryObject qo;
+		//	Param select;
+		//	clauseResult1.instantiateClause(qo.getClauses()[0]);
+		//	qo.insertClause(ModifiesS, STMT, "s", VAR_NAME, "a");
+		//	select = createParam(STMT, "s");
+		//	pkbStub.getStatementsFromModifiesVariable = { 1,2,3 };
+		//	int result = pkbStub.getStatementsFromModifiesVariable;
+		//	vector<int> vectorResult = { result };
+		//	clauseResult1.setValues(vectorResult);
+		//	evaluator.intersectSingle(clauseResult1);
+		//	list<string> results = pkbStub.getStatementsFromModifiesVariable;
+		//	Assert::AreEqual(results, evaluator.resultToStringList(clauseResult1, select));
+		//}
 
 
-		/* TEST_METHOD(resultToStringListTest) {
-			ClauseResults clauseresult1;
-			clauseresult1.lhs = 
-			clauseresult1.rhs =
-			Param selected = clauseresult1.lhs;
-			Assert::AreEqual(, evaluator.resultToStringList(clauseresult1, selected));
-		} */
+		///* TEST_METHOD(resultToStringListTest) {
+		//	ClauseResults clauseresult1;
+		//	clauseresult1.lhs = 
+		//	clauseresult1.rhs =
+		//	Param selected = clauseresult1.lhs;
+		//	Assert::AreEqual(, evaluator.resultToStringList(clauseresult1, selected));
+		//} */
 
-		TEST_METHOD(intersectSingleTest) {
-			ClauseResults clauseresult1;
-			Param leftParam = clauseresult1.lhs;
-			Param rightParam = clauseresult1.rhs;
-			int typeInt;
-			typeInt = evaluator.statementTypeToIntMap(ASSIGN);
-		}
+		//TEST_METHOD(intersectSingleTest) {
+		//	ClauseResults clauseresult1;
+		//	Param leftParam = clauseresult1.lhs;
+		//	Param rightParam = clauseresult1.rhs;
+		//	int typeInt;
+		//	typeInt = evaluator.statementTypeToIntMap(ASSIGN);
+		//}
 
-		TEST_METHOD(intersectDoubleTest) {
+		//TEST_METHOD(intersectDoubleTest) {
 
-		}
+		//}
 
 		/* Object creation helpers*/
 		Param createParam(ParamType type, string value) {

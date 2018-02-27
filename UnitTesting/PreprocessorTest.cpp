@@ -22,8 +22,8 @@ namespace UnitTesting {
 				string declaration1 = "assign a";
 				string declaration2 = "variable v1";
 				string declaration3 = "assign a1, a2";
-				string declaration4 = "while w";
-				string declaration5 = "prog_line n";
+				string declaration4 = "stmt s1,s2";
+				string declaration5 = "while w1         ,            w2";
 
 				string invalidDeclaration1 = "assigna"; //declaration and synonym in between must have space 
 				string invalidDeclaration2 = "varia v2"; // declaration must be a valid spelling
@@ -51,16 +51,49 @@ namespace UnitTesting {
 				//Populate the declarationMap
 				preprocessor.insertDeclarationToMap("a", "assign");
 				preprocessor.insertDeclarationToMap("w", "while");
+				preprocessor.insertDeclarationToMap("v", "variable");
 
+				//Query without clause and pattern
 				string query1 = "Select a";
-				string query2 = "Select a pattern a(\"x\", _\"y\"_)";
-				string query3 = "Select a pattern a(_, _\"5\"_)";
-				string query4 = "Select a such that Follows*(a, 2)";
-				string query5 = "Select a such that Follows(w, a) pattern a(\"x\", _)";
-				string query6 = "Select a such that Uses(a, \"x\")";
+
+				//Query for Uses and Modifies clause
+				string query2 = "Select a such that Modifies(a, \"x\")";
+				string query3 = "Select a such that Modifies(a, \"       x       \")";
+				string query4 = "Select a such that Modifies(a, _)";
+				string query5 = "Select a such that Modifies(a, v)";
+				string query6 = "Select a such that Modifies(3, _)";
+				string query7 = "Select a such that Modifies(3, \"       x       \")";
+				string query8 = "Select a such that Modifies(3, v)";
+
+				//Query for Follows and Parent clause
+				string query9 = "Select a such that Parent*(a, 5)";
+				string query10 = "Select a such that Parent*(a, w)";
+				string query11 = "Select a such that Parent*(a, _)";
+				string query12 = "Select a such that Parent*   (  5  , w            )";
+				string query13 = "Select a such that Parent*   (5  , 7     )";
+				string query14 = "Select a such that Parent*   (5  , _     )";
+				string query15 = "Select a such that Parent*   (_  , 5     )";
+				string query16 = "Select a such that Parent*   (_  , w     )";
+				string query17 = "Select a such that Parent*   (_  , _     )";
+
+				//Query with pattern
+				string query18 = "Select a pattern a(v, _)";
+				string query19 = "Select a pattern a(v, _\"y\"_)";
+				string query20 = "Select a pattern a(v, _\"2\"_)";
+				string query21 = "Select a pattern a(\"    x    \", _\"y\"_)";
+				string query22 = "Select a pattern a(\"    x    \", _\"2\"_)";
+				string query23 = "Select a pattern a(\"    x    \", _)";
+				string query24 = "Select a pattern a(   _    , _\"y\"_)";
+				string query25 = "Select a pattern a(   _    , _\"2\"_)";
+				string query26 = "Select a pattern a(   _    , _)";
+
+				//Query with clause and pattern
+				string query27 = "Select a such that Modifies(a, \"x\") pattern a(v, _)";
+				string query28 = "Select a such that Parent*(a, _) pattern a(v, _\"y\"_)";
+
 
 				string invalidQuery1 = "Selecta"; //Must have space in between select and a
-				string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern and its param must not have space
+				string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
 				string invalidQuery3 = "Select a such Follows*(a, 2)"; //Must have "that" word
 				string invalidQuery4= "Select a such that Follows(w, a) a(\"x\", _)"; //Missing pattern
 				string invalidQuery5 = "Select a such that Follows(w, \"x\")"; //Follows 2nd param must be stmtRef 
@@ -75,6 +108,28 @@ namespace UnitTesting {
 				Assert::AreEqual(true, preprocessor.isValidQuery(query4));
 				Assert::AreEqual(true, preprocessor.isValidQuery(query5));
 				Assert::AreEqual(true, preprocessor.isValidQuery(query6));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query7));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query8));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query9));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query10));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query11));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query12));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query13));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query14));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query15));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query16));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query17));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query18));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query19));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query20));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query21));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query22));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query23));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query24));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query25));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query26));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query27));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query28));
 
 				//Invalid
 				Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
@@ -176,8 +231,8 @@ namespace UnitTesting {
 				QueryObject qo;
 
 				string relType = "Modifies";
-				string arg1 = "w,";
-				string arg2 = "\"x\")";
+				string arg1 = "w";
+				string arg2 = "\"x\"";
 
 				string firstParamValue;
 				firstParamValue += arg1.at(0);
@@ -212,14 +267,13 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1StmtRef2, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, invalidArg1StmtRefNotExist, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, integerZero, arg2));
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, underScore, arg2));
 
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2Empty));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2EntRef1));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2EntRef2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, invalidArg2EntRefNotExist));
-
-				//Both underscore
-				Assert::AreNotEqual(true, preprocessor.parseClauseArg1(qo, relType, underScore, underScore));
+				
 			}
 
 			TEST_METHOD(parseClauseArg2Test) {
@@ -236,8 +290,8 @@ namespace UnitTesting {
 				QueryObject qo;
 
 				string relType = "Parent*";
-				string arg1 = "5,";
-				string arg2 = "s)";
+				string arg1 = "5";
+				string arg2 = "s";
 
 				string firstParamValue;
 				firstParamValue += arg1.at(0);
@@ -278,9 +332,6 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2StmtRef2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2EntRefNotExist));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, integerZero));
-
-				//Both underscore
-				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, underScore, underScore));
 			}
 
 			TEST_METHOD(parsePatternTest) {
@@ -293,8 +344,8 @@ namespace UnitTesting {
 				QueryObject qo;
 
 				string entity = "a";
-				string arg1 = "\"x\",";
-				string arg2 = "_\"3\"_)";
+				string arg1 = "\"x\"";
+				string arg2 = "_\"3\"_";
 
 				string firstParamValue;
 				firstParamValue += arg1.at(1);
@@ -320,8 +371,6 @@ namespace UnitTesting {
 				string invalidArg2Empty = "";
 				string invalidArg2ExpressSpec= "_x_"; //without ""
 
-				string underScore = "_";
-
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1Empty, arg2));
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1EntRef1, arg2));
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1EntRef2, arg2));
@@ -330,8 +379,6 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidArg2Empty));
 				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidArg2ExpressSpec));
 
-				//Both underscore
-				Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, underScore, underScore));
 			}
 
 			TEST_METHOD(retrieveArgTypeTest) {
