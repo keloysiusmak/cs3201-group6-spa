@@ -139,9 +139,15 @@ bool Preprocessor::isValidDeclaration(string declaration) {
 }
 
 bool Preprocessor::isValidQuery(string query) {
+	string q = Utils::trim(query);
+
+	//Check for the single space between 'such that' keyword
+	if (!isValidSuchThatKeyword(q)) {
+		return false;
+	}
 
 	QueryObject queryObject;
-	vector<string> queryArr = Utils::explode(Utils::trim(query) + SYMBOL_SPACE, DELIM_STRING, DELIMITERS_QUERY);
+	vector<string> queryArr = Utils::explode(q + SYMBOL_SPACE, DELIM_STRING, DELIMITERS_QUERY);
 
 	//Check if Select word exists and if there's at least 2 elements in the query (e.g. "select", "s")
 	if (queryArr.at(0).compare(SELECT_WORD) != 0 || queryArr.size() < 2) {
@@ -559,4 +565,30 @@ string Preprocessor::retrieveParamFromQuery(vector<string> queryArr, int &paramL
 	}
 
 	return arg;
+}
+
+bool Preprocessor::isValidSuchThatKeyword(string query) {
+
+	vector<size_t> positions;
+
+	size_t pos = query.find(SUCH_WORD, 0);
+
+	while (pos != string::npos) {
+		positions.push_back(pos);
+		pos = query.find(SUCH_WORD, pos + 1);
+	}
+
+	for (size_t i = 0; i < positions.size(); i++) {
+		size_t spacePos = positions.at(i) + 4;
+		size_t thatPos = positions.at(i) + 5;
+		if (spacePos >= query.length() ||
+			thatPos >= query.length() ||
+			query.at(spacePos) != SYMBOL_SPACE ||
+			query.substr(thatPos, 4).compare(THAT_WORD) != 0) {
+			return false;
+		}
+			
+	}
+
+	return true;
 }

@@ -1,9 +1,9 @@
 #pragma once
-#include "../SPA/Parser.h"
+//#include "../SPA/Parser.h"
 #include "../SPA/InvalidExpressionException.h"
 //#include "../SPA/Utils.h"
 //#include "PKB.h"
-
+#include "../AutoTester/source/TestWrapper.h"
 
 
 Parser::Parser() {
@@ -178,7 +178,7 @@ bool Parser::match(string token, bool isVar = false) {
 		}
 		else {
 			cout << "Diff: " << token << " != " << nextToken << "\n";
-			throw MyException();
+			throw InvalidSyntaxException;
 			return false;
 		}
 	}
@@ -188,6 +188,15 @@ bool Parser::match(string token, bool isVar = false) {
 	}
 
 }
+
+string Parser::getWord()
+{
+	string result = nextToken;
+	nextToken = getToken();
+	//cout << "RESULT: " << result;
+	return result;
+}
+
 
 void Parser::expression() {
 	getExpression();
@@ -204,6 +213,9 @@ void Parser::ifStatement() {
 	match("if");
 	// insert variable to varTable
 	string var_name = nextToken;
+	if (!Utils::isValidName(var_name)) {
+		throw InvalidNameException;
+	}
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
@@ -240,6 +252,9 @@ void Parser::whileStatement() {
 	match("while");
 	// insert variable
 	string var_name = nextToken;
+	if (!Utils::isValidName(var_name)) {
+		throw InvalidNameException;
+	}
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
@@ -264,6 +279,9 @@ void Parser::assignStatement() {
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::ASSIGNMENT_TYPE } });
 	// insert variable
 	string var_name = nextToken;
+	if (!Utils::isValidName(var_name)) {
+		throw InvalidNameException;
+	}
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
@@ -329,7 +347,12 @@ void Parser::statementList() {
 void Parser::procedure() {
 	match("procedure");
 	string procName = nextToken;
-	currentProcId = pkb.insertToNameTable(ParserConstants::PROC_TABLE_8, procName);
+	if (Utils::isValidName(procName)) {
+		currentProcId = pkb.insertToNameTable(ParserConstants::PROC_TABLE_8, procName);
+	}
+	else {
+		throw InvalidNameException;
+	}
 	match("", true);
 	match("{");
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { ParserConstants::PROCEDURE_PARENT_ID },{},{ ParserConstants::PROCEDURE_PARENT_ID } });
@@ -350,24 +373,13 @@ void Parser::program() {
 	else {
 		// wrong syntax
 		cout << "expect 'procedure'" << "but is: " << nextToken << endl;
-		throw MyException();
+		throw InvalidSyntaxException;
 	}
 }
-
-string Parser::getWord()
-{
-	string result = nextToken;
-	nextToken = getToken();
-	//cout << "RESULT: " << result;
-	return result;
-}
-
 
 
 PKB Parser::Parse(string fileName, PKB passedPKB, bool isString, string stringInput)
 {
-	//int i = 1, currentStmNo = 0 , StmListIndex = 0, currentParent = 0, currentIf = 0, nestingLevel = 0;
-
 	pkb = passedPKB;
 	if (isString == true) {
 		stringstream stringInputStream(stringInput);
@@ -391,11 +403,16 @@ PKB Parser::Parse(string fileName, PKB passedPKB, bool isString, string stringIn
 		nextToken = getToken();
 		program();
 	}
-	catch (MyException& e) {
+	catch (exception& e) {
 		std::cout << "MyException caught" << std::endl;
 		std::cout << e.what() << std::endl;
-		//return EXIT_FAILURE;
+		exit(1);
+	} catch (InvalidExpressionException& e) {
+		std::cout << "InvalidExpressionException caught" << std::endl;
+		std::cout << e.what() << std::endl;
+		exit(2);
 	}
+	
 	std::cout << "success!";
 
 	return pkb;
