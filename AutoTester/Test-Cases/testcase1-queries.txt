@@ -631,17 +631,17 @@ Select n1 such that Uses(n1, _)
 127 - Uses(p, v)
 proc p; variable v;
 Select p such that Uses(p, v)
-a
+
 5000
 128 - Uses(p, _)
 proc p;
 Select p such that Uses(p, _)
-a
+
 5000
 129 - Uses(_, v)
 variable v;
 Select v such that Uses(_, v)
-x
+
 5000
 130 - Modifies(s1, v)
 stmt s1; variable v;
@@ -676,17 +676,17 @@ Select n1 such that Modifies(n1, _)
 136 - Modifies(p, v)
 proc p; variable v;
 Select p such that Modifies(p, v)
-a
+
 5000
 137 - Modifies(p, _)
 proc p;
 Select p such that Modifies(p, _)
-a
+
 5000
 138 - Modifies(_, v)
 variable v;
 Select v such that Modifies(_, v)
-x
+
 5000
 139 - pattern a(v, _v_)
 assign a; variable v;
@@ -771,7 +771,7 @@ Select w such that Follows(1, 2) pattern a("x", _"x"_)
 155 - proc p
 proc p; assign a;
 Select p such that Follows(1, 2) pattern a("x", _"x"_)
-a
+
 5000
 156 - prog_line n
 prog_line n; assign a;
@@ -806,7 +806,7 @@ Select w such that Parent(2, 3) pattern a("x", _"x"_)
 162 - proc p
 proc p; assign a;
 Select p such that Parent(2, 3) pattern a("x", _"x"_)
-a
+
 5000
 163 - prog_line n
 prog_line n; assign a;
@@ -841,7 +841,7 @@ Select w such that Uses(1, "x") pattern a("x", _"x"_)
 169 - proc p
 proc p; assign a;
 Select p such that Uses(1, "x") pattern a("x", _"x"_)
-a
+
 5000
 170 - prog_line n
 prog_line n; assign a;
@@ -876,7 +876,7 @@ Select w such that Modifies(1, "x") pattern a("x", _"x"_)
 176 - proc p
 proc p; assign a;
 Select p such that Modifies(1, "x") pattern a("x", _"x"_)
-a
+
 5000
 177 - prog_line n
 prog_line n; assign a;
@@ -911,7 +911,7 @@ Select w;
 183 - no clause(6)
 proc p;
 Select p;
-a
+
 5000
 184 - no clause(7)
 prog_line n;
@@ -931,7 +931,7 @@ Select a such that Uses(a, "x")
 187 - Uses(p, 'x')
 proc p;
 Select p such that Uses(p, "x")
-1
+
 5000
 188 - Uses(if, 'x')
 if ifs;
@@ -946,7 +946,7 @@ Select w such that Uses(w, "x")
 190 - Uses(_, 'x')
 assign a;
 Select a such that Uses(_, "x")
-1,4,5,7,8,11,13,14,15
+
 5000
 191 - Modifies(s, 'x')
 stmt s;
@@ -961,7 +961,7 @@ Select a such that Modifies(a, "x")
 193 - Modifies(p, 'x')
 proc p;
 Select p such that Modifies(p, "x")
-1
+
 5000
 194 - Modifies(if, 'x')
 if ifs;
@@ -976,5 +976,5 @@ Select w such that Modifies(w, "x")
 196 - Modifies(_, 'x')
 assign a;
 Select a such that Modifies(_, "x")
-1,4,5,7,8,11,13,14,15
+
 5000
