@@ -491,7 +491,10 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 			unordered_map<int, vector<int>> statementsUsing = pkb.getAllStatementModifiesVariables();
 			patternResults.setkeyValues(statementsUsing);
 
-			vector<int> allStatements = getAllValuesFromMap(statementsUsing);
+			vector<int> allStatements;
+			for (auto keyValuePair : statementsUsing) {
+				allStatements.push_back(keyValuePair.first);
+			}
 			patternResults.setAssignmentsEnts(removeWhileIfs(allStatements)); // Set assignment
 		}
 		else {
@@ -583,10 +586,9 @@ vector<int> Evaluator::removeElems(vector<int> v1, vector<int> v2) {
 
 /* Removes all while and if statements from statement list */
 vector<int> Evaluator::removeWhileIfs(vector<int> stmts) {
-	vector<int> ifStatements = pkb.getAllStatementsWithType(2);
-	vector<int> whileStatements = pkb.getAllStatementsWithType(3);
-	return removeElems(removeElems(stmts, ifStatements), 
-		whileStatements);
+	vector<int> whileStatements = pkb.getAllStatementsWithType(2);
+	vector<int> ifStatements = pkb.getAllStatementsWithType(3);
+	return removeElems(removeElems(stmts, ifStatements), whileStatements);
 };
 
 /* Assumes no duplicates in vectors */
