@@ -165,7 +165,8 @@ list<string> Evaluator::getAllSelectedParam(Param p) {
 
 	list<string> results;
 	for (int ans : pkbResults) {
-		(p.type == VARIABLE) ? results.push_back(pkb.getVariableName(ans)) :
+		(p.type == VARIABLE) ?
+			results.push_back(pkb.getVariableName(ans)) :
 			results.push_back(to_string(ans));
 	}
 	return results;
