@@ -36,4 +36,5 @@ public:
 	bool parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2);
 	int retrieveArgType(string arg);
 	string retrieveParamFromQuery(vector<string> queryArr, int &paramLength, int pos, string end);
+	bool isValidSuchThatKeyword(string query);
 };
