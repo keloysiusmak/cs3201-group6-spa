@@ -781,7 +781,7 @@ Select s such that Modifies(6, "x")
 157 - Uses(0, 7)
 assign a; variable v;
 Select a such that Uses(a,v) pattern a(v, _"1"_)
-3,4,5,6
+3,5
 5000
 158 - Uses(1, 7)
 assign a; variable v;
@@ -791,7 +791,7 @@ Select a such that Uses(a,v) pattern a(v, _"x"_)
 159 - Uses(2, 7)
 assign a; variable v;
 Select a such that Uses(a,v) pattern a(v, _)
-3,4,5,6
+3,5
 5000
 160 - Modifies(0, 7)
 assign a; variable v;
