@@ -130,6 +130,7 @@ bool Evaluator::selectParamInClause(Param select, Clause &clause) {
 bool Evaluator::selectParamInPattern(Param select, Pattern &pattern) {
 	if (Utils::isSameParam(pattern.getLeftParam(), select)) return true;
 	if (Utils::isSameParam(pattern.getRightParam(), select)) return true;
+	if (Utils::isSameParam(pattern.getEntity(), select)) return true;
 	return false;
 }
 
@@ -200,7 +201,12 @@ list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &
 	Param rightParam = clauseResults.rhs;
 	set<int> answerSet;
 
-	if (clauseResults.values.size()) { // Get selected from values 
+	if (Utils::isSameParam(selected, clauseResults.entRef)) { // Get selected from pattern assignments
+		for (int value : clauseResults.assignmentsEnts) {
+			answerSet.insert(value);
+		}
+	}
+	else if (clauseResults.values.size()) { // Get selected from values 
 		if (clauseResults.values[0] == 0) return {};
 		for (int value : clauseResults.values) {
 			answerSet.insert(value);
@@ -475,6 +481,7 @@ LHS: _, VARIABLE, IDENT
 RHS: _, VAR_NAME, CONSTANT
 */
 void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults) {
+	patternResults.instantiatePattern(pattern);
 
 	Param leftParam = pattern.getLeftParam();
 	Param rightParam = pattern.getRightParam();
@@ -482,8 +489,10 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 	if (Utils::isSynonym(leftParam.type)) {
 		if (Utils::isSynonym(rightParam.type)) { // (v/_, IDENT/CONSTANT)
 			unordered_map<int, vector<int>> statementsUsing = pkb.getAllStatementModifiesVariables();
-			patternResults.setAssignmentsEnts(getAllValuesFromMap(statementsUsing)); // Set assignment
 			patternResults.setkeyValues(statementsUsing);
+
+			vector<int> allStatements = getAllValuesFromMap(statementsUsing);
+			patternResults.setAssignmentsEnts(removeWhileIfs(allStatements)); // Set assignment
 		}
 		else {
 			vector<int> statementsUsing;
@@ -518,7 +527,7 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 			int lhsVarId = pkb.getVariableId(leftParam.value);
 			vector<int> statementModifies = pkb.getStatementsFromModifiesVariable(lhsVarId);
 			patternResults.setValid(statementModifies.size() > 0);
-			patternResults.setAssignmentsEnts(statementModifies); // Set assignment
+			patternResults.setAssignmentsEnts(removeWhileIfs(statementModifies)); // Set assignment
 		}
 		else {
 			int lhsVarId = pkb.getVariableId(leftParam.value);
@@ -541,7 +550,7 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 					}
 				}
 			}
-			patternResults.setAssignmentsEnts(assignmentEnts);
+			patternResults.setAssignmentsEnts(removeWhileIfs(assignmentEnts));
 		}
 	}
 
@@ -560,6 +569,26 @@ vector<int> Evaluator::getAllValuesFromMap(unordered_map<int, vector<int>> map) 
 	return values;
 }
 
+/* Removes elements in v2 from v1 */
+vector<int> Evaluator::removeElems(vector<int> v1, vector<int> v2) {
+	vector<int> filtered;
+	for (int value : v1) {
+		if (find(v2.begin(), v2.end(), value) == v2.end()) { // If not in vector
+			filtered.push_back(value);
+		}
+	}
+	return filtered;
+	
+};
+
+/* Removes all while and if statements from statement list */
+vector<int> Evaluator::removeWhileIfs(vector<int> stmts) {
+	vector<int> ifStatements = pkb.getAllStatementsWithType(2);
+	vector<int> whileStatements = pkb.getAllStatementsWithType(3);
+	return removeElems(removeElems(stmts, ifStatements), 
+		whileStatements);
+};
+
 /* Assumes no duplicates in vectors */
 vector<int> Evaluator::intersectVectors(vector<int> &v1, vector<int> &v2) {
 	vector<int> filtered;
@@ -569,7 +598,7 @@ vector<int> Evaluator::intersectVectors(vector<int> &v1, vector<int> &v2) {
 		}
 	}
 	return filtered;
-}
+};
 
 void Evaluator::intersectSingle(ClauseResults &clauseResults) {
 

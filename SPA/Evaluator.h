@@ -17,11 +17,18 @@ struct ClauseResults {
 	/* Boolean for when both params are concrete */
 	bool valid;
 	/* Solely used for pattern */
+	Param entRef;
 	vector<int> assignmentsEnts;
 
 	void ClauseResults::instantiateClause(Clause clause) {
 		lhs = clause.getFirstParam();
 		rhs = clause.getSecondParam();
+	};
+
+	void ClauseResults::instantiatePattern(Pattern pattern) {
+		entRef = pattern.getEntity();
+		lhs = pattern.getLeftParam();
+		rhs = pattern.getRightParam();
 	};
 
 	void ClauseResults::setkeyValues(unordered_map<int, vector<int>> &results) {
@@ -89,6 +96,8 @@ public:
 	list<string> getAllSelectedParam(Param p);
 	list<string> resultToStringList(ClauseResults &clauseResults, Param &selected);
 
+	vector<int> removeElems(vector<int> v1, vector<int> v2);
+	vector<int> removeWhileIfs(vector<int> stmts);
 	vector<int> getAllValuesFromMap(unordered_map<int, vector<int>> map);
 
 	int statementTypeToIntMap(ParamType t);
