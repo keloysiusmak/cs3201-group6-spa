@@ -16,7 +16,7 @@ namespace PKBEvaluatorIntegrationTesting
 	Evaluator evaluator;
 	list<string> _variableID;
 
-	TEST_CLASS(PKBAPIIntegration)
+	TEST_CLASS(PKBEvaluatorIntegration)
 	{
 	public:
 		/*
@@ -78,9 +78,9 @@ namespace PKBEvaluatorIntegrationTesting
 			pkb.insertToTable(5, 4, { { 5,8 },{ 1 } } );
 			pkb.insertToTable(5, 5, { { 9 },{ 1 } } );
 
-			pkb.insertToTable(6, 1, {{8, 9, 13}} );
-			pkb.insertToTable(6, 4, { { 7 } } );
-			pkb.insertToTable(6, 7, { { 4 } } );
+			pkb.insertToTable(7, 1, {{8, 9, 13}} );
+			pkb.insertToTable(7, 4, { { 7 } } );
+			pkb.insertToTable(7, 7, { { 4 } } );
 
 			pkb.insertToNameTable(8, "a");
 			pkb.insertToNameTable(8, "b");

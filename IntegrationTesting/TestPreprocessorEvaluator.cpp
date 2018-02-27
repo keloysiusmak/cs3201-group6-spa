@@ -10,7 +10,7 @@ namespace PreprocessorEvaluatorIntegrationTesting
 	Evaluator evaluator;
 	Preprocessor preprocessor;
 
-	TEST_CLASS(PreprocessorEvaluatorTest) {
+	TEST_CLASS(PreprocessorEvaluatorIntegration) {
 		public:
 
 			TEST_CLASS_INITIALIZE(setup) {
