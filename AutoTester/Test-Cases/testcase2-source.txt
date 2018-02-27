@@ -1,1 +1,0 @@
-procedure a { x = x + 1; if x then { if x then { x = x + 1; } else { x = x + 1; } while x { x = x + 1; } } else { x = x + 1; } while x { while x { x = x + 1; } if x then { x = x + 1; } else { x = x + 1;} x = x + 1; } }
