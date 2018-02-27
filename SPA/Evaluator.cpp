@@ -472,7 +472,7 @@ void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
 
 /* Pattern cases: 
 LHS: _, VARIABLE, IDENT
-RHS: _, VARIABLE, CONSTANT
+RHS: _, VAR_NAME, CONSTANT
 */
 void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults) {
 
@@ -482,6 +482,7 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 	if (Utils::isSynonym(leftParam.type)) {
 		if (Utils::isSynonym(rightParam.type)) { // (v/_, IDENT/CONSTANT)
 			unordered_map<int, vector<int>> statementsUsing = pkb.getAllStatementModifiesVariables();
+			patternResults.setAssignmentsEnts(getAllValuesFromMap(statementsUsing)); // Set assignment
 			patternResults.setkeyValues(statementsUsing);
 		}
 		else {
@@ -493,7 +494,7 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 			else { // (v/_, constant)
 				statementsUsing = pkb.getStatementsWithConstant(stoi(rightParam.value));
 			}
-
+			/* Get variables */
 			vector<int> variables;
 			for (int stmt : statementsUsing) {
 				vector<int> variableIds = pkb.getModifiesVariablesFromStatement(stmt);
@@ -505,13 +506,19 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 				}
 			}
 			patternResults.setValues(variables);
+
+			/* Set assignment statements */
+			vector<int> assignments = pkb.getAllStatementsWithType(1);
+			vector<int> assignmentEnts = intersectVectors(assignments, statementsUsing);
+			patternResults.setAssignmentsEnts(assignmentEnts);
 		}
 	}
 	else {
 		if (Utils::isSynonym(rightParam.type)) { // (IDENT, var_name/constant) 
 			int lhsVarId = pkb.getVariableId(leftParam.value);
 			vector<int> statementModifies = pkb.getStatementsFromModifiesVariable(lhsVarId);
-			patternResults.setValues(statementModifies);
+			patternResults.setValid(statementModifies.size() > 0);
+			patternResults.setAssignmentsEnts(statementModifies); // Set assignment
 		}
 		else {
 			int lhsVarId = pkb.getVariableId(leftParam.value);
@@ -525,15 +532,44 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 				statementUses = pkb.getStatementsWithConstant(stoi(rightParam.value));
 			}
 
+			vector<int> assignmentEnts;
 			for (int modifiesStmt : statementModifies) { // Check intersection
 				for (int UsesStmt : statementUses) {
-					if (modifiesStmt == UsesStmt) patternResults.setValid(true);
+					if (modifiesStmt == UsesStmt) {
+						assignmentEnts.push_back(modifiesStmt);
+						patternResults.setValid(true);
+					}
 				}
 			}
+			patternResults.setAssignmentsEnts(assignmentEnts);
 		}
 	}
 
 };
+
+/* Gets all values from left side of unordered map */
+vector<int> Evaluator::getAllValuesFromMap(unordered_map<int, vector<int>> map) {
+	vector<int> values;
+	for (auto keyValuePair : map) {
+		for (int value : keyValuePair.second) {
+			if (find(values.begin(), values.end(), value) == values.end()) { // If not in vector
+				values.push_back(value);
+			}
+		}
+	}
+	return values;
+}
+
+/* Assumes no duplicates in vectors */
+vector<int> Evaluator::intersectVectors(vector<int> &v1, vector<int> &v2) {
+	vector<int> filtered;
+	for (int v1Value : v1) {
+		for (int v2Value : v2) {
+			if (v1Value == v2Value) filtered.push_back(v1Value);
+		}
+	}
+	return filtered;
+}
 
 void Evaluator::intersectSingle(ClauseResults &clauseResults) {
 

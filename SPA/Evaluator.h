@@ -16,6 +16,8 @@ struct ClauseResults {
 	vector<int> values;
 	/* Boolean for when both params are concrete */
 	bool valid;
+	/* Solely used for pattern */
+	vector<int> assignmentsEnts;
 
 	void ClauseResults::instantiateClause(Clause clause) {
 		lhs = clause.getFirstParam();
@@ -41,6 +43,10 @@ struct ClauseResults {
 
 	void ClauseResults::setValid(bool validity) {
 		valid = validity;
+	}
+
+	void ClauseResults::setAssignmentsEnts(vector<int> &assigns) {
+		assignmentsEnts = assigns;
 	}
 };
 
@@ -71,6 +77,7 @@ public:
 	// Intersection Helpers
 	void intersectSingle(ClauseResults &clauseResults);
 	void intersectDouble(ClauseResults &clauseResults);
+	vector<int> intersectVectors(vector<int> &v1, vector<int> &v2);
 
 	// Helper Methods
 	bool selectParamInClauses(QueryObject &queryObj);
@@ -81,6 +88,8 @@ public:
 	bool hasClauseResults(ClauseResults &clauseResults);
 	list<string> getAllSelectedParam(Param p);
 	list<string> resultToStringList(ClauseResults &clauseResults, Param &selected);
+
+	vector<int> getAllValuesFromMap(unordered_map<int, vector<int>> map);
 
 	int statementTypeToIntMap(ParamType t);
 
