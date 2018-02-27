@@ -66,7 +66,7 @@ list<string> Evaluator::evaluateQuery() {
 		}
 		else { // Param within clauses
 			if (queryHasClause(queryObject) &&
-				selectParamInClause(selectParam, queryObject.getClauses()[0])) {
+				selectParamInClause(selectParam, queryObject.getClauses()[0])) { // Param in clause
 
 				list<string> clauseResults = resultToStringList(cResults, selectParam);
 
@@ -79,11 +79,11 @@ list<string> Evaluator::evaluateQuery() {
 					if (hasClauseResults(pResults)) return clauseResults; // Check if pattern has results
 					else return {};
 				}
-				else {
+				else { // Param present only in clause and no pattern object;
 					return clauseResults;
 				}
 			} 
-			else {
+			else { // Param only in pattern
 				// To be implemented
 			}
 		}
@@ -401,7 +401,14 @@ void Evaluator::evaluateUses(Clause &clause, ClauseResults &clauseResults) {
 			clauseResults.setValues(results);
 		}
 		else { // (concrete, concrete)
-			bool result = pkb.checkStatementUsesVariable(stoi(leftParam.value), stoi(rightParam.value));
+			bool result;
+			if (rightParam.type == IDENT) {
+				int varId = pkb.getVariableId(rightParam.value);
+				result = pkb.checkStatementUsesVariable(stoi(leftParam.value), varId);
+			}
+			else {
+				result = pkb.checkStatementUsesVariable(stoi(leftParam.value), stoi(rightParam.value));
+			}
 			clauseResults.setValid(result);
 		}
 	}
@@ -436,7 +443,14 @@ void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
 			intersectSingle(clauseResults);
 		}
 		else { // (concrete, concrete)
-			bool result = pkb.checkStatementModifiesVariable(stoi(leftParam.value), stoi(rightParam.value));
+			bool result;
+			if (rightParam.type == IDENT) {
+				int varId = pkb.getVariableId(rightParam.value);
+				result = pkb.checkStatementModifiesVariable(stoi(leftParam.value), varId);
+			}
+			else {
+				result = pkb.checkStatementModifiesVariable(stoi(leftParam.value), stoi(rightParam.value));
+			}
 			clauseResults.setValid(result);
 		}
 	}
@@ -452,8 +466,9 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 	Param rightParam = pattern.getRightParam();
 
 	if (Utils::isSynonym(leftParam.type)) {
-		if (Utils::isSynonym(rightParam.type)) { // Case non-applicable
-			; 
+		if (Utils::isSynonym(rightParam.type)) { // (v/_, IDENT/CONSTANT)
+			unordered_map<int, vector<int>> statementsUsing = pkb.getAllStatementModifiesVariables();
+			patternResults.setkeyValues(statementsUsing);
 		}
 		else {
 			vector<int> statementsUsing;
