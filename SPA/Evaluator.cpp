@@ -86,11 +86,11 @@ list<string> Evaluator::evaluateQuery() {
 					return intersectedAns;
 				}
 				else if (selectParamInClause(selectParam, clause)) { // Param exists only in clause
-					if (hasClauseResults(pResults)) return clauseResults;
+					if (hasClauseResults(cResults)) return clauseResults;
 					else return{};
 				}
 				else { // Param exists only in pattern
-					if (hasClauseResults(cResults)) return clauseResults;
+					if (hasClauseResults(pResults)) return patternResults;
 					else return{};
 				}
 			}
@@ -156,7 +156,7 @@ list<string> Evaluator::getAllSelectedParam(Param p) {
 	if (paramIntType != 0) {
 		pkbResults = pkb.getAllStatementsWithType(paramIntType);
 	}
-	else if (p.type == STMT) { 
+	else if (p.type == STMT || p.type == PROG_LINE) { 
 		pkbResults = pkb.getAllStatements();
 	}
 	else if (p.type == VARIABLE) {
