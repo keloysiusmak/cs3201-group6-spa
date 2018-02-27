@@ -11,11 +11,12 @@
 using namespace std::tr1;
 
 class PKB {
-public:
+private:
 	/*  PKB Structure*/
 	unordered_map<int, std::vector<std::vector<int>>> tables[7];
 	unordered_map<int, std::string> nameTables[2];
 
+public:
 	/* PKB Operations */
 	bool insertToTable(int, int, std::vector<std::vector<int>>);
 	int insertToNameTable(int, std::string);

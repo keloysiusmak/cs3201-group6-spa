@@ -11,6 +11,10 @@ const char SYMBOL_EQUALS = '=';
 const char SYMBOL_FULL_STOP = '.';
 const char SYMBOL_UNDERSCORE = '_';
 
+const string DELIM_STRING = " ,()";
+const vector<char> DELIMITERS_DECLARATION { };
+const vector<char> DELIMITERS_QUERY { SYMBOL_COMMA, SYMBOL_CLOSE_BRACKET };
+
 const string SELECT_WORD = "Select";
 const string SUCH_WORD = "such";
 const string THAT_WORD = "that";
@@ -105,7 +109,8 @@ void Preprocessor::preprocessQuery(string query) {
 
 bool Preprocessor::isValidDeclaration(string declaration) {
 
-	vector<string> declarationArr = Utils::split(declaration, SYMBOL_SPACE);
+	vector<string> declarationArr = Utils::explode(declaration + SYMBOL_SPACE, DELIM_STRING, DELIMITERS_DECLARATION);
+	//vector<string> declarationArr = Utils::split(declaration, SYMBOL_SPACE);
 
 	//Check if there is a declarationType and synonym
 	if (declarationArr.size() < 2) {
@@ -136,7 +141,7 @@ bool Preprocessor::isValidDeclaration(string declaration) {
 bool Preprocessor::isValidQuery(string query) {
 
 	QueryObject queryObject;
-	vector<string> queryArr = Utils::split(query, SYMBOL_SPACE);
+	vector<string> queryArr = Utils::explode(Utils::trim(query) + SYMBOL_SPACE, DELIM_STRING, DELIMITERS_QUERY);
 
 	//Check if Select word exists and if there's at least 2 elements in the query (e.g. "select", "s")
 	if (queryArr.at(0).compare(SELECT_WORD) != 0 || queryArr.size() < 2) {
@@ -163,32 +168,40 @@ bool Preprocessor::isValidQuery(string query) {
 
 		//check "such" word exists
 		if (queryArr.at(i).compare(SUCH_WORD) == 0) {
+
+			//Keep track of the length of clause
+			int clauseLength = 1;
+
 			// check "that" word exists
 			if ((i + 1) >= queryArr.size() || queryArr.at(i + 1).compare(THAT_WORD) != 0) {
 				return false;
 			}
 
-			//check whether clause and param exists
-			if ((i + 2) >= queryArr.size() || (i + 3) >= queryArr.size()) {
+			//Add "that"
+			clauseLength++;
+
+			//check whether clause exists
+			if ((i + 2) >= queryArr.size()) {
 				return false;
 			}
 
-			//Split the clause from the open bracket e.g. Parent*(4,
-			vector<string> clause = Utils::split(queryArr.at(i + 2), SYMBOL_OPEN_BRACKET);
+			//Add relRef
+			clauseLength++;
 
-			//Should have two string e.g. {Parent*}, {4,}
-			if (clause.size() != 2) {
-				return false;
-			}
+			//Add all the left Param
+			string leftArg = retrieveParamFromQuery(queryArr, clauseLength, i, string(1, SYMBOL_COMMA));
+
+			//Add all the right Param
+			string rightArg = retrieveParamFromQuery(queryArr, clauseLength, i, string(1, SYMBOL_CLOSE_BRACKET));
 
 			//Check whether is a valid clause
-			if (KEYWORDS_CLAUSES_1.find(clause.at(0)) != KEYWORDS_CLAUSES_1.end()) {
-				if (!parseClauseArg1(queryObject, clause.at(0), clause.at(1), queryArr.at(i + 3))) {
+			if (KEYWORDS_CLAUSES_1.find(queryArr.at(i + 2)) != KEYWORDS_CLAUSES_1.end()) {
+				if (!parseClauseArg1(queryObject, queryArr.at(i + 2), leftArg, rightArg)) {
 					return false;
 				}
 			}
-			else if (KEYWORDS_CLAUSES_2.find(clause.at(0)) != KEYWORDS_CLAUSES_2.end()) {
-				if (!parseClauseArg2(queryObject, clause.at(0), clause.at(1), queryArr.at(i + 3))) {
+			else if (KEYWORDS_CLAUSES_2.find(queryArr.at(i + 2)) != KEYWORDS_CLAUSES_2.end()) {
+				if (!parseClauseArg2(queryObject, queryArr.at(i + 2), leftArg, rightArg)) {
 					return false;
 				}
 			}
@@ -197,41 +210,44 @@ bool Preprocessor::isValidQuery(string query) {
 			}
 
 			//Finish processing this clause
-			i += 3;		
+			i += (clauseLength - 1);
 		}
 		//check wether "pattern" word exists
 		else if (queryArr.at(i).compare(PATTERN_WORD) == 0) {
 
-			//check whether pattern type and param exists
-			if ((i + 1) >= queryArr.size() && (i + 2) >= queryArr.size()) {
-				return false;
-			}
+			//Keep track of the length of pattern
+			int patternLength = 1;
 
-			//Split the pattern type from the open bracket e.g. a(_,
-			vector<string> patternType = Utils::split(queryArr.at(i + 1), SYMBOL_OPEN_BRACKET);
-
-			//Should have two string e.g. {a}, {_,}
+			//check whether pattern type exists and
 			//the patternType should exist in the declarationMap
-			if (patternType.size() != 2 ||  
-				!isDeclarationSynonymExist(patternType.at(0))) {
+			if ((i + 1) >= queryArr.size() || !isDeclarationSynonymExist(queryArr.at(i + 1))) {
 				return false;
 			}
 
-			searchSynonym = declarationMap.find(patternType.at(0));
+			searchSynonym = declarationMap.find(queryArr.at(i + 1));
 
 			//check whether patternType is valid
 			if (KEYWORDS_PATTERN_TYPE.find(searchSynonym->second) == KEYWORDS_PATTERN_TYPE.end()) {
 				return false;
 			}
 
+			//Add patternType
+			patternLength++;
+
+			//Add all the left Param
+			string leftArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_COMMA));
+
+			//Add all the right Param
+			string rightArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_CLOSE_BRACKET));
+
 			searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
 
-			if (!parsePattern(queryObject, searchDeclareType->second, patternType.at(0), patternType.at(1), queryArr.at(i + 2))) {
+			if (!parsePattern(queryObject, searchDeclareType->second, queryArr.at(i + 1), leftArg, rightArg)) {
 				return false;
 			}
 
 			//Finish processing this pattern
-			i += 2;
+			i += (patternLength - 1);
 		}
 		else {
 			return false;
@@ -285,25 +301,19 @@ bool Preprocessor::isDeclarationSynonymExist(string synonym) {
 	return true;
 }
 
+/*UsesS, ModifiesS*/
 bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1, string arg2) {
 
-	vector<string> arg1Split = Utils::split(arg1, SYMBOL_COMMA);
+	string leftArg = Utils::trim(arg1);
+	string rightArg = Utils::trim(arg2);
 
-	if (arg1Split.size() < 1 || !isValidStmtRef(Utils::trim(arg1Split.at(0)))) {
+	if (leftArg.length() < 1 || !isValidStmtRef(leftArg)) {
 		return false;
 	}
 
-	vector<string> arg2Split = Utils::split(arg2, SYMBOL_CLOSE_BRACKET);
-
-	if (arg2Split.size() < 1 || !isValidEntRef(Utils::trim(arg2Split.at(0)))) {
+	if (rightArg.length() < 1 || !isValidEntRef(rightArg)) {
 		return false;
 	}
-
-	string leftArg = Utils::trim(arg1Split.at(0));
-	string rightArg = Utils::trim(arg2Split.at(0));
-
-	bool isLeftArgAll = false;
-	bool isRightArgAll = false;
 
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
 	ParamType insertLeftType = leftArgType->second;
@@ -335,7 +345,7 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 	}
 	// Underscore
 	else {
-		isLeftArgAll = true;
+		return false;
 	}
 
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
@@ -362,15 +372,7 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 	else if (insertRightType == IDENT) {
 		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
 	}
-	// Underscore
-	else {
-		isRightArgAll = true;
-	}
 
-	//Invalid case as both is underscore
-	if (isLeftArgAll && isRightArgAll) {
-		return false;
-	}
 
 	auto searchRelType = KEYWORDS_CLAUSES_1.find(relType);
 	qo.insertClause(searchRelType->second, insertLeftType, leftArg,
@@ -379,25 +381,19 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 	return true;
 }
 
+/*Follows, FollowsT, Parent, ParentT*/
 bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1, string arg2) {
 
-	vector<string> arg1Split = Utils::split(arg1, SYMBOL_COMMA);
+	string leftArg = Utils::trim(arg1);
+	string rightArg = Utils::trim(arg2);
 
-	if (arg1Split.size() < 1 || !isValidStmtRef(Utils::trim(arg1Split.at(0)))) {
+	if (leftArg.length() < 1 || !isValidStmtRef(leftArg)) {
 		return false;
 	}
 
-	vector<string> arg2Split = Utils::split(arg2, SYMBOL_CLOSE_BRACKET);
-
-	if (arg2Split.size() < 1 || !isValidStmtRef(Utils::trim(arg2Split.at(0)))) {
+	if (rightArg.length() < 1 || !isValidStmtRef(rightArg)) {
 		return false;
 	}
-
-	string leftArg = Utils::trim(arg1Split.at(0));
-	string rightArg = Utils::trim(arg2Split.at(0));
-
-	bool isLeftArgAll = false;
-	bool isRightArgAll = false;
 
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
 	ParamType insertLeftType = leftArgType->second;
@@ -425,10 +421,6 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 		if (stoi(leftArg) < 1) {
 			return false;
 		}
-	}
-	// Underscore
-	else {
-		isLeftArgAll = true;
 	}
 
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
@@ -458,15 +450,6 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 			return false;
 		}
 	}
-	// Underscore
-	else {
-		isRightArgAll = true;
-	}
-
-	//Invalid case as both is underscore
-	if (isLeftArgAll && isRightArgAll) {
-		return false;
-	}
 
 	auto searchRelType = KEYWORDS_CLAUSES_2.find(relType);
 	qo.insertClause(searchRelType->second, insertLeftType, leftArg,
@@ -477,23 +460,17 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 
 bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2) {
 	
-	vector<string> arg1Split = Utils::split(arg1, SYMBOL_COMMA);
+	string leftArg = Utils::trim(arg1);
+	string rightArg = Utils::trim(arg2);
 
-	if (arg1Split.size() < 1 || !isValidEntRef(Utils::trim(arg1Split.at(0)))) {
+	if (leftArg.length() < 1 || !isValidEntRef(leftArg)) {
 		return false;
 	}
 
-	vector<string> arg2Split = Utils::split(arg2, SYMBOL_CLOSE_BRACKET);
-
-	if (arg2Split.size() < 1 || !isValidExpressSpec(Utils::trim(arg2Split.at(0)))) {
+	if (rightArg.length() < 1 || !isValidExpressSpec(rightArg)) {
 		return false;
 	}
 
-	string leftArg = Utils::trim(arg1Split.at(0));
-	string rightArg = Utils::trim(arg2Split.at(0));
-
-	bool isLeftArgAll = false;
-	bool isRightArgAll = false;
 
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
 	ParamType insertLeftArgType = leftArgType->second;
@@ -517,28 +494,14 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	}
 	//Check if is Ident and store the content between the double quotes
 	else if (leftArgType->second == IDENT) {
-		leftArg = (Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+		leftArg = Utils::trim((Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1));
 	}
-	// Underscore
-	else {
-		isLeftArgAll = true;
-	}
-	
 
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
 
 	//Check if is factor expresson-spec and store the content between the double quotes
 	if (rightArgType->second == VAR_NAME || rightArgType->second == CONSTANT) {
 		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
-	}
-	// Underscore
-	else {
-		isRightArgAll = true;
-	}
-
-	//Invalid case as both is underscore
-	if (isLeftArgAll && isRightArgAll) {
-		return false;
 	}
 
 	qo.insertPattern(entityType, entity, insertLeftArgType,
@@ -571,4 +534,29 @@ int Preprocessor::retrieveArgType(string arg) {
 	else {
 		return 5;
 	}
+}
+
+string Preprocessor::retrieveParamFromQuery(vector<string> queryArr, int &paramLength, int pos, string end) {
+	
+	//Add all the Param
+	string arg;
+
+	while (true) {
+		//if counter exceeded array size
+		if ((pos + paramLength) >= queryArr.size()) {
+			return false;
+		}
+
+		if (queryArr.at(pos + paramLength).compare(end) == 0) {
+			//end of left param
+			paramLength++;
+			break;
+		}
+		else {
+			arg += queryArr.at(pos + paramLength);
+		}
+		paramLength++;
+	}
+
+	return arg;
 }

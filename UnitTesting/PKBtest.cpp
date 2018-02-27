@@ -176,11 +176,8 @@ namespace UnitTesting
 				/* Null Test */
 				Assert::AreEqual(string(""), pkb.getFromNameTable(i, 1));
 
-				Assert::AreEqual(0, static_cast<int>(pkb.nameTables[i - 8].size()));
 				Assert::AreEqual(1, pkb.insertToNameTable(i, data));
-				Assert::AreEqual(1, static_cast<int>(pkb.nameTables[i - 8].size()));
 				Assert::AreEqual(1, pkb.insertToNameTable(i, data));
-				Assert::AreEqual(1, static_cast<int>(pkb.nameTables[i - 8].size()));
 			}
 		}
 
