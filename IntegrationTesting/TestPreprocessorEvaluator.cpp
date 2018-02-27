@@ -78,6 +78,7 @@ namespace PreprocessorEvaluatorIntegrationTesting
 				string invalidQuery3 = "assign a; stmt s; Select s such that Follows*(a, \"x\")"; //Follows cannot have IDENT on the right param
 				string invalidQuery4 = "stmt s; variable v; Select s such that Modifies(v, v)"; //Modifies cannot have variable synonym on the left param
 				string invalidQuery5 = "stmt s; variable v; Select s such that Uses(_, v)"; //Uses cannot have _ on the left param
+				string invalidQuery6 = "stmt s; variable v; Select s such  that Uses(_, v)"; //Such That can only have single space in between
 
 				preprocessor.preprocessQuery(invalidQuery1);
 				Assert::AreNotEqual(true, evaluator.isValidQuery());
@@ -92,6 +93,9 @@ namespace PreprocessorEvaluatorIntegrationTesting
 				Assert::AreNotEqual(true, evaluator.isValidQuery());
 
 				preprocessor.preprocessQuery(invalidQuery5);
+				Assert::AreNotEqual(true, evaluator.isValidQuery());
+
+				preprocessor.preprocessQuery(invalidQuery6);
 				Assert::AreNotEqual(true, evaluator.isValidQuery());
 			}
 
