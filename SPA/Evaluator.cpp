@@ -479,8 +479,10 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // Case non-applicable
-			;
+		if (Utils::isSynonym(rightParam.type)) { // (IDENT, var_name/constant) 
+			int lhsVarId = pkb.getVariableId(leftParam.value);
+			vector<int> statementModifies = pkb.getStatementsFromModifiesVariable(lhsVarId);
+			patternResults.setValues(statementModifies);
 		}
 		else {
 			int lhsVarId = pkb.getVariableId(leftParam.value);
