@@ -50,7 +50,7 @@ list<string> Evaluator::evaluateQuery() {
 		ClauseResults pResults = ClauseResults();
 
 		if (queryHasClause(queryObject)) evaluateClause(queryObject.getClauses()[0], cResults);
-		if (queryHasPattern(queryObject)) { ; };
+		if (queryHasPattern(queryObject)) evaluatePattern(queryObject.getPatterns()[0], pResults);
 
 		/* Check if param in clause or pattern */
 		if (!selectParamInClauses(queryObject)) { // Param independent of clauses
@@ -456,25 +456,48 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 			; 
 		}
 		else {
-			vector<int> results;
+			vector<int> statementsUsing;
 			if (rightParam.type == VAR_NAME) { // (v/_, var_name)
+				int varId = pkb.getVariableId(rightParam.value);
+				statementsUsing = pkb.getStatementsFromUsesVariable(varId);
 			}
 			else { // (v/_, constant)
-
+				statementsUsing = pkb.getStatementsWithConstant(stoi(rightParam.value));
 			}
+
+			vector<int> variables;
+			for (int stmt : statementsUsing) {
+				vector<int> variableIds = pkb.getModifiesVariablesFromStatement(stmt);
+				for (int varId : variableIds) {
+					if (find(variables.begin(), variables.end(), varId) == variables.end()) { // If not in vector
+						variables.push_back(varId);
+					}
+					else { ; }
+				}
+			}
+			patternResults.setValues(variables);
 		}
 	}
 	else {
 		if (Utils::isSynonym(rightParam.type)) { // Case non-applicable
-
+			;
 		}
 		else {
-			vector<int> results;
+			int lhsVarId = pkb.getVariableId(leftParam.value);
+			vector<int> statementModifies = pkb.getStatementsFromModifiesVariable(lhsVarId);
+			vector<int> statementUses;
 			if (rightParam.type == VAR_NAME) { // (IDENT, var_name)
-
+				int rhsVarId = pkb.getVariableId(rightParam.value);
+				statementUses = pkb.getStatementsFromUsesVariable(rhsVarId);
 			}
 			else { // (IDENT, constant)
+				statementUses = pkb.getStatementsWithConstant(stoi(rightParam.value));
+			}
 
+			for (int modifiesStmt : statementModifies) { // Check intersection
+				for (int UsesStmt : statementUses) {
+					if (modifiesStmt == UsesStmt) patternResults.setValid(true);
+				}
 			}
 		}
 	}
