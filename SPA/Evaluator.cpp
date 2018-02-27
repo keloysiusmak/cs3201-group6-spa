@@ -205,7 +205,7 @@ list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &
 		}
 	}
 	else {
-		return{ "None" };
+		return{};
 	}
 
 	// Store set of answers into list of strings
