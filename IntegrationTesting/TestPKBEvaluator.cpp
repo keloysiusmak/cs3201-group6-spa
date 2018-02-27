@@ -72,7 +72,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			unordered_map<int, std::vector<std::vector<int>>> table3;
 			table3.insert({ 1, {{2,3,5,11}, {1,2}} });
-			table3.insert({ 2,{ {1,10,11},{ 1,2 } } });
+			table3.insert({ 2,{ {1,10,11, 12},{ 1,2 } } });
 			table3.insert({ 3,{ { 2 },{ 1 } } });
 			table3.insert({ 5,{ {5,6},{1} } });
 
@@ -134,7 +134,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -161,7 +160,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -188,7 +186,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -215,7 +212,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -242,7 +238,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -269,7 +265,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -296,7 +292,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -323,7 +319,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -352,7 +348,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -381,7 +377,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -410,7 +406,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -439,7 +435,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -466,7 +461,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -493,7 +488,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -520,7 +515,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -547,7 +542,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -639,7 +634,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -654,7 +648,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			list<string> result = evaluator.evaluateQuery();
 			list<string> expected;
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q1;
@@ -690,7 +684,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -717,7 +711,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q2;
@@ -729,7 +723,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -796,7 +790,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -835,7 +829,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -850,7 +843,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			list<string> result = evaluator.evaluateQuery();
 			list<string> expected;
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q1;
@@ -901,7 +894,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q2;
@@ -913,7 +906,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -977,7 +970,6 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -1016,7 +1008,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -1058,7 +1050,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -1099,7 +1091,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -1167,7 +1159,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -1206,7 +1198,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -1248,7 +1240,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
 			Assert::AreEqual(true, (expected == result));
 		}
 
@@ -1296,7 +1288,164 @@ namespace PKBEvaluatorIntegrationTesting
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
-			expected.push_back("None");
+			
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorPatternAllVarName)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(ASSIGN, "a");
+			q.insertPattern(ASSIGN, "a", ALL, "_", VAR_NAME, "b");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("1");
+			expected.push_back("10");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(ASSIGN, "a");
+			q1.insertPattern(ASSIGN, "a", ALL, "_", VAR_NAME, "f");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorPatternAllConstant)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(ASSIGN, "a");
+			q.insertPattern(ASSIGN, "a", ALL, "_", CONSTANT, "1");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("8");
+			expected.push_back("9");
+			expected.push_back("13");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(ASSIGN, "a");
+			q1.insertPattern(ASSIGN, "a", ALL, "_", CONSTANT, "17");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorPatternIdentAll)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(ASSIGN, "a");
+			q.insertPattern(ASSIGN, "a", IDENT, "a", ALL, "_");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("1");
+			expected.push_back("10");
+			expected.push_back("13");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(ASSIGN, "a");
+			q1.insertPattern(ASSIGN, "a", IDENT, "f", ALL, "_");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorPatternIdentVarName)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(ASSIGN, "a");
+			q.insertPattern(ASSIGN, "a", IDENT, "a", VAR_NAME, "b");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("1");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(ASSIGN, "a");
+			q1.insertPattern(ASSIGN, "a", IDENT, "f", VAR_NAME, "b");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(ASSIGN, "a");
+			q2.insertPattern(ASSIGN, "a", IDENT, "a", VAR_NAME, "f");
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorPatternIdentConstant)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(ASSIGN, "a");
+			q.insertPattern(ASSIGN, "a", IDENT, "a", CONSTANT, "1");
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("13");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(ASSIGN, "a");
+			q1.insertPattern(ASSIGN, "a", IDENT, "f", CONSTANT, "1");
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(ASSIGN, "a");
+			q2.insertPattern(ASSIGN, "a", IDENT, "a", CONSTANT, "13");
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
 			Assert::AreEqual(true, (expected == result));
 		}
 
