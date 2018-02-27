@@ -46,11 +46,18 @@ void Evaluator::setInvalidQuery(string message) {
 list<string> Evaluator::evaluateQuery() {
 	if (isValidQuery()) {
 		Param selectParam = queryObject.getSelectStatement();
+		Clause clause; Pattern pattern;
 		ClauseResults cResults = ClauseResults();
 		ClauseResults pResults = ClauseResults();
 
-		if (queryHasClause(queryObject)) evaluateClause(queryObject.getClauses()[0], cResults);
-		if (queryHasPattern(queryObject)) evaluatePattern(queryObject.getPatterns()[0], pResults);
+		if (queryHasClause(queryObject)) {
+			clause = queryObject.getClauses()[0];
+			evaluateClause(clause, cResults);
+		}
+		if (queryHasPattern(queryObject)) {
+			pattern = queryObject.getPatterns()[0];
+			evaluatePattern(pattern, pResults);
+		}
 
 		/* Check if param in clause or pattern */
 		if (!selectParamInClauses(queryObject)) { // Param independent of clauses
@@ -64,27 +71,34 @@ list<string> Evaluator::evaluateQuery() {
 				return{};
 			}
 		}
-		else { // Param within clauses
-			if (queryHasClause(queryObject) &&
-				selectParamInClause(selectParam, queryObject.getClauses()[0])) { // Param in clause
-
+		else {
+			if (queryHasClause(queryObject) && queryHasPattern(queryObject)) { // Both Clause and Pattern exist
 				list<string> clauseResults = resultToStringList(cResults, selectParam);
+				list<string> patternResults = resultToStringList(pResults, selectParam);
 
-				if (queryHasPattern(queryObject) &&
-					selectParamInPattern(selectParam, queryObject.getPatterns()[0])) { // Param in both
-
-					list<string> patternResults = resultToStringList(pResults, selectParam);
+				if (selectParamInClause(selectParam, clause) && selectParamInPattern(selectParam, pattern)) { // Param exists in both
+					list<string> intersectedAns;
+					for (string clauseAns : clauseResults) {
+						for (string patternAns : patternResults) {
+							if (clauseAns == patternAns) intersectedAns.push_back(clauseAns);
+						}
+					}
+					return intersectedAns;
 				}
-				else if (queryHasPattern(queryObject)) { // Param present only in clause
-					if (hasClauseResults(pResults)) return clauseResults; // Check if pattern has results
-					else return {};
+				else if (selectParamInClause(selectParam, clause)) { // Param exists only in clause
+					if (hasClauseResults(pResults)) return clauseResults;
+					else return{};
 				}
-				else { // Param present only in clause and no pattern object;
-					return clauseResults;
+				else { // Param exists only in pattern
+					if (hasClauseResults(cResults)) return clauseResults;
+					else return{};
 				}
-			} 
-			else { // Param only in pattern
-				// To be implemented
+			}
+			else if (queryHasClause(queryObject)) { // Only Clause exists
+				return resultToStringList(cResults, selectParam);
+			}
+			else { // Only Pattern exists
+				return resultToStringList(pResults, selectParam);
 			}
 		}
 	}
