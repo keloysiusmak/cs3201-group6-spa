@@ -46,11 +46,18 @@ void Evaluator::setInvalidQuery(string message) {
 list<string> Evaluator::evaluateQuery() {
 	if (isValidQuery()) {
 		Param selectParam = queryObject.getSelectStatement();
+		Clause clause; Pattern pattern;
 		ClauseResults cResults = ClauseResults();
 		ClauseResults pResults = ClauseResults();
 
-		if (queryHasClause(queryObject)) evaluateClause(queryObject.getClauses()[0], cResults);
-		if (queryHasPattern(queryObject)) evaluatePattern(queryObject.getPatterns()[0], pResults);
+		if (queryHasClause(queryObject)) {
+			clause = queryObject.getClauses()[0];
+			evaluateClause(clause, cResults);
+		}
+		if (queryHasPattern(queryObject)) {
+			pattern = queryObject.getPatterns()[0];
+			evaluatePattern(pattern, pResults);
+		}
 
 		/* Check if param in clause or pattern */
 		if (!selectParamInClauses(queryObject)) { // Param independent of clauses
@@ -64,27 +71,34 @@ list<string> Evaluator::evaluateQuery() {
 				return{};
 			}
 		}
-		else { // Param within clauses
-			if (queryHasClause(queryObject) &&
-				selectParamInClause(selectParam, queryObject.getClauses()[0])) { // Param in clause
-
+		else {
+			if (queryHasClause(queryObject) && queryHasPattern(queryObject)) { // Both Clause and Pattern exist
 				list<string> clauseResults = resultToStringList(cResults, selectParam);
+				list<string> patternResults = resultToStringList(pResults, selectParam);
 
-				if (queryHasPattern(queryObject) &&
-					selectParamInPattern(selectParam, queryObject.getPatterns()[0])) { // Param in both
-
-					list<string> patternResults = resultToStringList(pResults, selectParam);
+				if (selectParamInClause(selectParam, clause) && selectParamInPattern(selectParam, pattern)) { // Param exists in both
+					list<string> intersectedAns;
+					for (string clauseAns : clauseResults) {
+						for (string patternAns : patternResults) {
+							if (clauseAns == patternAns) intersectedAns.push_back(clauseAns);
+						}
+					}
+					return intersectedAns;
 				}
-				else if (queryHasPattern(queryObject)) { // Param present only in clause
-					if (hasClauseResults(pResults)) return clauseResults; // Check if pattern has results
-					else return {};
+				else if (selectParamInClause(selectParam, clause)) { // Param exists only in clause
+					if (hasClauseResults(pResults)) return clauseResults;
+					else return{};
 				}
-				else { // Param present only in clause and no pattern object;
-					return clauseResults;
+				else { // Param exists only in pattern
+					if (hasClauseResults(cResults)) return clauseResults;
+					else return{};
 				}
-			} 
-			else { // Param only in pattern
-				// To be implemented
+			}
+			else if (queryHasClause(queryObject)) { // Only Clause exists
+				return resultToStringList(cResults, selectParam);
+			}
+			else { // Only Pattern exists
+				return resultToStringList(pResults, selectParam);
 			}
 		}
 	}
@@ -116,6 +130,7 @@ bool Evaluator::selectParamInClause(Param select, Clause &clause) {
 bool Evaluator::selectParamInPattern(Param select, Pattern &pattern) {
 	if (Utils::isSameParam(pattern.getLeftParam(), select)) return true;
 	if (Utils::isSameParam(pattern.getRightParam(), select)) return true;
+	if (Utils::isSameParam(pattern.getEntity(), select)) return true;
 	return false;
 }
 
@@ -186,7 +201,12 @@ list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &
 	Param rightParam = clauseResults.rhs;
 	set<int> answerSet;
 
-	if (clauseResults.values.size()) { // Get selected from values 
+	if (Utils::isSameParam(selected, clauseResults.entRef)) { // Get selected from pattern assignments
+		for (int value : clauseResults.assignmentsEnts) {
+			answerSet.insert(value);
+		}
+	}
+	else if (clauseResults.values.size()) { // Get selected from values 
 		if (clauseResults.values[0] == 0) return {};
 		for (int value : clauseResults.values) {
 			answerSet.insert(value);
@@ -458,9 +478,10 @@ void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
 
 /* Pattern cases: 
 LHS: _, VARIABLE, IDENT
-RHS: _, VARIABLE, CONSTANT
+RHS: _, VAR_NAME, CONSTANT
 */
 void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults) {
+	patternResults.instantiatePattern(pattern);
 
 	Param leftParam = pattern.getLeftParam();
 	Param rightParam = pattern.getRightParam();
@@ -469,6 +490,12 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 		if (Utils::isSynonym(rightParam.type)) { // (v/_, IDENT/CONSTANT)
 			unordered_map<int, vector<int>> statementsUsing = pkb.getAllStatementModifiesVariables();
 			patternResults.setkeyValues(statementsUsing);
+
+			vector<int> allStatements;
+			for (auto keyValuePair : statementsUsing) {
+				allStatements.push_back(keyValuePair.first);
+			}
+			patternResults.setAssignmentsEnts(removeWhileIfs(allStatements)); // Set assignment
 		}
 		else {
 			vector<int> statementsUsing;
@@ -479,7 +506,7 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 			else { // (v/_, constant)
 				statementsUsing = pkb.getStatementsWithConstant(stoi(rightParam.value));
 			}
-
+			/* Get variables */
 			vector<int> variables;
 			for (int stmt : statementsUsing) {
 				vector<int> variableIds = pkb.getModifiesVariablesFromStatement(stmt);
@@ -491,13 +518,19 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 				}
 			}
 			patternResults.setValues(variables);
+
+			/* Set assignment statements */
+			vector<int> assignments = pkb.getAllStatementsWithType(1);
+			vector<int> assignmentEnts = intersectVectors(assignments, statementsUsing);
+			patternResults.setAssignmentsEnts(assignmentEnts);
 		}
 	}
 	else {
 		if (Utils::isSynonym(rightParam.type)) { // (IDENT, var_name/constant) 
 			int lhsVarId = pkb.getVariableId(leftParam.value);
 			vector<int> statementModifies = pkb.getStatementsFromModifiesVariable(lhsVarId);
-			patternResults.setValues(statementModifies);
+			patternResults.setValid(statementModifies.size() > 0);
+			patternResults.setAssignmentsEnts(removeWhileIfs(statementModifies)); // Set assignment
 		}
 		else {
 			int lhsVarId = pkb.getVariableId(leftParam.value);
@@ -511,14 +544,62 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 				statementUses = pkb.getStatementsWithConstant(stoi(rightParam.value));
 			}
 
+			vector<int> assignmentEnts;
 			for (int modifiesStmt : statementModifies) { // Check intersection
 				for (int UsesStmt : statementUses) {
-					if (modifiesStmt == UsesStmt) patternResults.setValid(true);
+					if (modifiesStmt == UsesStmt) {
+						assignmentEnts.push_back(modifiesStmt);
+						patternResults.setValid(true);
+					}
 				}
 			}
+			patternResults.setAssignmentsEnts(removeWhileIfs(assignmentEnts));
 		}
 	}
 
+};
+
+/* Gets all values from left side of unordered map */
+vector<int> Evaluator::getAllValuesFromMap(unordered_map<int, vector<int>> map) {
+	vector<int> values;
+	for (auto keyValuePair : map) {
+		for (int value : keyValuePair.second) {
+			if (find(values.begin(), values.end(), value) == values.end()) { // If not in vector
+				values.push_back(value);
+			}
+		}
+	}
+	return values;
+}
+
+/* Removes elements in v2 from v1 */
+vector<int> Evaluator::removeElems(vector<int> v1, vector<int> v2) {
+	vector<int> filtered;
+	for (int value : v1) {
+		if (find(v2.begin(), v2.end(), value) == v2.end()) { // If not in vector
+			filtered.push_back(value);
+		}
+	}
+	return filtered;
+	
+};
+
+/* Removes all while and if statements from statement list */
+vector<int> Evaluator::removeWhileIfs(vector<int> stmts) {
+	vector<int> whileStatements = pkb.getAllStatementsWithType(2);
+	vector<int> ifStatements = pkb.getAllStatementsWithType(3);
+	return removeElems(removeElems(stmts, ifStatements), whileStatements);
+};
+
+/* Assumes no duplicates in vectors */
+vector<int> Evaluator::intersectVectors(vector<int> &v1, vector<int> &v2) {
+	vector<int> filtered;
+	for (int v1Value : v1) {
+		for (int v2Value : v2) {
+			if (v1Value == v2Value) filtered.push_back(v1Value);
+		}
+	}
+	return filtered;
 };
 
 void Evaluator::intersectSingle(ClauseResults &clauseResults) {

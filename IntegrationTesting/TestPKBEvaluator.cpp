@@ -1370,6 +1370,7 @@ namespace PKBEvaluatorIntegrationTesting
 			list<string> result = evaluator.evaluateQuery();
 			list<string> expected;
 			expected.push_back("1");
+			expected.push_back("10");
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q1;
