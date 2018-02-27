@@ -390,22 +390,21 @@ namespace UnitTesting {
 
 			}
 
-			TEST_METHOD(retrieveArgTypeTest) {
+			TEST_METHOD(isValidSuchThatKeywordTest) {
 
-				string refInteger = "5";
-				string refConstValue = "_\"2\"_";
-				string refVarName = "_\"x\"_";		
-				string refIdent = "\"y\"";
-				string refSynonym = "a";
-				string refAll = "_";
+				string query1 = "Select a such that Parent*(a, 5)";
+				string query2 = "Select a such that Parent*(a, _) pattern a(v, _\"y\"_) such that Modifies(a, \"x\")";
 
-				Assert::AreEqual(1, preprocessor.retrieveArgType(refInteger));
-				Assert::AreEqual(2, preprocessor.retrieveArgType(refConstValue));
-				Assert::AreEqual(3, preprocessor.retrieveArgType(refVarName));
-				Assert::AreEqual(4, preprocessor.retrieveArgType(refIdent));
-				Assert::AreEqual(5, preprocessor.retrieveArgType(refSynonym));
-				Assert::AreEqual(6, preprocessor.retrieveArgType(refAll));
+				string invalidQuery1 = "Select a such   that Parent*(a, 5)";
+				string invalidQuery2 = "Select a such that Parent*(a, _) pattern a(v, _\"y\"_) such   that Modifies(a, \"x\")";
 
+				//Valid
+				Assert::AreEqual(true, preprocessor.isValidSuchThatKeyword(query1));
+				Assert::AreEqual(true, preprocessor.isValidSuchThatKeyword(query2));
+
+				//Invalid
+				Assert::AreNotEqual(true, preprocessor.isValidSuchThatKeyword(invalidQuery1));
+				Assert::AreNotEqual(true, preprocessor.isValidSuchThatKeyword(invalidQuery2));
 			}
 
 	};
