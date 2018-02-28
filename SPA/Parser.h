@@ -46,12 +46,12 @@ public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stri
 		  string getWord();
 		  void expression();
 		  bool ifStatement();
-		  void whileStatement();
-		  void assignStatement();
-		  void statement();
-		  void statementList();
-		  void procedure();
-		  void program();
+		  bool whileStatement();
+		  bool assignStatement();
+		  bool statement();
+		  bool statementList();
+		  bool procedure();
+		  bool program();
 		  string test;
 		  struct MySyntaxException : public exception {
 			  const char * what() const throw () {

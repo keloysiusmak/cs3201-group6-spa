@@ -147,7 +147,8 @@ queue<string> Parser::getExpression()
 {
 	queue<string> originalExpression;
 	string word;
-	while ((word = getWord()) != ";") {
+	while ( nextToken != ";") {
+		word = getWord();
 		//cout << "---- CURRENT WORD: " << word << "-------\n";
 		if (Utils::isValidFactor(word) || Utils::isValidOperator(word) || word == "(" || word == ")") {
 			originalExpression.push(word);
@@ -156,8 +157,11 @@ queue<string> Parser::getExpression()
 			throw InvalidExpressionException("Invalid Expression!");
 		}
 	}
-
+	if (originalExpression.empty()) {
+		throw InvalidExpressionException("Invalid Expression!");
+	}
 	queue<string> rpn;
+
 	try {
 		rpn = getRPN(originalExpression);
 	}
@@ -245,7 +249,7 @@ bool Parser::ifStatement() {
 	return true;
 }
 
-void Parser::whileStatement() {
+bool Parser::whileStatement() {
 	int curStmListId = stmListIdStack.top();
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId, nextStmListId },{},{},{ ParserConstants::WHILE_TYPE } });
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentStmNum },{},{ ParserConstants::WHILE_TYPE } });
@@ -273,9 +277,10 @@ void Parser::whileStatement() {
 	match("{");
 	statementList();
 	match("}");
+	return true;
 }
 
-void Parser::assignStatement() {
+bool Parser::assignStatement() {
 	int curStmListId = stmListIdStack.top();
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::ASSIGNMENT_TYPE } });
 	// insert variable
@@ -301,10 +306,11 @@ void Parser::assignStatement() {
 	expression();
 	//cout << "\nEND OF EXPRESSION";
 	//match("", true);
-	//match(";");
+	match(";");
+	return true;
 }
 
-void Parser::statement() {
+bool Parser::statement() {
 	string var_name;
 	int var_id;
 	// increate Statement number
@@ -324,11 +330,11 @@ void Parser::statement() {
 	else {
 		assignStatement();
 	}
-
+	return true;
 }
 
 
-void Parser::statementList() {
+bool Parser::statementList() {
 	bool first = true;
 	if (first) {
 		//cout << "NEW List: " << nextStmListId << ". ";
@@ -343,9 +349,10 @@ void Parser::statementList() {
 		statement();
 	}
 	stmListIdStack.pop();
+	return true;
 }
 
-void Parser::procedure() {
+bool Parser::procedure() {
 	match("procedure");
 	string procName = nextToken;
 	if (Utils::isValidName(procName)) {
@@ -360,10 +367,11 @@ void Parser::procedure() {
 	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { { nextStmListId },{},{} });
 	statementList();
 	match("}");
+	return true;
 }
 
 
-void Parser::program() {
+bool Parser::program() {
 	procedure();
 	if (nextToken == "procedure") {
 		procedure();
@@ -376,6 +384,7 @@ void Parser::program() {
 		cout << "expect 'procedure'" << "but is: " << nextToken << endl;
 		throw InvalidSyntaxException;
 	}
+	return true;
 }
 
 
