@@ -76,7 +76,7 @@ namespace UnitTesting {
 			QueryObject queryObj;
 
 			/* variable v; pattern a("c", _) */
-			pattern = createPattern(ASSIGN, "a", VAR_NAME, "c", ALL, "_");
+			pattern = createPattern(ASSIGN, "a", VARIABLE, "v", ALL, "_");
 			select = createParam(VARIABLE, "v");
 			queryObj = createQueryObject(select, clause, pattern);
 			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
@@ -84,7 +84,7 @@ namespace UnitTesting {
 			/* variable v; Select v such that Parent(1, 2) pattern a("c", _) */
 			clause = createClause(Parent, INTEGER, "1", INTEGER, "2");
 			pattern = createPattern(ASSIGN, "a", VAR_NAME, "c", ALL, "_");
-			select = createParam(VARIABLE, "v");
+			select = createParam(ASSIGN, "a");
 			queryObj = createQueryObject(select, clause, pattern);
 			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 
@@ -154,6 +154,7 @@ namespace UnitTesting {
 			Assert::AreEqual(true, evaluator.hasClauseResults(clauseResult3));
 
 			ClauseResults invalidClauseResult;
+			invalidClauseResult.setValid(false);
 			Assert::AreEqual(false, evaluator.hasClauseResults(invalidClauseResult));
 		};
 
@@ -204,7 +205,7 @@ namespace UnitTesting {
 			clause = createClause(Follows, STMT, "1", WHILE, "w");
 			clauseResults.instantiateClause(clause);
 			values = { 1, 2 };
-			clauseResults.setkeyValues(keyValues);
+			clauseResults.setValues(values);
 			expected = { "1", "2" };
 			Assert::AreEqual(true, expected == evaluator.resultToStringList(clauseResults, select));
 
