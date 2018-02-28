@@ -240,6 +240,20 @@ namespace UnitTesting {
 			Assert::AreEqual(true, expected == evaluator.intersectVectors(v1, v2));
 		};
 
+		TEST_METHOD(intersectListsTest) {
+			list<string> strList1 = { "1", "2", "3", "4" };
+			list<string> strList2 = { "3", "5", "1", "6" };
+			list<string> expected = { "1", "3" };
+			Assert::AreEqual(true, expected == evaluator.intersectLists(strList1, strList2));
+		}
+
+		TEST_METHOD(consolidateKeyValuesTest) {
+			vector<vector<int>> keyValuePairs = { {1, 2}, {1, 3}, {1, 4}, {2, 5}, {2,7} };
+			unordered_map<int, vector<int>> consolidated = { {1, {2, 3, 4}}, {2, {5, 7}} };
+			Assert::AreEqual(true, consolidated == evaluator.consolidateKeyValues(keyValuePairs));
+
+		}
+
 		/* Object creation helpers*/
 		Param createParam(ParamType type, string value) {
 			Param param;
