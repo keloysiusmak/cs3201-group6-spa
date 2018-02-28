@@ -1,15 +1,12 @@
 #pragma once
-//#include "../SPA/Parser.h"
 #include "../SPA/InvalidExpressionException.h"
-//#include "../SPA/Utils.h"
-//#include "PKB.h"
 #include "../AutoTester/source/TestWrapper.h"
 
-
+// constructor
 Parser::Parser() {
-	//cout << "Object is being created" << endl;
 }
 
+// tokenize content
 void Parser::tokenize(string content)
 {
 	content = Utils::sanitise(content);
@@ -17,6 +14,7 @@ void Parser::tokenize(string content)
 	iter = tokens.begin();
 }
 
+// reads and returns next token
 string Parser::getToken() {
 	{
 		if (iter < tokens.end()) {
@@ -25,14 +23,20 @@ string Parser::getToken() {
 		else {
 			nextToken.clear();
 		}
-		//std::cout << "Token: " << nextToken;
 		return nextToken;
 	}
 }
 
+string Parser::getWord()
+{
+	string result = nextToken;
+	nextToken = getToken();
+	//cout << "RESULT: " << result;
+	return result;
+}
+
 queue<string> Parser::getRPN(queue<string> expr)
 {
-	//cout << "-------- BEGIN RPN -----------\n";
 	originalExpression = expr;
 	//using Shunting-yard algorithm
 	while (!originalExpression.empty()) {
@@ -40,7 +44,6 @@ queue<string> Parser::getRPN(queue<string> expr)
 		//parse word if it follows the mathematical rule
 		if (Utils::isValidFactor(word)) {
 			//factor either appears at the start of the expression, or it follows an open bracket or operator
-			//cout << "var: " << word;
 			if (Utils::isValidConstant(word)) {
 				cout << "word" << word;
 				int constant = stoi(word);
@@ -102,7 +105,6 @@ queue<string> Parser::getRPN(queue<string> expr)
 		expressionQueue.push(operationStack.top());
 		operationStack.pop();
 	}
-	//cout << "--------END RPN------\n";
 	return expressionQueue;
 }
 
@@ -149,7 +151,6 @@ queue<string> Parser::getExpression()
 	string word;
 	while ( nextToken != ";") {
 		word = getWord();
-		//cout << "---- CURRENT WORD: " << word << "-------\n";
 		if (Utils::isValidFactor(word) || Utils::isValidOperator(word) || word == "(" || word == ")") {
 			originalExpression.push(word);
 		}
@@ -172,34 +173,30 @@ queue<string> Parser::getExpression()
 	return rpn;
 }
 
+// check if token matches nextToken
 bool Parser::match(string token, bool isVar = false) {
-	cout << "[ " << token << " == " << nextToken << " ]" << endl;
 	if (isVar == false) {
-		// expected vs real
+		// expected vs real token
 		if (token == nextToken) {
 			nextToken = getToken();
 			return true;
 		}
 		else {
-			cout << "Diff: " << token << " != " << nextToken << "\n";
 			throw InvalidSyntaxException;
 			return false;
 		}
 	}
 	else {
+		// check if name of variable is valid
+		if (!Utils::isValidName(token)) {
+			throw InvalidNameException;
+		}
 		nextToken = getToken();
 		return true;
 	}
-
 }
 
-string Parser::getWord()
-{
-	string result = nextToken;
-	nextToken = getToken();
-	//cout << "RESULT: " << result;
-	return result;
-}
+
 
 
 void Parser::expression() {
@@ -215,11 +212,12 @@ bool Parser::ifStatement() {
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentStmNum },{},{ ParserConstants::IF_TYPE } });
 
 	match("if");
-	// insert variable to varTable
+
 	string var_name = nextToken;
-	if (!Utils::isValidName(var_name)) {
-		throw InvalidNameException;
-	}
+
+	match(var_name, true);
+
+	// insert variable to varTable
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
@@ -229,18 +227,18 @@ bool Parser::ifStatement() {
 		pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { parents[i] },{ } });
 	}
 
-	// insert uses to table 1,3,4
+	// insert uses to tables 1,3,4
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{ var_id },{},{} });
 	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{ var_id },{} });
 	pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { currentStmNum },{ currentProcId } });
-	match("", true);
 	match("then");
 	match("{");
 	statementList();
 	match("}");
 	// else
-	// insert StmtID to StmtListTable2 - new StmtList
+	// update ElseStatementListID for IfStatement
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentIfNum, { { nextStmListId },{},{},{} });
+	// insert StmtID to StmtListTable2 - new StmtList
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentIfNum },{},{ ParserConstants::IF_TYPE } });
 	match("else");
 	match("{");
@@ -251,15 +249,17 @@ bool Parser::ifStatement() {
 
 bool Parser::whileStatement() {
 	int curStmListId = stmListIdStack.top();
+	// insert StmtListID to StmtTable1 
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId, nextStmListId },{},{},{ ParserConstants::WHILE_TYPE } });
+	// insert StmtID to StmtListTable2
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { currentStmNum },{},{ ParserConstants::WHILE_TYPE } });
 
 	match("while");
-	// insert variable
 	string var_name = nextToken;
-	if (!Utils::isValidName(var_name)) {
-		throw InvalidNameException;
-	}
+
+	match(var_name, true);
+
+	// insert variable to var table
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
@@ -273,7 +273,6 @@ bool Parser::whileStatement() {
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{ var_id },{},{} });
 	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{ var_id },{} });
 	pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { currentStmNum },{ currentProcId } });
-	match("", true);
 	match("{");
 	statementList();
 	match("}");
@@ -282,12 +281,13 @@ bool Parser::whileStatement() {
 
 bool Parser::assignStatement() {
 	int curStmListId = stmListIdStack.top();
+	// insert StmtListID to StmtTable1 
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::ASSIGNMENT_TYPE } });
-	// insert variable
 	string var_name = nextToken;
-	if (!Utils::isValidName(var_name)) {
-		throw InvalidNameException;
-	}
+
+	match(var_name, true);
+
+	// insert variable
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
@@ -301,11 +301,9 @@ bool Parser::assignStatement() {
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { {},{},{ var_id },{} });
 	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { {},{},{ var_id } });
 	pkb.insertToTable(ParserConstants::MODIFIES_TABLE_5, var_id, { { currentStmNum },{ currentProcId } });
-	match("", true);
+	
 	match("=");
 	expression();
-	//cout << "\nEND OF EXPRESSION";
-	//match("", true);
 	match(";");
 	return true;
 }
@@ -315,10 +313,10 @@ bool Parser::statement() {
 	int var_id;
 	// increate Statement number
 	currentStmNum++;
-	// need to top
+	// need to top stmListIdStack to get curStmListId
 	int curStmListId = stmListIdStack.top();
 
-	// *** add cur stm to cur stm list ***
+	// add cur stm to cur stm list 
 	bool a = pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, curStmListId, { {},{ currentStmNum },{} });
 
 	if (nextToken == "if") {
@@ -336,8 +334,8 @@ bool Parser::statement() {
 
 bool Parser::statementList() {
 	bool first = true;
+	// only push to StatementListStack 1 time
 	if (first) {
-		//cout << "NEW List: " << nextStmListId << ". ";
 		stmListIdStack.push(nextStmListId);
 		nextStmListId++;
 		first = false;
@@ -348,22 +346,25 @@ bool Parser::statementList() {
 	while (nextToken != "}") {
 		statement();
 	}
+
 	stmListIdStack.pop();
+
 	return true;
 }
 
 bool Parser::procedure() {
 	match("procedure");
 	string procName = nextToken;
-	if (Utils::isValidName(procName)) {
-		currentProcId = pkb.insertToNameTable(ParserConstants::PROC_TABLE_8, procName);
-	}
-	else {
-		throw InvalidNameException;
-	}
-	match("", true);
+
+	match(procName, true);
+
+	// insert proc id to PROC_INFO_TABLE_3
+	currentProcId = pkb.insertToNameTable(ParserConstants::PROC_TABLE_8, procName);
+
 	match("{");
+	// insert proc id to STATEMENT_LIST_TABLE_2
 	pkb.insertToTable(ParserConstants::STATEMENT_LIST_TABLE_2, nextStmListId, { { ParserConstants::PROCEDURE_PARENT_ID },{},{ ParserConstants::PROCEDURE_PARENT_ID } });
+	// insert statement list id to PROC_INFO_TABLE_3
 	pkb.insertToTable(ParserConstants::PROC_INFO_TABLE_3, currentProcId, { { nextStmListId },{},{} });
 	statementList();
 	match("}");
@@ -377,29 +378,28 @@ bool Parser::program() {
 		procedure();
 	}
 	else if (nextToken == "") {
-		// done
+		// program is finished
 	}
 	else {
-		// wrong syntax
-		cout << "expect 'procedure'" << "but is: " << nextToken << endl;
+		// wrong syntax - expect "procedure" but token is some other word
 		throw InvalidSyntaxException;
 	}
 	return true;
 }
 
 
-PKB Parser::Parse(string fileName, PKB passedPKB, bool isString, string stringInput)
+PKB Parser::Parse(string fileName, PKB passedPKB, bool isStringInput, string stringInput)
 {
 	pkb = passedPKB;
-	if (isString == true) {
+	if (isStringInput == true) {
 		stringstream stringInputStream(stringInput);
 		simpleStringStream << stringInputStream.rdbuf();
 	}
 	else {
+		// input is a file
 		std::ifstream file(fileName);
 		if (file)
 		{
-			//cout << file.rdbuf();
 			simpleStringStream << file.rdbuf();
 			file.close();
 		}
@@ -427,77 +427,3 @@ PKB Parser::Parse(string fileName, PKB passedPKB, bool isString, string stringIn
 
 	return pkb;
 }
-
-void printTable(unordered_map<int, std::vector<std::vector<int>>> table) {
-	for (const auto& element : table) {
-		std::cout << "Key:[" << element.first;
-
-		// Iterate and print values of vector
-		cout << "], ";
-		std::vector<std::vector<int>> VinV = element.second;
-		for (int i = 0; i< VinV.size(); i++) {
-			for (int p = 0; p < VinV[i].size(); p++) {
-				cout << VinV[i][p] << " ";
-			}
-			cout << ";";
-		}
-		cout << "]\n";
-	}
-}
-
-void printNameTable(unordered_map<int, std::string> table) {
-	for (const auto& element : table) {
-		std::cout << "[ " << element.first << " , " << element.second << " ]\n";
-	}
-}
-
-/*
-int main() {
-
-Parser parser;
-
-PKB pkb;
-string testString = "procedure a { x = x + 1; if x then { if x then { x = x + 1; } else { x = x + 1; } while x { x = x + 1; } } else { x = x + 1; } while x { while x { x = x + 1; } if x then { x = x + 1; } else { x = x + 1;} x = x + 1; } }";
-testString = "procedure a {a = b; while c { b = a; d = 7; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { a = 1; }} }";
-pkb = parser.Parse("hell.txt", pkb, true, testString);
-
-std::vector<int> data = pkb.getAllStatementsWithType(2);
-for (int i = 0; i < data.size(); i++) {
-	cout << i << " " << data[i] << endl;
-}
-
-cout << "*** TABLE 1 - StmtTable ***\n";
-unordered_map<int, std::vector<std::vector<int>>> table1 = pkb.tables[0];
-printTable(table1);
-
-cout << "*** TABLE 2 - StmtListInfoTable ***\n";
-unordered_map<int, std::vector<std::vector<int>>> table2 = pkb.tables[1];
-printTable(table2);
-
-cout << "*** TABLE 3 - ProcInfoTable ***\n";
-unordered_map<int, std::vector<std::vector<int>>> table3 = pkb.tables[2];
-printTable(table3);
-
-cout << "*** TABLE 4 - Uses ***\n";
-unordered_map<int, std::vector<std::vector<int>>> table4 = pkb.tables[3];
-printTable(table4);
-
-cout << "*** TABLE 5 - Modifies ***\n";
-unordered_map<int, std::vector<std::vector<int>>> table5 = pkb.tables[4];
-printTable(table5);
-
-cout << "*** TABLE 7 - Constants ***\n";
-unordered_map<int, std::vector<std::vector<int>>> table7 = pkb.tables[6];
-printTable(table7);
-
-cout << "*** TABLE 8 - ProcTable ***\n";
-unordered_map<int, std::string> table8 = pkb.nameTables[0];
-printNameTable(table8);
-
-cout << "*** TABLE 9 - VarTable ***\n";
-unordered_map<int, std::string> table9 = pkb.nameTables[1];
-printNameTable(table9);
-
-return 0;
-}
-*/
