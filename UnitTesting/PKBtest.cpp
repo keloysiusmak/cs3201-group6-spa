@@ -12,7 +12,7 @@ namespace UnitTesting
 	{
 	public:
 
-		TEST_METHOD(PKBTableInsertTest)
+		TEST_METHOD(PKBInsertToTable)
 		{
 			PKB pkb;
 
@@ -58,7 +58,7 @@ namespace UnitTesting
 		}
 
 
-		TEST_METHOD(PKBInvalidTableInsertTest)
+		TEST_METHOD(PKBInsertToTableInvalid)
 		{
 			PKB pkb;
 
@@ -103,7 +103,7 @@ namespace UnitTesting
 			}
 		}
 
-		TEST_METHOD(PKBMultipleTableInsertTest)
+		TEST_METHOD(PKBInsertToTableMultiple)
 		{
 			PKB pkb;
 
@@ -122,7 +122,7 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getFromTable(1, 1) == dataFinal));
 		}
 
-		TEST_METHOD(PKBMultipleTableInsertTestSameValue)
+		TEST_METHOD(PKBInsertToTableInsertMultipleSameValue)
 		{
 			PKB pkb;
 
@@ -139,7 +139,7 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getFromTable(1, 1) == dataFinal));
 		}
 
-		TEST_METHOD(PKBInvalidMultipleTableInsertTest)
+		TEST_METHOD(PKBInsertToTableMultipleInvalid)
 		{
 			PKB pkb;
 
@@ -152,7 +152,7 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getFromTable(1, 1) == dataFinal));
 		}
 
-		TEST_METHOD(PKBNameTableInsertTest)
+		TEST_METHOD(PKBInsertToNameTable)
 		{
 			PKB pkb;
 
@@ -166,7 +166,7 @@ namespace UnitTesting
 			}
 		}
 
-		TEST_METHOD(PKBNameTableAlreadyInsertedTest)
+		TEST_METHOD(PKBInsertToNameTableInvalid)
 		{
 			PKB pkb;
 
@@ -176,15 +176,12 @@ namespace UnitTesting
 				/* Null Test */
 				Assert::AreEqual(string(""), pkb.getFromNameTable(i, 1));
 
-				Assert::AreEqual(0, static_cast<int>(pkb.nameTables[i - 8].size()));
 				Assert::AreEqual(1, pkb.insertToNameTable(i, data));
-				Assert::AreEqual(1, static_cast<int>(pkb.nameTables[i - 8].size()));
 				Assert::AreEqual(1, pkb.insertToNameTable(i, data));
-				Assert::AreEqual(1, static_cast<int>(pkb.nameTables[i - 8].size()));
 			}
 		}
 
-		TEST_METHOD(PKBProcedureMethods)
+		TEST_METHOD(PKBGetProcedureName)
 		{
 			PKB pkb;
 
@@ -199,7 +196,7 @@ namespace UnitTesting
 			Assert::AreEqual(string("proc_x"), pkb.getProcedureName(return_id));
 		}
 
-		TEST_METHOD(PKBVariableMethods)
+		TEST_METHOD(PKBGetVariableName)
 		{
 			PKB pkb;
 

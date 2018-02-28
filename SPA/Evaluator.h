@@ -16,10 +16,19 @@ struct ClauseResults {
 	vector<int> values;
 	/* Boolean for when both params are concrete */
 	bool valid;
+	/* Solely used for pattern */
+	Param entRef;
+	vector<int> assignmentsEnts;
 
 	void ClauseResults::instantiateClause(Clause clause) {
 		lhs = clause.getFirstParam();
 		rhs = clause.getSecondParam();
+	};
+
+	void ClauseResults::instantiatePattern(Pattern pattern) {
+		entRef = pattern.getEntity();
+		lhs = pattern.getLeftParam();
+		rhs = pattern.getRightParam();
 	};
 
 	void ClauseResults::setkeyValues(unordered_map<int, vector<int>> &results) {
@@ -41,6 +50,10 @@ struct ClauseResults {
 
 	void ClauseResults::setValid(bool validity) {
 		valid = validity;
+	}
+
+	void ClauseResults::setAssignmentsEnts(vector<int> &assigns) {
+		assignmentsEnts = assigns;
 	}
 };
 
@@ -71,6 +84,9 @@ public:
 	// Intersection Helpers
 	void intersectSingle(ClauseResults &clauseResults);
 	void intersectDouble(ClauseResults &clauseResults);
+	vector<int> intersectVectors(vector<int> &v1, vector<int> &v2);
+	list<string> intersectLists(list<string> &v1, list<string> &v2);
+	unordered_map<int, vector<int>> consolidateKeyValues(vector<vector<int>> keyValues);
 
 	// Helper Methods
 	bool selectParamInClauses(QueryObject &queryObj);
@@ -81,6 +97,10 @@ public:
 	bool hasClauseResults(ClauseResults &clauseResults);
 	list<string> getAllSelectedParam(Param p);
 	list<string> resultToStringList(ClauseResults &clauseResults, Param &selected);
+
+	vector<int> removeElems(vector<int> v1, vector<int> v2);
+	vector<int> removeWhileIfs(vector<int> stmts);
+	vector<int> getAllValuesFromMap(unordered_map<int, vector<int>> map);
 
 	int statementTypeToIntMap(ParamType t);
 

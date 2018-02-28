@@ -1,65 +1,980 @@
-1 - Select follows
-stmt s;
-Select s such that Follows(3, s)
-4
+1 - Follows(s1, s2)
+stmt s1, s2;
+Select s1 such that Follows(s1, s2)
+1,2,3,10,12
 5000
-2 - Select all ifs
-if ifs;
-Select ifs
-5
-5000
-3 - Select all assign
-assign a;
-Select a
-1,3,4,7,8,9,10,13
-5000
-4 - Select all variables
-variable v;
-Select v
-a,b,d,c,e
-5000
-5 - Select all procedures
-procedure p;
-Select p
-a,b
-5000
-6 - Select all statements
-stmt s;
-Select s
-1,2,3,4,5,6,7,8,9,10,11,12,13
-5000
-7 - Follows
-stmt s;
-Select s such that Follows(1, s)
-2
-5000
-8 - Follows*
-stmt s;
-Select s such that Follows*(1, s)
-2,5,9
-5000
-9 - Follows*
-stmt s;
-Select s such that Follows*(10, s)
-11
-5000
-10 - Follows*
-stmt s;
-Select s such that Follows*(11, s)
-
-5000
-11 - Parent
-stmt s;
-Select s such that Parent(10, s)
-
-5000
-12 - Parent
-stmt s;
-Select s such that Parent(11, s)
+2 - Follows(s1, a2)
+stmt s1; assign a2;
+Select s1 such that Follows(s1, a2)
 12
 5000
-13 - Parent*
+3 - Follows(s1, if2)
+stmt s1; if if2;
+Select s1 such that Follows(s1, if2)
+1,10
+5000
+4 - Follows(s1, w2)
+stmt s1; while w2;
+Select s1 such that Follows(s1, w2)
+2,3
+5000
+5 - Follows(s1, n2)
+stmt s1; prog_line n2;
+Select s1 such that Follows(s1, n2)
+1,2,3,10,12
+5000
+6 - Follows(s1, _)
+stmt s1;
+Select s1 such that Follows(s1, _)
+1,2,3,10,12
+5000
+7 - Follows(a1, s2)
+assign a1; stmt s2;
+Select a1 such that Follows(a1, s2)
+1
+5000
+8 - Follows(a1, a2)
+assign a1, a2;
+Select a1 such that Follows(a1, a2)
+
+5000
+9 - Follows(a1, if2)
+assign a1; if if2;
+Select a1 such that Follows(a1, if2)
+1
+5000
+10 - Follows(a1, w2)
+assign a1; while w2;
+Select a1 such that Follows(a1, w2)
+
+5000
+11 - Follows(a1, n2)
+assign a1; prog_line n2;
+Select a1 such that Follows(a1, n2)
+1
+5000
+12 - Follows(a1, _)
+assign a1;
+Select a1 such that Follows(a1, _)
+1
+5000
+13 - Follows(if1, s2)
+if if1; stmt s2;
+Select if1 such that Follows(if1, s2)
+2,3,12
+5000
+14 - Follows(if1, a2)
+if if1; assign a2;
+Select if1 such that Follows(if1, a2)
+12
+5000
+15 - Follows(if1, if2)
+if if1, if2;
+Select if1 such that Follows(if1, if2)
+
+5000
+16 - Follows(if1, w2)
+if if1; while w2;
+Select if1 such that Follows(if1, w2)
+2,3
+5000
+17 - Follows(if1, n2)
+if if1; prog_line n2;
+Select if1 such that Follows(if1, n2)
+2,3,12
+5000
+18 - Follows(if1, _)
+if if1;
+Select if1 such that Follows(if1, _)
+2,3,12
+5000
+19 - Follows(w1, s2)
+while w1; stmt s2;
+Select w1 such that Follows(w1, s2)
+10
+5000
+20 - Follows(w1, a2)
+while w1; assign a2;
+Select w1 such that Follows(w1, a2)
+
+5000
+21 - Follows(w1, if2)
+while w1; if if2;
+Select w1 such that Follows(w1, if2)
+10
+5000
+22 - Follows(w1, w2)
+while w1, w2;
+Select w1 such that Follows(w1, w2)
+
+5000
+23 - Follows(w1, n2)
+while w1; prog_line n2;
+Select w1 such that Follows(w1, n2)
+10
+5000
+24 - Follows(w1, _)
+while w1;
+Select w1 such that Follows(w1, _)
+10
+5000
+25 - Follows(n1, s2)
+prog_line n1; stmt s2;
+Select n1 such that Follows(n1, s2)
+1,2,3,10,12
+5000
+26 - Follows(n1, a2)
+prog_line n1; assign a2;
+Select n1 such that Follows(n1, a2)
+12
+5000
+27 - Follows(n1, if2)
+prog_line n1; if if2;
+Select n1 such that Follows(n1, if2)
+1,10
+5000
+28 - Follows(n1, w2)
+prog_line n1; while w2;
+Select n1 such that Follows(n1, w2)
+2,3
+5000
+29 - Follows(n1, n2)
+prog_line n1, n2;
+Select n1 such that Follows(n1, n2)
+1,2,3,10,12
+5000
+30 - Follows(n1, _)
+prog_line n1;
+Select n1 such that Follows(n1, _)
+1,2,3,10,12
+5000
+31 - Follows(_, s2)
+stmt s2;
+Select s2 such that Follows(_, s2)
+2,6,9,12,15
+5000
+32 - Follows(_, a2)
+assign a2;
+Select a2 such that Follows(_, a2)
+15
+5000
+33 - Follows(_, if2)
+if if2;
+Select if2 such that Follows(_, if2)
+2,12
+5000
+34 - Follows(_, w2)
+while w2;
+Select w2 such that Follows(_, w2)
+6,9
+5000
+35 - Follows(_, n2)
+prog_line n2;
+Select n2 such that Follows(_, n2)
+2,6,9,12,15
+5000
+36 - Follows*(s1, s2)
+stmt s1, s2;
+Select s1 such that Follows*(s1, s2)
+1,2,3,10,12
+5000
+37 - Follows*(s1, a2)
+stmt s1; assign a2;
+Select s1 such that Follows*(s1, a2)
+10,12
+5000
+38 - Follows*(s1, if2)
+stmt s1; if if2;
+Select s1 such that Follows*(s1, if2)
+1,10
+5000
+39 - Follows*(s1, w2)
+stmt s1; while w2;
+Select s1 such that Follows*(s1, w2)
+1,2,3
+5000
+40 - Follows*(s1, n2)
+stmt s1; prog_line n2;
+Select s1 such that Follows*(s1, n2)
+1,2,3,10,12
+5000
+41 - Follows*(s1, _)
+stmt s1;
+Select s1 such that Follows*(s1, _)
+1,2,3,10,12
+5000
+42 - Follows*(a1, s2)
+assign a1; stmt s2;
+Select a1 such that Follows*(a1, s2)
+1
+5000
+43 - Follows*(a1, a2)
+assign a1, a2;
+Select a1 such that Follows*(a1, a2)
+
+5000
+44 - Follows*(a1, if2)
+assign a1; if if2;
+Select a1 such that Follows*(a1, if2)
+1
+5000
+45 - Follows*(a1, w2)
+assign a1; while w2;
+Select a1 such that Follows*(a1, w2)
+1
+5000
+46 - Follows*(a1, n2)
+assign a1; prog_line n2;
+Select a1 such that Follows*(a1, n2)
+1
+5000
+47 - Follows*(a1, _)
+assign a1;
+Select a1 such that Follows*(a1, _)
+1
+5000
+48 - Follows*(if1, s2)
+if if1; stmt s2;
+Select if1 such that Follows*(if1, s2)
+2,3,12
+5000
+49 - Follows*(if1, a2)
+if if1; assign a2;
+Select if1 such that Follows*(if1, a2)
+12
+5000
+50 - Follows*(if1, if2)
+if if1, if2;
+Select if1 such that Follows*(if1, if2)
+
+5000
+51 - Follows*(if1, w2)
+if if1; while w2;
+Select if1 such that Follows*(if1, w2)
+2,3
+5000
+52 - Follows*(if1, n2)
+if if1; prog_line n2;
+Select if1 such that Follows*(if1, n2)
+2,3,12
+5000
+53 - Follows*(if1, _)
+if if1;
+Select if1 such that Follows*(if1, _)
+2,3,12
+5000
+54 - Follows*(w1, s2)
+while w1; stmt s2;
+Select w1 such that Follows*(w1, s2)
+10
+5000
+55 - Follows*(w1, a2)
+while w1; assign a2;
+Select w1 such that Follows*(w1, a2)
+10
+5000
+56 - Follows*(w1, if2)
+while w1; if if2;
+Select w1 such that Follows*(w1, if2)
+10
+5000
+57 - Follows*(w1, w2)
+while w1, w2;
+Select w1 such that Follows*(w1, w2)
+
+5000
+58 - Follows*(w1, n2)
+while w1; prog_line n2;
+Select w1 such that Follows*(w1, n2)
+10
+5000
+59 - Follows*(w1, _)
+while w1;
+Select w1 such that Follows*(w1, _)
+10
+5000
+60 - Follows*(n1, s2)
+prog_line n1; stmt s2;
+Select n1 such that Follows*(n1, s2)
+1,2,3,10,12
+5000
+61 - Follows*(n1, a2)
+prog_line n1; assign a2;
+Select n1 such that Follows*(n1, a2)
+10,12
+5000
+62 - Follows*(n1, if2)
+prog_line n1; if if2;
+Select n1 such that Follows*(n1, if2)
+1,10
+5000
+63 - Follows*(n1, w2)
+prog_line n1; while w2;
+Select n1 such that Follows*(n1, w2)
+1,2,3
+5000
+64 - Follows*(n1, n2)
+prog_line n1, n2;
+Select n1 such that Follows*(n1, n2)
+1,2,3,10,12
+5000
+65 - Follows*(n1, _)
+prog_line n1;
+Select n1 such that Follows*(n1, _)
+1,2,3,10,12
+5000
+66 - Follows*(_, s2)
+stmt s2;
+Select s2 such that Follows*(_, s2)
+2,6,9,12,15
+5000
+67 - Follows*(_, a2)
+assign a2;
+Select a2 such that Follows*(_, a2)
+15
+5000
+68 - Follows*(_, if2)
+if if2;
+Select if2 such that Follows*(_, if2)
+2,12
+5000
+69 - Follows*(_, w2)
+while w2;
+Select w2 such that Follows*(_, w2)
+6,9
+5000
+70 - Follows*(_, n2)
+prog_line n2;
+Select n2 such that Follows*(_, n2)
+2,6,9,12,15
+5000
+71 - Parent(s1, s2)
+stmt s1, s2;
+Select s1 such that Parent(s1, s2)
+2,3,6,9,10,12
+5000
+72 - Parent(s1, if2)
+stmt s1; if if2;
+Select s1 such that Parent(s1, if2)
+2,9
+5000
+73 - Parent(s1, w2)
+stmt s1; while w2;
+Select s1 such that Parent(s1, w2)
+2,9
+5000
+74 - Parent(s1, a2)
+stmt s1; assign a2;
+Select s1 such that Parent(s1, a2)
+2,3,6,9,10,12
+5000
+75 - Parent(s1, n2)
+stmt s1; prog_line n2;
+Select s1 such that Parent(s1, n2)
+2,3,6,9,10,12
+5000
+76 - Parent(s1, _)
+stmt s1;
+Select s1 such that Parent(s1, _)
+2,3,6,9,10,12
+5000
+77 - Parent(if1, s2)
+if if1; stmt s2;
+Select if1 such that Parent(if1, s2)
+2,3,12
+5000
+78 - Parent(if1, if2)
+if if1, if2;
+Select if1 such that Parent(if1, if2)
+2
+5000
+79 - Parent(if1, w2)
+if if1; while w2;
+Select if1 such that Parent(if1, w2)
+2
+5000
+80 - Parent(if1, a2)
+if if1; assign a2;
+Select if1 such that Parent(if1, a2)
+2,3,12
+5000
+81 - Parent(if1, n2)
+if if1; prog_line n2;
+Select if1 such that Parent(if1, n2)
+2,3,12
+5000
+82 - Parent(if1, _)
+if if1;
+Select if1 such that Parent(if1, _)
+2,3,12
+5000
+83 - Parent(w1, s2)
+while w1; stmt s2;
+Select w1 such that Parent(w1, s2)
+6,9,10
+5000
+84 - Parent(w1, if2)
+while w1; if if2;
+Select w1 such that Parent(w1, if2)
+9
+5000
+85 - Parent(w1, w2)
+while w1, w2;
+Select w1 such that Parent(w1, w2)
+9
+5000
+86 - Parent(w1, a2)
+while w1; assign a2;
+Select w1 such that Parent(w1, a2)
+6,9,10
+5000
+87 - Parent(w1, n2)
+while w1; prog_line n2;
+Select w1 such that Parent(w1, n2)
+6,9,10
+5000
+88 - Parent(w1, _)
+while w1;
+Select w1 such that Parent(w1, _)
+6,9,10
+5000
+89 - Parent(_, s2)
+stmt s2;
+Select s2 such that Parent(_, s2)
+3,4,5,6,7,8,10,11,12,13,14,15
+5000
+90 - Parent(_, if2)
+if if2;
+Select if2 such that Parent(_, if2)
+3,12
+5000
+91 - Parent(_, w2)
+while w2;
+Select w2 such that Parent(_, w2)
+6,10
+5000
+92 - Parent(_, a2)
+assign a2;
+Select a2 such that Parent(_, a2)
+4,5,7,8,11,13,14,15
+5000
+93 - Parent(_, n2)
+prog_line n2;
+Select n2 such that Parent(_, n2)
+3,4,5,6,7,8,10,11,12,13,14,15
+5000
+94 - Parent*(s1, s2)
+stmt s1, s2;
+Select s1 such that Parent*(s1, s2)
+2,3,6,9,10,12
+5000
+95 - Parent*(s1, if2)
+stmt s1; if if2;
+Select s1 such that Parent*(s1, if2)
+2,9
+5000
+96 - Parent*(s1, w2)
+stmt s1; while w2;
+Select s1 such that Parent*(s1, w2)
+2,9
+5000
+97 - Parent*(s1, a2)
+stmt s1; assign a2;
+Select s1 such that Parent*(s1, a2)
+2,3,6,9,10,12
+5000
+98 - Parent*(s1, n2)
+stmt s1; prog_line n2;
+Select s1 such that Parent*(s1, n2)
+2,3,6,9,10,12
+5000
+99 - Parent*(s1, _)
+stmt s1;
+Select s1 such that Parent*(s1, _)
+2,3,6,9,10,12
+5000
+100 - Parent*(if1, s2)
+if if1; stmt s2;
+Select if1 such that Parent*(if1, s2)
+2,3,12
+5000
+101 - Parent*(if1, if2)
+if if1, if2;
+Select if1 such that Parent*(if1, if2)
+2
+5000
+102 - Parent*(if1, w2)
+if if1; while w2;
+Select if1 such that Parent*(if1, w2)
+2
+5000
+103 - Parent*(if1, a2)
+if if1; assign a2;
+Select if1 such that Parent*(if1, a2)
+2,3,12
+5000
+104 - Parent*(if1, n2)
+if if1; prog_line n2;
+Select if1 such that Parent*(if1, n2)
+2,3,12
+5000
+105 - Parent*(if1, _)
+if if1;
+Select if1 such that Parent*(if1, _)
+2,3,12
+5000
+106 - Parent*(w1, s2)
+while w1; stmt s2;
+Select w1 such that Parent*(w1, s2)
+6,9,10
+5000
+107 - Parent*(w1, if2)
+while w1; if if2;
+Select w1 such that Parent*(w1, if2)
+9
+5000
+108 - Parent*(w1, w2)
+while w1, w2;
+Select w1 such that Parent*(w1, w2)
+9
+5000
+109 - Parent*(w1, a2)
+while w1; assign a2;
+Select w1 such that Parent*(w1, a2)
+6,9,10
+5000
+110 - Parent*(w1, n2)
+while w1; prog_line n2;
+Select w1 such that Parent*(w1, n2)
+6,9,10
+5000
+111 - Parent*(w1, _)
+while w1;
+Select w1 such that Parent*(w1, _)
+6,9,10
+5000
+112 - Parent*(_, s2)
+stmt s2;
+Select s2 such that Parent*(_, s2)
+3,4,5,6,7,8,10,11,12,13,14,15
+5000
+113 - Parent*(_, if2)
+if if2;
+Select if2 such that Parent*(_, if2)
+3,12
+5000
+114 - Parent*(_, w2)
+while w2;
+Select w2 such that Parent*(_, w2)
+6,10
+5000
+115 - Parent*(_, a2)
+assign a2;
+Select a2 such that Parent*(_, a2)
+4,5,7,8,11,13,14,15
+5000
+116 - Parent*(_, n2)
+prog_line n2;
+Select n2 such that Parent*(_, n2)
+3,4,5,6,7,8,10,11,12,13,14,15
+5000
+117 - Uses(s1, v)
+stmt s1; variable v;
+Select s1 such that Uses(s1, v)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+118 - Uses(s1, _)
+stmt s1;
+Select s1 such that Uses(s1, _)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+119 - Uses(a1, v)
+assign a1; variable v;
+Select a1 such that Uses(a1, v)
+1,4,5,7,8,11,13,14,15
+5000
+120 - Uses(a1, _)
+assign a1;
+Select a1 such that Uses(a1, _)
+1,4,5,7,8,11,13,14,15
+5000
+121 - Uses(if1, v)
+if if1; variable v;
+Select if1 such that Uses(if1, v)
+2,3,12
+5000
+122 - Uses(if1, _)
+if if1;
+Select if1 such that Uses(if1, _)
+2,3,12
+5000
+123 - Uses(w1, v)
+while w1; variable v;
+Select w1 such that Uses(w1, v)
+6,9,10
+5000
+124 - Uses(w1, _)
+while w1;
+Select w1 such that Uses(w1, _)
+6,9,10
+5000
+125 - Uses(n1, v)
+prog_line n1; variable v;
+Select n1 such that Uses(n1, v)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+126 - Uses(n1, _)
+prog_line n1;
+Select n1 such that Uses(n1, _)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+127 - Uses(p, v)
+proc p; variable v;
+Select p such that Uses(p, v)
+
+5000
+128 - Uses(p, _)
+proc p;
+Select p such that Uses(p, _)
+
+5000
+129 - Uses(_, v)
+variable v;
+Select v such that Uses(_, v)
+
+5000
+130 - Modifies(s1, v)
+stmt s1; variable v;
+Select s1 such that Modifies(s1, v)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+131 - Modifies(s1, _)
+stmt s1;
+Select s1 such that Modifies(s1, _)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+132 - Modifies(a1, v)
+assign a1; variable v;
+Select a1 such that Modifies(a1, v)
+1,4,5,7,8,11,13,14,15
+5000
+133 - Modifies(a1, _)
+assign a1;
+Select a1 such that Modifies(a1, _)
+1,4,5,7,8,11,13,14,15
+5000
+134 - Modifies(n1, v)
+prog_line n1; variable v;
+Select n1 such that Modifies(n1, v)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+135 - Modifies(n1, _)
+prog_line n1;
+Select n1 such that Modifies(n1, _)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+136 - Modifies(p, v)
+proc p; variable v;
+Select p such that Modifies(p, v)
+
+5000
+137 - Modifies(p, _)
+proc p;
+Select p such that Modifies(p, _)
+
+5000
+138 - Modifies(_, v)
+variable v;
+Select v such that Modifies(_, v)
+
+5000
+139 - pattern a(v, _v_)
+assign a; variable v;
+Select a pattern a(v, _v_)
+
+5000
+140 - pattern a(v, _'x'_)
+assign a; variable v;
+Select a pattern a(v, _"x"_)
+1,4,5,7,8,11,13,14,15
+5000
+141 - pattern a(v, _'1'_)
+assign a; variable v;
+Select a pattern a(v, _"1"_)
+1,4,5,7,8,11,13,14,15
+5000
+142 - pattern a(v, _)
+assign a; variable v;
+Select a pattern a(v, _)
+1,4,5,7,8,11,13,14,15
+5000
+143 - pattern a('x', _v_)
+assign a; variable v;
+Select a pattern a("x", _v_)
+
+5000
+144 - pattern a('x', _'x'_)
+assign a;
+Select a pattern a("x", _"x"_)
+1,4,5,7,8,11,13,14,15
+5000
+145 - pattern a('x', _'1'_)
+assign a;
+Select a pattern a("x", _"1"_)
+1,4,5,7,8,11,13,14,15
+5000
+146 - pattern a('x', _)
+assign a;
+Select a pattern a("x", _)
+1,4,5,7,8,11,13,14,15
+5000
+147 - pattern a(_, _v_)
+assign a; variable v;
+Select a pattern a(_, _v_)
+
+5000
+148 - pattern a(_, _'x'_)
+assign a;
+Select a pattern a(_, _"x"_)
+1,4,5,7,8,11,13,14,15
+5000
+149 - pattern a(_, _'1'_)
+assign a;
+Select a pattern a(_, _"1"_)
+1,4,5,7,8,11,13,14,15
+5000
+150 - variable v
+variable v; assign a;
+Select v such that Follows(1, 2) pattern a("x", _"x"_)
+x
+5000
+151 - assign a, a1
+assign a, a1;
+Select a1 such that Follows(1, 2) pattern a("x", _"x"_)
+1,4,5,7,8,11,13,14,15
+5000
+152 - stmt s
+stmt s; assign a;
+Select s such that Follows(1, 2) pattern a("x", _"x"_)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+153 - if ifs
+if ifs; assign a;
+Select ifs such that Follows(1, 2) pattern a("x", _"x"_)
+2,3,12
+5000
+154 - while w
+while w; assign a;
+Select w such that Follows(1, 2) pattern a("x", _"x"_)
+6,9,10
+5000
+155 - proc p
+proc p; assign a;
+Select p such that Follows(1, 2) pattern a("x", _"x"_)
+
+5000
+156 - prog_line n
+prog_line n; assign a;
+Select n such that Follows(1, 2) pattern a("x", _"x"_)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+157 - variable v
+variable v; assign a;
+Select v such that Parent(2, 3) pattern a("x", _"x"_)
+x
+5000
+158 - assign a, a1
+assign a, a1;
+Select a1 such that Parent(2, 3) pattern a("x", _"x"_)
+1,4,5,7,8,11,13,14,15
+5000
+159 - stmt s
+stmt s; assign a;
+Select s such that Parent(2, 3) pattern a("x", _"x"_)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+160 - if ifs
+if ifs; assign a;
+Select ifs such that Parent(2, 3) pattern a("x", _"x"_)
+2,3,12
+5000
+161 - while w
+while w; assign a;
+Select w such that Parent(2, 3) pattern a("x", _"x"_)
+6,9,10
+5000
+162 - proc p
+proc p; assign a;
+Select p such that Parent(2, 3) pattern a("x", _"x"_)
+
+5000
+163 - prog_line n
+prog_line n; assign a;
+Select n such that Parent(2, 3) pattern a("x", _"x"_)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+164 - variable v
+variable v; assign a;
+Select v such that Uses(1, "x") pattern a("x", _"x"_)
+x
+5000
+165 - assign a, a1
+assign a, a1;
+Select a1 such that Uses(1, "x") pattern a("x", _"x"_)
+1,4,5,7,8,11,13,14,15
+5000
+166 - stmt s
+stmt s; assign a;
+Select s such that Uses(1, "x") pattern a("x", _"x"_)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+167 - if ifs
+if ifs; assign a;
+Select ifs such that Uses(1, "x") pattern a("x", _"x"_)
+2,3,12
+5000
+168 - while w
+while w; assign a;
+Select w such that Uses(1, "x") pattern a("x", _"x"_)
+6,9,10
+5000
+169 - proc p
+proc p; assign a;
+Select p such that Uses(1, "x") pattern a("x", _"x"_)
+
+5000
+170 - prog_line n
+prog_line n; assign a;
+Select n such that Uses(1, "x") pattern a("x", _"x"_)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+171 - variable v
+variable v; assign a;
+Select v such that Modifies(1, "x") pattern a("x", _"x"_)
+x
+5000
+172 - assign a, a1
+assign a, a1;
+Select a1 such that Modifies(1, "x") pattern a("x", _"x"_)
+1,4,5,7,8,11,13,14,15
+5000
+173 - stmt s
+stmt s; assign a;
+Select s such that Modifies(1, "x") pattern a("x", _"x"_)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+174 - if ifs
+if ifs; assign a;
+Select ifs such that Modifies(1, "x") pattern a("x", _"x"_)
+2,3,12
+5000
+175 - while w
+while w; assign a;
+Select w such that Modifies(1, "x") pattern a("x", _"x"_)
+6,9,10
+5000
+176 - proc p
+proc p; assign a;
+Select p such that Modifies(1, "x") pattern a("x", _"x"_)
+
+5000
+177 - prog_line n
+prog_line n; assign a;
+Select n such that Modifies(1, "x") pattern a("x", _"x"_)
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+178 - no clause(1)
+variable v;
+Select v;
+x
+5000
+179 - no clause(2)
+assign a;
+Select a;
+1,4,5,7,8,11,13,14,15
+5000
+180 - no clause(3)
 stmt s;
-Select s such that Parent*(11, s)
-12,13
+Select s;
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+181 - no clause(4)
+if ifs;
+Select ifs;
+2,3,12
+5000
+182 - no clause(5)
+while w;
+Select w;
+6,9,10
+5000
+183 - no clause(6)
+proc p;
+Select p;
+
+5000
+184 - no clause(7)
+prog_line n;
+Select n;
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+185 - Uses(s, 'x')
+stmt s;
+Select s such that Uses(s, "x")
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+186 - Uses(a, 'x')
+assign a;
+Select a such that Uses(a, "x")
+1,4,5,7,8,11,13,14,15
+5000
+187 - Uses(p, 'x')
+proc p;
+Select p such that Uses(p, "x")
+
+5000
+188 - Uses(if, 'x')
+if ifs;
+Select ifs such that Uses(ifs, "x")
+2,3,12
+5000
+189 - Uses(w, 'x')
+while w;
+Select w such that Uses(w, "x")
+6,9,10
+5000
+190 - Uses(_, 'x')
+assign a;
+Select a such that Uses(_, "x")
+
+5000
+191 - Modifies(s, 'x')
+stmt s;
+Select s such that Modifies(s, "x")
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+5000
+192 - Modifies(a, 'x')
+assign a;
+Select a such that Modifies(a, "x")
+1,4,5,7,8,11,13,14,15
+5000
+193 - Modifies(p, 'x')
+proc p;
+Select p such that Modifies(p, "x")
+
+5000
+194 - Modifies(if, 'x')
+if ifs;
+Select ifs such that Modifies(ifs, "x")
+2,3,12
+5000
+195 - Modifies(w, 'x')
+while w;
+Select w such that Modifies(w, "x")
+6,9,10
+5000
+196 - Modifies(_, 'x')
+assign a;
+Select a such that Modifies(_, "x")
+
 5000

@@ -17,6 +17,9 @@ private:
 	unordered_map<string, string> declarationMap;
 	Evaluator * _evaluator;
 
+	int retrieveArgType(string arg);
+	string retrieveParamFromQuery(vector<string> queryArr, int &paramLength, int pos, string end);
+
 public:
 	Preprocessor();
 	Preprocessor(Evaluator &evaluator);
@@ -34,5 +37,5 @@ public:
 	bool parseClauseArg1(QueryObject &qo, string relType, string arg1, string arg2);
 	bool parseClauseArg2(QueryObject &qo, string relType, string arg1, string arg2);
 	bool parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2);
-	int retrieveArgType(string arg);
+	bool isValidSuchThatKeyword(string query);
 };

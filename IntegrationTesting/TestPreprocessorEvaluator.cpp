@@ -10,7 +10,7 @@ namespace PreprocessorEvaluatorIntegrationTesting
 	Evaluator evaluator;
 	Preprocessor preprocessor;
 
-	TEST_CLASS(PreprocessorEvaluatorTest) {
+	TEST_CLASS(PreprocessorEvaluatorIntegration) {
 		public:
 
 			TEST_CLASS_INITIALIZE(setup) {
@@ -73,10 +73,12 @@ namespace PreprocessorEvaluatorIntegrationTesting
 			//and return invalid message
 			TEST_METHOD(TestInvalidPreprocessQuery) {
 
-				string invalidQuery1 = "assign a; Select s";
-				string invalidQuery2 = "assign a; Select a pattern a(_, _)";
-				string invalidQuery3 = "assign a; stmt s; Select s such that Follows*(a, \"x\")";
-				string invalidQuery4 = "stmt s; variable v; Select s such that Modifies(v, v)";
+				string invalidQuery1 = "assign a; Select s"; //synonym not declared
+				string invalidQuery2 = "assign a; Select a pattern (_, _)"; //No pattern Type
+				string invalidQuery3 = "assign a; stmt s; Select s such that Follows*(a, \"x\")"; //Follows cannot have IDENT on the right param
+				string invalidQuery4 = "stmt s; variable v; Select s such that Modifies(v, v)"; //Modifies cannot have variable synonym on the left param
+				string invalidQuery5 = "stmt s; variable v; Select s such that Uses(_, v)"; //Uses cannot have _ on the left param
+				string invalidQuery6 = "stmt s; variable v; Select s such  that Uses(_, v)"; //Such That can only have single space in between
 
 				preprocessor.preprocessQuery(invalidQuery1);
 				Assert::AreNotEqual(true, evaluator.isValidQuery());
@@ -88,6 +90,12 @@ namespace PreprocessorEvaluatorIntegrationTesting
 				Assert::AreNotEqual(true, evaluator.isValidQuery());
 
 				preprocessor.preprocessQuery(invalidQuery4);
+				Assert::AreNotEqual(true, evaluator.isValidQuery());
+
+				preprocessor.preprocessQuery(invalidQuery5);
+				Assert::AreNotEqual(true, evaluator.isValidQuery());
+
+				preprocessor.preprocessQuery(invalidQuery6);
 				Assert::AreNotEqual(true, evaluator.isValidQuery());
 			}
 
