@@ -48,18 +48,6 @@ namespace UnitTesting
 			parser.stmListIdStack.push(1);
 			Assert::IsTrue(parser.whileStatement());
 		}
-	
-/*		TEST_METHOD(ParserStatementListTest)
-		{
-			Parser parser;
-			PKB pkb;
-			parser.pkb = pkb;
-			parser.tokenize("{ a = 1 + c * 2; b = 2; }");
-			string nextToken = parser.getToken();
-			parser.stmListIdStack.push(1);
-			Assert::IsTrue(parser.statementList());
-		}
-	*/	
 
 
 

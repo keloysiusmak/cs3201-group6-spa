@@ -2,12 +2,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "PKB.h"
 #include <fstream>
 #include <sstream>
 #include <stack>
 #include <deque>
 #include <unordered_map>
+#include "PKB.h"
 #include "../SPA/Utils.h"
 using namespace std;
 
@@ -15,11 +15,7 @@ using namespace std;
 class Parser {
 public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stringInput = "");
 		  Parser();
-		  friend class ParserTest;
-
 		  void tokenize(string content);
-
-
 		  PKB pkb;
 		  string nextToken;
 		  stringstream simpleStringStream;
@@ -37,6 +33,7 @@ public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stri
 		  queue<string> expressionQueue;
 		  vector<string> tokens;
 		  vector<string>::iterator iter;
+
 		  int currentStmNum = 0;
 		  stack<int> stmListIdStack;
 		  int nextStmListId = 1;
@@ -55,7 +52,7 @@ public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stri
 		  string test;
 		  struct MySyntaxException : public exception {
 			  const char * what() const throw () {
-				  return "Syntax is wrong!";
+				  return "Syntax is invalid!";
 			  }
 		  } InvalidSyntaxException;
 		  struct MyNameException : public exception {
