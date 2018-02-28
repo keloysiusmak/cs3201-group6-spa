@@ -105,6 +105,8 @@ namespace UnitTesting {
 				string invalidQuery9 = "Select a such  that Parent*(a, 5)"; //such that keyword can only have one white space in between
 				string invalidQuery10 = "Select a such that Parent*(a, _) pattern a(v, _\"y\"_) such   that Modifies(a, \"x\")";
 				//the 2nd such that keyword can only have one white space in between
+				string invalidQuery11 = "Select a such that Uses()";
+				string invalidQuery12 = "Select a such that Uses(a,a,a)";
 
 				//Valid
 				Assert::AreEqual(true, preprocessor.isValidQuery(query1));
@@ -149,6 +151,8 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery8));
 				Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery9));
 				Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery10));
+				Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery11));
+				Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery12));
 			}
 
 			TEST_METHOD(isValidSynonymTest) {
