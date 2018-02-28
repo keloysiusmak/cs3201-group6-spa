@@ -14,17 +14,17 @@ namespace UnitTesting {
 
 	TEST_CLASS(EvaluatorTest) {
 
-		TEST_METHOD(ValidQueryObjectSetterTest) {
+		TEST_METHOD(EvaluatorValidQueryObjectSetter) {
 			evaluator.setQueryObject(queryObjectStub);
 			Assert::AreEqual(true, evaluator.isValidQuery());
 		};
 
-		TEST_METHOD(InvalidQueryObjectSetterTest) {
+		TEST_METHOD(EvaluatorInvalidQueryObjectSetter) {
 			evaluator.setInvalidQuery("Invalid Query");
 			Assert::AreEqual(false, evaluator.isValidQuery());
 		};
 
-		TEST_METHOD(SelectParamInClauseTest) {
+		TEST_METHOD(EvaluatorSelectParamInClause) {
 			Param select;
 			Clause clause;
 			Pattern pattern;
@@ -69,7 +69,7 @@ namespace UnitTesting {
 			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 		};
 
-		TEST_METHOD(SelectParamInPatternTest) {
+		TEST_METHOD(EvaluatorSelectParamInPattern) {
 			Param select, clauseLHS, clauseRHS, patternEnt, patternLHS, patternRHS;
 			Clause clause;
 			Pattern pattern;
@@ -96,7 +96,7 @@ namespace UnitTesting {
 			Assert::AreEqual(true, evaluator.selectParamInClauses(queryObj));
 		};
 
-		TEST_METHOD(SelectParamNotInClauseTest) {
+		TEST_METHOD(EvaluatorSelectParamNotInClause) {
 			Param select, lhs, rhs;
 			Clause clause;
 			Pattern pattern;
@@ -111,7 +111,7 @@ namespace UnitTesting {
 			Assert::AreEqual(false, evaluator.selectParamInClauses(queryObj));
 		};
 
-		TEST_METHOD(QueryHasClauseTest) {
+		TEST_METHOD(EvaluatorQueryHasClause) {
 			Param select = createParam(ASSIGN, "a");
 			QueryObject queryObject = createQueryObject(select);
 
@@ -123,7 +123,7 @@ namespace UnitTesting {
 			Assert::AreEqual(true, evaluator.queryHasClause(queryObject));
 		};
 
-		TEST_METHOD(QueryHasPatternTest) {
+		TEST_METHOD(EvaluatorQueryHasPattern) {
 			Param select = createParam(STMT, "s");
 			QueryObject queryObject = createQueryObject(select);
 
@@ -135,7 +135,7 @@ namespace UnitTesting {
 			Assert::AreEqual(true, evaluator.queryHasPattern(queryObject));
 		};
 
-		TEST_METHOD(HasClauseResultsTest) {
+		TEST_METHOD(EvaluatorHasClauseResults) {
 			// Validity check
 			ClauseResults clauseResult1;
 			clauseResult1.setValid(true);
@@ -158,7 +158,7 @@ namespace UnitTesting {
 			Assert::AreEqual(false, evaluator.hasClauseResults(invalidClauseResult));
 		};
 
-		TEST_METHOD(StatementTypeToIntMapTest) {
+		TEST_METHOD(EvaluatorStatementTypeToIntMap) {
 			// Assigned Types
 			Assert::AreEqual(1, evaluator.statementTypeToIntMap(ASSIGN));
 			Assert::AreEqual(2, evaluator.statementTypeToIntMap(WHILE));
@@ -174,7 +174,7 @@ namespace UnitTesting {
 			Assert::AreEqual(0, evaluator.statementTypeToIntMap(IDENT));
 		};
 
-		TEST_METHOD(resultToStringListTest) {
+		TEST_METHOD(EvaluatorResultToStringList) {
 			Param select;
 			Clause clause; Pattern pattern;
 			ClauseResults clauseResults;
@@ -219,35 +219,35 @@ namespace UnitTesting {
 			Assert::AreEqual(true, expected == evaluator.resultToStringList(clauseResults, select));
 		};
 
-		TEST_METHOD(getAllValuesFromMapTest) {
+		TEST_METHOD(EvaluatorGetAllValuesFromMap) {
 			unordered_map<int, vector<int>> map = { {1, {2, 3}}, {2, {3, 5}} };
 			vector<int> values = evaluator.getAllValuesFromMap(map);
 			vector<int> expected = { 2, 3, 5 };
 			Assert::AreEqual(true, expected == values);
 		};
 
-		TEST_METHOD(removeElemsTest) {
+		TEST_METHOD(EvaluatorRemoveElems) {
 			vector<int> v1 = { 1, 2, 3, 4, 5 };
 			vector<int> v2 = { 4, 5 };
 			vector<int> expected = { 1, 2, 3 };
 			Assert::AreEqual(true, expected == evaluator.removeElems(v1, v2));
 		};
 
-		TEST_METHOD(intersectVectorsTest) {
+		TEST_METHOD(EvaluatorIntersectVectors) {
 			vector<int> v1 = { 1, 2, 3, 4, 5 };
 			vector<int> v2 = { 4, 5, 6 };
 			vector<int> expected = { 4, 5 };
 			Assert::AreEqual(true, expected == evaluator.intersectVectors(v1, v2));
 		};
 
-		TEST_METHOD(intersectListsTest) {
+		TEST_METHOD(EvaluatorIntersectLists) {
 			list<string> strList1 = { "1", "2", "3", "4" };
 			list<string> strList2 = { "3", "5", "1", "6" };
 			list<string> expected = { "1", "3" };
 			Assert::AreEqual(true, expected == evaluator.intersectLists(strList1, strList2));
 		}
 
-		TEST_METHOD(consolidateKeyValuesTest) {
+		TEST_METHOD(EvaluatorConsolidateKeyValues) {
 			vector<vector<int>> keyValuePairs = { {1, 2}, {1, 3}, {1, 4}, {2, 5}, {2,7} };
 			unordered_map<int, vector<int>> consolidated = { {1, {2, 3, 4}}, {2, {5, 7}} };
 			Assert::AreEqual(true, consolidated == evaluator.consolidateKeyValues(keyValuePairs));

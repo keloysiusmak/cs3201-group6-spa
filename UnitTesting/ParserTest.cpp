@@ -13,7 +13,7 @@ namespace UnitTesting
 	{
 	public:
 
-		TEST_METHOD(ParserGetTokenTest) {
+		TEST_METHOD(ParserGetToken) {
 			Parser parser;
 			parser.tokenize("a b c");
 			string a = "a";
@@ -21,7 +21,7 @@ namespace UnitTesting
 		}
 
 
-		TEST_METHOD(ParserMatchTest)
+		TEST_METHOD(ParserMatch)
 		{
 			Parser parser;
 			parser.tokenize("a b c");
@@ -30,7 +30,7 @@ namespace UnitTesting
 			Assert::IsTrue(parser.match("abc", true));
 		};
 	
-		TEST_METHOD(ParserIfStatementTest)
+		TEST_METHOD(ParserIfStatement)
 		{
 			Parser parser;
 			parser.tokenize("if x then { x = x + 1; } else { x = x + 1; }");
@@ -40,7 +40,7 @@ namespace UnitTesting
 
 		}
 
-		TEST_METHOD(ParserWhileStatementTest)
+		TEST_METHOD(ParserWhileStatement)
 		{
 			Parser parser;
 			parser.tokenize("while y { x = x + 1; b = a;} ");

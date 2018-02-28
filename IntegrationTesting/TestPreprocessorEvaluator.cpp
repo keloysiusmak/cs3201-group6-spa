@@ -20,7 +20,7 @@ namespace PreprocessorEvaluatorIntegrationTesting
 			//This test method will take in an actual test query
 			//and validate & deconstruct the query into a QueryObject.
 			//Once the QueryObject is ready, it will be passed to Evaluator
-			TEST_METHOD(TestValidPreprocessQuery) {		
+			TEST_METHOD(PreprocessorEvaluatorValidPreprocessQuery) {		
 
 				string query1 = "assign a; Select a";
 				string query2 = "assign a; Select a pattern a(\"x\", _\"y\"_)";
@@ -71,7 +71,7 @@ namespace PreprocessorEvaluatorIntegrationTesting
 
 			//This test method will take in an invalid test query
 			//and return invalid message
-			TEST_METHOD(TestInvalidPreprocessQuery) {
+			TEST_METHOD(PreprocessorEvaluatorInvalidPreprocessQuery) {
 
 				string invalidQuery1 = "assign a; Select s"; //synonym not declared
 				string invalidQuery2 = "assign a; Select a pattern (_, _)"; //No pattern Type
