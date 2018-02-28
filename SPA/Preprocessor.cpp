@@ -11,6 +11,7 @@ const char SYMBOL_EQUALS = '=';
 const char SYMBOL_FULL_STOP = '.';
 const char SYMBOL_UNDERSCORE = '_';
 
+const string EMPTY_STRING = "";
 const string DELIM_STRING = " ,()";
 const vector<char> DELIMITERS_DECLARATION { };
 const vector<char> DELIMITERS_QUERY { SYMBOL_COMMA, SYMBOL_CLOSE_BRACKET };
@@ -550,7 +551,7 @@ string Preprocessor::retrieveParamFromQuery(vector<string> queryArr, int &paramL
 	while (true) {
 		//if counter exceeded array size
 		if ((pos + paramLength) >= queryArr.size()) {
-			return false;
+			return EMPTY_STRING;
 		}
 
 		if (queryArr.at(pos + paramLength).compare(end) == 0) {
