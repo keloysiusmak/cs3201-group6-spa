@@ -78,7 +78,6 @@ assign a; variable v;
 Select a such that Uses()
 
 5000
-
 16 - Missing Left Arguments
 assign a; variable v;
 Select a such that Parent(a,)
@@ -157,7 +156,7 @@ Select a such that (a,6) pattern a ( _ ,_"7"_)
 28 - Combination of Parent and pattern
 assign a;
 Select a such that Parent*(6,8) pattern a ( _ ,_"f"_) 
-5
+5,7
 5000
 29 - Combination of Uses and pattern
 assign a;
@@ -171,8 +170,8 @@ Select a such that Modifies(a,"f") pattern a ( _ ,_"f"_)
 5000
 31 - Combination of Follows* and pattern
 assign a; prog_line n;
-Select n such that Follows*(3,n) pattern a ( _ ,_”f”_) 
-1,2
+Select n such that Follows*(3,n) pattern a ( _ ,_"f"_) 
+6
 5000
 32 - Combination of Parent* and pattern
 assign a; prog_line n;
