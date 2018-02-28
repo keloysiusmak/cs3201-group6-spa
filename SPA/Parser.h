@@ -44,7 +44,7 @@ public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stri
 		  void expression();
 		  bool ifStatement();
 		  bool whileStatement();
-		  bool assignStatement();
+		  bool assignmentStatement();
 		  bool statement();
 		  bool statementList();
 		  bool procedure();

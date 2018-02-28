@@ -278,7 +278,7 @@ bool Parser::whileStatement() {
 	return true;
 }
 
-bool Parser::assignStatement() {
+bool Parser::assignmentStatement() {
 	int curStmListId = stmListIdStack.top();
 	// insert StmtListID to StmtTable1 
 	pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, currentStmNum, { { curStmListId },{},{},{ ParserConstants::ASSIGNMENT_TYPE } });
@@ -325,7 +325,7 @@ bool Parser::statement() {
 		whileStatement();
 	}
 	else {
-		assignStatement();
+		assignmentStatement();
 	}
 	return true;
 }
