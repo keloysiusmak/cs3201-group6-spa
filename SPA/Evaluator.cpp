@@ -77,12 +77,7 @@ list<string> Evaluator::evaluateQuery() {
 				list<string> patternResults = resultToStringList(pResults, selectParam);
 
 				if (selectParamInClause(selectParam, clause) && selectParamInPattern(selectParam, pattern)) { // Param exists in both
-					list<string> intersectedAns;
-					for (string clauseAns : clauseResults) {
-						for (string patternAns : patternResults) {
-							if (clauseAns == patternAns) intersectedAns.push_back(clauseAns);
-						}
-					}
+					list<string> intersectedAns = intersectLists(clauseResults, patternResults);
 					return intersectedAns;
 				}
 				else if (selectParamInClause(selectParam, clause)) { // Param exists only in clause
@@ -213,7 +208,7 @@ list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &
 			answerSet.insert(value);
 		}
 	}
-	else if (clauseResults.keyValues.size()) { // Get selected from hashtable
+	else if (clauseResults.keyValues.size()) { // Get selected from keyValues
 		for (auto pair : clauseResults.keyValues) {
 			if (Utils::isSameParam(selected, leftParam)) {
 				answerSet.insert(pair.first);
@@ -232,7 +227,8 @@ list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &
 	// Store set of answers into list of strings
 	list<string> stringAns;
 	for (auto key : answerSet) {
-		(selected.type != VARIABLE) ? stringAns.push_back(to_string(key)):
+		(selected.type != VARIABLE) ?
+			stringAns.push_back(to_string(key)):
 			stringAns.push_back(pkb.getVariableName(key));
 	}
 	return stringAns;
@@ -318,21 +314,7 @@ void Evaluator::evaluateParent(Clause &clause, ClauseResults &clauseResults) {
 	if (Utils::isSynonym(leftParam.type)) { // (syn, syn)
 		if (Utils::isSynonym(rightParam.type)) {
 			vector<vector<int>> results = pkb.getAllParent();
-
-			/* Consolidate key parent and value vector of children */
-			unordered_map<int, vector<int>> parentResults;
-			for (auto pair : results) {
-				auto it = parentResults.find(pair[0]);
-				if (it != parentResults.end()) {
-					vector<int> *currentChildren = &(it->second);
-					currentChildren->push_back(pair[1]);
-				}
-				else {
-					vector<int> children = { pair[1] };
-					parentResults.insert({ pair[0], children });
-				}
-			}
-
+			unordered_map<int, vector<int>> parentResults = consolidateKeyValues(results);
 			clauseResults.setkeyValues(parentResults);
 			intersectDouble(clauseResults);
 		}
@@ -602,6 +584,32 @@ vector<int> Evaluator::intersectVectors(vector<int> &v1, vector<int> &v2) {
 	}
 	return filtered;
 };
+list<string> Evaluator::intersectLists(list<string> &v1, list<string> &v2) {
+	list<string> filtered;
+	for (string v1Value : v1) {
+		for (string v2Value : v2) {
+			if (v1Value == v2Value) filtered.push_back(v1Value);
+		}
+	}
+	return filtered;
+};
+
+unordered_map<int, vector<int>> Evaluator::consolidateKeyValues(vector<vector<int>> keyValues) {
+	/* Consolidate key parent and value vector of children */
+	unordered_map<int, vector<int>> consolidated;
+	for (auto pair : keyValues) {
+		auto it = consolidated.find(pair[0]);
+		if (it != consolidated.end()) {
+			vector<int> *currentChildren = &(it->second);
+			currentChildren->push_back(pair[1]);
+		}
+		else {
+			vector<int> children = { pair[1] };
+			consolidated.insert({ pair[0], children });
+		}
+	}
+	return consolidated;
+}
 
 void Evaluator::intersectSingle(ClauseResults &clauseResults) {
 
