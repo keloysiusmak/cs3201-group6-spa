@@ -19,6 +19,11 @@ namespace UnitTesting {
 
 			TEST_METHOD(PreprocessorIsValidDeclaration) {
 
+				Evaluator evaluatorStub;
+				Preprocessor preprocessor;
+
+				preprocessor.setEvaluator(evaluatorStub);
+
 				string declaration1 = "assign a";
 				string declaration2 = "variable v1";
 				string declaration3 = "assign a1, a2";
