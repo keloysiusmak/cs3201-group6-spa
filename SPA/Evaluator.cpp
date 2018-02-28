@@ -198,7 +198,7 @@ list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &
 	set<int> answerSet;
 
 	if (Utils::isSameParam(selected, clauseResults.entRef)) { // Get selected from pattern assignments
-		for (int value : clauseResults.assignmentsEnts) {
+		for (int value : clauseResults.patternEnt) {
 			answerSet.insert(value);
 		}
 	}
@@ -583,11 +583,11 @@ vector<int> Evaluator::intersectVectors(vector<int> &v1, vector<int> &v2) {
 	return filtered;
 };
 
-list<string> Evaluator::intersectLists(list<string> &v1, list<string> &v2) {
+list<string> Evaluator::intersectLists(list<string> &l1, list<string> &l2) {
 	list<string> filtered;
-	for (string v1Value : v1) {
-		for (string v2Value : v2) {
-			if (v1Value == v2Value) filtered.push_back(v1Value);
+	for (string l1Value : l1) {
+		for (string l2Value : l2) {
+			if (l1Value == l2Value) filtered.push_back(l1Value);
 		}
 	}
 	return filtered;

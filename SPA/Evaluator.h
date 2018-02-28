@@ -36,7 +36,7 @@ public:
 	void intersectSingle(ClauseResults &clauseResults);
 	void intersectDouble(ClauseResults &clauseResults);
 	vector<int> intersectVectors(vector<int> &v1, vector<int> &v2);
-	list<string> intersectLists(list<string> &v1, list<string> &v2);
+	list<string> intersectLists(list<string> &l1, list<string> &l2);
 	unordered_map<int, vector<int>> consolidateKeyValues(vector<vector<int>> keyValues);
 
 	// Helper Methods
