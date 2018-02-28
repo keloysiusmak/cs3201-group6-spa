@@ -539,7 +539,6 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 			patternResults.setAssignmentsEnts(removeWhileIfs(assignmentEnts));
 		}
 	}
-
 };
 
 /* Gets all values from left side of unordered map */
@@ -564,7 +563,6 @@ vector<int> Evaluator::removeElems(vector<int> v1, vector<int> v2) {
 		}
 	}
 	return filtered;
-	
 };
 
 /* Removes all while and if statements from statement list */
@@ -584,6 +582,7 @@ vector<int> Evaluator::intersectVectors(vector<int> &v1, vector<int> &v2) {
 	}
 	return filtered;
 };
+
 list<string> Evaluator::intersectLists(list<string> &v1, list<string> &v2) {
 	list<string> filtered;
 	for (string v1Value : v1) {
@@ -626,16 +625,7 @@ void Evaluator::intersectSingle(ClauseResults &clauseResults) {
 
 	pkb.getAllStatementsWithType(typeInt);
 	vector<int> validTypeStmts = pkb.getAllStatementsWithType(typeInt);
-	vector<int> filtered;
-
-	/* Intersect vectors */
-	for (int stmt1 : clauseResults.values) {
-		for (int stmt2 : validTypeStmts) {
-			if (stmt1 == stmt2) {
-				filtered.push_back(stmt1);
-			}
-		}
-	}
+	vector<int> filtered = intersectVectors(clauseResults.values, validTypeStmts);
 	clauseResults.setValues(filtered);
 };
 
