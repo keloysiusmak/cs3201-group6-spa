@@ -202,7 +202,7 @@ void Parser::expression() {
 	getExpression();
 }
 
-void Parser::ifStatement() {
+bool Parser::ifStatement() {
 	int currentIfNum = currentStmNum;
 	int curStmListId = stmListIdStack.top();
 	// insert StmtListID to StmtTable1 
@@ -242,6 +242,7 @@ void Parser::ifStatement() {
 	match("{");
 	statementList();
 	match("}");
+	return true;
 }
 
 void Parser::whileStatement() {
