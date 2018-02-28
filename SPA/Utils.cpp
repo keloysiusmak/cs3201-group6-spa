@@ -106,7 +106,7 @@ string Utils::getWordAndPop(queue<string> &originalExpression) {
 
 bool Utils::isInteger(const string& s)
 {
-	return !s.empty() && std::find_if(s.begin(),
+	return !s.empty() && find_if(s.begin(),
 		s.end(), [](char c) { return !isdigit(c); }) == s.end();
 }
 

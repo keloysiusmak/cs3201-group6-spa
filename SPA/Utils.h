@@ -5,7 +5,6 @@
 #include <sstream>
 #include <unordered_map>
 #include <queue>
-
 #include "Param.h"
 
 using namespace std;
@@ -30,7 +29,7 @@ public:
 
 namespace UtilsConstants {
 	const char SANITISED_CHAR[] = { '\t', '\n' };
-	const unordered_map<std::string, int> OPERATOR_PRIORITIES({ { "+", 2 },{ "-", 2 },{ "*", 3 } });
+	const unordered_map<string, int> OPERATOR_PRIORITIES({ { "+", 2 },{ "-", 2 },{ "*", 3 } });
 };
 
 

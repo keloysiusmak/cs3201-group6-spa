@@ -1,6 +1,7 @@
 #pragma once
 #include "../SPA/InvalidExpressionException.h"
 #include "../AutoTester/source/TestWrapper.h"
+using namespace std;
 
 // constructor
 Parser::Parser() {
@@ -31,7 +32,6 @@ string Parser::getWord()
 {
 	string result = nextToken;
 	nextToken = getToken();
-	//cout << "RESULT: " << result;
 	return result;
 }
 
@@ -45,7 +45,6 @@ queue<string> Parser::getRPN(queue<string> expr)
 		if (Utils::isValidFactor(word)) {
 			//factor either appears at the start of the expression, or it follows an open bracket or operator
 			if (Utils::isValidConstant(word)) {
-				cout << "word" << word;
 				int constant = stoi(word);
 				pkb.insertToTable(ParserConstants::CONST_TABLE_7, constant, { { currentStmNum } });
 			}
@@ -54,7 +53,7 @@ queue<string> Parser::getRPN(queue<string> expr)
 				int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 				// get parents and insert parents
-				std::vector<int> parents = pkb.getParentStar(currentStmNum);
+				vector<int> parents = pkb.getParentStar(currentStmNum);
 				for (int i = 0; i < static_cast<int>(parents.size()); i++) {
 					pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{ var_id },{},{} });
 					pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { parents[i] },{} });
@@ -221,7 +220,7 @@ bool Parser::ifStatement() {
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
-	std::vector<int> parents = pkb.getParentStar(currentStmNum);
+	vector<int> parents = pkb.getParentStar(currentStmNum);
 	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
 		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{ var_id },{},{} });
 		pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { parents[i] },{ } });
@@ -263,7 +262,7 @@ bool Parser::whileStatement() {
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
-	std::vector<int> parents = pkb.getParentStar(currentStmNum);
+	vector<int> parents = pkb.getParentStar(currentStmNum);
 	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
 		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{ var_id },{},{} });
 		pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { parents[i] },{} });
@@ -291,7 +290,7 @@ bool Parser::assignStatement() {
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
-	std::vector<int> parents = pkb.getParentStar(currentStmNum);
+	vector<int> parents = pkb.getParentStar(currentStmNum);
 	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
 		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{},{ var_id },{} });
 		pkb.insertToTable(ParserConstants::MODIFIES_TABLE_5, var_id, { { parents[i] },{} });
@@ -397,14 +396,14 @@ PKB Parser::Parse(string fileName, PKB passedPKB, bool isStringInput, string str
 	}
 	else {
 		// input is a file
-		std::ifstream file(fileName);
+		ifstream file(fileName);
 		if (file)
 		{
 			simpleStringStream << file.rdbuf();
 			file.close();
 		}
 		else {
-			cout << "file not found";
+			cout << "file not found" << endl;
 		}
 	}
 
@@ -414,16 +413,16 @@ PKB Parser::Parse(string fileName, PKB passedPKB, bool isStringInput, string str
 		program();
 	}
 	catch (exception& e) {
-		std::cout << "MyException caught" << std::endl;
-		std::cout << e.what() << std::endl;
+		cout << "MyException caught" << endl;
+		cout << e.what() << endl;
 		exit(1);
 	} catch (InvalidExpressionException& e) {
-		std::cout << "InvalidExpressionException caught" << std::endl;
-		std::cout << e.what() << std::endl;
+		cout << "InvalidExpressionException caught" << endl;
+		cout << e.what() << endl;
 		exit(2);
 	}
 	
-	std::cout << "success!";
+	cout << "success!";
 
 	return pkb;
 }
