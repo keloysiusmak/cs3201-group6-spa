@@ -355,9 +355,9 @@ unordered_map<int, std::vector<int>> PKB::getAllFollowsStar() {
 int PKB::getParent(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(1, stmt);
-	if (static_cast<int>(data.size()) > 0) {
+	if (static_cast<int>(data.size()) > 0 && static_cast<int>(data[0].size()) > 0) {
 		data = PKB::getFromTable(2, data[0][0]);
-		if (static_cast<int>(data.size()) > 0) {
+		if (static_cast<int>(data.size()) > 0 && static_cast<int>(data[0].size()) > 0) {
 			return data[0][0];
 		}
 	}

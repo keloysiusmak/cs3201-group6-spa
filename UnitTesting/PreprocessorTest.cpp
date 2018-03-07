@@ -17,7 +17,12 @@ namespace UnitTesting {
 				preprocessor.setEvaluator(evaluatorStub);
 			}
 
-			TEST_METHOD(isValidDeclarationTest) {		
+			TEST_METHOD(PreprocessorIsValidDeclaration) {
+
+				Evaluator evaluatorStub;
+				Preprocessor preprocessor;
+
+				preprocessor.setEvaluator(evaluatorStub);
 
 				string declaration1 = "assign a";
 				string declaration2 = "variable v1";
@@ -46,7 +51,7 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.isValidDeclaration(invalidDeclaration4));
 			}
 
-			TEST_METHOD(isValidQueryTest) {
+			TEST_METHOD(PreprocessorIsValidQuery) {
 
 				//Populate the declarationMap
 				preprocessor.insertDeclarationToMap("a", "assign");
@@ -155,7 +160,7 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery12));
 			}
 
-			TEST_METHOD(isValidSynonymTest) {
+			TEST_METHOD(PreprocessorIsValidSynonym) {
 
 				Assert::AreEqual(true, preprocessor.isValidSynonym("a"));
 				Assert::AreEqual(true, preprocessor.isValidSynonym("ab"));
@@ -168,7 +173,7 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.isValidSynonym("#a"));
 			}
 
-			TEST_METHOD(isValidStmtRefTest) {
+			TEST_METHOD(PreprocessorIsValidStmtRef) {
 
 				Assert::AreEqual(true, preprocessor.isValidStmtRef("a"));
 				Assert::AreEqual(true, preprocessor.isValidStmtRef("ab"));
@@ -183,7 +188,7 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.isValidStmtRef("#a"));
 			}
 
-			TEST_METHOD(isValidEntRefTest) {
+			TEST_METHOD(PreprocessorIsValidEntRef) {
 
 				Assert::AreEqual(true, preprocessor.isValidEntRef("a"));
 				Assert::AreEqual(true, preprocessor.isValidEntRef("ab"));
@@ -205,7 +210,7 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.isValidEntRef("\"#x\""));
 			}
 
-			TEST_METHOD(isValidExpressSpecTest) {
+			TEST_METHOD(PreprocessorIsValidExpressSpec) {
 
 				Assert::AreEqual(true, preprocessor.isValidExpressSpec("_"));
 				Assert::AreEqual(true, preprocessor.isValidExpressSpec("_\"x\"_"));
@@ -218,7 +223,7 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.isValidExpressSpec("#a"));
 			}
 
-			TEST_METHOD(isDeclarationSynonymExistTest) {
+			TEST_METHOD(PreprocessorIsDeclarationSynonymExist) {
 
 				preprocessor.insertDeclarationToMap("a", "assign");
 				preprocessor.insertDeclarationToMap("s", "stmt");
@@ -230,7 +235,7 @@ namespace UnitTesting {
 				Assert::AreEqual(false, preprocessor.isDeclarationSynonymExist("b"));
 			}
 
-			TEST_METHOD(parseClauseArg1Test) {
+			TEST_METHOD(PreprocessorParseClauseArg1) {
 
 				Evaluator evaluatorStub;
 				Preprocessor preprocessor;
@@ -289,7 +294,7 @@ namespace UnitTesting {
 				
 			}
 
-			TEST_METHOD(parseClauseArg2Test) {
+			TEST_METHOD(PreprocessorParseClauseArg2) {
 
 				Evaluator evaluatorStub;
 				Preprocessor preprocessor;
@@ -347,7 +352,7 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, integerZero));
 			}
 
-			TEST_METHOD(parsePatternTest) {
+			TEST_METHOD(PreprocessorParsePattern) {
 				Evaluator evaluatorStub;
 				Preprocessor preprocessor(evaluatorStub);
 
@@ -394,7 +399,7 @@ namespace UnitTesting {
 
 			}
 
-			TEST_METHOD(isValidSuchThatKeywordTest) {
+			TEST_METHOD(PreprocessorIsValidSuchThatKeyword) {
 
 				string query1 = "Select a such that Parent*(a, 5)";
 				string query2 = "Select a such that Parent*(a, _) pattern a(v, _\"y\"_) such that Modifies(a, \"x\")";
