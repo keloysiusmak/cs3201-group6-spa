@@ -72,8 +72,8 @@ void Preprocessor::preprocessQuery(string query) {
 	//Clear the contents in declarationMap first before processing the query
 	declarationMap.clear();
 
-	//Trim whitespace from a String
-	string q = Utils::trim(query);
+	//sanitise whitespace from a String
+	string q = Utils::sanitise(query);
 
 	//Split the string into different parts: declarations & query
 	vector<string> declarations = Utils::split(q, SYMBOL_SEMICOLON);
@@ -88,7 +88,7 @@ void Preprocessor::preprocessQuery(string query) {
 	}
 
 	for (int i = 0; i < queryIndex; i++) {
-		bool validateDeclaration = isValidDeclaration(Utils::trim(declarations.at(i)));
+		bool validateDeclaration = isValidDeclaration(Utils::sanitise(declarations.at(i)));
 
 		if (!validateDeclaration) {
 			// insert evaluator invalid query api here
@@ -97,7 +97,7 @@ void Preprocessor::preprocessQuery(string query) {
 		}
 	}
 
-	string queryPortion = Utils::trim(declarations.at(queryIndex));
+	string queryPortion = Utils::sanitise(declarations.at(queryIndex));
 
 	//validate whether is a valid query
 	bool validQuery = isValidQuery(queryPortion);
@@ -128,7 +128,7 @@ bool Preprocessor::isValidDeclaration(string declaration) {
 	for (int i = 1; i < declarationArr.size(); i++) {
 		//remove comma
 		vector<string> synonym = Utils::split(declarationArr.at(i), SYMBOL_COMMA);
-		string s = Utils::trim(synonym.at(0));
+		string s = Utils::sanitise(synonym.at(0));
 
 		if (!isValidSynonym(s) || isDeclarationSynonymExist(s)) {
 			return false;
@@ -140,7 +140,7 @@ bool Preprocessor::isValidDeclaration(string declaration) {
 }
 
 bool Preprocessor::isValidQuery(string query) {
-	string q = Utils::trim(query);
+	string q = Utils::sanitise(query);
 
 	//Check for the single space between 'such that' keyword
 	if (!isValidSuchThatKeyword(q)) {
@@ -311,8 +311,8 @@ bool Preprocessor::isDeclarationSynonymExist(string synonym) {
 /*UsesS, ModifiesS*/
 bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1, string arg2) {
 
-	string leftArg = Utils::trim(arg1);
-	string rightArg = Utils::trim(arg2);
+	string leftArg = Utils::sanitise(arg1);
+	string rightArg = Utils::sanitise(arg2);
 
 	if (leftArg.length() < 1 || !isValidStmtRef(leftArg)) {
 		return false;
@@ -391,8 +391,8 @@ bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1,
 /*Follows, FollowsT, Parent, ParentT*/
 bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1, string arg2) {
 
-	string leftArg = Utils::trim(arg1);
-	string rightArg = Utils::trim(arg2);
+	string leftArg = Utils::sanitise(arg1);
+	string rightArg = Utils::sanitise(arg2);
 
 	if (leftArg.length() < 1 || !isValidStmtRef(leftArg)) {
 		return false;
@@ -404,7 +404,7 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 
 	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
 	ParamType insertLeftType = leftArgType->second;
-
+	bool isLeftSynonym = false;
 	//Check if is synonym and whether the synonym exists in declarationMap
 	if (insertLeftType == SYNONYM) {
 		if (!isDeclarationSynonymExist(leftArg)) {
@@ -421,6 +421,7 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 		}
 
 		insertLeftType = searchDeclareType->second;
+		isLeftSynonym = true;
 	}
 	//Check if is Integer
 	else if (insertLeftType == INTEGER) {
@@ -432,6 +433,7 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
 	ParamType insertRightType = rightArgType->second;
+	bool isRightSynonym = false;
 
 	//Check if is synonym and whether the synonym exists in declarationMap
 	if (insertRightType == SYNONYM) {
@@ -449,6 +451,7 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 		}
 
 		insertRightType = searchDeclareType->second;
+		isRightSynonym = true;
 	}
 	//Check if is Integer
 	else if (insertRightType == INTEGER) {
@@ -456,6 +459,13 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 		if (stoi(rightArg) < 1) {
 			return false;
 		}
+	}
+
+	//Check for same synonym on the left and right param
+	if (isLeftSynonym &&
+		isRightSynonym &&
+		leftArg.compare(rightArg) == 0) {
+		return false;
 	}
 
 	auto searchRelType = KEYWORDS_CLAUSES_2.find(relType);
@@ -467,8 +477,8 @@ bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1,
 
 bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2) {
 	
-	string leftArg = Utils::trim(arg1);
-	string rightArg = Utils::trim(arg2);
+	string leftArg = Utils::sanitise(arg1);
+	string rightArg = Utils::sanitise(arg2);
 
 	if (leftArg.length() < 1 || !isValidEntRef(leftArg)) {
 		return false;
@@ -501,7 +511,7 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	}
 	//Check if is Ident and store the content between the double quotes
 	else if (leftArgType->second == IDENT) {
-		leftArg = Utils::trim((Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1));
+		leftArg = Utils::sanitise((Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1));
 	}
 
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));

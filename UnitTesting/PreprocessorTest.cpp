@@ -86,7 +86,7 @@ namespace UnitTesting {
 				string query19 = "Select a pattern a(v, _\"y\"_)";
 				string query20 = "Select a pattern a(v, _\"2\"_)";
 				string query21 = "Select a pattern a(\"    x    \", _\"y\"_)";
-				string query22 = "Select a pattern a(\"    x    \", _\"2\"_)";
+				string query22 = "Select a pattern a(\"    x    \", _\"2	\"_)";
 				string query23 = "Select a pattern a(\"    x    \", _)";
 				string query24 = "Select a pattern a(   _    , _\"y\"_)";
 				string query25 = "Select a pattern a(   _    , _\"2\"_)";
@@ -338,6 +338,7 @@ namespace UnitTesting {
 
 				string underScore = "_";
 				string integerZero = "0";
+				string invalidSameStmtRef = "s";
 
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1Empty, arg2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidArg1StmtRef1, arg2));
@@ -350,6 +351,8 @@ namespace UnitTesting {
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2StmtRef2));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, invalidArg2EntRefNotExist));
 				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, arg1, integerZero));
+
+				Assert::AreNotEqual(true, preprocessor.parseClauseArg2(qo, relType, invalidSameStmtRef, invalidSameStmtRef));
 			}
 
 			TEST_METHOD(PreprocessorParsePattern) {
