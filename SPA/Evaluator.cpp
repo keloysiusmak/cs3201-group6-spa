@@ -1,4 +1,4 @@
-#include "Evaluator.h"
+/* #include "Evaluator.h"
 #include <set>
 
 using namespace std;
@@ -9,7 +9,7 @@ string STMT_SYN = "stmtSyn";
 string STMT_NUM = "stmtNumber";
 
 /* Constructor */
-Evaluator::Evaluator() {
+/* Evaluator::Evaluator() {
 	// Defaults true
 	validQuery = true;
 };
@@ -19,7 +19,7 @@ Evaluator::Evaluator(QueryObject queryObj) {
 };
 
 /* getters and setter Methods */
-void Evaluator::setPKB(PKB generatedPKB) {
+/* void Evaluator::setPKB(PKB generatedPKB) {
 	pkb = generatedPKB;
 };
 
@@ -33,7 +33,7 @@ QueryObject Evaluator::getQueryObject() {
 };
 
 /* Query Methods */
-bool Evaluator::isValidQuery() {
+/* bool Evaluator::isValidQuery() {
 	return validQuery;
 };
 
@@ -43,7 +43,7 @@ void Evaluator::setInvalidQuery(string message) {
 };
 
 /* Main evaluator */
-list<string> Evaluator::evaluateQuery() {
+/* list<string> Evaluator::evaluateQuery() {
 	if (isValidQuery()) {
 		Param selectParam = queryObject.getSelectStatement();
 		Clause clause; Pattern pattern;
@@ -60,7 +60,7 @@ list<string> Evaluator::evaluateQuery() {
 		}
 
 		/* Check if param in clause or pattern */
-		if (!selectParamInClauses(queryObject)) { // Param independent of clauses
+		/* if (!selectParamInClauses(queryObject)) { // Param independent of clauses
 			if (hasClauseResults(cResults) || hasClauseResults(pResults)) { // Results exists for either
 				return getAllSelectedParam(selectParam);
 			}
@@ -103,7 +103,7 @@ list<string> Evaluator::evaluateQuery() {
 };
 
 /* Check whether selected synonym is used in clauses */
-bool Evaluator::selectParamInClauses(QueryObject &queryObj) {
+/* bool Evaluator::selectParamInClauses(QueryObject &queryObj) {
 	Param selectParam = queryObj.getSelectStatement();
 	vector<Clause> clauses = queryObj.getClauses();
 	vector<Pattern> patterns = queryObj.getPatterns();
@@ -130,7 +130,7 @@ bool Evaluator::selectParamInPattern(Param select, Pattern &pattern) {
 }
 
 /* Check if Clauses or Patterns are present */
-bool Evaluator::queryHasClause(QueryObject &queryObj) {
+/* bool Evaluator::queryHasClause(QueryObject &queryObj) {
 	return queryObj.getClauses().size() > 0;
 };
 
@@ -139,13 +139,13 @@ bool Evaluator::queryHasPattern(QueryObject &queryObj) {
 };
 
 /* Check if results exist in clause or pattern */
-bool Evaluator::hasClauseResults(ClauseResults &clauseResults) {
+/* bool Evaluator::hasClauseResults(ClauseResults &clauseResults) {
 	if (clauseResults.valid || clauseResults.values.size() || clauseResults.keyValues.size()) return true;
 	return false;
 };
 
 /* Get all selected params when Select param not in clause/pattern */
-list<string> Evaluator::getAllSelectedParam(Param p) {
+/* list<string> Evaluator::getAllSelectedParam(Param p) {
 	int paramIntType = statementTypeToIntMap(p.type);
 	vector<int> pkbResults;
 	if (paramIntType != 0) {
@@ -188,11 +188,17 @@ void Evaluator::evaluateClause(Clause &clause, ClauseResults &clauseResults) {
 	else if (relation == ModifiesS) {
 		evaluateModifies(clause, clauseResults);
 	}
+	else if (relation == Next) {
+		evaluateNext(clause, clauseResults);
+	}
+	else if (relation == NextT) {
+		evaluateNextStar(clause, clauseResults);
+	}
 	else { ; } // For extension
 };
 
 /* Assumes Selected is within ClauseResults */
-list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &selected) {
+/* list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &selected) {
 	Param leftParam = clauseResults.lhs;
 	Param rightParam = clauseResults.rhs;
 	set<int> answerSet;
@@ -240,7 +246,7 @@ list<string> Evaluator::resultToStringList(ClauseResults &clauseResults, Param &
 lhs: s, a, if, w, int
 rhs: s, a, if, w, int
 */
-void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
+/* void Evaluator::evaluateFollows(Clause &clause, ClauseResults &clauseResults) {
 
 	Param leftParam = clause.getFirstParam();
 	Param rightParam = clause.getSecondParam();
@@ -306,7 +312,7 @@ void Evaluator::evaluateFollowStar(Clause &clause, ClauseResults &clauseResults)
 lhs: s, a, if, w, int
 rhs: s, a, if, w, int
 */
-void Evaluator::evaluateParent(Clause &clause, ClauseResults &clauseResults) {
+/* void Evaluator::evaluateParent(Clause &clause, ClauseResults &clauseResults) {
 
 	Param leftParam = clause.getFirstParam();
 	Param rightParam = clause.getSecondParam();
@@ -373,7 +379,7 @@ void Evaluator::evaluateParentStar(Clause &clause, ClauseResults &clauseResults)
 lhs: s, w, if, a, int
 rhs: v, var_name, constant
 */
-void Evaluator::evaluateUses(Clause &clause, ClauseResults &clauseResults) {
+/* void Evaluator::evaluateUses(Clause &clause, ClauseResults &clauseResults) {
 
 	Param leftParam = clause.getFirstParam();
 	Param rightParam = clause.getSecondParam();
@@ -421,7 +427,7 @@ void Evaluator::evaluateUses(Clause &clause, ClauseResults &clauseResults) {
 LHS: s, a, if, w, int
 RHS: v, var_name
 */
-void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
+/* void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
 
 	Param leftParam = clause.getFirstParam();
 	Param rightParam = clause.getSecondParam();
@@ -459,11 +465,84 @@ void Evaluator::evaluateModifies(Clause &clause, ClauseResults &clauseResults) {
 	}
 };
 
+/* Next cases:
+LHS: s, a, if, w, int
+RHS: s, a, if, w, int
+*/
+/* void Evaluator::evaluateNext(Clause &clause, ClauseResults &clauseResults) {
+
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (Utils::isSynonym(leftParam.type)) {
+		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+			unordered_map<int, vector<int>> results = pkb.getAllNext(); //check PKB API
+			clauseResults.setkeyValues(results);
+			intersectDouble(clauseResults);
+		}
+		else { // (syn, concrete)
+			int variableId = pkb.getVariableId(rightParam.value);
+			vector<int> results = pkb.getNextBefore(variableId); //check PKB API
+			clauseResults.setValues(results);
+			intersectSingle(clauseResults);
+		}
+	}
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+			vector<int> results = pkb.getNextAfter(stoi(leftParam.value));
+			clauseResults.setValues(results);
+			intersectSingle(clauseResults);
+		}
+		else { // (concrete, concrete)
+			bool result;
+			if (rightParam.type == IDENT) {
+				int varId = pkb.getVariableId(rightParam.value);
+				result = pkb.checkNext(stoi(leftParam.value), varId);
+			}
+			else {
+				result = pkb.checkNext(stoi(leftParam.value), stoi(rightParam.value));
+			}
+			clauseResults.setValid(result);
+		}
+	}
+};
+
+void Evaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseResults)
+{
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (Utils::isSynonym(leftParam.type)) {
+		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+			unordered_map<int, vector<int>> results = pkb.getAllNextStar(); //check PKB API
+			clauseResults.setkeyValues(results);
+			intersectDouble(clauseResults);
+		}
+		else { // (syn, concrete)
+			vector<int> results = pkb.getNextBeforeStar(stoi(rightParam.value));
+			clauseResults.setValues(results);
+			intersectSingle(clauseResults);
+		}
+	}
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+			vector<int> results = pkb.getNextAfterStar(stoi(leftParam.value));
+			clauseResults.setValues(results);
+			intersectSingle(clauseResults);
+		}
+		else { // (concrete, concrete)
+			bool result = pkb.checkNextStar(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
+		}
+	}
+}
+;
+
 /* Pattern cases: 
 LHS: _, VARIABLE, IDENT
 RHS: _, VAR_NAME, CONSTANT
 */
-void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults) {
+/* void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults) {
 	patternResults.instantiatePattern(pattern);
 
 	Param leftParam = pattern.getLeftParam();
@@ -490,7 +569,7 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 				statementsUsing = pkb.getStatementsWithConstant(stoi(rightParam.value));
 			}
 			/* Get variables */
-			vector<int> variables;
+			/* vector<int> variables;
 			for (int stmt : statementsUsing) {
 				vector<int> variableIds = pkb.getModifiesVariablesFromStatement(stmt);
 				for (int varId : variableIds) {
@@ -503,7 +582,7 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 			patternResults.setValues(variables);
 
 			/* Set assignment statements */
-			vector<int> assignments = pkb.getAllStatementsWithType(1);
+			/* vector<int> assignments = pkb.getAllStatementsWithType(1);
 			vector<int> assignmentEnts = intersectVectors(assignments, statementsUsing);
 			patternResults.setAssignmentsEnts(assignmentEnts);
 		}
@@ -542,7 +621,7 @@ void Evaluator::evaluatePattern(Pattern &pattern, ClauseResults &patternResults)
 };
 
 /* Gets all values from left side of unordered map */
-vector<int> Evaluator::getAllValuesFromMap(unordered_map<int, vector<int>> map) {
+/* vector<int> Evaluator::getAllValuesFromMap(unordered_map<int, vector<int>> map) {
 	vector<int> values;
 	for (auto keyValuePair : map) {
 		for (int value : keyValuePair.second) {
@@ -555,7 +634,7 @@ vector<int> Evaluator::getAllValuesFromMap(unordered_map<int, vector<int>> map) 
 }
 
 /* Removes elements in v2 from v1 */
-vector<int> Evaluator::removeElems(vector<int> v1, vector<int> v2) {
+/* vector<int> Evaluator::removeElems(vector<int> v1, vector<int> v2) {
 	vector<int> filtered;
 	for (int value : v1) {
 		if (find(v2.begin(), v2.end(), value) == v2.end()) { // If not in vector
@@ -566,14 +645,14 @@ vector<int> Evaluator::removeElems(vector<int> v1, vector<int> v2) {
 };
 
 /* Removes all while and if statements from statement list */
-vector<int> Evaluator::removeWhileIfs(vector<int> stmts) {
+/* vector<int> Evaluator::removeWhileIfs(vector<int> stmts) {
 	vector<int> whileStatements = pkb.getAllStatementsWithType(2);
 	vector<int> ifStatements = pkb.getAllStatementsWithType(3);
 	return removeElems(removeElems(stmts, ifStatements), whileStatements);
 };
 
 /* Assumes no duplicates in vectors */
-vector<int> Evaluator::intersectVectors(vector<int> &v1, vector<int> &v2) {
+/* vector<int> Evaluator::intersectVectors(vector<int> &v1, vector<int> &v2) {
 	vector<int> filtered;
 	for (int v1Value : v1) {
 		for (int v2Value : v2) {
@@ -595,7 +674,7 @@ list<string> Evaluator::intersectLists(list<string> &v1, list<string> &v2) {
 
 unordered_map<int, vector<int>> Evaluator::consolidateKeyValues(vector<vector<int>> keyValues) {
 	/* Consolidate key parent and value vector of children */
-	unordered_map<int, vector<int>> consolidated;
+	/* unordered_map<int, vector<int>> consolidated;
 	for (auto pair : keyValues) {
 		auto it = consolidated.find(pair[0]);
 		if (it != consolidated.end()) {
@@ -617,13 +696,13 @@ void Evaluator::intersectSingle(ClauseResults &clauseResults) {
 	Param rightParam = clauseResults.rhs;
 
 	/* Get typeInt for param */
-	(Utils::isSynonym(leftParam.type)) ? typeInt = statementTypeToIntMap(leftParam.type) :
+	/* (Utils::isSynonym(leftParam.type)) ? typeInt = statementTypeToIntMap(leftParam.type) :
 		typeInt = statementTypeToIntMap(rightParam.type);
 
 	/* Return out if synonym is statement */
-	if (typeInt == 0) return;
+	//if (typeInt == 0) return;
 
-	pkb.getAllStatementsWithType(typeInt);
+	/* pkb.getAllStatementsWithType(typeInt);
 	vector<int> validTypeStmts = pkb.getAllStatementsWithType(typeInt);
 	vector<int> filtered = intersectVectors(clauseResults.values, validTypeStmts);
 	clauseResults.setValues(filtered);
@@ -637,7 +716,7 @@ void Evaluator::intersectDouble(ClauseResults &clauseResults) {
 	int rightParamIntType = statementTypeToIntMap(rightParam.type);
 		
 	/* Filter Keys */
-	if (leftParamIntType != 0) {
+	/* if (leftParamIntType != 0) {
 		unordered_map<int, vector<int>> keyValueTable = clauseResults.keyValues;
 		unordered_map<int, vector<int>> filteredTable;
 		vector<int> leftParamValidStmts = pkb.getAllStatementsWithType(leftParamIntType);
@@ -652,10 +731,10 @@ void Evaluator::intersectDouble(ClauseResults &clauseResults) {
 	}
 	
 	/* Short circuit for variable */
-	if (rightParam.type == VARIABLE) return;
+	/* if (rightParam.type == VARIABLE) return;
 
 	/* Filter values */
-	if (rightParamIntType != 0) {
+	/* if (rightParamIntType != 0) {
 		unordered_map<int, vector<int>> keyValueTable = clauseResults.keyValues;
 		vector<int> rightParamValidStmts = pkb.getAllStatementsWithType(rightParamIntType);
 		unordered_map<int, vector<int>> filteredTable;
@@ -685,4 +764,4 @@ int Evaluator::statementTypeToIntMap(ParamType t) {
 	default:
 		return 0;
 	}
-};
+}; */
