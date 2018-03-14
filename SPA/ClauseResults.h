@@ -5,8 +5,6 @@
 
 class ClauseResults {
  private:
-  /* 2d table storing results from pkb */
-  vector<vector<int>> results;
   /* Boolean for when both params are concrete */
   bool valid;
   /* Solely used for pattern */
@@ -15,6 +13,10 @@ class ClauseResults {
   Param entRef;
   Param lhs;
   Param rhs;
+
+  /* 2d table storing results from pkb */
+  vector<Param> tableColumns;
+  vector<vector<int>> results;
 
   // Instantiation
   void ClauseResults::instantiateClause(Clause clause);
@@ -25,7 +27,9 @@ class ClauseResults {
   void ClauseResults::setValid(bool validity);
 
   // Getter methods
+  bool ClauseResults::isValid();
   bool ClauseResults::hasResults();
+  int ClauseResults::numSyns();
   
 };
 

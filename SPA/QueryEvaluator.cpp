@@ -57,16 +57,19 @@ list<string> QueryEvaluator::evaluateQuery() {
     for (Clause clause : queryObject.getClauses()) {
       ClauseResult clauseResults;
       evaluateClause(clause, clauseResults);
-      EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
+
+      if (!clauseResults.hasResults()) return {};
+      if (clauseResults.numSyn() != 0) EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
     }
 
     /* Evaluation of patterns */
-    for (Clause clause : queryObject.getClauses()) {
+    for (Clause clause : queryObject.getPatterns()) {
       ClauseResult patternResults;
       evaluatePattern(clause, patternResults);
-      EvaluatorHelper::mergeClauseTable(patternResults, iTable);
-    }
 
+      if (!patternResults.hasResults()) return {};
+      if (patternResults.numSyn() != 0) EvaluatorHelper::mergeClauseTable(patternResults, iTable);
+    }
     return EvaluatorHelpers::extractParams(selectParams, iTable);
 
   } else { // Return no value
@@ -384,8 +387,7 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseResults) {
 }
 
-void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternResults)
-{ 
+void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternResults) { 
 	/* patternResults.instantiatePattern(pattern);
 
 	Param leftParam = pattern.getLeftParam();
