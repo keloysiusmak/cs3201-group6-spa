@@ -42,39 +42,63 @@ void QueryEvaluator::setInvalidQuery(string message) {
 	invalidQueryMessage = message;
 };
 
-QueryEvaluator::QueryEvaluator()
+vector<vector<int>> QueryEvaluator::evaluateQuery()
 {
+	if (isValidQuery()) {
+		Param selectParam = queryObject.getSelectStatement(); //one param or tuple
+		Clause clause;
+		Pattern pattern;
+		ClauseResults cResults = ClauseResults();
+		ClauseResults pResults = ClauseResults();
+		vector<vector<int>> result;
+		int numClauses = queryNumClauses(queryObject);
+		int numPattern = queryNumPattern(queryObject);
+
+		while (numClauses > 0) {
+			clause = queryObject.getClauses()[0];
+			evaluateClause(clause, cResults);
+			numClauses--;
+		}
+
+		while (numPattern > 0) {
+			pattern = queryObject.getPatterns()[0];
+			evaluateClause(clause, pResults);
+			numPattern--;
+		}
+	}
 }
 
-QueryEvaluator::QueryEvaluator(QueryObject)
-{
-}
+/* for any seleced param that is not in any of the clauses, return all instances of that param */
+/* uncomment this out later when bugs are fixed*/
+/* add to intermediate table later on*/
+/* vector<vector<int>> QueryEvaluator::getAllSelectedParam(Param p) {
+	int paramIntType = statementTypeToIntMap(p.type);
+	vector<int> pkbResults;
+	if (paramIntType != 0) {
+		pkbResults = pkb.getAllStatementsWithType(paramIntType);
+	}
+	else if (p.type == STMT || p.type == PROG_LINE) {
+		pkbResults = pkb.getAllStatements();
+	}
+	else if (p.type == VARIABLE) {
+		pkbResults = pkb.getAllVariables();
+	}
 
-list<string> QueryEvaluator::evaluateQuery()
-{
-	return list<string>();
-}
+	vector<vector<int>> results;
+	for (int ans : pkbResults) {
+		(p.type == VARIABLE) ?
+			results.push_back(pkb.getVariableName(ans)) :
+			results.push_back(to_string(ans));
+	}
+	return results;
+}; */
 
-bool QueryEvaluator::isValidQuery()
-{
-	return false;
-}
+int QueryEvaluator::queryNumClauses(QueryObject &queryObj) {
+	return queryObj.getClauses().size();
+};
 
-QueryObject QueryEvaluator::getQueryObject()
-{
-	return QueryObject();
-}
-
-void QueryEvaluator::setQueryObject(QueryObject)
-{
-}
-
-void QueryEvaluator::setInvalidQuery(string)
-{
-}
-
-void QueryEvaluator::setPKB(PKB)
-{
+int QueryEvaluator::queryNumPattern(QueryObject &queryObj) {
+	return queryObj.getPatterns().size();
 }
 
 vector<vector<int>> QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResults)
@@ -137,17 +161,8 @@ vector<vector<int>> QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseRes
 	return vector<vector<int>>();
 }
 
-bool QueryEvaluator::queryHasClause(QueryObject & queryObj)
-{
-	return false;
-}
-
-bool QueryEvaluator::queryHasPattern(QueryObject & queryObj)
-{
-	return false;
-}
-
 bool QueryEvaluator::hasClauseResults(ClauseResults & clauseResults)
 {
+	if (clauseResults.valid || clauseResults.values.size() || clauseResults.keyValues.size()) return true;
 	return false;
-}
+};
