@@ -10,16 +10,20 @@ const char SYMBOL_CLOSE_BRACKET = ')';
 const char SYMBOL_EQUALS = '=';
 const char SYMBOL_FULL_STOP = '.';
 const char SYMBOL_UNDERSCORE = '_';
+const char SYMBOL_ANGLE_OPEN_BRACKETS = '<';
+const char SYMBOL_ANGLE_CLOSE_BRACKETS = '>';
 
 const string EMPTY_STRING = "";
-const string DELIM_STRING = " ,()";
+const string DELIM_STRING = " ,()<>";
 const vector<char> DELIMITERS_DECLARATION { };
-const vector<char> DELIMITERS_QUERY { SYMBOL_COMMA, SYMBOL_CLOSE_BRACKET };
+const vector<char> DELIMITERS_QUERY { SYMBOL_COMMA, SYMBOL_CLOSE_BRACKET, SYMBOL_ANGLE_OPEN_BRACKETS,
+										SYMBOL_ANGLE_CLOSE_BRACKETS };
 
 const string SELECT_WORD = "Select";
 const string SUCH_WORD = "such";
 const string THAT_WORD = "that";
 const string PATTERN_WORD = "pattern";
+const string BOOLEAN_WORD = "BOOLEAN";
 
 const string SYNONYM_WORD = "synonym";
 const string ALL_WORD = "all";
@@ -159,23 +163,70 @@ bool Preprocessor::isValidQuery(string query) {
 		return false;
 	}
 
-	//check if select synonym exist in the declarationMap
-	if (!isDeclarationSynonymExist(queryArr.at(1))) {
-		return false;
+	int endOfSelectStatement = 1;
+
+	//if is a tuple
+	if (queryArr.at(endOfSelectStatement).at(0) == SYMBOL_ANGLE_OPEN_BRACKETS) {
+
+		endOfSelectStatement++;
+
+		//iterate through the tuple
+		while (queryArr.at(endOfSelectStatement).at(0) != SYMBOL_ANGLE_CLOSE_BRACKETS) {
+
+			//even position must be synonym
+			if (endOfSelectStatement % 2 == 0) {
+
+				//check if select synonym exist in the declarationMap
+				if (!isDeclarationSynonymExist(queryArr.at(endOfSelectStatement))) {
+					return false;
+				}
+
+				//Populate the selectType of QueryObject
+				auto searchSynonym = declarationMap.find(queryArr.at(endOfSelectStatement));
+				auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+				queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
+			}
+			//odd position must be comma
+			else {
+				//check if is comma
+				if (queryArr.at(endOfSelectStatement).at(0) != SYMBOL_COMMA) {
+					return false;
+				}
+			}
+			endOfSelectStatement++;
+		}
+
+		// if is a tuple without any values in (e.g. <>), return false
+		if (endOfSelectStatement == 2) {
+			return false;
+		}
 	}
-	//Populate the selectType of QueryObject
-	auto searchSynonym = declarationMap.find(queryArr.at(1));
-	auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-	queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
+	//if is a BOOLEAN
+	else if (queryArr.at(endOfSelectStatement).compare(BOOLEAN_WORD) == 0) {
+		queryObject.insertSelectStmt(BOOLEAN, BOOLEAN_WORD);
+	}
+	else {
+		//check if select synonym exist in the declarationMap
+		if (!isDeclarationSynonymExist(queryArr.at(endOfSelectStatement))) {
+			return false;
+		}
+
+		//Populate the selectType of QueryObject
+		auto searchSynonym = declarationMap.find(queryArr.at(endOfSelectStatement));
+		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+		queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
+	}
+
+	endOfSelectStatement++;
 
 	//Check if there is any such that or pattern clause
-	if (queryArr.size() == 2) {
+	if (queryArr.size() == endOfSelectStatement) {
 		// insert evaluator query api here
 		//(*_evaluator).setQueryObject(queryObject);
 		return true;
 	}
 	
-	for (int i = 2; i < queryArr.size(); i++) {
+	for (int i = endOfSelectStatement; i < queryArr.size(); i++) {
 
 		//check "such" word exists
 		if (queryArr.at(i).compare(SUCH_WORD) == 0) {
@@ -240,7 +291,7 @@ bool Preprocessor::isValidQuery(string query) {
 				return false;
 			}
 
-			searchSynonym = declarationMap.find(queryArr.at(i + 1));
+			auto searchSynonym = declarationMap.find(queryArr.at(i + 1));
 
 			//check whether patternType is valid
 			if (KEYWORDS_PATTERN_TYPE.find(searchSynonym->second) == KEYWORDS_PATTERN_TYPE.end()) {
@@ -256,7 +307,7 @@ bool Preprocessor::isValidQuery(string query) {
 			//Add all the right Param
 			string rightArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_CLOSE_BRACKET));
 
-			searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+			auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
 
 			if (!parsePattern(queryObject, searchDeclareType->second, queryArr.at(i + 1), leftArg, rightArg)) {
 				return false;
@@ -609,7 +660,7 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	string leftArg = Utils::sanitise(arg1);
 	string rightArg = Utils::sanitise(arg2);
 
-	if (leftArg.length() < 1 || !isValidEntRef(leftArg)) {
+	if (leftArg.length() < 1 || !isValidVarRef(leftArg)) {
 		return false;
 	}
 
