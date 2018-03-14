@@ -1,4 +1,4 @@
-#pragma once
+/* #pragma once
 
 #include <vector>
 #include <string>
@@ -30,6 +30,10 @@ public:
 	void evaluateParentStar(Clause &clause, ClauseResults &clauseResults);
 	void evaluateUses(Clause &clause, ClauseResults &clauseResults);
 	void evaluateModifies(Clause &clause, ClauseResults &clauseResults);
+	void evaluateNext(Clause &clause, ClauseResults &clauseResults);
+	void evaluateNextStar(Clause &clause, ClauseResults &clauseResults);
+	void evaluateCalls(Clause &clause, ClauseResults &clauseResults);
+	void evaluateCallsStar(Clause &clause, ClauseResults &clauseResults);
 	void evaluatePattern(Pattern &pattern, ClauseResults &patternResults);
 
 	// Intersection Helpers
@@ -60,4 +64,4 @@ private:
 	PKB pkb;
 	bool validQuery;
 	string invalidQueryMessage;
-};
+}; */
