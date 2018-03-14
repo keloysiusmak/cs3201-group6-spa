@@ -42,7 +42,7 @@ const unordered_map<string, ParamType> KEYWORDS_DECLARATIONS = { { "assign", ASS
 																{ "procedure", PROCEDURE }, { "call", CALL } };
 
 const unordered_map<int, ParamType> NUMBER_MAPPING_REF_TYPE = { { 1, INTEGER }, { 2, CONSTANT },
-															{ 3, VAR_NAME }, { 4, IDENT }, { 5, SYNONYM },
+															{ 3, EXPR }, { 4, IDENT }, { 5, SYNONYM },
 															{ 6, ALL } };
 
 const regex synonymRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)");
@@ -646,7 +646,7 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
 
 	//Check if is factor expresson-spec and store the content between the double quotes
-	if (rightArgType->second == VAR_NAME || rightArgType->second == CONSTANT) {
+	if (rightArgType->second == EXPR) {
 		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
 	}
 
