@@ -535,8 +535,7 @@ void Evaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseResults)
 			clauseResults.setValid(result);
 		}
 	}
-}
-;
+};
 
 /* Pattern cases: 
 LHS: _, VARIABLE, IDENT
