@@ -386,9 +386,3 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 
 void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternResults) {
 };
-
-bool QueryEvaluator::hasClauseResults(ClauseResults & clauseResults)
-{
-  if (clauseResults.valid || clauseResults.values.size() || clauseResults.keyValues.size()) return true;
-  return false;
-};

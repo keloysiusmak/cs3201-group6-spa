@@ -4,16 +4,17 @@
 #include "Pattern.h"
 
 class ClauseResults {
- public:
-  Param entRef;
-  Param lhs;
-  Param rhs;
+ private:
   /* 2d table storing results from pkb */
   vector<vector<int>> results;
   /* Boolean for when both params are concrete */
   bool valid;
   /* Solely used for pattern */
   vector<int> assignmentsEnts;
+ public:
+  Param entRef;
+  Param lhs;
+  Param rhs;
 
   // Instantiation
   void ClauseResults::instantiateClause(Clause clause);
@@ -22,6 +23,10 @@ class ClauseResults {
   // Setter methods
   void ClauseResults::setResults(vector<vector<int>> &pkbResults);
   void ClauseResults::setValid(bool validity);
+
+  // Getter methods
+  bool ClauseResults::hasResults();
+  
 };
 
 struct IntermediateTable {

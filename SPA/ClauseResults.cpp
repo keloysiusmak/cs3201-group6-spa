@@ -19,3 +19,9 @@ void ClauseResults::setResults(vector<vector<int> > &pkbResults) {
 void ClauseResults::setValid(bool validity) {
   valid = validity;
 };
+
+bool ClauseResults::hasResults() {
+  if (results.size() > 0) return true;
+  if (valid) return true;
+  return false;
+}
