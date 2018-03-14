@@ -5,6 +5,7 @@
 using namespace std;
 
 #include "PKB.h"
+#include "../SPA/Constants.h"
 
 /* PKB Operations */
 bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> value)
@@ -33,6 +34,9 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 		tableValuesCount = 2;
 		break;
 	case 7:
+		tableValuesCount = 1;
+		break;
+	case 8:
 		tableValuesCount = 1;
 		break;
 	default:
@@ -79,21 +83,21 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 
 int PKB::insertToNameTable(int table_id, string value)
 {
-	unordered_map<int, string> table = nameTables[table_id - 8];
-	if (table_id != 8 && table_id != 9) {
+	unordered_map<int, string> table = nameTables[table_id - 9];
+	if (table_id != 9 && table_id != 10) {
 		return 0;
 	}
-	else if (table_id == 8 && PKB::getProcedureId(value) != 0) {
+	else if (table_id == 9 && PKB::getProcedureId(value) != 0) {
 		return PKB::getProcedureId(value);
 	}
-	else if (table_id == 9 && PKB::getVariableId(value) != 0) {
+	else if (table_id == 10 && PKB::getVariableId(value) != 0) {
 		return PKB::getVariableId(value);
 	}
 	else {
 
 		/* Variable does not exist */
 		int size = static_cast<int>(table.size()) + 1;
-		nameTables[table_id - 8].insert({ size , value });
+		nameTables[table_id - 9].insert({ size , value });
 
 		return size;
 	}
@@ -111,11 +115,11 @@ std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 
 string PKB::getFromNameTable(int table_id, int key_id)
 {
-	std::unordered_map<int, string>::const_iterator got = nameTables[table_id - 8].find(key_id);
-	if (got == nameTables[table_id - 8].end()) {
+	std::unordered_map<int, string>::const_iterator got = nameTables[table_id - 9].find(key_id);
+	if (got == nameTables[table_id - 9].end()) {
 		return "";
 	}
-	return nameTables[table_id - 8][key_id];
+	return nameTables[table_id - 9][key_id];
 }
 
 std::vector<int> PKB::getAllVariables() {
@@ -174,11 +178,11 @@ std::vector<int> PKB::getAllProcedures() {
 
 /* Accessor Operations */
 std::string PKB::getProcedureName(int proc_id) {
-	return PKB::getFromNameTable(8, proc_id);
+	return PKB::getFromNameTable(PROC_TABLE, proc_id);
 }
 
 std::string PKB::getVariableName(int var_id) {
-	return PKB::getFromNameTable(9, var_id);
+	return PKB::getFromNameTable(VAR_TABLE, var_id);
 }
 
 int PKB::getProcedureId(std::string proc_name) {
