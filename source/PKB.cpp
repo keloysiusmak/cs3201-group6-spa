@@ -818,6 +818,101 @@ bool PKB::checkProcedureModifiesVariable(int procId, int varId) {
 
 }
 
+/* Next Operations */
+std::vector<std::vector<int>> PKB::getNextBefore(int stmt) {
+	std::vector<std::vector<int>> data;
+	data = PKB::getFromTable(11, stmt);
+	if (static_cast<int>(data.size()) > 0) {
+		return data;
+	}
+
+	std::vector<std::vector<int>> empty;
+	return empty;
+}
+
+std::vector<std::vector<int>> PKB::getNextAfter(int stmt) {
+	std::vector<std::vector<int>> data;
+	data = PKB::getFromTable(9, stmt);
+	if (static_cast<int>(data.size()) > 0) {
+		return data;
+	}
+
+	std::vector<std::vector<int>> empty;
+	return empty;
+}
+
+std::vector<std::vector<int>> PKB::getNextBeforeStar(int stmt) {
+	std::vector<std::vector<int>> data;
+	data = PKB::getFromTable(12, stmt);
+	if (static_cast<int>(data.size()) > 0) {
+		return data;
+	}
+
+	std::vector<std::vector<int>> empty;
+	return empty;
+}
+
+std::vector<std::vector<int>> PKB::getNextAfterStar(int stmt) {
+	std::vector<std::vector<int>> data;
+	data = PKB::getFromTable(10, stmt);
+	if (static_cast<int>(data.size()) > 0) {
+		return data;
+	}
+
+	std::vector<std::vector<int>> empty;
+	return empty;
+}
+
+bool PKB::checkNext(int stmt1, int stmt2) {
+	std::vector<int> data = PKB::getNextAfter(stmt1)[0];
+	for (int i = 0; i < data.size(); i++) {
+		if (stmt2 == data[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool PKB::checkNextStar(int stmt1, int stmt2) {
+	std::vector<int> data = PKB::getNextAfterStar(stmt1)[0];
+	for (int i = 0; i < data.size(); i++) {
+		if (stmt2 == data[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
+std::vector<std::vector<int>> PKB::getAllNext() {
+
+	std::vector<std::vector<int>> output;
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[9];
+
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		std::vector<int> stmtList = it->second[1];
+		for (unsigned int i = 0; i < static_cast<unsigned int>(stmtList.size()); i++) {
+			output.push_back({it->first, stmtList[i]});
+		}
+	}
+
+	return output;
+}
+
+std::vector<std::vector<int>> PKB::getAllNextStar() {
+
+	std::vector<std::vector<int>> output;
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[10];
+
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		std::vector<int> stmtList = it->second[1];
+		for (unsigned int i = 0; i < static_cast<unsigned int>(stmtList.size()); i++) {
+			output.push_back({ it->first, stmtList[i] });
+		}
+	}
+
+	return output;
+}
+
 /* Constant Operations */
 std::vector<std::vector<int>> PKB::getStatementsWithConstant(int constant) {
 

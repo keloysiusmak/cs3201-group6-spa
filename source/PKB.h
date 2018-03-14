@@ -38,10 +38,10 @@ public:
 	std::vector<std::vector<int>> getFollowsAfter(int);
 	std::vector<std::vector<int>> getFollowsBeforeStar(int);
 	std::vector<std::vector<int>> getFollowsAfterStar(int);
-	bool checkFollows(int, int);
-	bool checkFollowsStar(int, int);
 	std::vector<std::vector<int>> getAllFollows();
 	std::vector<std::vector<int>> getAllFollowsStar();
+	bool checkFollows(int, int);
+	bool checkFollowsStar(int, int);
 
 	/* Parent Operations */
 	std::vector<std::vector<int>> getParent(int);
@@ -76,6 +76,16 @@ public:
 	std::vector<std::vector<int>> getAllVariableModifiesProcedures();
 	bool checkStatementModifiesVariable(int, int);
 	bool checkProcedureModifiesVariable(int, int);
+
+	/* Next Operations */
+	std::vector<std::vector<int>> getNextBefore(int);
+	std::vector<std::vector<int>> getNextAfter(int);
+	std::vector<std::vector<int>> getNextBeforeStar(int);
+	std::vector<std::vector<int>> getNextAfterStar(int);
+	std::vector<std::vector<int>> getAllNext();
+	std::vector<std::vector<int>> getAllNextStar();
+	bool checkNext(int, int);
+	bool checkNextStar(int, int);
 
 	/* Constant Operations */
 	std::vector<std::vector<int>> getStatementsWithConstant(int);
