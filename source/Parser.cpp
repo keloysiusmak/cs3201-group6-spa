@@ -292,7 +292,7 @@ bool Parser::whileStatement() {
 
 string Parser::getExpressionQueueString() {
 	std::stringstream ss;
-	while (expressionQueue.size != 0) {
+	while (expressionQueue.size() != 0) {
 		ss << expressionQueue.front();
 		expressionQueue.pop();
 	}
@@ -369,12 +369,12 @@ bool Parser::callStatement() {
 	pkb.insertToNameTable(PATTERN_TABLE, patternVector);
 
 	match(";");
+	return true;
 }
 
 bool Parser::statement() {
 
 	string var_name;
-	int var_id;
 	// increate Statement number
 	currentStmNum++;
 	// need to top stmListIdStack to get curStmListId
