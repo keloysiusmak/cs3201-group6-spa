@@ -211,6 +211,31 @@ namespace UnitTesting
 			Assert::AreEqual(string("x"), pkb.getVariableName(return_id));
 		}
 
+		TEST_METHOD(PKBGetProcedureId)
+		{
+			PKB pkb;
+			
+			string data = "proc_x";
+
+			pkb.insertToNameTable(8, data);
+			Assert::AreEqual(1, pkb.getProcedureId("proc_x"));
+			Assert::AreEqual(0, pkb.getProcedureId("PROC_X"));
+		}
+
+		TEST_METHOD(PKBGetVariableId)
+		{
+			PKB pkb;
+
+			/* Null Test */
+			Assert::AreEqual(string(""), pkb.getFromNameTable(9, 1));
+
+			string data = "x";
+
+			pkb.insertToNameTable(9, data);
+			Assert::AreEqual(1, pkb.getVariableId("x"));
+			Assert::AreEqual(0, pkb.getVariableId("X"));
+		}
+
 		TEST_METHOD(PKBGetAllVariables)
 		{
 			PKB pkb;
