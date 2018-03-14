@@ -53,7 +53,7 @@ queue<string> Parser::getRPN(queue<string> expr)
 				int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 				// get parents and insert parents
-				vector<int> parents = pkb.getParentStar(currentStmNum);
+				vector<int> parents = pkb.getParentStar(currentStmNum)[0];
 				for (int i = 0; i < static_cast<int>(parents.size()); i++) {
 					pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{ var_id },{},{} });
 					pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { parents[i] },{} });
@@ -220,7 +220,7 @@ bool Parser::ifStatement() {
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
-	vector<int> parents = pkb.getParentStar(currentStmNum);
+	vector<int> parents = pkb.getParentStar(currentStmNum)[0];
 	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
 		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{ var_id },{},{} });
 		pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { parents[i] },{ } });
@@ -262,7 +262,7 @@ bool Parser::whileStatement() {
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
-	vector<int> parents = pkb.getParentStar(currentStmNum);
+	vector<int> parents = pkb.getParentStar(currentStmNum)[0];
 	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
 		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{ var_id },{},{} });
 		pkb.insertToTable(ParserConstants::USES_TABLE_4, var_id, { { parents[i] },{} });
@@ -290,7 +290,7 @@ bool Parser::assignmentStatement() {
 	int var_id = pkb.insertToNameTable(ParserConstants::VAR_TABLE_9, var_name);
 
 	// get parents and insert parents
-	vector<int> parents = pkb.getParentStar(currentStmNum);
+	vector<int> parents = pkb.getParentStar(currentStmNum)[0];
 	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
 		pkb.insertToTable(ParserConstants::STATEMENT_TABLE_1, parents[i], { {},{},{ var_id },{} });
 		pkb.insertToTable(ParserConstants::MODIFIES_TABLE_5, var_id, { { parents[i] },{} });
@@ -413,15 +413,17 @@ PKB Parser::Parse(string fileName, PKB passedPKB, bool isStringInput, string str
 		program();
 	}
 	catch (exception& e) {
-		cout << "MyException caught" << endl;
+		cout << "Exception caught" << endl;
 		cout << e.what() << endl;
 		exit(1);
-	} catch (InvalidExpressionException& e) {
+	} 
+/*
+	catch (InvalidExpressionException& e) {
 		cout << "InvalidExpressionException caught" << endl;
 		cout << e.what() << endl;
 		exit(2);
 	}
-	
+*/
 	cout << "success!";
 
 	return pkb;
