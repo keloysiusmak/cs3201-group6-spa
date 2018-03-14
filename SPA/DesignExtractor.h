@@ -10,5 +10,8 @@ public:
 private:
 	void extractNext(PKB &);
 	void extractNextStar(PKB &);
+	void extractCallsInverse(PKB &);
+	void extractCallsStar(PKB &);
+	void extractUsesModifies(PKB &);
 };
 

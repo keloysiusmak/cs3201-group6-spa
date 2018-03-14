@@ -87,6 +87,16 @@ public:
 	bool checkNext(int, int);
 	bool checkNextStar(int, int);
 
+	/* Calls Operations */
+	std::vector<std::vector<int>> getCallsBefore(int);
+	std::vector<std::vector<int>> getCallsAfter(int);
+	std::vector<std::vector<int>> getCallsBeforeStar(int);
+	std::vector<std::vector<int>> getCallsAfterStar(int);
+	std::vector<std::vector<int>> getAllCalls();
+	std::vector<std::vector<int>> getAllCallsStar();
+	bool checkCalls(int, int);
+	bool checkCallsStar(int, int);
+
 	/* Constant Operations */
 	std::vector<std::vector<int>> getStatementsWithConstant(int);
 
