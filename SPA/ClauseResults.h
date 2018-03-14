@@ -4,27 +4,36 @@
 #include "Pattern.h"
 
 class ClauseResults {
-public:
-	Param lhs;
-	Param rhs;
-	/* Key Values Hash for queries with 2 synonyms
-		Vector of int values for queries with only 1 synonym */
-	unordered_map<int, vector<int>> keyValues;
-	vector<int> values;
-	/* Boolean for when both params are concrete */
-	bool valid;
-	/* Solely used for pattern */
-	Param entRef;
-	vector<int> assignmentsEnts;
+ private:
+  /* Boolean for when both params are concrete */
+  bool valid;
+  /* Solely used for pattern */
+  vector<int> assignmentsEnts;
+ public:
+  Param entRef;
+  Param lhs;
+  Param rhs;
 
-	// Instantiation
-	void ClauseResults::instantiateClause(Clause clause);
-	void ClauseResults::instantiatePattern(Pattern pattern);
+  /* 2d table storing results from pkb */
+  vector<Param> tableColumns;
+  vector<vector<int>> results;
 
-	// Setter methods
-	void ClauseResults::setkeyValues(unordered_map<int, vector<int>> &results);
-	void ClauseResults::setkeyValues(vector<vector<int>> &results);
-	void ClauseResults::setValues(vector<int> &results);
-	void ClauseResults::setValid(bool validity);
-	void ClauseResults::setAssignmentsEnts(vector<int> &assigns);
+  // Instantiation
+  void ClauseResults::instantiateClause(Clause clause);
+  void ClauseResults::instantiatePattern(Pattern pattern);
+
+  // Setter methods
+  void ClauseResults::setResults(vector<vector<int>> &pkbResults);
+  void ClauseResults::setValid(bool validity);
+
+  // Getter methods
+  bool ClauseResults::isValid();
+  bool ClauseResults::hasResults();
+  int ClauseResults::numSyns();
+  
+};
+
+struct IntermediateTable {
+  vector<Param> tableColumns;
+  vector<vector<int>> resultsTable;
 };

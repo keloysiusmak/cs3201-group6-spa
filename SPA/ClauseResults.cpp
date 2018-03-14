@@ -33,6 +33,3 @@ void ClauseResults::setValid(bool validity) {
 	valid = validity;
 };
 
-void ClauseResults::setAssignmentsEnts(vector<int> &assigns) {
-	assignmentsEnts = assigns;
-};
