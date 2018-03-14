@@ -13,7 +13,7 @@ using namespace std::tr1;
 class PKB {
 private:
 	/*  PKB Structure*/
-	unordered_map<int, std::vector<std::vector<int>>> tables[8];
+	unordered_map<int, std::vector<std::vector<int>>> tables[10];
 	unordered_map<int, std::string> nameTables[2];
 
 public:
