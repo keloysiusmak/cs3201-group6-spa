@@ -12,7 +12,7 @@ class QueryEvaluator {
 public:
 	QueryEvaluator();
 	QueryEvaluator(QueryObject);
-	vector<vector<int>> evaluateQuery();
+	void evaluateQuery();
 
 	bool isValidQuery();
 	QueryObject getQueryObject();
@@ -36,7 +36,7 @@ public:
 	void evaluateCallsStar(Clause &clause, ClauseResults &clauseResults);
 	void evaluatePattern(Pattern &pattern, ClauseResults &patternResults);
 
-	vector<vector<int>> getAllSelectedParam(Param p);
+	//void getAllSelectedParam(Param p);
 
 	// Helper Methods
 	int queryNumClauses(QueryObject &queryObj);

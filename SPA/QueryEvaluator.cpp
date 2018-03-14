@@ -42,7 +42,7 @@ void QueryEvaluator::setInvalidQuery(string message) {
 	invalidQueryMessage = message;
 };
 
-vector<vector<int>> QueryEvaluator::evaluateQuery()
+void QueryEvaluator::evaluateQuery()
 {
 	if (isValidQuery()) {
 		Param selectParam = queryObject.getSelectStatement(); //one param or tuple
@@ -66,7 +66,7 @@ vector<vector<int>> QueryEvaluator::evaluateQuery()
 			numPattern--;
 		}
 	}
-}
+};
 
 /* for any seleced param that is not in any of the clauses, return all instances of that param */
 /* uncomment this out later when bugs are fixed*/
@@ -391,8 +391,50 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 }
 
 void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternResults)
-{
+{ 
+	/* patternResults.instantiatePattern(pattern);
 
+	Param leftParam = pattern.getLeftParam();
+	Param rightParam = pattern.getRightParam();
+
+	if (pattern.getEntity == IF) {
+		vector<vector<int>> results = pkb.getAllIfsVariables();
+		patternResults.setResults(results);
+	}
+	else if (pattern.getEntity == WHILE) {
+		vector<vector<int>> results = pkb.getAllWhileVariables();
+		patternResults.setResults(results);
+	}
+	else { //assignment 
+		if (rightParam.type == EXPR_SPEC) {
+			if (Utils::isSynonym(leftParam.type)) {
+				vector<vector<int>> results = pkb.getAllStatementsWithExprSpec(rightParam);
+				patternResults.setResults(results);
+			}
+			else if (leftParam.type == IDENT) {
+				boolean results = pkb.checkPattern(stoi(leftParam.type), rightParam);
+				patternResults.setValid(results);
+			}
+			else {
+				vector<vector<int>> results = pkb.getPatternVariableWithExprSpec(rightParam);
+				patternResults.setResults(results);
+			}
+		}
+		else {
+			if (Utils::isSynonym(leftParam.type)) {
+				vector<vector<int>> results = pkb.getAllAssignRHS();
+				patternResults.setResults(results);
+			}
+			else if (leftParam.type == IDENT) {
+				vector<vector<int>> results = pkb.checkStatementModifiesVariable(stoi(leftParam.value));
+				patternResults.setResults(results);
+			}
+			else {
+				vector<vector<int>> results = pkb.getAllAssignStatements();
+				patternResults.setResults(results);
+			}
+		}
+	} */
 };
 
 bool QueryEvaluator::hasClauseResults(ClauseResults & clauseResults)
