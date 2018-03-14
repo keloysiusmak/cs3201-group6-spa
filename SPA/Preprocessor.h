@@ -32,10 +32,12 @@ public:
 	bool isValidSynonym(string synonym);
 	bool isValidStmtRef(string stmtRef);
 	bool isValidEntRef(string entRef);
+	bool isValidVarRef(string varRef);
 	bool isValidExpressSpec(string expressSpec);
 	bool isDeclarationSynonymExist(string synonym);
 	bool parseClauseArg1(QueryObject &qo, string relType, string arg1, string arg2);
 	bool parseClauseArg2(QueryObject &qo, string relType, string arg1, string arg2);
+	bool parseClauseArg3(QueryObject &qo, string relType, string arg1, string arg2);
 	bool parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2);
 	bool isValidSuchThatKeyword(string query);
 };

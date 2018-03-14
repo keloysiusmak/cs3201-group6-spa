@@ -16,10 +16,10 @@ class TestWrapper : public AbstractWrapper {
 private:
 
 	//================== Main Component =======================
-	PKB pkb;
-	Evaluator evaluator;
-	Preprocessor preprocessor;
-	Parser parser;
+	//PKB pkb;
+	//Evaluator evaluator;
+	//Preprocessor preprocessor;
+	//Parser parser;
 	//=========================================================
 
  public:
