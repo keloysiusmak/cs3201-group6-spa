@@ -382,12 +382,57 @@ void QueryEvaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseRes
 
 void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResults)
 {
-	
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (Utils::isSynonym(leftParam.type)) { // (syn, syn)
+		if (Utils::isSynonym(rightParam.type)) {
+			//vector<vector<int>> results = pkb.getAllCallers();
+			//clauseResults.setResults(results);
+		}
+		else { // (syn, concrete)
+			//vector<vector<int>> results = pkb.getCalledBy(stoi(rightParam.value));
+			//clauseResults.setValues(results);
+		}
+	}
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+			//vector<vector<int>> results = pkb.getCalls(stoi(leftParam.value));
+			//clauseResults.setResults(results);
+
+		}
+		else { // (concrete, conrete)
+			//bool result = pkb.checkCall(stoi(leftParam.value), stoi(rightParam.value));
+			//clauseResults.setValid(result);
+		}
+	}
 }
 
 void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseResults)
 {
-	
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (Utils::isSynonym(leftParam.type)) {
+		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+			//vector<vector<int>> results = pkb.getAllCallerStar();
+			//clauseResults.setResults(results);
+		}
+		else { // (syn, concrete)
+			//vector<vector<int>> results = pkb.getCallerStar(stoi(rightParam.value));
+			//clauseResults.setResults(results);
+		}
+	}
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+			//vector<vector<int>> results = pkb.getCalleeStar(stoi(leftParam.value));
+			//clauseResults.setResults(results);
+		}
+		else { // (concrete, concrete)
+			//bool result = pkb.checkCallStar(stoi(leftParam.value), stoi(rightParam.value));
+			//clauseResults.setValid(result);
+		}
+	}
 }
 
 void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternResults)
