@@ -290,7 +290,8 @@ bool Parser::assignmentStatement() {
 	// insert variable
 	int var_id = pkb.insertToNameTable(VAR_TABLE, var_name);
 
-	// get parents and insert parents
+	// INSERT MODIFIES
+	// get parents and insert modifies for parents
 	vector<int> parents = pkb.getParentStar(currentStmNum)[0];
 	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
 		pkb.insertToTable(STATEMENT_TABLE, parents[i], { {},{},{ var_id },{} });
@@ -306,6 +307,26 @@ bool Parser::assignmentStatement() {
 	expression();
 	match(";");
 	return true;
+}
+
+bool Parser::callStatement() {
+	int curStmListId = stmListIdStack.top();
+	// insert StmtListID to StmtTable1 
+	pkb.insertToTable(STATEMENT_TABLE, currentStmNum, { { curStmListId },{},{},{ CALL_TYPE } });
+
+	match("call");
+
+	string procName = nextToken;
+	match(procName, true);
+
+	// insert proc id to PROC_INFO_TABLE if new
+	int calledProcId = pkb.insertToNameTable(PROC_TABLE, procName);
+
+	// insert to calls table
+	pkb.insertToTable(CALLS_TABLE, currentProcId, { { calledProcId }, {} });
+	pkb.insertToTable(CALLS_TABLE, calledProcId, { {}, { currentStmNum } });
+
+	match(";");
 }
 
 bool Parser::statement() {
@@ -324,6 +345,9 @@ bool Parser::statement() {
 	}
 	else if (nextToken == "while") {
 		whileStatement();
+	}
+	else if (nextToken == "call") {
+		callStatement();
 	}
 	else {
 		assignmentStatement();
