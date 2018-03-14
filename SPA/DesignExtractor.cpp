@@ -4,10 +4,9 @@ using namespace std;
 
 #include "DesignExtractor.h";
 #include "Constants.h";
+#include "Graph.h"
 #include <set>;
 #include <queue>;
-#include <list>;
-#include <stack>;
 
 void DesignExtractor::extract(PKB &pkb) {
 	extractNext(pkb);
@@ -33,7 +32,8 @@ void DesignExtractor::extractNext(PKB &pkb) {
 				pkb.insertToTable(NEXT_INVERSE_TABLE, (currStatement + 1), { {currStatement} });
 			}
 			else if (whileStack.size() > 0) {
-				int popped = whileStack.pop_back;
+				int popped = whileStack.back();
+				data.pop_back();
 				std::vector<std::vector<int>> insert = { { popped } };
 				pkb.insertToTable(NEXT_TABLE, currStatement, insert);
 				pkb.insertToTable(NEXT_INVERSE_TABLE, popped, { { currStatement } });
@@ -43,7 +43,8 @@ void DesignExtractor::extractNext(PKB &pkb) {
 			whileStack.push_back(currStatement);
 			int childStmtList = pkb.getFromTable(1, currStatement)[0][1];
 			int firstStatementInChild = pkb.getFromTable(2, childStmtList)[1][0];
-			int popped = whileStack.pop_back;
+			int popped = whileStack.back();
+			whileStack.pop_back();
 			std::vector<std::vector<int>> insert = { { popped } };
 			pkb.insertToTable(NEXT_TABLE, currStatement, insert);
 			pkb.insertToTable(NEXT_INVERSE_TABLE, popped, { { currStatement } });
@@ -52,7 +53,8 @@ void DesignExtractor::extractNext(PKB &pkb) {
 			for (int a = 1; a < 3; a++) {
 				int childStmtList = pkb.getFromTable(1, currStatement)[0][a];
 				int firstStatementInChild = pkb.getFromTable(2, childStmtList)[1][0];
-				int popped = whileStack.pop_back;
+				int popped = whileStack.back();
+				whileStack.pop_back();
 				std::vector<std::vector<int>> insert = { { popped } };
 				pkb.insertToTable(NEXT_TABLE, currStatement, insert);
 				pkb.insertToTable(NEXT_INVERSE_TABLE, popped, { { currStatement } });
@@ -78,14 +80,17 @@ void DesignExtractor::extractNextStar(PKB &pkb) {
 		/* Regular */
 		std::vector<int> data = pkb.getFromTable(NEXT_TABLE, currStatement)[0];
 		while (data.size() > 0) {
-			next.push(data.pop_back);
+			next.push(data.back());
+			data.pop_back();
 		}
 		while (next.size() > 0) {
-			int nextStatement = next.pop;
+			int nextStatement = next.back();
+			next.pop();
 			std::vector<int> data = pkb.getFromTable(NEXT_TABLE, nextStatement)[0];
 			for (int i = 0; i < data.size(); i++) {
 				int initialSize = nextStar.size();
-				int newData = data.pop_back;
+				int newData = data.back();
+				data.pop_back();
 				nextStar.insert(newData);
 				if (nextStar.size() > initialSize) {
 					next.push(newData);
@@ -99,16 +104,19 @@ void DesignExtractor::extractNextStar(PKB &pkb) {
 		nextStar.clear();
 
 		/* Inverse */
-		std::vector<int> data = pkb.getFromTable(NEXT_INVERSE_TABLE, currStatement)[0];
+		data = pkb.getFromTable(NEXT_INVERSE_TABLE, currStatement)[0];
 		while (data.size() > 0) {
-			next.push(data.pop_back);
+			next.push(data.back());
+			data.pop_back();
 		}
 		while (next.size() > 0) {
-			int nextStatement = next.pop;
+			int nextStatement = next.back();
+			next.pop();
 			std::vector<int> data = pkb.getFromTable(NEXT_INVERSE_TABLE, nextStatement)[0];
 			for (int i = 0; i < data.size(); i++) {
 				int initialSize = nextStar.size();
-				int newData = data.pop_back;
+				int newData = data.back();
+				data.pop_back();
 				nextStar.insert(newData);
 				if (nextStar.size() > initialSize) {
 					next.push(newData);
@@ -116,9 +124,9 @@ void DesignExtractor::extractNextStar(PKB &pkb) {
 			}
 		}
 
-		std::vector<int> insert(nextStar.begin(), nextStar.end());
+		std::vector<int> nextInsert(nextStar.begin(), nextStar.end());
 
-		pkb.insertToTable(NEXT_STAR_INVERSE_TABLE, currStatement, { insert });
+		pkb.insertToTable(NEXT_STAR_INVERSE_TABLE, currStatement, { nextInsert });
 		nextStar.clear();
 
 		currStatement++;
@@ -155,14 +163,17 @@ void DesignExtractor::extractCallsStar(PKB &pkb) {
 		/* Regular */
 		std::vector<int> data = pkb.getFromTable(CALLS_TABLE, currProcedure)[0];
 		while (data.size() > 0) {
-			calls.push(data.pop_back);
+			calls.push(data.back());
+			data.pop_back();
 		}
 		while (calls.size() > 0) {
-			int nextProcedure = calls.pop;
+			int nextProcedure = calls.back();
+			calls.pop();
 			std::vector<int> data = pkb.getFromTable(CALLS_TABLE, nextProcedure)[0];
 			for (int i = 0; i < data.size(); i++) {
 				int initialSize = callsStar.size();
-				int newData = data.pop_back;
+				int newData = data.back();
+				data.pop_back();
 				callsStar.insert(newData);
 				if (callsStar.size() > initialSize) {
 					calls.push(newData);
@@ -176,16 +187,19 @@ void DesignExtractor::extractCallsStar(PKB &pkb) {
 		callsStar.clear();
 
 		/* Inverse */
-		std::vector<int> data = pkb.getFromTable(CALLS_INVERSE_TABLE, currProcedure)[0];
+		data = pkb.getFromTable(CALLS_INVERSE_TABLE, currProcedure)[0];
 		while (data.size() > 0) {
-			calls.push(data.pop_back);
+			calls.push(data.back());
+			data.pop_back();
 		}
 		while (calls.size() > 0) {
-			int nextProcedure = calls.pop;
+			int nextProcedure = calls.back();
+			calls.pop();
 			std::vector<int> data = pkb.getFromTable(CALLS_INVERSE_TABLE, nextProcedure)[0];
 			for (int i = 0; i < data.size(); i++) {
 				int initialSize = callsStar.size();
-				int newData = data.pop_back;
+				int newData = data.back();
+				data.pop_back();
 				callsStar.insert(newData);
 				if (callsStar.size() > initialSize) {
 					calls.push(newData);
@@ -193,9 +207,9 @@ void DesignExtractor::extractCallsStar(PKB &pkb) {
 			}
 		}
 
-		std::vector<int> insert(callsStar.begin(), callsStar.end());
+		std::vector<int> nextInsert(callsStar.begin(), callsStar.end());
 
-		pkb.insertToTable(CALLS_STAR_INVERSE_TABLE, currProcedure, { insert });
+		pkb.insertToTable(CALLS_STAR_INVERSE_TABLE, currProcedure, { nextInsert });
 		callsStar.clear();
 
 		currProcedure++;
@@ -247,61 +261,5 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 			}
 		}
 
-	}
-}
-
-class Graph {
-
-	int V; 
-	list<int> *adj;
-
-	void topologicalSortUtil(int v, bool visited[], stack<int> &Stack);
-public:
-	Graph(int V);   
-	void addEdge(int v, int w);
-	std::vector<int> topologicalSort();
-};
-
-Graph::Graph(int V)
-{
-	this->V = V;
-	adj = new list<int>[V];
-}
-
-void Graph::addEdge(int v, int w)
-{
-	adj[v].push_back(w);
-}
-
-void Graph::topologicalSortUtil(int v, bool visited[],
-	stack<int> &Stack)
-{
-	visited[v] = true;
-
-	list<int>::iterator i;
-	for (i = adj[v].begin(); i != adj[v].end(); ++i)
-		if (!visited[*i])
-			topologicalSortUtil(*i, visited, Stack);
-
-	Stack.push(v);
-}
-
-std::vector<int> Graph::topologicalSort()
-{
-	stack<int> Stack;
-
-	bool *visited = new bool[V];
-	for (int i = 0; i < V; i++)
-		visited[i] = false;
-
-	for (int i = 0; i < V; i++)
-		if (visited[i] == false)
-			topologicalSortUtil(i, visited, Stack);
-
-	std::vector<int> data;
-	while (Stack.empty() == false)
-	{
-		data.push_back(Stack.top());
-		Stack.pop();
 	}
 }

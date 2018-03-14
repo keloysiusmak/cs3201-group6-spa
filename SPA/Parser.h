@@ -62,6 +62,7 @@ public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stri
 				  return "Name is invalid!";
 			  }
 		  } InvalidNameException;
+
 };
 
 namespace ParserConstants {
