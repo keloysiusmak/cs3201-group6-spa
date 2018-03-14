@@ -384,5 +384,55 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseResults) {
 }
 
-void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternResults) {
+void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternResults)
+{ 
+	/* patternResults.instantiatePattern(pattern);
+
+	Param leftParam = pattern.getLeftParam();
+	Param rightParam = pattern.getRightParam();
+
+	if (pattern.getEntity == IF) {
+		vector<vector<int>> results = pkb.getAllIfsVariables();
+		patternResults.setResults(results);
+	}
+	else if (pattern.getEntity == WHILE) {
+		vector<vector<int>> results = pkb.getAllWhileVariables();
+		patternResults.setResults(results);
+	}
+	else { //assignment 
+		if (rightParam.type == EXPR_SPEC) {
+			if (Utils::isSynonym(leftParam.type)) {
+				vector<vector<int>> results = pkb.getAllStatementsWithExprSpec(rightParam);
+				patternResults.setResults(results);
+			}
+			else if (leftParam.type == IDENT) {
+				boolean results = pkb.checkPattern(stoi(leftParam.type), rightParam);
+				patternResults.setValid(results);
+			}
+			else {
+				vector<vector<int>> results = pkb.getPatternVariableWithExprSpec(rightParam);
+				patternResults.setResults(results);
+			}
+		}
+		else {
+			if (Utils::isSynonym(leftParam.type)) {
+				vector<vector<int>> results = pkb.getAllAssignRHS();
+				patternResults.setResults(results);
+			}
+			else if (leftParam.type == IDENT) {
+				vector<vector<int>> results = pkb.checkStatementModifiesVariable(stoi(leftParam.value));
+				patternResults.setResults(results);
+			}
+			else {
+				vector<vector<int>> results = pkb.getAllAssignStatements();
+				patternResults.setResults(results);
+			}
+		}
+	} */
+};
+
+bool QueryEvaluator::hasClauseResults(ClauseResults & clauseResults)
+{
+	if (clauseResults.valid || clauseResults.values.size() || clauseResults.keyValues.size()) return true;
+	return false;
 };
