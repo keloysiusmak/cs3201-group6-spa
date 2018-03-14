@@ -12,7 +12,7 @@ class QueryEvaluator {
 public:
 	QueryEvaluator();
 	QueryEvaluator(QueryObject);
-	list<string> evaluateQuery();
+	vector<vector<int>> evaluateQuery();
 
 	bool isValidQuery();
 	QueryObject getQueryObject();
@@ -36,9 +36,11 @@ public:
 	vector<vector<int>> evaluateCallsStar(Clause &clause, ClauseResults &clauseResults);
 	vector<vector<int>> evaluatePattern(Pattern &pattern, ClauseResults &patternResults);
 
+	vector<vector<int>> getAllSelectedParam(Param p);
+
 	// Helper Methods
-	bool queryHasClause(QueryObject &queryObj);
-	bool queryHasPattern(QueryObject &queryObj);
+	int queryNumClauses(QueryObject &queryObj);
+	int queryNumPattern(QueryObject &queryObj);
 	bool hasClauseResults(ClauseResults &clauseResults);
 
 private:
