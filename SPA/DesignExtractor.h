@@ -5,9 +5,13 @@
 class DesignExtractor
 {
 public:
-	PKB extract(PKB);
+	void extract(PKB &);
 	
 private:
-	void extractCalls(PKB*);
+	void extractNext(PKB &);
+	void extractNextStar(PKB &);
+	void extractCallsInverse(PKB &);
+	void extractCallsStar(PKB &);
+	void extractUsesModifies(PKB &);
 };
 

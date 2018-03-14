@@ -8,6 +8,7 @@ using namespace std;
 enum RelRef { Modifies, Uses, Parent, ParentT, Follows, FollowsT,
 				Next, NextT, Calls, CallsT };
 
+
 class Clause {
 private:
 	RelRef _relRef;

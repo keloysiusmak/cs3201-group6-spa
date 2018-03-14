@@ -55,13 +55,13 @@ Preprocessor::Preprocessor() {
 
 }
 
-Preprocessor::Preprocessor(Evaluator &evaluator) {
-	_evaluator = &evaluator;
-}
+//Preprocessor::Preprocessor(Evaluator &evaluator) {
+//	_evaluator = &evaluator;
+//}
 
-void Preprocessor::setEvaluator(Evaluator &evaluator) {
-	_evaluator = &evaluator;
-}
+//void Preprocessor::setEvaluator(Evaluator &evaluator) {
+//	_evaluator = &evaluator;
+//}
 
 void Preprocessor::insertDeclarationToMap(string synonym, string declaration) {
 	declarationMap.insert({ synonym, declaration });
@@ -88,7 +88,7 @@ void Preprocessor::preprocessQuery(string query) {
 	//if queryIndex is 0, means no declarations at all
 	if (queryIndex <= 0) {
 		// insert evaluator invalid query api here
-		(*_evaluator).setInvalidQuery("Invalid Query");
+		//(*_evaluator).setInvalidQuery("Invalid Query");
 	}
 
 	for (int i = 0; i < queryIndex; i++) {
@@ -96,7 +96,7 @@ void Preprocessor::preprocessQuery(string query) {
 
 		if (!validateDeclaration) {
 			// insert evaluator invalid query api here
-			(*_evaluator).setInvalidQuery("Invalid Query");
+			//(*_evaluator).setInvalidQuery("Invalid Query");
 			return;
 		}
 	}
@@ -108,7 +108,7 @@ void Preprocessor::preprocessQuery(string query) {
 	
 	if (!validQuery) {
 		// insert evaluator invalid query api here
-		(*_evaluator).setInvalidQuery("Invalid Query");
+		//(*_evaluator).setInvalidQuery("Invalid Query");
 	}	
 };
 
@@ -271,7 +271,7 @@ bool Preprocessor::isValidQuery(string query) {
 	}
 
 	// insert evaluator query api here
-	(*_evaluator).setQueryObject(queryObject);
+	//(*_evaluator).setQueryObject(queryObject);
 	return true;
 };
 

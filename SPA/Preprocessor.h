@@ -15,15 +15,15 @@ using namespace std;
 class Preprocessor {
 private:
 	unordered_map<string, string> declarationMap;
-	Evaluator * _evaluator;
+	//Evaluator * _evaluator;
 
 	int retrieveArgType(string arg);
 	string retrieveParamFromQuery(vector<string> queryArr, int &paramLength, int pos, string end);
 
 public:
 	Preprocessor();
-	Preprocessor(Evaluator &evaluator);
-	void setEvaluator(Evaluator &evaluator);
+	//Preprocessor(Evaluator &evaluator);
+	//void setEvaluator(Evaluator &evaluator);
 	void insertDeclarationToMap(string synonym, string declaration);
 	unordered_map<string, string> getDeclarationMap();
 	void preprocessQuery(string query);
