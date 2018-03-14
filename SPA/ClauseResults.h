@@ -23,3 +23,8 @@ class ClauseResults {
   void ClauseResults::setResults(vector<vector<int>> &pkbResults);
   void ClauseResults::setValid(bool validity);
 };
+
+struct IntermediateTable {
+  vector<Param> tableColumns;
+  vector<vector<int>> resultsTable;
+};
