@@ -29,7 +29,7 @@ class ClauseResults {
   // Getter methods
   bool ClauseResults::isValid();
   bool ClauseResults::hasResults();
-  int ClauseResults::numSyns();
+  int ClauseResults::numParamsInResult();
   
 };
 
