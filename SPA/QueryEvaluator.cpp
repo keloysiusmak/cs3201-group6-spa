@@ -103,12 +103,58 @@ int QueryEvaluator::queryNumPattern(QueryObject &queryObj) {
 
 vector<vector<int>> QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResults)
 {
-	return vector<vector<int>>();
+	clauseResults.instantiateClause(queryObject.getClauses()[0]);
+	RelRef relation = clause.getRelRef();
+	if (relation == Follows) {
+		evaluateFollows(clause, clauseResults);
+	}
+	else if (relation == FollowsT) {
+		evaluateFollowStar(clause, clauseResults);
+	}
+	else if (relation == Parent) {
+		evaluateParent(clause, clauseResults);
+	}
+	else if (relation == ParentT) {
+		evaluateParentStar(clause, clauseResults);
+	}
+	else if (relation == UsesS) {
+		evaluateUses(clause, clauseResults);
+	}
+	else if (relation == ModifiesS) {
+		evaluateModifies(clause, clauseResults);
+	}
+	else if (relation == Next) {
+		evaluateNext(clause, clauseResults);
+	}
+	else if (relation == NextT) {
+		evaluateNextStar(clause, clauseResults);
+	}
+	else { ; } //affects
+	//return vector<vector<int>>();
 }
 
 vector<vector<int>> QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResults)
 {
-	return vector<vector<int>>();
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (Utils::isSynonym(leftParam.type)) {
+		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+			vector<vector<int>> results = pkb.getAllFollows();
+		}
+		else { // (syn, concrete)
+			vector<vector<int>> results = pkb.getFollowsBefore(stoi(rightParam.value));
+		}
+	}
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+			vector<vector<int>> results = pkb.getFollowsAfter(stoi(leftParam.value));
+		}
+		else { // (concrete, concrete)
+			bool result = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
+		}
+	}
 }
 
 vector<vector<int>> QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseResults)
