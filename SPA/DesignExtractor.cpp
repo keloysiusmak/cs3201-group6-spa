@@ -1,12 +1,6 @@
+#pragma once
+
+using namespace std;
+
 #include "DesignExtractor.h"
 
-
-
-DesignExtractor::DesignExtractor()
-{
-}
-
-
-DesignExtractor::~DesignExtractor()
-{
-}
