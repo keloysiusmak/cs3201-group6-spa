@@ -13,15 +13,15 @@ using namespace std::tr1;
 class PKB {
 private:
 	/*  PKB Structure*/
-	unordered_map<int, std::vector<std::vector<int>>> tables[10];
-	unordered_map<int, std::string> nameTables[2];
+	unordered_map<int, std::vector<std::vector<int>>> tables[14];
+	unordered_map<int, std::vector<std::string>> nameTables[3];
 
 public:
 	/* Parser/DE Operations */
 	bool insertToTable(int, int, std::vector<std::vector<int>>);
-	int insertToNameTable(int, std::string);
+	int insertToNameTable(int, std::vector<std::string>);
 	std::vector<std::vector<int>> getFromTable(int, int);
-	std::string getFromNameTable(int, int);
+	std::vector<std::string> getFromNameTable(int, int);
 	std::string getProcedureName(int);
 	std::string getVariableName(int);
 	int getProcedureId(std::string);
@@ -96,6 +96,9 @@ public:
 	std::vector<std::vector<int>> getAllCallsStar();
 	bool checkCalls(int, int);
 	bool checkCallsStar(int, int);
+
+	/* Pattern Operations */
+	std::vector<std::vector<int>> getAssignmentPattern(int);
 
 	/* Constant Operations */
 	std::vector<std::vector<int>> getStatementsWithConstant(int);
