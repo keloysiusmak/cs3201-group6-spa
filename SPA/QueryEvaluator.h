@@ -23,18 +23,18 @@ public:
 	void setPKB(PKB);
 
 	// Main Evaluation methods
-	vector<vector<int>> evaluateClause(Clause &clause, ClauseResults &clauseResults);
-	vector<vector<int>> evaluateFollows(Clause &clause, ClauseResults &clauseResults);
-	vector<vector<int>> evaluateFollowStar(Clause &clause, ClauseResults &clauseResults);
-	vector<vector<int>> evaluateParent(Clause &clause, ClauseResults &clauseResults);
-	vector<vector<int>> evaluateParentStar(Clause &clause, ClauseResults &clauseResults);
-	vector<vector<int>> evaluateUses(Clause &clause, ClauseResults &clauseResults);
-	vector<vector<int>> evaluateModifies(Clause &clause, ClauseResults &clauseResults);
-	vector<vector<int>> evaluateNext(Clause &clause, ClauseResults &clauseResults);
-	vector<vector<int>> evaluateNextStar(Clause &clause, ClauseResults &clauseResults);
-	vector<vector<int>> evaluateCalls(Clause &clause, ClauseResults &clauseResults);
-	vector<vector<int>> evaluateCallsStar(Clause &clause, ClauseResults &clauseResults);
-	vector<vector<int>> evaluatePattern(Pattern &pattern, ClauseResults &patternResults);
+	void evaluateClause(Clause &clause, ClauseResults &clauseResults);
+	void evaluateFollows(Clause &clause, ClauseResults &clauseResults);
+	void evaluateFollowStar(Clause &clause, ClauseResults &clauseResults);
+	void evaluateParent(Clause &clause, ClauseResults &clauseResults);
+	void evaluateParentStar(Clause &clause, ClauseResults &clauseResults);
+	void evaluateUses(Clause &clause, ClauseResults &clauseResults);
+	void evaluateModifies(Clause &clause, ClauseResults &clauseResults);
+	void evaluateNext(Clause &clause, ClauseResults &clauseResults);
+	void evaluateNextStar(Clause &clause, ClauseResults &clauseResults);
+	void evaluateCalls(Clause &clause, ClauseResults &clauseResults);
+	void evaluateCallsStar(Clause &clause, ClauseResults &clauseResults);
+	void evaluatePattern(Pattern &pattern, ClauseResults &patternResults);
 
 	vector<vector<int>> getAllSelectedParam(Param p);
 
