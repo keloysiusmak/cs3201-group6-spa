@@ -8,7 +8,7 @@ enum ParamType { ASSIGN, STMT, STMTLST, WHILE, PROG_LINE, IF, CALL, //Synonym wi
 				VARIABLE, CONSTANT, //Synonym
 				PROCEDURE, //Synonym
 				INTEGER,  //Statement Number
-				CONST_VALUE, VAR_NAME, //For pattern assign (RHS)
+				EXPR, //For pattern assign (RHS)
 				IDENT, //IDENT refers to "x"
 				SYNONYM, //Synonym is the general term
 				BOOLEAN, //return true/false
