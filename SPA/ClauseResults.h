@@ -15,7 +15,7 @@ class ClauseResults {
   Param rhs;
 
   /* 2d table storing results from pkb */
-  vector<Param> tableColumns;
+  vector<Param> tableParams;
   vector<vector<int>> results;
 
   // Instantiation
@@ -34,6 +34,14 @@ class ClauseResults {
 };
 
 struct IntermediateTable {
-  vector<Param> tableColumns;
+  vector<Param> tableParams;
   vector<vector<int>> resultsTable;
+
+  void addTableParams(Param p) {
+	tableParams.push_back(p);
+  };
+
+  void setResultsTable(vector<vector<int>> &table) {
+	resultsTable = table;
+  }
 };
