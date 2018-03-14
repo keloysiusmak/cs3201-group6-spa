@@ -206,6 +206,8 @@ void Parser::expression() {
 bool Parser::ifStatement() {
 	int currentIfNum = currentStmNum;
 	int curStmListId = stmListIdStack.top();
+	vector<string> patternVector;
+
 	// insert StmtListID to StmtTable1 
 	pkb.insertToTable(STATEMENT_TABLE, currentStmNum, { { curStmListId, nextStmListId },{},{},{ IF_TYPE } });
 	// insert StmtID to StmtListTable2
@@ -214,6 +216,9 @@ bool Parser::ifStatement() {
 	match("if");
 
 	string var_name = nextToken;
+	// PATTERN
+	patternVector.push_back(var_name);
+	pkb.insertToNameTable(PATTERN_TABLE, patternVector);
 
 	match(var_name, true);
 
@@ -249,13 +254,19 @@ bool Parser::ifStatement() {
 
 bool Parser::whileStatement() {
 	int curStmListId = stmListIdStack.top();
+	vector<string> patternVector;
+
 	// insert StmtListID to StmtTable1 
 	pkb.insertToTable(STATEMENT_TABLE, currentStmNum, { { curStmListId, nextStmListId },{},{},{ WHILE_TYPE } });
 	// insert StmtID to StmtListTable2
 	pkb.insertToTable(STATEMENT_LIST_TABLE, nextStmListId, { { currentStmNum },{},{ WHILE_TYPE } });
 
 	match("while");
+	// control variable
 	string var_name = nextToken;
+	// PATTERN
+	patternVector.push_back(var_name);
+	pkb.insertToNameTable(PATTERN_TABLE, patternVector);
 
 	match(var_name, true);
 
@@ -279,11 +290,29 @@ bool Parser::whileStatement() {
 	return true;
 }
 
+string Parser::getExpressionQueueString() {
+	std::stringstream ss;
+	while (expressionQueue.size != 0) {
+		ss << expressionQueue.front();
+		expressionQueue.pop();
+	}
+	return ss.str();
+}
+
 bool Parser::assignmentStatement() {
 	int curStmListId = stmListIdStack.top();
+	//re-initialize
+	expressionQueue = queue<string>();
+
+	vector<string> patternVector;
+
 	// insert StmtListID to StmtTable1 
 	pkb.insertToTable(STATEMENT_TABLE, currentStmNum, { { curStmListId },{},{},{ ASSIGNMENT_TYPE } });
+
+	// LHS
 	string var_name = nextToken;
+
+	patternVector.push_back(var_name);
 
 	match(var_name, true);
 
@@ -303,14 +332,24 @@ bool Parser::assignmentStatement() {
 	pkb.insertToTable(PROC_INFO_TABLE, currentProcId, { {},{},{ var_id } });
 	pkb.insertToTable(MODIFIES_TABLE, var_id, { { currentStmNum },{ currentProcId } });
 	
+	// INSERT PATTERN TABLE
+	//pkb.insertToNameTable()
+
 	match("=");
 	expression();
+	// RHS
+	patternVector.push_back(getExpressionQueueString());
+	// PATTERN
+	pkb.insertToNameTable(PATTERN_TABLE, patternVector);
+
 	match(";");
 	return true;
 }
 
 bool Parser::callStatement() {
 	int curStmListId = stmListIdStack.top();
+	vector<string> patternVector = {};
+
 	// insert StmtListID to StmtTable1 
 	pkb.insertToTable(STATEMENT_TABLE, currentStmNum, { { curStmListId },{},{},{ CALL_TYPE } });
 
@@ -326,10 +365,14 @@ bool Parser::callStatement() {
 	pkb.insertToTable(CALLS_TABLE, currentProcId, { { calledProcId }, {} });
 	pkb.insertToTable(CALLS_TABLE, calledProcId, { {}, { currentStmNum } });
 
+	// PATTERN
+	pkb.insertToNameTable(PATTERN_TABLE, patternVector);
+
 	match(";");
 }
 
 bool Parser::statement() {
+
 	string var_name;
 	int var_id;
 	// increate Statement number
