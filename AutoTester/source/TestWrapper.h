@@ -8,18 +8,20 @@
 // include your other headers here
 #include "AbstractWrapper.h"
 #include "PKB.h"
-#include "../SPA/Evaluator.h"
+//#include "../SPA/Evaluator.h"
 #include "../SPA/Preprocessor.h"
+#include "../SPA/DesignExtractor.h"
 #include "../SPA/Parser.h"
 
 class TestWrapper : public AbstractWrapper {
 private:
 
 	//================== Main Component =======================
-	//PKB pkb;
+	PKB pkb;
 	//Evaluator evaluator;
 	//Preprocessor preprocessor;
-	//Parser parser;
+	Parser parser;
+	DesignExtractor de;
 	//=========================================================
 
  public:

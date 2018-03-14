@@ -6,7 +6,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "PatternObject.h"
+#include "../SPA/Pattern.h"
 
 using namespace std::tr1;
 
@@ -98,7 +98,7 @@ public:
 	bool checkCallsStar(int, int);
 
 	/* Pattern Operations */
-	std::vector<std::vector<int>> getAssignmentPattern(int);
+	std::vector<std::vector<int>> getPattern(Pattern);
 
 	/* Constant Operations */
 	std::vector<std::vector<int>> getStatementsWithConstant(int);
