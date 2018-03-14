@@ -51,7 +51,7 @@ queue<string> Parser::getRPN(queue<string> expr)
 			}
 			else if (Utils::isValidName(word)) {
 				string var_name = word;
-				int var_id = pkb.insertToNameTable(VAR_TABLE, var_name);
+				int var_id = pkb.insertToNameTable(VAR_TABLE, { var_name });
 
 				// get parents and insert parents
 				vector<int> parents = pkb.getParentStar(currentStmNum)[0];
@@ -218,7 +218,7 @@ bool Parser::ifStatement() {
 	match(var_name, true);
 
 	// insert variable to varTable
-	int var_id = pkb.insertToNameTable(VAR_TABLE, var_name);
+	int var_id = pkb.insertToNameTable(VAR_TABLE, { var_name });
 
 	// get parents and insert parents
 	vector<int> parents = pkb.getParentStar(currentStmNum)[0];
@@ -260,7 +260,7 @@ bool Parser::whileStatement() {
 	match(var_name, true);
 
 	// insert variable to var table
-	int var_id = pkb.insertToNameTable(VAR_TABLE, var_name);
+	int var_id = pkb.insertToNameTable(VAR_TABLE, { var_name });
 
 	// get parents and insert parents
 	vector<int> parents = pkb.getParentStar(currentStmNum)[0];
@@ -288,7 +288,7 @@ bool Parser::assignmentStatement() {
 	match(var_name, true);
 
 	// insert variable
-	int var_id = pkb.insertToNameTable(VAR_TABLE, var_name);
+	int var_id = pkb.insertToNameTable(VAR_TABLE, { var_name });
 
 	// INSERT MODIFIES
 	// get parents and insert modifies for parents
@@ -320,7 +320,7 @@ bool Parser::callStatement() {
 	match(procName, true);
 
 	// insert proc id to PROC_INFO_TABLE if new
-	int calledProcId = pkb.insertToNameTable(PROC_TABLE, procName);
+	int calledProcId = pkb.insertToNameTable(PROC_TABLE, { procName });
 
 	// insert to calls table
 	pkb.insertToTable(CALLS_TABLE, currentProcId, { { calledProcId }, {} });
@@ -383,7 +383,7 @@ bool Parser::procedure() {
 	match(procName, true);
 
 	// insert proc id to PROC_INFO_TABLE_3
-	currentProcId = pkb.insertToNameTable(PROC_TABLE, procName);
+	currentProcId = pkb.insertToNameTable(PROC_TABLE, { procName });
 
 	match("{");
 	// insert proc id to STATEMENT_LIST_TABLE_2
