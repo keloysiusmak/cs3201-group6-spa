@@ -21,9 +21,9 @@ TestWrapper::TestWrapper() {
 void TestWrapper::parse(std::string filename) {
 	// call your parser to do the parsing
   // ...rest of your code...
-	pkb = parser.Parse(filename, pkb);
-	de.extract(pkb);
-	evaluator.setPKB(pkb);
+	//pkb = parser.Parse(filename, pkb);
+	//de.extract(pkb);
+	//evaluator.setPKB(pkb);
 }
 
 // method to evaluating a query

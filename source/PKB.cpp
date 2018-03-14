@@ -1017,6 +1017,8 @@ std::vector<std::vector<int>> PKB::getPattern(Pattern p) {
 	else if (p.getEntity().type == IF || p.getEntity().type == WHILE) {
 
 	}
+	std::vector<std::vector<int>> a;
+	return a;
 }
 
 /* Constant Operations */
