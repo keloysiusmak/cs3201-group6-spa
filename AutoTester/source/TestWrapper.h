@@ -10,6 +10,7 @@
 #include "PKB.h"
 #include "../SPA/Evaluator.h"
 #include "../SPA/Preprocessor.h"
+#include "../SPA/DesignExtractor.h"
 #include "../SPA/Parser.h"
 
 class TestWrapper : public AbstractWrapper {
@@ -20,6 +21,7 @@ private:
 	Evaluator evaluator;
 	Preprocessor preprocessor;
 	Parser parser;
+	DesignExtractor de;
 	//=========================================================
 
  public:
