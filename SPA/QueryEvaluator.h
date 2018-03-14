@@ -12,7 +12,7 @@ class QueryEvaluator {
 public:
 	QueryEvaluator();
 	QueryEvaluator(QueryObject);
-	void evaluateQuery();
+	list<string> evaluateQuery();
 
 	bool isValidQuery();
 	QueryObject getQueryObject();
