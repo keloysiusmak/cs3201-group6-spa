@@ -45,7 +45,7 @@ void QueryEvaluator::setInvalidQuery(string message) {
 list<string> QueryEvaluator::evaluateQuery() {
   if (isValidQuery()) {
 
-    vector<Param> selectParams = queryObject.getSelectStatement();
+    vector<Param> selectParams = queryObject.getSelectStatements();
 
     /* For storing clause results for pattern and such that clauses */
     vector<Clause> clauses;
