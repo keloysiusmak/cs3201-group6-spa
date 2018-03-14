@@ -57,14 +57,14 @@ list<string> QueryEvaluator::evaluateQuery() {
     for (Clause clause : queryObject.getClauses()) {
       ClauseResult clauseResults;
       evaluateClause(clause, clauseResults);
-      EvaluatorHelpers::mergeClauseTable(clauseResults, iTable);
+      EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
     }
 
     /* Evaluation of patterns */
     for (Clause clause : queryObject.getClauses()) {
       ClauseResult patternResults;
       evaluatePattern(clause, patternResults);
-      EvaluatorHelpers::mergeClauseTable(patternResults, iTable);
+      EvaluatorHelper::mergeClauseTable(patternResults, iTable);
     }
 
     return EvaluatorHelpers::extractParams(selectParams, iTable);
