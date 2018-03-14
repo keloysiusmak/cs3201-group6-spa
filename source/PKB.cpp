@@ -87,23 +87,23 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 	return true;
 }
 
-int PKB::insertToNameTable(int table_id, string value)
+int PKB::insertToNameTable(int table_id, std::vector<string> value)
 {
-	unordered_map<int, string> table = nameTables[table_id - PROC_TABLE];
-	if (table_id != PROC_TABLE && table_id != VAR_TABLE) {
+	unordered_map<int, std::vector<string>> table = nameTables[table_id - PATTERN_TABLE];
+	if (table_id != PROC_TABLE && table_id != VAR_TABLE && table_id != PATTERN_TABLE) {
 		return 0;
 	}
-	else if (table_id == PROC_TABLE && PKB::getProcedureId(value) != 0) {
-		return PKB::getProcedureId(value);
+	else if (table_id == PROC_TABLE && PKB::getProcedureId(value[0]) != 0) {
+		return PKB::getProcedureId(value[0]);
 	}
-	else if (table_id == VAR_TABLE && PKB::getVariableId(value) != 0) {
-		return PKB::getVariableId(value);
+	else if (table_id == VAR_TABLE && PKB::getVariableId(value[0]) != 0) {
+		return PKB::getVariableId(value[0]);
 	}
 	else {
 
 		/* Variable does not exist */
 		int size = static_cast<int>(table.size()) + 1;
-		nameTables[table_id - PROC_TABLE].insert({ size , value });
+		nameTables[table_id - PATTERN_TABLE].insert({size,  value });
 
 		return size;
 	}
@@ -119,19 +119,20 @@ std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 	return tables[table_id - 1][key_id];
 }
 
-string PKB::getFromNameTable(int table_id, int key_id)
+std::vector<string> PKB::getFromNameTable(int table_id, int key_id)
 {
-	std::unordered_map<int, string>::const_iterator got = nameTables[table_id - PROC_TABLE].find(key_id);
+	std::unordered_map<int, std::vector<string>>::const_iterator got = nameTables[table_id - PROC_TABLE].find(key_id);
 	if (got == nameTables[table_id - PROC_TABLE].end()) {
-		return "";
+		std::vector<string> data;
+		return data;
 	}
 	return nameTables[table_id - PROC_TABLE][key_id];
 }
 
 int PKB::getProcedureId(std::string proc_name) {
-	unordered_map<int, string> table = nameTables[0];
+	unordered_map<int, std::vector<string>> table = nameTables[0];
 	for (auto it = table.begin(); it != table.end(); ++it) {
-		if (it->second == proc_name) {
+		if (it->second[0] == proc_name) {
 			return it->first;
 		}
 	}
@@ -140,9 +141,9 @@ int PKB::getProcedureId(std::string proc_name) {
 }
 
 int PKB::getVariableId(std::string var_name) {
-	unordered_map<int, string> table = nameTables[1];
+	unordered_map<int, std::vector<string>> table = nameTables[1];
 	for (auto it = table.begin(); it != table.end(); ++it) {
-		if (it->second == var_name) {
+		if (it->second[0] == var_name) {
 			return it->first;
 		}
 	}
@@ -150,11 +151,11 @@ int PKB::getVariableId(std::string var_name) {
 	return 0;
 }
 std::string PKB::getProcedureName(int proc_id) {
-	return PKB::getFromNameTable(PROC_TABLE, proc_id);
+	return PKB::getFromNameTable(PROC_TABLE, proc_id)[0];
 }
 
 std::string PKB::getVariableName(int var_id) {
-	return PKB::getFromNameTable(VAR_TABLE, var_id);
+	return PKB::getFromNameTable(VAR_TABLE, var_id)[0];
 }
 
 /* General Operations */
@@ -163,7 +164,7 @@ std::vector<std::vector<int>> PKB::getAllVariables() {
 	std::vector<int> data;
 	std::vector<std::vector<int>> new_data;
 
-	unordered_map<int, string> table = nameTables[1];
+	unordered_map<int, std::vector<string>> table = nameTables[1];
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		data.push_back(it->first);
 	}
@@ -210,7 +211,7 @@ std::vector<std::vector<int>> PKB::getAllProcedures() {
 	std::vector<int> data;
 	std::vector<std::vector<int>> new_data;
 
-	unordered_map<int, string> table = nameTables[0];
+	unordered_map<int, std::vector<string>> table = nameTables[0];
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		data.push_back(it->first);
 	}
