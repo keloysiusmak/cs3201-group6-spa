@@ -11,7 +11,7 @@ class QueryObject {
 private:
 	vector<Clause> _clauses;
 	vector<Pattern> _Patterns;
-	Param _selectStmt;
+	vector<Param> _selectStmts;
 
 public:
 	QueryObject();
@@ -19,9 +19,9 @@ public:
 
 	void insertClause(RelRef, ParamType, string, ParamType, string);
 	void insertPattern(ParamType, string, ParamType, string, ParamType, string);
-	void insertSelectStmt(ParamType, string);
+	void insertSelectStmtParam(ParamType, string);
 
 	vector<Clause> getClauses();
 	vector<Pattern> getPatterns();
-	Param getSelectStatement();
+	vector<Param> getSelectStatement();
 };
