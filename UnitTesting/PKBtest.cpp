@@ -24,8 +24,9 @@ namespace UnitTesting
 			
 			int tableValuesCount;
 
-			for (int i = 1; i < PROC_TABLE; i++) {
+			for (int i = 1; i < PATTERN_TABLE; i++) {
 				switch (i) {
+
 				case 1:
 					tableValuesCount = 4;
 					break;
@@ -42,12 +43,30 @@ namespace UnitTesting
 					tableValuesCount = 2;
 					break;
 				case 6:
-					tableValuesCount = 2;
-					break;
-				case 7:
 					tableValuesCount = 1;
 					break;
+				case 7:
+					tableValuesCount = 2;
+					break;
 				case 8:
+					tableValuesCount = 1;
+					break;
+				case 9:
+					tableValuesCount = 2;
+					break;
+				case 10:
+					tableValuesCount = 1;
+					break;
+				case 11:
+					tableValuesCount = 1;
+					break;
+				case 12:
+					tableValuesCount = 1;
+					break;
+				case 13:
+					tableValuesCount = 1;
+					break;
+				case 14:
 					tableValuesCount = 1;
 					break;
 				}
@@ -90,9 +109,30 @@ namespace UnitTesting
 					tableValuesCount = 2;
 					break;
 				case 6:
-					tableValuesCount = 2;
+					tableValuesCount = 1;
 					break;
 				case 7:
+					tableValuesCount = 2;
+					break;
+				case 8:
+					tableValuesCount = 1;
+					break;
+				case 9:
+					tableValuesCount = 2;
+					break;
+				case 10:
+					tableValuesCount = 1;
+					break;
+				case 11:
+					tableValuesCount = 1;
+					break;
+				case 12:
+					tableValuesCount = 1;
+					break;
+				case 13:
+					tableValuesCount = 1;
+					break;
+				case 14:
 					tableValuesCount = 1;
 					break;
 				}
@@ -162,11 +202,18 @@ namespace UnitTesting
 			string data = "x";
 			std::vector<string> null;
 
-			for (int i = PROC_TABLE; i < PROC_TABLE + 2; i++) {
+			for (int i = PATTERN_TABLE; i < PATTERN_TABLE + 3; i++) {
 				/* Null Test */
+				null.clear();
 				Assert::AreEqual(true, (null == pkb.getFromNameTable(i, 1)));
-				null = {"x"};
-				Assert::AreEqual(true, (null == pkb.getFromNameTable(i, pkb.insertToNameTable(i, { data }))));
+				if (i > PATTERN_TABLE) {
+					null = { "x" };
+					Assert::AreEqual(true, (null == pkb.getFromNameTable(i, pkb.insertToNameTable(i, { data }))));
+				}
+				else {
+					null = {"x", "x"};
+					Assert::AreEqual(true, (null == pkb.getFromNameTable(i, pkb.insertToNameTable(i, { data, data }))));
+				}
 			}
 		}
 
@@ -287,7 +334,8 @@ namespace UnitTesting
 			pkb.insertToTable(1, 1, { { 1 },{},{},{ 1 } });
 			pkb.insertToTable(1, 2, { { 1 },{},{},{ 1 } });
 			pkb.insertToTable(1, 3, { { 1 },{},{},{ 1 } });
-			data = { { 1, 2, 3 } };
+			data = { { 1}, {2}, {3} };
+
 
 			Assert::AreEqual(true, (pkb.getAllStatements() == data));
 		}
@@ -305,7 +353,7 @@ namespace UnitTesting
 			pkb.insertToTable(1, 2, { { 1 },{},{},{ 2 } });
 			pkb.insertToTable(1, 3, { { 1 },{},{},{ 3 } });
 
-			data = { { 1, 3 } };
+			data = { { 1}, {3 } };
 			Assert::AreEqual(true, (pkb.getAllStatementsWithType(3) == data));
 
 			data = { { 2 } };
@@ -335,9 +383,8 @@ namespace UnitTesting
 			Assert::AreEqual(true, (data == pkb.getFollowsBefore(2)));
 			data = { { 2 } };
 			Assert::AreEqual(true, (data == pkb.getFollowsAfter(1)));
-			data = { { 0 } };
+			data.clear();
 			Assert::AreEqual(true, (data == pkb.getFollowsAfter(2)));
-			data = { { 0 } };
 			Assert::AreEqual(true, (data == pkb.getFollowsBefore(0)));
 		}
 
@@ -360,8 +407,8 @@ namespace UnitTesting
 
 			pkb.insertToTable(2, 1, { { 0 },{ 1, 2, 3 },{ 1 } });
 
-			std::vector<std::vector<int>> dataBeforeStar = { {1, 2} };
-			std::vector<std::vector<int>> dataAfterStar = { {2, 3} };
+			std::vector<std::vector<int>> dataBeforeStar = { {1}, {2} };
+		std::vector<std::vector<int>> dataAfterStar = { {2}, {3} };
 			std::vector<std::vector<int>> nullData;
 			Assert::AreEqual(true, (pkb.getFollowsBeforeStar(1) == nullData));
 			Assert::AreEqual(true, (pkb.getFollowsAfterStar(3) == nullData));
@@ -456,10 +503,10 @@ namespace UnitTesting
 			/* Invalid Test */
 			Assert::AreEqual(0, static_cast<int>(pkb.getAllFollowsStar().size()));
 
-			pkb.insertToTable(2, 1, { { 0 },{ 1, 2, 3, 4 },{},{},{ 1 } });
+			pkb.insertToTable(2, 1, { { 0 },{ 1, 2, 3, 4 },{ 1 } });
 			
 			std::vector<std::vector<int>> follows = pkb.getAllFollowsStar();
-			std::vector<std::vector<int>> data = { {2,3,4}, {3,4}, {4} };
+			std::vector<std::vector<int>> data = { {1,2}, {1,3}, {1,4}, {2,3}, {2,4}, {3,4} };
 			for (int i = 0; i < follows[0].size(); i++) {
 				Assert::AreEqual(true, (follows[0][i] == data[0][i]));
 				i++;
@@ -473,7 +520,6 @@ namespace UnitTesting
 
 			/* Null Test */
 			std::vector<std::vector<int>> data;
-			data = { { 0 } };
 			Assert::AreEqual(true, (data == pkb.getParent(2)));
 			Assert::AreEqual(true, (data == pkb.getParent(1)));
 			Assert::AreEqual(true, (pkb.getChildren(1) == data));
@@ -485,7 +531,6 @@ namespace UnitTesting
 			pkb.insertToTable(1, 5, { { 4 },{},{},{ 1 } });
 
 			/* Invalid Test */
-			data = { { 0 } };
 			Assert::AreEqual(true, (data == pkb.getParent(2)));
 			Assert::AreEqual(true, (data == pkb.getParent(1)));
 			Assert::AreEqual(true, (pkb.getChildren(1) == data));
@@ -504,13 +549,12 @@ namespace UnitTesting
 			data = { { 4 } };
 			Assert::AreEqual(true, (data == pkb.getParent(5)));
 
-			std::vector<int> result;
-			result = { 2 };
-			Assert::AreEqual(true, ( result == pkb.getChildren(1)[0]));
-			result = { 3 };
-			Assert::AreEqual(true, (result == pkb.getChildren(1)[1]));
-			result = { 5 };
-			Assert::AreEqual(true, (result == pkb.getChildren(1)[0]));
+			std::vector<std::vector<int>> result;
+			result = { {2}, {3} };
+			Assert::AreEqual(true, ( result == pkb.getChildren(1)));
+			result = { {5} };
+			Assert::AreEqual(true, (result == pkb.getChildren(4)));
+			data.clear();
 			Assert::AreEqual(true, (pkb.getChildren(2) == data));
 		}
 
@@ -543,7 +587,7 @@ namespace UnitTesting
 
 			std::vector<std::vector<int>> parentStar1 = { { 1 } };
 			std::vector<std::vector<int>> parentStar2 = { { 5 } };
-			std::vector<std::vector<int>> childStar1 = { { 2, 3, 4 } };
+			std::vector<std::vector<int>> childStar1 = { { 2}, {3}, {4} };
 			std::vector<std::vector<int>> childStar2 = { { 6 } };
 			Assert::AreEqual(true, (pkb.getParentStar(1) == data));
 			Assert::AreEqual(true, (pkb.getChildrenStar(3) == data));
@@ -620,6 +664,7 @@ namespace UnitTesting
 			pkb.insertToTable(2, 3, { { 1 },{ 3, 4 },{ 3 } });
 			pkb.insertToTable(2, 4, { { 4 },{ 5 },{ 2 } });
 
+			
 			Assert::AreEqual(true, pkb.checkParentStar(1, 2));
 			Assert::AreEqual(true, pkb.checkParentStar(1, 3));
 			Assert::AreEqual(true, pkb.checkParentStar(1, 4));
@@ -687,6 +732,7 @@ namespace UnitTesting
 			data.push_back({ 1,4 });
 			data.push_back({ 1,5 });
 			data.push_back({ 4, 5 });
+
 			Assert::AreEqual(true, (pkb.getAllParentStar() == data));
 		}
 
@@ -733,7 +779,7 @@ namespace UnitTesting
 			pkb.insertToTable(4, 1, { {},{1,2} });
 
 			data = { { 1 } };
-			data2 = { { 1, 2 } };
+			data2 = { { 1}, {2 }};
 
 			Assert::AreEqual(true, pkb.checkProcedureUsesVariable(1, 1));
 			Assert::AreEqual(true, pkb.checkProcedureUsesVariable(2, 1));
@@ -770,9 +816,9 @@ namespace UnitTesting
 			pkb.insertToTable(4, 6, { { 6 },{} });
 			pkb.insertToTable(4, 7, { { 6, 7 },{} });
 
-			data = { { 2,3,4,5 } };
-			data2 = {{ 1,3 }};
-			data3 = { { 6, 7 } };
+			data = { { 2},{3},{4},{5} };
+			data2 = { { 1},{3 }};
+			data3 = { { 6}, {7 }};
 
 			Assert::AreEqual(true, pkb.checkStatementUsesVariable(2, 2));
 			Assert::AreEqual(true, pkb.checkStatementUsesVariable(1, 3));
@@ -954,9 +1000,9 @@ namespace UnitTesting
 			pkb.insertToTable(5, 6, { {  },{} });
 			pkb.insertToTable(5, 7, { { 6, 7 },{} });
 
-			data = { { 2,3,4,5 } };
-			data2 = { { 1,3 } };
-			data3 = { { 6, 7 } };
+			data = { { 2},{3},{4},{5 }};
+			data2 = { { 1 }, {3 } };
+			data3 = { { 6}, {7 }};
 
 			Assert::AreEqual(true, pkb.checkStatementModifiesVariable(2, 2));
 			Assert::AreEqual(true, pkb.checkStatementModifiesVariable(1, 3));
@@ -984,7 +1030,7 @@ namespace UnitTesting
 			pkb.insertToTable(5, 1, { {},{ 1, 2 } });
 
 			data = { { 1 } };
-			data2 = { { 1, 2 } };
+			data2 = { { 1}, {2 }};
 
 			Assert::AreEqual(true, pkb.checkProcedureModifiesVariable(1, 1));
 			Assert::AreEqual(true, pkb.checkProcedureModifiesVariable(2, 1));
@@ -1012,7 +1058,7 @@ namespace UnitTesting
 			stmts.push_back({ 2, 2 });
 
 			vars.push_back({ pkb.insertToNameTable(VAR_TABLE, {"a"}) , 1 });
-			vars.push_back({ pkb.insertToNameTable(VAR_TABLE, {"a"}) , 2 });
+			vars.push_back({ pkb.insertToNameTable(VAR_TABLE, {"b"}) , 1 });
 
 			Assert::AreEqual(true, (pkb.getAllStatementModifiesVariables() == stmts));
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesStatements() == vars));
@@ -1072,8 +1118,6 @@ namespace UnitTesting
 			vars.push_back({ pkb.insertToNameTable(VAR_TABLE, {"g"}) , 6 });
 			vars.push_back({ pkb.insertToNameTable(VAR_TABLE, {"g"}) , 7 });
 
-			std::vector<std::vector<int>> table = pkb.getAllStatementModifiesVariables();
-			
 			Assert::AreEqual(true, (pkb.getAllStatementModifiesVariables() == stmts));
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesStatements() == vars));
 		}
@@ -1097,7 +1141,7 @@ namespace UnitTesting
 
 
 			procs.push_back({ pkb.insertToNameTable(PROC_TABLE, {"abc"}), 1 });
-			procs.push_back({ pkb.insertToNameTable(PROC_TABLE, {"abc"}), 1 });
+			procs.push_back({ pkb.insertToNameTable(PROC_TABLE, {"abd"}), 1 });
 
 			vars.push_back({ pkb.insertToNameTable(VAR_TABLE, {"a"}) , 1 });
 			vars.push_back({ pkb.insertToNameTable(VAR_TABLE, {"a"}) , 2 });
@@ -1115,7 +1159,7 @@ namespace UnitTesting
 			/* Null Tests */
 			Assert::AreEqual(true, (pkb.getStatementsWithConstant(1) == initial_data));
 
-			pkb.insertToTable(7, 1, { { 1 } });
+			pkb.insertToTable(CONST_TABLE, 1, { { 1 } });
 			std::vector<std::vector<int>> data = { {1} };
 			Assert::AreEqual(true, (pkb.getStatementsWithConstant(1) == data));
 			Assert::AreEqual(true, (pkb.getStatementsWithConstant(2) == initial_data));

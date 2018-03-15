@@ -31,18 +31,30 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 		tableValuesCount = 2;
 		break;
 	case 6:
-		tableValuesCount = 2;
+		tableValuesCount = 1;
 		break;
 	case 7:
-		tableValuesCount = 1;
-		break;
-	case 8:
 		tableValuesCount = 2;
 		break;
-	case 9:
+	case 8:
 		tableValuesCount = 1;
 		break;
+	case 9:
+		tableValuesCount = 2;
+		break;
 	case 10:
+		tableValuesCount = 1;
+		break;
+	case 11:
+		tableValuesCount = 1;
+		break;
+	case 12:
+		tableValuesCount = 1;
+		break;
+	case 13:
+		tableValuesCount = 1;
+		break;
+	case 14:
 		tableValuesCount = 1;
 		break;
 	default:
@@ -121,12 +133,12 @@ std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 
 std::vector<string> PKB::getFromNameTable(int table_id, int key_id)
 {
-	std::unordered_map<int, std::vector<string>>::const_iterator got = nameTables[table_id - PROC_TABLE].find(key_id);
-	if (got == nameTables[table_id - PROC_TABLE].end()) {
+	std::unordered_map<int, std::vector<string>>::const_iterator got = nameTables[table_id - PATTERN_TABLE].find(key_id);
+	if (got == nameTables[table_id - PATTERN_TABLE].end()) {
 		std::vector<string> data;
 		return data;
 	}
-	return nameTables[table_id - PROC_TABLE][key_id];
+	return got->second;
 }
 
 int PKB::getProcedureId(std::string proc_name) {
@@ -151,57 +163,63 @@ int PKB::getVariableId(std::string var_name) {
 	return 0;
 }
 std::string PKB::getProcedureName(int proc_id) {
-	return PKB::getFromNameTable(PROC_TABLE, proc_id)[0];
+	std::vector<string> data = PKB::getFromNameTable(PROC_TABLE, proc_id);
+	if (data.size() > 0) {
+		return data[0];
+	}
+	else {
+		return "";
+	}
 }
 
 std::string PKB::getVariableName(int var_id) {
-	return PKB::getFromNameTable(VAR_TABLE, var_id)[0];
+	std::vector<string> data = PKB::getFromNameTable(VAR_TABLE, var_id);
+	if (data.size() > 0) {
+		return data[0];
+	}
+	else {
+		return "";
+	}
 }
 
 /* General Operations */
 std::vector<std::vector<int>> PKB::getAllVariables() {
 
-	std::vector<int> data;
 	std::vector<std::vector<int>> new_data;
 
-	unordered_map<int, std::vector<string>> table = nameTables[VAR_TABLE - 15];
+	unordered_map<int, std::vector<string>> table = nameTables[VAR_TABLE - PATTERN_TABLE];
 	for (auto it = table.begin(); it != table.end(); ++it) {
-		data.push_back(it->first);
+		new_data.push_back({ it->first });
 	}
 
-	new_data.push_back(data);
 	return new_data;
 
 }
 
 std::vector<std::vector<int>> PKB::getAllStatements() {
 
-	std::vector<int> data;
 	std::vector<std::vector<int>> new_data;
 
 	unordered_map<int, std::vector<std::vector<int>>> table = tables[STATEMENT_TABLE - 1];
 	for (auto it = table.begin(); it != table.end(); ++it) {
-		data.push_back(it->first);
+		new_data.push_back({ it->first });
 	}
 
-	new_data.push_back(data);
 	return new_data;
 
 }
 
 std::vector<std::vector<int>> PKB::getAllStatementsWithType(int stmt_type) {
 
-	std::vector<int> data;
 	std::vector<std::vector<int>> new_data;
 
 	unordered_map<int, std::vector<std::vector<int>>> table = tables[STATEMENT_TABLE - 1];
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		if (it->second[3][0] == stmt_type) {
-			data.push_back(it->first);
+			new_data.push_back({ it->first });
 		}
 	}
 
-	new_data.push_back(data);
 	return new_data;
 
 }
@@ -211,12 +229,10 @@ std::vector<std::vector<int>> PKB::getAllProcedures() {
 	std::vector<int> data;
 	std::vector<std::vector<int>> new_data;
 
-	unordered_map<int, std::vector<string>> table = nameTables[PATTERN_TABLE - 15];
+	unordered_map<int, std::vector<string>> table = nameTables[PROC_TABLE - PATTERN_TABLE];
 	for (auto it = table.begin(); it != table.end(); ++it) {
-		data.push_back(it->first);
+		new_data.push_back({ it->first });
 	}
-
-	new_data.push_back(data);
 	return new_data;
 
 }
@@ -233,9 +249,10 @@ std::vector<std::vector<int>> PKB::getFollowsBefore(int stmt) {
 
 			for (unsigned int i = 0; i < static_cast<int>(data[1].size()); i++) {
 				if (data[1][i] == stmt) {
-					int res = i == 0 ? 0 : data[1][i - 1];
-					std::vector<std::vector<int>> result = { {res} };
-					return result;
+					if (i > 0) {
+						std::vector<std::vector<int>> result = { { data[1][i - 1] } };
+						return result;
+					}
 					break;
 				}
 			}
@@ -249,7 +266,7 @@ std::vector<std::vector<int>> PKB::getFollowsBefore(int stmt) {
 
 std::vector<std::vector<int>> PKB::getFollowsAfter(int stmt) {
 	std::vector<std::vector<int>> data;
-	data = PKB::getFromTable(1, stmt);
+	data = PKB::getFromTable(STATEMENT_TABLE, stmt);
 	if (static_cast<int>(data.size()) > 0) {
 		int stmtListID = data[0][0];
 		data = PKB::getFromTable(STATEMENT_LIST_TABLE, stmtListID);
@@ -258,9 +275,10 @@ std::vector<std::vector<int>> PKB::getFollowsAfter(int stmt) {
 
 			for (unsigned int i = 0; i < static_cast<int>(data[1].size()); i++) {
 				if (data[1][i] == stmt) {
-					int res = ((i + 1) == static_cast<int>(data[1].size())) ? 0 : data[1][i + 1];
-					std::vector<std::vector<int>> result = { { res } };
-					return result;
+					if ((i + 1) < static_cast<int>(data[1].size())) {
+						std::vector<std::vector<int>> result = { { data[1][i + 1] } };
+						return result;
+					}
 					break;
 				}
 			}
@@ -282,9 +300,13 @@ std::vector<std::vector<int>> PKB::getFollowsBeforeStar(int stmt) {
 		if (static_cast<int>(data.size()) > 0) {
 
 			for (unsigned int i = 0; i < static_cast<int>(data[1].size()); i++) {
-				if (data[1][i] == stmt) {
+				if (i > 0 && data[1][i] == stmt) {
 					data[1].erase(data[1].begin() + i, data[1].begin() + static_cast<int>(data[1].size()));
-					std::vector<std::vector<int>> result = { data[1] };
+
+					std::vector<std::vector<int>> result;
+					for (int i = 0; i < data[1].size(); i++) {
+						result.push_back({ data[1][i] });
+					}
 					return result;
 					break;
 				}
@@ -307,9 +329,12 @@ std::vector<std::vector<int>> PKB::getFollowsAfterStar(int stmt) {
 		if (static_cast<int>(data.size()) > 0) {
 
 			for (unsigned int i = 0; i < static_cast<int>(data[1].size()); i++) {
-				if (data[1][i] == stmt) {
+				if ((i+1) < data[1].size() && data[1][i] == stmt) {
 					data[1].erase(data[1].begin(), data[1].begin() + i + 1);
-					std::vector<std::vector<int>> result = { data[1] };
+					std::vector<std::vector<int>> result;
+					for (int i = 0; i < data[1].size(); i++) {
+						result.push_back({data[1][i]});
+					}
 					return result;
 					break;
 				}
@@ -323,15 +348,21 @@ std::vector<std::vector<int>> PKB::getFollowsAfterStar(int stmt) {
 }
 
 bool PKB::checkFollows(int stmt1, int stmt2) {
-	return (stmt2 == PKB::getFollowsAfter(stmt1)[0][0]);
+	std::vector<std::vector<int>> data = PKB::getFollowsAfter(stmt1);
+	if (data.size() > 0 && data[0].size() > 0) {
+		return (stmt2 == data[0][0]);
+	}
+	return false;
 }
 
 bool PKB::checkFollowsStar(int stmt1, int stmt2) {
-	std::vector<int> stmtList = PKB::getFollowsAfterStar(stmt1)[0];
-	
-	for (unsigned int i = 0; i < static_cast<int>(stmtList.size()); i++) {
-		if (stmt2 == stmtList[i]) {
-			return true;
+	std::vector<std::vector<int>> stmtLists = PKB::getFollowsAfterStar(stmt1);
+	if (stmtLists.size() > 0) {
+
+		for (unsigned int i = 0; i < static_cast<int>(stmtLists.size()); i++) {
+			if (stmt2 == stmtLists[i][0]) {
+				return true;
+			}
 		}
 	}
 
@@ -341,7 +372,7 @@ bool PKB::checkFollowsStar(int stmt1, int stmt2) {
 std::vector<std::vector<int>> PKB::getAllFollows() {
 
 	std::vector<std::vector<int>> output;
-	unordered_map<int, std::vector<std::vector<int>>> table = tables[STATEMENT_LIST_TABLE];
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[STATEMENT_LIST_TABLE - 1];
 
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		std::vector<int> stmtList = it->second[1];
@@ -377,26 +408,28 @@ std::vector<std::vector<int>> PKB::getAllFollowsStar() {
 /* Parent Operations */
 std::vector<std::vector<int>> PKB::getParent(int stmt) {
 	std::vector<std::vector<int>> data;
+	std::vector<std::vector<int>> result;
 	data = PKB::getFromTable(STATEMENT_TABLE, stmt);
 	if (static_cast<int>(data.size()) > 0 && static_cast<int>(data[0].size()) > 0) {
 		data = PKB::getFromTable(STATEMENT_LIST_TABLE, data[0][0]);
 		if (static_cast<int>(data.size()) > 0 && static_cast<int>(data[0].size()) > 0) {
-			std::vector<std::vector<int>> result = { {data[0][0]} };
+			result.push_back({ data[0][0] });
 			return result;
 		}
 	}
 
-	std::vector<std::vector<int>> empty;
-	return empty;
+	return result;
 }
 
 std::vector<std::vector<int>> PKB::getParentStar(int stmt) {
 	std::vector<std::vector<int>> output;
 	std::vector<std::vector<int>> parent = PKB::getParent(stmt);
 	
-	while (parent[0][0] != 0) {
-		output.push_back({ parent[0][0] });
-		parent = PKB::getParent(parent[0][0]);
+	if (parent.size() > 0 && parent[0].size() > 0) {
+		while (parent[0][0] != 0) {
+			output.push_back({ parent[0][0] });
+			parent = PKB::getParent(parent[0][0]);
+		}
 	}
 
 	return output;
@@ -405,53 +438,49 @@ std::vector<std::vector<int>> PKB::getParentStar(int stmt) {
 std::vector<std::vector<int>> PKB::getChildren(int stmt) {
 	unordered_map<int, std::vector<std::vector<int>>> table = tables[STATEMENT_LIST_TABLE - 1];
 
-	std::vector<std::vector<int>> data;
+
+	std::vector<std::vector<int>> res;
 
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		if (it->second[0][0] == stmt) {
-			data.insert(data.end(), it->second[1].begin(), it->second[1].end());
+			for (int i = 0; i < it->second[1].size(); i++) {
+				res.push_back({ it->second[1][i] });
+			}
 		}
 	}
-	return data;
+	return res;
 }
 
 std::vector<std::vector<int>> PKB::getChildrenStar(int stmt) {
-	std::vector<std::vector<int>> output;
 	std::vector<std::vector<int>> data;
 	unordered_map<int, std::vector<std::vector<int>>> table = tables[STATEMENT_LIST_TABLE - 1];
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		if (it->second[0][0] == stmt) {
-			if (static_cast<int>(data.size()) == 0) {
-				data = it->second;
-			}
-			else {
-				for (int i = 0; i < static_cast<int>(data.size()); i++) {
-					data[i].insert(data[i].end(), it->second[i].begin(), it->second[i].end());
-				}
+			for (unsigned int i = 0; i < static_cast<int>(it->second[1].size()); i++) {
+				data.push_back({ it->second[1][i] });
 			}
 		}
 	}
 	if (static_cast<int>(data.size()) > 0) {
-		for (unsigned int i = 0; i < static_cast<int>(data[1].size()); i++) {
-			output.push_back({ data[1][i] });
-			if (static_cast<int>(PKB::getChildren(data[1][i]).size()) > 0) {
-				std::vector<std::vector<int>> recur_output = PKB::getChildrenStar(data[1][i]);
-				for (unsigned int j = 0; j < static_cast<int>(recur_output[0].size()); j++) {
-					output.push_back({ recur_output[0][j] });
-				}
+		for (unsigned int i = 0; i < static_cast<int>(data.size()); i++) {
+			std::vector<std::vector<int>> recur_output = PKB::getChildrenStar(data[i][0]);
+			for (unsigned int j = 0; j < static_cast<int>(recur_output.size()); j++) {
+				data.push_back({ recur_output[j][0] });
 			}
 		}
 	}
 
-	return output;
+	return data;
 }
 
 bool PKB::checkParent(int stmt1, int stmt2) {
 	std::vector<std::vector<int>> children = PKB::getChildren(stmt1);
 
-	for (unsigned int i = 0; i < static_cast<int>(children.size()); i++) {
-		if (stmt2 == children[0][i]) {
-			return true;
+	if (children.size() > 0 && children[0].size() > 0) {
+		for (unsigned int i = 0; i < static_cast<int>(children.size()); i++) {
+			if (stmt2 == children[i][0]) {
+				return true;
+			}
 		}
 	}
 
@@ -461,9 +490,11 @@ bool PKB::checkParent(int stmt1, int stmt2) {
 bool PKB::checkParentStar(int stmt1, int stmt2) {
 	std::vector<std::vector<int>> children = PKB::getChildrenStar(stmt1);
 
-	for (unsigned int i = 0; i < static_cast<int>(children.size()); i++) {
-		if (stmt2 == children[0][i]) {
-			return true;
+	if (children.size() > 0 && children[0].size() > 0) {
+		for (unsigned int i = 0; i < static_cast<int>(children.size()); i++) {
+			if (stmt2 == children[i][0]) {
+				return true;
+			}
 		}
 	}
 
@@ -494,12 +525,16 @@ std::vector<std::vector<int>> PKB::getAllParent() {
 std::vector<std::vector<int>> PKB::getAllParentStar() {
 
 	std::vector<std::vector<int>> output;
-	unordered_map<int, std::vector<std::vector<int>>> table = tables[STATEMENT_LIST_TABLE - 1];
+	std::vector<std::vector<int>> data = PKB::getAllStatements();
 	
-	for (auto it = table.begin(); it != table.end(); ++it) {
-		if (it->second[0][0] != 0) {
-			std::vector<std::vector<int>> stmtList = PKB::getChildrenStar(it->second[0][0]);
-			output.push_back({ it->second[0][0], stmtList[0][0] });
+	for (int j = 0; j < data.size(); j++) {
+		if (data.size() > 0 && data[j].size() > 0) {
+			std::vector<std::vector<int>> stmtList = PKB::getChildrenStar(data[j][0]);
+			if (stmtList.size() > 0 && stmtList[0].size() > 0) {
+				for (int i = 0; i < stmtList.size(); i++) {
+					output.push_back({ data[j][0], stmtList[i][0] });
+				}
+			}
 		}
 	}
 
@@ -512,9 +547,12 @@ std::vector<std::vector<int>> PKB::getUsesVariablesFromStatement(int stmt) {
 	std::vector<std::vector<int>> data;
 	std::vector<std::vector<int>> table = PKB::getFromTable(STATEMENT_TABLE, stmt);
 
-	if (static_cast<int>(table.size()) > 0) {
-		data = { table[1] };
+	if (table.size() > 0 && table[1].size() > 0) {
+		for (int i = 0; i < table[1].size(); i++) {
+			data.push_back({ table[1][i] });
+		}
 	}
+
 	return data;
 
 }
@@ -524,7 +562,11 @@ std::vector<std::vector<int>> PKB::getStatementsFromUsesVariable(int varId) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(USES_TABLE, varId);
 	if (static_cast<int>(data.size()) > 0) {
-		return{ data[0] };
+		std::vector<std::vector<int>> res;
+		for (int i = 0; i < data[0].size(); i++) {
+			res.push_back({ data[0][i] });
+		}
+		return res;
 	}
 	else {
 		std::vector<std::vector<int>> null_data;
@@ -538,7 +580,11 @@ std::vector<std::vector<int>> PKB::getUsesVariablesFromProcedure(int proc) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(PROC_INFO_TABLE, proc);
 	if (static_cast<int>(data.size()) > 0) {
-		return{ data[1] };
+		std::vector<std::vector<int>> res;
+		for (int i = 0; i < data[1].size(); i++) {
+			res.push_back({ data[1][i] });
+		}
+		return res;
 	}
 	else {
 		std::vector<std::vector<int>> null_data;
@@ -552,7 +598,11 @@ std::vector<std::vector<int>> PKB::getProceduresFromUsesVariable(int varId) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(USES_TABLE, varId);
 	if (static_cast<int>(data.size()) > 0) {
-		return{ data[1] };
+		std::vector<std::vector<int>> res;
+		for (int i = 0; i < data[1].size(); i++) {
+			res.push_back({ data[1][i] });
+		}
+		return res;
 	}
 	else {
 		std::vector<std::vector<int>> null_data;
@@ -568,10 +618,10 @@ std::vector<std::vector<int>> PKB::getAllStatementUsesVariables() {
 	std::vector<std::vector<int>> data;
 
 	for (int i = 0; i < static_cast<int>(stmts.size()); i++) {
-		data = PKB::getUsesVariablesFromStatement(stmts[0][i]);
+		data = PKB::getUsesVariablesFromStatement(stmts[i][0]);
 		if (data.size() > 0) {
-			for (int j = 0; j < static_cast<int>(data[0].size()); j++) {
-				output.push_back({ stmts[0][i], data[0][j] });
+			for (int j = 0; j < static_cast<int>(data.size()); j++) {
+				output.push_back({ stmts[i][0], data[j][0] });
 			}
 		}
 	}
@@ -587,10 +637,10 @@ std::vector<std::vector<int>> PKB::getAllVariableUsesStatements() {
 	std::vector<std::vector<int>> data;
 
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
-		data = PKB::getStatementsFromUsesVariable(vars[0][i]);
+		data = PKB::getStatementsFromUsesVariable(vars[i][0]);
 		if (data.size() > 0) {
-			for (int j = 0; j < static_cast<int>(data[0].size()); j++) {
-				output.push_back({ vars[0][i], data[0][j] });
+			for (int j = 0; j < static_cast<int>(data.size()); j++) {
+				output.push_back({ vars[i][0], data[j][0] });
 			}
 		}
 	}
@@ -606,9 +656,9 @@ std::vector<std::vector<int>> PKB::getAllProcedureUsesVariables() {
 	std::vector<std::vector<int>> procs = PKB::getAllProcedures();
 
 	for (int i = 0; i < static_cast<int>(procs.size()); i++) {
-		data = PKB::getUsesVariablesFromProcedure(procs[0][i]);
-		for (int j = 0; j < static_cast<int>(data[0].size()); j++) {
-			output.push_back({ procs[0][i], data[0][j] });
+		data = PKB::getUsesVariablesFromProcedure(procs[i][0]);
+		for (int j = 0; j < static_cast<int>(data.size()); j++) {
+			output.push_back({ procs[i][0], data[j][0] });
 		}
 	}
 
@@ -623,10 +673,10 @@ std::vector<std::vector<int>> PKB::getAllVariableUsesProcedures() {
 	std::vector<std::vector<int>> data;
 
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
-		data = PKB::getProceduresFromUsesVariable(vars[0][i]);
+		data = PKB::getProceduresFromUsesVariable(vars[i][0]);
 		if (data.size() > 0) {
-			for (int j = 0; j < static_cast<int>(data[0].size()); j++) {
-				output.push_back({ vars[0][i], data[0][j] });
+			for (int j = 0; j < static_cast<int>(data.size()); j++) {
+				output.push_back({ vars[i][0], data[j][0] });
 			}
 		}
 	}
@@ -639,7 +689,7 @@ bool PKB::checkStatementUsesVariable(int stmt, int varId) {
 
 	std::vector<std::vector<int>> vars = PKB::getUsesVariablesFromStatement(stmt);
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
-		if (vars[0][i] == varId) {
+		if (vars[i][0] == varId) {
 			return true;
 		}
 	}
@@ -652,7 +702,7 @@ bool PKB::checkProcedureUsesVariable(int procId, int varId) {
 
 	std::vector<std::vector<int>> vars = PKB::getUsesVariablesFromProcedure(procId);
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
-		if (vars[0][i] == varId) {
+		if (vars[i][0] == varId) {
 			return true;
 		}
 	}
@@ -667,8 +717,10 @@ std::vector<std::vector<int>> PKB::getModifiesVariablesFromStatement(int stmt) {
 	std::vector<std::vector<int>> data;
 	std::vector<std::vector<int>> table = PKB::getFromTable(STATEMENT_TABLE, stmt);
 
-	if (static_cast<int>(table.size()) > 0) {
-		data = { table[2] };
+	if (table.size() > 0 && table[2].size() > 0) {
+		for (int i = 0; i < table[2].size(); i++) {
+			data.push_back({ table[2][i] });
+		}
 	}
 
 	return data;
@@ -681,7 +733,11 @@ std::vector<std::vector<int>> PKB::getStatementsFromModifiesVariable(int varId) 
 	data = PKB::getFromTable(MODIFIES_TABLE, varId);
 
 	if (static_cast<int>(data.size()) > 0) {
-		return{ data[0] };
+		std::vector<std::vector<int>> output;
+		for (int i = 0; i < data[0].size(); i++) {
+			output.push_back({ data[0][i] });
+		}
+		return output;
 	}
 	else {
 		std::vector<std::vector<int>> null_data;
@@ -693,15 +749,18 @@ std::vector<std::vector<int>> PKB::getStatementsFromModifiesVariable(int varId) 
 std::vector<std::vector<int>> PKB::getModifiesVariablesFromProcedure(int proc) {
 
 	std::vector<std::vector<int>> data;
-	data = PKB::getFromTable(PROC_INFO_TABLE, proc);
+	std::vector<std::vector<int>> table = PKB::getFromTable(PROC_INFO_TABLE, proc);
 
-	if (static_cast<int>(data.size()) > 0) {
-		return{ data[2] };
+	if (static_cast<int>(table.size()) > 0) {
+
+		std::vector<std::vector<int>> res;
+		for (int i = 0; i < table[2].size(); i++) {
+			res.push_back({ table[2][i] });
+		}
+		return res;
 	}
-	else {
-		std::vector<std::vector<int>> null_data;
-		return null_data;
-	}
+
+	return data;
 
 }
 
@@ -711,7 +770,12 @@ std::vector<std::vector<int>> PKB::getProceduresFromModifiesVariable(int varId) 
 	data = PKB::getFromTable(MODIFIES_TABLE, varId);
 	
 	if (static_cast<int>(data.size()) > 0) {
-		return{ data[1] };
+
+		std::vector<std::vector<int>> res;
+		for (int i = 0; i < data[1].size(); i++) {
+			res.push_back({ data[1][i] });
+		}
+		return res;
 	}
 	else {
 		std::vector<std::vector<int>> null_data;
@@ -726,11 +790,13 @@ std::vector<std::vector<int>> PKB::getAllStatementModifiesVariables() {
 	std::vector<std::vector<int>> stmts = PKB::getAllStatements();
 	std::vector<std::vector<int>> data;
 
-	for (int i = 0; i < static_cast<int>(stmts.size()); i++) {
-		data = PKB::getModifiesVariablesFromStatement(stmts[0][i]);
-		if (data.size() > 0) {
-			for (int j = 0; j < static_cast<int>(data[0].size()); j++) {
-				output.push_back({ stmts[0][i], data[0][j] });
+	if (stmts.size() > 0 && stmts[0].size() > 0) {
+		for (int i = 0; i < static_cast<int>(stmts.size()); i++) {
+			data = PKB::getModifiesVariablesFromStatement(stmts[i][0]);
+			if (data.size() > 0) {
+				for (int j = 0; j < static_cast<int>(data.size()); j++) {
+					output.push_back({ stmts[i][0], data[j][0] });
+				}
 			}
 		}
 	}
@@ -746,10 +812,12 @@ std::vector<std::vector<int>> PKB::getAllVariableModifiesStatements() {
 	std::vector<std::vector<int>> vars = PKB::getAllVariables();
 
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
-		data = PKB::getStatementsFromModifiesVariable(vars[0][i]);
-
-		for (int j = 0; j < static_cast<int>(data[0].size()); j++) {
-			output.push_back({ vars[0][i], data[0][j] });
+		data = PKB::getFromTable(MODIFIES_TABLE, vars[i][0]);
+		
+		if (data.size() > 0 && data[0].size() > 0) {
+			for (int j = 0; j < static_cast<int>(data[0].size()); j++) {
+				output.push_back({ vars[i][0], data[0][j] });
+			}
 		}
 	}
 
@@ -763,11 +831,12 @@ std::vector<std::vector<int>> PKB::getAllProcedureModifiesVariables() {
 	std::vector<std::vector<int>> data;
 	std::vector<std::vector<int>> procs = PKB::getAllProcedures();
 
-	for (int i = 0; i < static_cast<int>(procs.size()); i++) {
-		data = PKB::getModifiesVariablesFromProcedure(procs[0][i]);
-		
-		for (int j = 0; j < static_cast<int>(data[0].size()); j++) {
-			output.push_back({ procs[0][i], data[0][j] });
+	if (procs.size() > 0) {
+		for (int i = 0; i < static_cast<int>(procs.size()); i++) {
+			data = PKB::getModifiesVariablesFromProcedure(procs[i][0]);
+			for (int j = 0; j < static_cast<int>(data.size()); j++) {
+				output.push_back({ procs[i][0], data[j][0] });
+			}
 		}
 	}
 
@@ -782,10 +851,12 @@ std::vector<std::vector<int>> PKB::getAllVariableModifiesProcedures() {
 	std::vector<std::vector<int>> vars = PKB::getAllVariables();
 
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
-		data = PKB::getProceduresFromModifiesVariable(vars[0][i]);
+		data = PKB::getProceduresFromModifiesVariable(vars[i][0]);
 
-		for (int j = 0; j < static_cast<int>(data[0].size()); j++) {
-			output.push_back({ vars[0][i], data[0][j] });
+		if (data.size() > 0 && data[0].size() > 0) {
+			for (int j = 0; j < static_cast<int>(data.size()); j++) {
+				output.push_back({ vars[i][0], data[j][0] });
+			}
 		}
 	}
 
@@ -797,7 +868,7 @@ bool PKB::checkStatementModifiesVariable(int stmt, int varId) {
 
 	std::vector<std::vector<int>> vars = PKB::getModifiesVariablesFromStatement(stmt);
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
-		if (vars[0][i] == varId) {
+		if (vars[i][0] == varId) {
 			return true;
 		}
 	}
@@ -810,7 +881,7 @@ bool PKB::checkProcedureModifiesVariable(int procId, int varId) {
 
 	std::vector<std::vector<int>> vars = PKB::getModifiesVariablesFromProcedure(procId);
 	for (int i = 0; i < static_cast<int>(vars.size()); i++) {
-		if (vars[0][i] == varId) {
+		if (vars[i][0] == varId) {
 			return true;
 		}
 	}
@@ -1028,7 +1099,9 @@ std::vector<std::vector<int>> PKB::getStatementsWithConstant(int constant) {
 	std::vector<std::vector<int>> table = PKB::getFromTable(CONST_TABLE, constant);
 
 	if (static_cast<int>(table.size()) > 0) {
-		data = { table[0] };
+		for (int i = 0; i < table[0].size(); i++) {
+			data.push_back({table[0][i]});
+		}
 	}
 	return data;
 
