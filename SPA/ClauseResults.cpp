@@ -12,27 +12,34 @@ void ClauseResults::instantiatePattern(Pattern pattern) {
 	rhs = pattern.getRightParam();
 };
 
-void ClauseResults::setkeyValues(unordered_map<int, vector<int>> &results) {
-	keyValues = results;
-};
-
-void ClauseResults::setkeyValues(vector<vector<int>> &results) {
-	for (auto pair : results) {
-		int key = pair.at(0);
-		vector<int> value;
-		value.push_back(pair.at(1));
-		keyValues.insert({ key, value });
-	}
-};
-
-void ClauseResults::setValues(vector<int> &results) {
-	values = results;
+void ClauseResults::setResults(vector<vector<int>> &pkbResults) {
+	results = pkbResults;
 };
 
 void ClauseResults::setValid(bool validity) {
 	valid = validity;
 };
 
-void ClauseResults::setAssignmentsEnts(vector<int> &assigns) {
-	assignmentsEnts = assigns;
+bool ClauseResults::isValid() {
+	return valid;
 };
+
+/* Returns true if valid results exist */
+bool ClauseResults::hasResults() {
+	if (results.size() > 0) return true;
+	if (valid) return true;
+	return false;
+};
+
+/* Returns number of synonyms of results: 0/1/2 */
+int ClauseResults::numParamsInResult() {
+	if (results.size() == 0) {
+		return 0;
+	} else {
+		return results[0].size();
+	}
+};
+
+
+
+

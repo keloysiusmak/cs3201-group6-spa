@@ -9,7 +9,6 @@ enum ParamType { ASSIGN, STMT, STMTLST, WHILE, PROG_LINE, IF, CALL, //Synonym wi
 				PROCEDURE, //Synonym
 				INTEGER,  //Statement Number
 				EXPR, //For pattern assign (RHS)
-				PROCNAME, VARNAME, VALUE, STMT_NO, //attrName for with clause
 				IDENT, //IDENT refers to "x"
 				SYNONYM, //Synonym is the general term
 				BOOLEAN, //return true/false
@@ -18,6 +17,4 @@ enum ParamType { ASSIGN, STMT, STMTLST, WHILE, PROG_LINE, IF, CALL, //Synonym wi
 struct Param {
 	ParamType type;
 	string value;
-	ParamType withType;
-	string withValue;
 };

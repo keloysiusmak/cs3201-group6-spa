@@ -5,9 +5,6 @@ using namespace std;
 
 string VALID_QUERY = "Query is valid";
 
-string STMT_SYN = "stmtSyn";
-string STMT_NUM = "stmtNumber";
-
 /* Constructor */
 QueryEvaluator::QueryEvaluator() {
   // Defaults true
@@ -37,7 +34,7 @@ bool QueryEvaluator::isValidQuery() {
   return validQuery;
 };
 
-void QueryEvaluator::setInvalidQuery(string message) {
+void QueryEvaluator::setInvalidQuery(list<string> message) {
   validQuery = false;
   invalidQueryMessage = message;
 };
@@ -55,19 +52,22 @@ list<string> QueryEvaluator::evaluateQuery() {
 
     /* Evaluation of clauses */
     for (Clause clause : queryObject.getClauses()) {
-      ClauseResult clauseResults;
+      ClauseResults clauseResults;
       evaluateClause(clause, clauseResults);
-      EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
+
+      if (!clauseResults.hasResults()) return {};
+      if (clauseResults.numParamsInResult() != 0) EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
     }
 
     /* Evaluation of patterns */
-    for (Clause clause : queryObject.getClauses()) {
-      ClauseResult patternResults;
+    for (Pattern clause : queryObject.getPatterns()) {
+      ClauseResults patternResults;
       evaluatePattern(clause, patternResults);
-      EvaluatorHelper::mergeClauseTable(patternResults, iTable);
-    }
 
-    return EvaluatorHelpers::extractParams(selectParams, iTable);
+      if (!patternResults.hasResults()) return {};
+      if (patternResults.numParamsInResult() != 0) EvaluatorHelper::mergeClauseTable(patternResults, iTable);
+    }
+    return extractParams(selectParams, iTable);
 
   } else { // Return no value
     return {};
@@ -123,10 +123,10 @@ void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResul
   else if (relation == ParentT) {
     evaluateParentStar(clause, clauseResults);
   }
-  else if (relation == UsesS) {
+  else if (relation == Uses) {
     evaluateUses(clause, clauseResults);
   }
-  else if (relation == ModifiesS) {
+  else if (relation == Modifies) {
     evaluateModifies(clause, clauseResults);
   }
   else if (relation == Next) {
@@ -138,6 +138,8 @@ void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResul
   else { ; } //affects
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -165,6 +167,8 @@ void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResu
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -191,6 +195,8 @@ void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseR
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -218,6 +224,8 @@ void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResul
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateParentStar(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -284,6 +292,8 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
   }
 }
 
+/* Right param: IDENT or stmt syn or proc syn */
+/* Left param: var syn or IDENT or _ */
 void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -318,6 +328,8 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -352,6 +364,8 @@ void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -378,6 +392,8 @@ void QueryEvaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseRes
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResults)
 {
 	Param leftParam = clause.getFirstParam();
@@ -406,6 +422,8 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 	}
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseResults)
 {
 	Param leftParam = clause.getFirstParam();
@@ -433,55 +451,56 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 	}
 }
 
+/* right Param: _ or IDENT or SYN */
+/* left Param: _ or exprSpec */
 void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternResults)
 { 
-	/* patternResults.instantiatePattern(pattern);
+	patternResults.instantiatePattern(pattern);
 
-	Param leftParam = pattern.getLeftParam();
-	Param rightParam = pattern.getRightParam();
-
-	if (pattern.getEntity == IF) {
-		vector<vector<int>> results = pkb.getAllIfsVariables();
-		patternResults.setResults(results);
-	}
-	else if (pattern.getEntity == WHILE) {
-		vector<vector<int>> results = pkb.getAllWhileVariables();
-		patternResults.setResults(results);
-	}
-	else { //assignment 
-		if (rightParam.type == EXPR_SPEC) {
-			if (Utils::isSynonym(leftParam.type)) {
-				vector<vector<int>> results = pkb.getAllStatementsWithExprSpec(rightParam);
-				patternResults.setResults(results);
-			}
-			else if (leftParam.type == IDENT) {
-				boolean results = pkb.checkPattern(stoi(leftParam.type), rightParam);
-				patternResults.setValid(results);
-			}
-			else {
-				vector<vector<int>> results = pkb.getPatternVariableWithExprSpec(rightParam);
-				patternResults.setResults(results);
-			}
-		}
-		else {
-			if (Utils::isSynonym(leftParam.type)) {
-				vector<vector<int>> results = pkb.getAllAssignRHS();
-				patternResults.setResults(results);
-			}
-			else if (leftParam.type == IDENT) {
-				vector<vector<int>> results = pkb.checkStatementModifiesVariable(stoi(leftParam.value));
-				patternResults.setResults(results);
-			}
-			else {
-				vector<vector<int>> results = pkb.getAllAssignStatements();
-				patternResults.setResults(results);
-			}
-		}
-	} */
+	vector<vector<int>> results = pkb.getPattern(pattern);
+	//clauseResults.setResults(results);
 };
 
-bool QueryEvaluator::hasClauseResults(ClauseResults & clauseResults)
-{
-	if (clauseResults.valid || clauseResults.values.size() || clauseResults.keyValues.size()) return true;
-	return false;
+/* Returns the selected params from the intermediate table */
+list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, IntermediateTable &iTable) {
+	if (selectedParams.size() == 1) {
+		Param selected = selectedParams[0];
+		if (selected.type == BOOLEAN) { // Boolean
+			if (iTable.resultsTable.size() > 0) return{ "true" };
+			else return{ "false" };
+		}
+		else { // Synonym
+			return paramToStringList(selected, iTable);
+		}
+	}
+	else { // Tuple
+		list<string> tupleResult;
+		for (Param p : selectedParams) {
+			list<string> paramValues = paramToStringList(p, iTable);
+			/* Concat string values as  */
+			stringstream paramValSingleString;
+			for (string val : paramValues) {
+				paramValSingleString << val + " ";
+			}
+			paramValSingleString << ", ";
+			tupleResult.push_back(paramValSingleString.str());
+		}
+		return tupleResult;
+	}
+};
+
+list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTable) {
+	int paramInt = EvaluatorHelper::getParamInt(p, iTable);
+	list<string> paramValues;
+	for (vector<int> tableRow : iTable.resultsTable) {
+		string paramVal;
+		if (p.type == VARIABLE) {
+			paramVal = pkb.getVariableName(tableRow[paramInt]);
+		}
+		else {
+			paramVal = to_string(tableRow[paramInt]);
+		}
+		paramValues.push_back(paramVal);
+	}
+	return paramValues;
 };

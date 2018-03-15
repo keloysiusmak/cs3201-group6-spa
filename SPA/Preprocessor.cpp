@@ -14,10 +14,10 @@ const char SYMBOL_ANGLE_OPEN_BRACKETS = '<';
 const char SYMBOL_ANGLE_CLOSE_BRACKETS = '>';
 
 const string EMPTY_STRING = "";
-const string DELIM_STRING = " ,()<>=";
+const string DELIM_STRING = " ,()<>";
 const vector<char> DELIMITERS_DECLARATION { };
 const vector<char> DELIMITERS_QUERY { SYMBOL_COMMA, SYMBOL_CLOSE_BRACKET, SYMBOL_ANGLE_OPEN_BRACKETS,
-										SYMBOL_ANGLE_CLOSE_BRACKETS, SYMBOL_EQUALS };
+										SYMBOL_ANGLE_CLOSE_BRACKETS };
 
 const string SELECT_WORD = "Select";
 const string SUCH_WORD = "such";
@@ -40,10 +40,6 @@ const unordered_map<string, RelRef> KEYWORDS_CLAUSES_2 = { { "Parent", Parent },
 															{ "Follows", Follows }, { "Follows*", FollowsT },
 															{ "Next", Next }, { "NextT", NextT } };
 const unordered_map<string, RelRef> KEYWORDS_CLAUSES_3 = { { "Calls", Calls }, { "Calls*", CallsT } };
-const unordered_map<string, ParamType> KEYWORDS_WITH_TYPE = { { "procName", PROCNAME },
-																{ "varName", VARNAME },
-																{ "value", VALUE },
-																{ "stmt#", STMT_NO } };
 
 const unordered_map<string, ParamType> KEYWORDS_DECLARATIONS = { { "assign", ASSIGN }, { "stmt", STMT },
 																{ "variable", VARIABLE }, { "while", WHILE },
@@ -60,8 +56,6 @@ const regex stmtRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|([0-9]+$)))
 const regex entRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$)|([0-9]+$))");
 const regex varRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$))");
 const regex expressSpecRegex("(^((_\"(([a-zA-Z]([a-zA-Z]|[0-9])*)|([0-9]+))\"_$)|[_]$))");
-const regex attrRefRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*[.](procName|varName|value|stmt#)$)");
-const regex refRegex("(^(([0-9]+$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$|[a-zA-Z]([a-zA-Z]|[0-9]|[#])*[.](procName|varName|value|stmt#)))");
 
 Preprocessor::Preprocessor() {
 
@@ -181,41 +175,18 @@ bool Preprocessor::isValidQuery(string query) {
 		//iterate through the tuple
 		while (queryArr.at(endOfSelectStatement).at(0) != SYMBOL_ANGLE_CLOSE_BRACKETS) {
 
-			//even position must be elem
+			//even position must be synonym
 			if (endOfSelectStatement % 2 == 0) {
-				string elem = Utils::sanitise(queryArr.at(endOfSelectStatement));
-				if (isValidAttrRef(elem)) {
-					vector<string> attrRef = Utils::split(elem, SYMBOL_FULL_STOP);
 
-					//check if select synonym exist in the declarationMap
-					if (!isDeclarationSynonymExist(attrRef.at(0))) {
-						return false;
-					}
-
-					auto searchSynonym = declarationMap.find(attrRef.at(0));
-					auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-
-					if (!isValidAttrName(searchDeclareType->second, attrRef.at(1))) {
-						return false;
-					}
-
-					//insert selectType of QueryObject
-
-				}
-				else if (isValidSynonym(elem)) {
-					//check if select synonym exist in the declarationMap
-					if (!isDeclarationSynonymExist(elem)) {
-						return false;
-					}
-
-					//Populate the selectType of QueryObject
-					auto searchSynonym = declarationMap.find(elem);
-					auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-					queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
-				}
-				else {
+				//check if select synonym exist in the declarationMap
+				if (!isDeclarationSynonymExist(queryArr.at(endOfSelectStatement))) {
 					return false;
 				}
+
+				//Populate the selectType of QueryObject
+				auto searchSynonym = declarationMap.find(queryArr.at(endOfSelectStatement));
+				auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+				queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
 			}
 			//odd position must be comma
 			else {
@@ -233,45 +204,19 @@ bool Preprocessor::isValidQuery(string query) {
 		}
 	}
 	//if is a BOOLEAN
-	else if (Utils::sanitise(queryArr.at(endOfSelectStatement)).compare(BOOLEAN_WORD) == 0) {
+	else if (queryArr.at(endOfSelectStatement).compare(BOOLEAN_WORD) == 0) {
 		queryObject.insertSelectStmt(BOOLEAN, BOOLEAN_WORD);
 	}
-	//single elem
 	else {
-		string elem = Utils::sanitise(queryArr.at(endOfSelectStatement));
-
-		if (isValidAttrRef(elem)) {
-			vector<string> attrRef = Utils::split(elem, SYMBOL_FULL_STOP);
-
-			//check if select synonym exist in the declarationMap
-			if (!isDeclarationSynonymExist(attrRef.at(0))) {
-				return false;
-			}
-
-			auto searchSynonym = declarationMap.find(attrRef.at(0));
-			auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-
-			if (!isValidAttrName(searchDeclareType->second, attrRef.at(1))) {
-				return false;
-			}
-
-			//insert selectType of QueryObject
-
-		}
-		else if (isValidSynonym(elem)) {
-			//check if select synonym exist in the declarationMap
-			if (!isDeclarationSynonymExist(elem)) {
-				return false;
-			}
-
-			//Populate the selectType of QueryObject
-			auto searchSynonym = declarationMap.find(elem);
-			auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-			queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
-		}
-		else {
+		//check if select synonym exist in the declarationMap
+		if (!isDeclarationSynonymExist(queryArr.at(endOfSelectStatement))) {
 			return false;
 		}
+
+		//Populate the selectType of QueryObject
+		auto searchSynonym = declarationMap.find(queryArr.at(endOfSelectStatement));
+		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+		queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
 	}
 
 	endOfSelectStatement++;
@@ -342,10 +287,8 @@ bool Preprocessor::isValidQuery(string query) {
 
 			//Finish processing this clause
 			i += (clauseLength - 1);
-
-			prevAndClause = 1;
 		}
-		//check whether "pattern" word exists
+		//check wether "pattern" word exists
 		else if (queryArr.at(i).compare(PATTERN_WORD) == 0) {
 
 			//Keep track of the length of pattern
@@ -401,8 +344,6 @@ bool Preprocessor::isValidQuery(string query) {
 								return false;
 							}
 						}
-
-						patternLength++;
 					}
 
 					//ifpt should have 2 underscore (center and right param)
@@ -428,7 +369,6 @@ bool Preprocessor::isValidQuery(string query) {
 								return false;
 							}
 						}
-						patternLength++;
 					}
 
 					//whilept should have 2 underscore (right param)
@@ -445,35 +385,9 @@ bool Preprocessor::isValidQuery(string query) {
 
 			//Finish processing this pattern
 			i += (patternLength - 1);
-
-			prevAndClause = 2;
 		}
-		//check whether "with" word exists
 		else if (queryArr.at(i).compare(WITH_WORD) == 0) {
 
-			if ((i + 1) >= queryArr.size() || 
-				(i + 2) >= queryArr.size() || 
-				(i + 3) >= queryArr.size()) {
-				return false;
-			}
-
-			string attrRef = Utils::sanitise(queryArr.at(i + 1));
-			char equalSign = Utils::sanitise(queryArr.at(i + 2)).at(0);
-			string ref = Utils::sanitise(queryArr.at(i + 3));
-
-			if (!isValidAttrRef(attrRef) ||
-				equalSign != SYMBOL_EQUALS ||
-				!isValidRef(ref)) {
-				return false;
-			}
-			
-			if (!parseWithClause(queryObject, attrRef, ref)) {
-				return false;
-			}
-			
-			i += 3;
-
-			prevAndClause = 3;
 		}
 		else if (queryArr.at(i).compare(AND_WORD) == 0) {
 
@@ -526,102 +440,7 @@ bool Preprocessor::isValidQuery(string query) {
 			}
 			//pattern
 			else if (prevAndClause == 2) {
-				//Keep track of the length of pattern
-				int patternLength = 1;
 
-				//check whether pattern type exists and
-				//the patternType should exist in the declarationMap
-				if ((i + 1) >= queryArr.size() || !isDeclarationSynonymExist(queryArr.at(i + 1))) {
-					return false;
-				}
-
-				auto searchSynonym = declarationMap.find(queryArr.at(i + 1));
-
-				//check whether patternType is valid
-				if (KEYWORDS_PATTERN_TYPE.find(searchSynonym->second) == KEYWORDS_PATTERN_TYPE.end()) {
-					return false;
-				}
-
-				auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-
-				//Add patternType
-				patternLength++;
-
-				//Add all the left Param
-				string leftArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_COMMA));
-
-				//Add all the right Param if is assignpt
-				string rightArg;
-				if (searchDeclareType->second == ASSIGN) {
-					rightArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_CLOSE_BRACKET));
-				}
-				else {
-					rightArg = EMPTY_STRING;
-					//keep track of the number of underscore
-					int countUnderscore = 0;
-
-					if (searchDeclareType->second == IF) {
-						//iterate through the syntax
-
-						while (queryArr.at(i + patternLength).at(0) != SYMBOL_CLOSE_BRACKET) {
-							//even position must be underscore
-							if (patternLength % 2) {
-								if (queryArr.at(i + patternLength).at(0) == SYMBOL_UNDERSCORE) {
-									countUnderscore++;
-								}
-								else {
-									return false;
-								}
-							}
-							else {
-								//check if is comma
-								if (queryArr.at(i + patternLength).at(0) != SYMBOL_COMMA) {
-									return false;
-								}
-							}
-							patternLength++;
-						}
-
-						//ifpt should have 2 underscore (center and right param)
-						if (countUnderscore != 2) {
-							return false;
-						}
-					}
-					else {
-
-						while (queryArr.at(i + patternLength).at(0) != SYMBOL_CLOSE_BRACKET) {
-							//even position must be underscore
-							if (patternLength % 2) {
-								if (queryArr.at(i + patternLength).at(0) == SYMBOL_UNDERSCORE) {
-									countUnderscore++;
-								}
-								else {
-									return false;
-								}
-							}
-							else {
-								//check if is comma
-								if (queryArr.at(i + patternLength).at(0) != SYMBOL_COMMA) {
-									return false;
-								}
-							}
-							patternLength++;
-						}
-
-						//whilept should have 2 underscore (right param)
-						if (countUnderscore != 1) {
-							return false;
-						}
-					}
-					patternLength++;
-				}
-
-				if (!parsePattern(queryObject, searchDeclareType->second, queryArr.at(i + 1), leftArg, rightArg)) {
-					return false;
-				}
-
-				//Finish processing this pattern
-				i += (patternLength - 1);
 			}
 			//with
 			else if (prevAndClause == 3) {
@@ -679,99 +498,6 @@ bool Preprocessor::isValidExpressSpec(string expressSpec) {
 	}
 
 	return regex_match(expressSpec, expressSpecRegex);
-}
-
-bool Preprocessor::isValidAttrRef(string attrRef) {
-	if (attrRef.length() == 0) {
-		return false;
-	}
-
-	return regex_match(attrRef, attrRefRegex);
-}
-
-bool Preprocessor::isValidAttrName(ParamType synonymType, string attrRef) {
-	auto checkAttrRef = KEYWORDS_WITH_TYPE.find(attrRef);
-
-	switch (checkAttrRef->second)
-	{
-	case PROCNAME: 
-		return synonymType == PROCEDURE;
-	case VARNAME:
-		return synonymType == VARIABLE;
-	case VALUE:
-		return synonymType == CONSTANT;
-	case STMT_NO:
-		return (synonymType != PROCEDURE) && (synonymType != VARIABLE) && (synonymType != CONSTANT);
-	default:
-		return false;
-	}
-}
-
-bool Preprocessor::isValidRef(string ref) {
-	if (ref.length() == 0) {
-		return false;
-	}
-
-	return regex_match(ref, refRegex);
-}
-
-bool Preprocessor::isValidAttrCond(ParamType attrRef, string ref) {
-
-	//attrRef
-	if (isValidAttrRef(ref)) {
-
-		vector<string> refArr = Utils::split(ref, SYMBOL_FULL_STOP);
-
-		if (!isDeclarationSynonymExist(refArr.at(0))) {
-			return false;
-		}
-
-		//Change the synonym of attrRef to the declaration type with reference to the declarationMap
-		auto searchSynonym = declarationMap.find(refArr.at(0));
-		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-
-		if (!isValidAttrName(searchDeclareType->second, refArr.at(1))) {
-			return false;
-		}
-
-		auto getAttrName = KEYWORDS_WITH_TYPE.find(refArr.at(1));
-
-		if (attrRef == PROCNAME || attrRef == VARNAME) {
-			if (getAttrName->second == PROCNAME || getAttrName->second == VARNAME) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-		else {
-			if (getAttrName->second == VALUE || getAttrName->second == STMT_NO) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-	}
-	//IDENT or INTEGER
-	else {
-		if (Utils::isInteger(ref)) {
-			if (attrRef == VALUE || attrRef == STMT_NO) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-		else {
-			if (attrRef == PROCNAME || attrRef == VARNAME) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-	}
 }
 
 bool Preprocessor::isDeclarationSynonymExist(string synonym) {
@@ -1117,51 +843,6 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	else {
 		qo.insertPattern(entityType, entity, insertLeftArgType,
 			leftArg, ALL, Utils::trim(SYMBOL_UNDERSCORE + rightArg));
-	}
-
-	return true;
-}
-
-bool Preprocessor::parseWithClause(QueryObject &qo, string attrRef, string ref) {
-	
-	vector<string> attrRefArr = Utils::split(attrRef, SYMBOL_FULL_STOP);
-
-	if (!isDeclarationSynonymExist(attrRefArr.at(0))) {
-		return false;
-	}
-
-	//Change the synonym of attrRef to the declaration type with reference to the declarationMap
-	auto searchSynonym = declarationMap.find(attrRefArr.at(0));
-	auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-
-	if (!isValidAttrName(searchDeclareType->second, attrRefArr.at(1))) {
-		return false;
-	}
-
-	auto getAttrName = KEYWORDS_WITH_TYPE.find(attrRefArr.at(1));
-
-	if (!isValidAttrCond(getAttrName->second, ref)) {
-		return false;
-	}
-
-	//attrRef
-	if (isValidAttrRef(ref)) {
-
-		vector<string> refArr = Utils::split(ref, SYMBOL_FULL_STOP);
-		auto getRef_AttrName = KEYWORDS_WITH_TYPE.find(refArr.at(1));
-		
-		qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
-			getRef_AttrName->second, ref);
-	}
-	//INTEGER
-	else if (Utils::isInteger(ref)) {
-		qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
-			INTEGER, ref);
-	}
-	//IDENTITY
-	else {
-		qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
-			IDENT, ref);
 	}
 
 	return true;
