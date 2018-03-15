@@ -510,4 +510,5 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 		}
 		paramValues.push_back(paramVal);
 	}
+	return paramValues;
 };
