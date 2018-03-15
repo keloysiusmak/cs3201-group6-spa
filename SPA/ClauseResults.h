@@ -4,48 +4,27 @@
 #include "Pattern.h"
 
 class ClauseResults {
- private:
-  /* Boolean for when both params are concrete */
-  bool valid;
-  /* Solely used for pattern */
-  vector<int> assignmentsEnts;
- public:
-  Param entRef;
-  Param lhs;
-  Param rhs;
+public:
+	Param lhs;
+	Param rhs;
+	/* Key Values Hash for queries with 2 synonyms
+		Vector of int values for queries with only 1 synonym */
+	unordered_map<int, vector<int>> keyValues;
+	vector<int> values;
+	/* Boolean for when both params are concrete */
+	bool valid;
+	/* Solely used for pattern */
+	Param entRef;
+	vector<int> assignmentsEnts;
 
-  /* 2d table storing results from pkb */
-  vector<Param> tableParams;
-  vector<vector<int>> results;
+	// Instantiation
+	void ClauseResults::instantiateClause(Clause clause);
+	void ClauseResults::instantiatePattern(Pattern pattern);
 
-  // Instantiation
-  void ClauseResults::instantiateClause(Clause clause);
-  void ClauseResults::instantiatePattern(Pattern pattern);
-
-  // Setter methods
-  void ClauseResults::setResults(vector<vector<int>> &pkbResults);
-  void ClauseResults::setValid(bool validity);
-
-  // Getter methods
-  bool ClauseResults::isValid();
-  bool ClauseResults::hasResults();
-  int ClauseResults::numParamsInResult();
-  
-};
-
-struct IntermediateTable {
-  vector<Param> tableParams;
-  vector<vector<int>> resultsTable;
-
-  void setTableParams(vector<Param> params) {
-	  tableParams = params;
-  };
-
-  void addTableParams(Param p) {
-	tableParams.push_back(p);
-  };
-
-  void setResultsTable(vector<vector<int>> &table) {
-	resultsTable = table;
-  }
+	// Setter methods
+	void ClauseResults::setkeyValues(unordered_map<int, vector<int>> &results);
+	void ClauseResults::setkeyValues(vector<vector<int>> &results);
+	void ClauseResults::setValues(vector<int> &results);
+	void ClauseResults::setValid(bool validity);
+	void ClauseResults::setAssignmentsEnts(vector<int> &assigns);
 };

@@ -91,6 +91,11 @@ namespace UnitTesting {
 				string query31 = "Select a pattern a(v, _\"y\"_) such that Parent*(a, _)";
 				string query32 = "Select a such that Parent*(a, _) pattern a(v, _\"y\"_) such that Modifies(a, \"x\")";
 
+				//Query with attrRef
+				string query33 = "Select a.stmt#";
+				string query34 = "Select <a.stmt#, w.stmt#,v.varName>";
+				string query35 = "Select <a.stmt#,w,v.varName>";
+
 
 				string invalidQuery1 = "Selecta"; //Must have space in between select and a
 				string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
@@ -137,6 +142,11 @@ namespace UnitTesting {
 				Assert::AreEqual(true, preprocessor.isValidQuery(query28));
 				Assert::AreEqual(true, preprocessor.isValidQuery(query29));
 				Assert::AreEqual(true, preprocessor.isValidQuery(query30));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query31));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query32));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query33));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query34));
+				Assert::AreEqual(true, preprocessor.isValidQuery(query35));
 
 				//Invalid
 				Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
