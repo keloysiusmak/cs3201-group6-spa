@@ -438,48 +438,7 @@ void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternR
 	patternResults.instantiatePattern(pattern);
 
 	vector<vector<int>> results = pkb.getPattern(pattern);
-
-	/* Param leftParam = pattern.getLeftParam();
-	Param rightParam = pattern.getRightParam();
-
-	if (pattern.getEntity == IF) {
-		vector<vector<int>> results = pkb.getAllIfsVariables();
-		patternResults.setResults(results);
-	}
-	else if (pattern.getEntity == WHILE) {
-		vector<vector<int>> results = pkb.getAllWhileVariables();
-		patternResults.setResults(results);
-	}
-	else { //assignment 
-		if (rightParam.type == EXPR_SPEC) {
-			if (Utils::isSynonym(leftParam.type)) {
-				vector<vector<int>> results = pkb.getAllStatementsWithExprSpec(rightParam);
-				patternResults.setResults(results);
-			}
-			else if (leftParam.type == IDENT) {
-				boolean results = pkb.checkPattern(stoi(leftParam.type), rightParam);
-				patternResults.setValid(results);
-			}
-			else {
-				vector<vector<int>> results = pkb.getPatternVariableWithExprSpec(rightParam);
-				patternResults.setResults(results);
-			}
-		}
-		else {
-			if (Utils::isSynonym(leftParam.type)) {
-				vector<vector<int>> results = pkb.getAllAssignRHS();
-				patternResults.setResults(results);
-			}
-			else if (leftParam.type == IDENT) {
-				vector<vector<int>> results = pkb.checkStatementModifiesVariable(stoi(leftParam.value));
-				patternResults.setResults(results);
-			}
-			else {
-				vector<vector<int>> results = pkb.getAllAssignStatements();
-				patternResults.setResults(results);
-			}
-		}
-	} */
+	//clauseResults.setResults(results);
 };
 
 /* Returns the selected params from the intermediate table */
