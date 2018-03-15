@@ -138,6 +138,8 @@ void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResul
   else { ; } //affects
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -165,6 +167,8 @@ void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResu
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -191,6 +195,8 @@ void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseR
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -218,6 +224,8 @@ void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResul
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateParentStar(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -284,6 +292,8 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
   }
 }
 
+/* Right param: IDENT or stmt syn or proc syn */
+/* Left param: var syn or IDENT or _ */
 void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -318,6 +328,8 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -352,6 +364,8 @@ void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseResults) {
   Param leftParam = clause.getFirstParam();
   Param rightParam = clause.getSecondParam();
@@ -378,6 +392,8 @@ void QueryEvaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseRes
   }
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResults)
 {
 	Param leftParam = clause.getFirstParam();
@@ -406,6 +422,8 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 	}
 }
 
+/* Right param: stmt syn or stmt no or _ */
+/* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseResults)
 {
 	Param leftParam = clause.getFirstParam();
@@ -433,6 +451,8 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 	}
 }
 
+/* right Param: _ or IDENT or SYN */
+/* left Param: _ or exprSpec */
 void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternResults)
 { 
 	patternResults.instantiatePattern(pattern);
