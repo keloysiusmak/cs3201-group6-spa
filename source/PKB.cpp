@@ -1009,6 +1009,18 @@ std::vector<std::vector<int>> PKB::getAllCallsStar() {
 	return output;
 }
 
+/* Pattern Operations */
+std::vector<std::vector<int>> PKB::getPattern(Pattern p) {
+	if (p.getEntity().type == ASSIGN) {
+
+	}
+	else if (p.getEntity().type == IF || p.getEntity().type == WHILE) {
+
+	}
+	std::vector<std::vector<int>> a;
+	return a;
+}
+
 /* Constant Operations */
 std::vector<std::vector<int>> PKB::getStatementsWithConstant(int constant) {
 

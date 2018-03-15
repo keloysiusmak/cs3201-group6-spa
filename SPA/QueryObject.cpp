@@ -47,12 +47,13 @@ void QueryObject::insertPattern(ParamType entityType, string entity, ParamType l
 	_Patterns.push_back(pattern);
 };
 
-void QueryObject::insertSelectStmtParam(ParamType selectType, string synonym) {
-	Param p;
-	p.type = selectType;
-	p.value = synonym;
-	_selectStmts.push_back(p);
-};
+void QueryObject::insertSelectStmt(ParamType selectType, string synonym) {
+	Param result;
+	result.type = selectType;
+	result.value = synonym;
+	
+	_selectStmt.push_back(result);
+}
 
 vector<Clause> QueryObject::getClauses() {
 	return _clauses;
@@ -62,6 +63,6 @@ vector<Pattern> QueryObject::getPatterns() {
 	return _Patterns;
 };
 
-vector<Param> QueryObject::getSelectStatement() {
-	return _selectStmts;
-};
+vector<Param> QueryObject::getSelectStatements() {
+	return _selectStmt;
+}

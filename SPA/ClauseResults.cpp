@@ -32,7 +32,7 @@ bool ClauseResults::hasResults() {
 };
 
 /* Returns number of synonyms of results: 0/1/2 */
-int ClauseResults::numSyns() {
+int ClauseResults::numParamsInResult() {
 	if (results.size() == 0) {
 		return 0;
 	} else {

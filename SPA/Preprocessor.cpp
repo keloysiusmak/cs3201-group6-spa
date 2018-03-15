@@ -10,16 +10,22 @@ const char SYMBOL_CLOSE_BRACKET = ')';
 const char SYMBOL_EQUALS = '=';
 const char SYMBOL_FULL_STOP = '.';
 const char SYMBOL_UNDERSCORE = '_';
+const char SYMBOL_ANGLE_OPEN_BRACKETS = '<';
+const char SYMBOL_ANGLE_CLOSE_BRACKETS = '>';
 
 const string EMPTY_STRING = "";
-const string DELIM_STRING = " ,()";
+const string DELIM_STRING = " ,()<>";
 const vector<char> DELIMITERS_DECLARATION { };
-const vector<char> DELIMITERS_QUERY { SYMBOL_COMMA, SYMBOL_CLOSE_BRACKET };
+const vector<char> DELIMITERS_QUERY { SYMBOL_COMMA, SYMBOL_CLOSE_BRACKET, SYMBOL_ANGLE_OPEN_BRACKETS,
+										SYMBOL_ANGLE_CLOSE_BRACKETS };
 
 const string SELECT_WORD = "Select";
 const string SUCH_WORD = "such";
 const string THAT_WORD = "that";
 const string PATTERN_WORD = "pattern";
+const string BOOLEAN_WORD = "BOOLEAN";
+const string AND_WORD = "and";
+const string WITH_WORD = "with";
 
 const string SYNONYM_WORD = "synonym";
 const string ALL_WORD = "all";
@@ -28,7 +34,7 @@ const string IDENT_WORD = "ident";
 const string CONSTANT_WORD = "constant";
 const string VAR_NAME_WORD = "var_name";
 
-const unordered_set<string> KEYWORDS_PATTERN_TYPE = { "assign" };
+const unordered_set<string> KEYWORDS_PATTERN_TYPE = { "assign", "while", "if" };
 const unordered_map<string, RelRef> KEYWORDS_CLAUSES_1 = { { "Modifies", Modifies },{ "Uses", Uses } };
 const unordered_map<string, RelRef> KEYWORDS_CLAUSES_2 = { { "Parent", Parent }, { "Parent*", ParentT },
 															{ "Follows", Follows }, { "Follows*", FollowsT },
@@ -159,23 +165,77 @@ bool Preprocessor::isValidQuery(string query) {
 		return false;
 	}
 
-	//check if select synonym exist in the declarationMap
-	if (!isDeclarationSynonymExist(queryArr.at(1))) {
-		return false;
+	int endOfSelectStatement = 1;
+
+	//if is a tuple
+	if (queryArr.at(endOfSelectStatement).at(0) == SYMBOL_ANGLE_OPEN_BRACKETS) {
+
+		endOfSelectStatement++;
+
+		//iterate through the tuple
+		while (queryArr.at(endOfSelectStatement).at(0) != SYMBOL_ANGLE_CLOSE_BRACKETS) {
+
+			//even position must be synonym
+			if (endOfSelectStatement % 2 == 0) {
+
+				//check if select synonym exist in the declarationMap
+				if (!isDeclarationSynonymExist(queryArr.at(endOfSelectStatement))) {
+					return false;
+				}
+
+				//Populate the selectType of QueryObject
+				auto searchSynonym = declarationMap.find(queryArr.at(endOfSelectStatement));
+				auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+				queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
+			}
+			//odd position must be comma
+			else {
+				//check if is comma
+				if (queryArr.at(endOfSelectStatement).at(0) != SYMBOL_COMMA) {
+					return false;
+				}
+			}
+			endOfSelectStatement++;
+		}
+
+		// if is a tuple without any values in (e.g. <>), return false
+		if (endOfSelectStatement == 2) {
+			return false;
+		}
 	}
-	//Populate the selectType of QueryObject
-	auto searchSynonym = declarationMap.find(queryArr.at(1));
-	auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-	queryObject.insertSelectStmtParam(searchDeclareType->second, searchSynonym->first);
+	//if is a BOOLEAN
+	else if (queryArr.at(endOfSelectStatement).compare(BOOLEAN_WORD) == 0) {
+		queryObject.insertSelectStmt(BOOLEAN, BOOLEAN_WORD);
+	}
+	else {
+		//check if select synonym exist in the declarationMap
+		if (!isDeclarationSynonymExist(queryArr.at(endOfSelectStatement))) {
+			return false;
+		}
+
+		//Populate the selectType of QueryObject
+		auto searchSynonym = declarationMap.find(queryArr.at(endOfSelectStatement));
+		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+		queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
+	}
+
+	endOfSelectStatement++;
 
 	//Check if there is any such that or pattern clause
-	if (queryArr.size() == 2) {
+	if (queryArr.size() == endOfSelectStatement) {
 		// insert evaluator query api here
 		//(*_evaluator).setQueryObject(queryObject);
 		return true;
 	}
+
+	//prevAndClause will keep track the condition "and" should correspond to which clauses
+	//1 == such that
+	//2 == pattern
+	//3 == with
+	//0 == there is nothing to correspond
+	int prevAndClause = 0;
 	
-	for (int i = 2; i < queryArr.size(); i++) {
+	for (int i = endOfSelectStatement; i < queryArr.size(); i++) {
 
 		//check "such" word exists
 		if (queryArr.at(i).compare(SUCH_WORD) == 0) {
@@ -240,23 +300,84 @@ bool Preprocessor::isValidQuery(string query) {
 				return false;
 			}
 
-			searchSynonym = declarationMap.find(queryArr.at(i + 1));
+			auto searchSynonym = declarationMap.find(queryArr.at(i + 1));
 
 			//check whether patternType is valid
 			if (KEYWORDS_PATTERN_TYPE.find(searchSynonym->second) == KEYWORDS_PATTERN_TYPE.end()) {
 				return false;
 			}
 
+			auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+
 			//Add patternType
 			patternLength++;
 
 			//Add all the left Param
 			string leftArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_COMMA));
+			
+			//Add all the right Param if is assignpt
+			string rightArg;
+			if (searchDeclareType->second == ASSIGN) {
+				rightArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_CLOSE_BRACKET));
+			}
+			else {
+				rightArg = EMPTY_STRING;
+				//keep track of the number of underscore
+				int countUnderscore = 0;
 
-			//Add all the right Param
-			string rightArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_CLOSE_BRACKET));
+				if (searchDeclareType->second == IF) {
+					//iterate through the syntax
 
-			searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+					while (queryArr.at(i + patternLength).at(0) != SYMBOL_CLOSE_BRACKET) {
+						//even position must be underscore
+						if (patternLength % 2) {
+							if (queryArr.at(i + patternLength).at(0) == SYMBOL_UNDERSCORE) {
+								countUnderscore++;
+							}
+							else {
+								return false;
+							}
+						}
+						else {
+							//check if is comma
+							if (queryArr.at(i + patternLength).at(0) != SYMBOL_COMMA) {
+								return false;
+							}
+						}
+					}
+
+					//ifpt should have 2 underscore (center and right param)
+					if (countUnderscore != 2) {
+						return false;
+					}
+				}
+				else {
+
+					while (queryArr.at(i + patternLength).at(0) != SYMBOL_CLOSE_BRACKET) {
+						//even position must be underscore
+						if (patternLength % 2) {
+							if (queryArr.at(i + patternLength).at(0) == SYMBOL_UNDERSCORE) {
+								countUnderscore++;
+							}
+							else {
+								return false;
+							}
+						}
+						else {
+							//check if is comma
+							if (queryArr.at(i + patternLength).at(0) != SYMBOL_COMMA) {
+								return false;
+							}
+						}
+					}
+
+					//whilept should have 2 underscore (right param)
+					if (countUnderscore != 1) {
+						return false;
+					}
+				}
+				patternLength++;
+			}
 
 			if (!parsePattern(queryObject, searchDeclareType->second, queryArr.at(i + 1), leftArg, rightArg)) {
 				return false;
@@ -264,6 +385,70 @@ bool Preprocessor::isValidQuery(string query) {
 
 			//Finish processing this pattern
 			i += (patternLength - 1);
+		}
+		else if (queryArr.at(i).compare(WITH_WORD) == 0) {
+
+		}
+		else if (queryArr.at(i).compare(AND_WORD) == 0) {
+
+			// check whether "and" have continuation
+			if ((i + 1) >= queryArr.size()) {
+				return false;
+			}
+
+			//such that
+			if (prevAndClause == 1) {
+
+				//Not a valid such that clause
+				if (KEYWORDS_CLAUSES_1.find(queryArr.at(i + 1)) == KEYWORDS_CLAUSES_1.end() &&
+					KEYWORDS_CLAUSES_2.find(queryArr.at(i + 1)) == KEYWORDS_CLAUSES_2.end() &&
+					KEYWORDS_CLAUSES_3.find(queryArr.at(i + 1)) == KEYWORDS_CLAUSES_3.end()) {
+					return false;
+				}
+
+				int clauseLength = 2;
+
+				//Add all the left Param
+				string leftArg = retrieveParamFromQuery(queryArr, clauseLength, i, string(1, SYMBOL_COMMA));
+
+				//Add all the right Param
+				string rightArg = retrieveParamFromQuery(queryArr, clauseLength, i, string(1, SYMBOL_CLOSE_BRACKET));
+
+				//Check whether is a valid clause
+				if (KEYWORDS_CLAUSES_1.find(queryArr.at(i + 1)) != KEYWORDS_CLAUSES_1.end()) {
+					if (!parseClauseArg1(queryObject, queryArr.at(i + 1), leftArg, rightArg)) {
+						return false;
+					}
+				}
+				else if (KEYWORDS_CLAUSES_2.find(queryArr.at(i + 1)) != KEYWORDS_CLAUSES_2.end()) {
+					if (!parseClauseArg2(queryObject, queryArr.at(i + 1), leftArg, rightArg)) {
+						return false;
+					}
+				}
+				else if (KEYWORDS_CLAUSES_3.find(queryArr.at(i + 1)) != KEYWORDS_CLAUSES_3.end()) {
+					if (!parseClauseArg3(queryObject, queryArr.at(i + 1), leftArg, rightArg)) {
+						return false;
+					}
+				}
+				else {
+					return false;
+				}
+
+				//Finish processing this clause
+				i += (clauseLength - 1);
+
+			}
+			//pattern
+			else if (prevAndClause == 2) {
+
+			}
+			//with
+			else if (prevAndClause == 3) {
+
+			}
+			else {
+				return false;
+			}		
 		}
 		else {
 			return false;
@@ -604,16 +789,17 @@ bool Preprocessor::parseClauseArg3(QueryObject &qo, string relType, string arg1,
 	return true;
 }
 
-bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2) {
+bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2)
+{
 	
 	string leftArg = Utils::sanitise(arg1);
 	string rightArg = Utils::sanitise(arg2);
 
-	if (leftArg.length() < 1 || !isValidEntRef(leftArg)) {
+	if (leftArg.length() < 1 || !isValidVarRef(leftArg)) {
 		return false;
 	}
 
-	if (rightArg.length() < 1 || !isValidExpressSpec(rightArg)) {
+	if (entityType == ASSIGN && (rightArg.length() < 1 || !isValidExpressSpec(rightArg))) {
 		return false;
 	}
 
@@ -643,15 +829,21 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 		leftArg = Utils::sanitise((Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1));
 	}
 
-	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
+	if (entityType == ASSIGN) {
+		auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
 
-	//Check if is factor expresson-spec and store the content between the double quotes
-	if (rightArgType->second == EXPR) {
-		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+		//Check if is factor expresson-spec and store the content between the double quotes
+		if (rightArgType->second == EXPR) {
+			rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+		}
+
+		qo.insertPattern(entityType, entity, insertLeftArgType,
+			leftArg, rightArgType->second, rightArg);
 	}
-
-	qo.insertPattern(entityType, entity, insertLeftArgType,
-					leftArg, rightArgType->second, rightArg);
+	else {
+		qo.insertPattern(entityType, entity, insertLeftArgType,
+			leftArg, ALL, Utils::trim(SYMBOL_UNDERSCORE + rightArg));
+	}
 
 	return true;
 }

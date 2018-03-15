@@ -44,8 +44,10 @@ public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stri
 		  void expression();
 		  bool ifStatement();
 		  bool whileStatement();
+		  bool callStatement();
 		  bool assignmentStatement();
 		  bool statement();
+		  string getExpressionQueueString();
 		  bool statementList();
 		  bool procedure();
 		  bool program();
@@ -60,6 +62,7 @@ public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stri
 				  return "Name is invalid!";
 			  }
 		  } InvalidNameException;
+
 };
 
 namespace ParserConstants {
