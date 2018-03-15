@@ -1,0 +1,18 @@
+# gitignore for C++
+*.suo
+*.user
+*.log
+*.lastbuildstate
+*.tlog
+*.obj
+*.idb
+*.pdb
+*.exe
+*.ilk
+*.pdb
+*.dll
+*.lib
+*.pch
+*.vcxprog
+*.filters
+*.opendb

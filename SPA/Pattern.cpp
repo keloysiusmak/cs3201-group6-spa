@@ -15,7 +15,7 @@ Pattern::Pattern(Param entity, Param leftParam, Param rightParam) {
 }
 
 void Pattern::setPattern(Param entity, Param leftParam, Param rightParam) {
-	
+
 }
 
 Param Pattern::getEntity() {

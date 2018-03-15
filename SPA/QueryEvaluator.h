@@ -7,7 +7,6 @@
 #include "../source/PKB.h"
 #include "Utils.h"
 #include "ClauseResults.h"
-#include "EvaluatorHelper.h";
 
 class QueryEvaluator {
 public:
@@ -20,7 +19,7 @@ public:
 
 	// Linkage to other components
 	void setQueryObject(QueryObject);
-	void setInvalidQuery(list<string>);
+	void setInvalidQuery(string);
 	void setPKB(PKB);
 
 	// Main Evaluation methods
@@ -42,12 +41,11 @@ public:
 	// Helper Methods
 	int queryNumClauses(QueryObject &queryObj);
 	int queryNumPattern(QueryObject &queryObj);
-	list<string> extractParams(vector<Param> selectedParams, IntermediateTable &iTable);
-	list<string> paramToStringList(Param p, IntermediateTable &iTable);
+	bool hasClauseResults(ClauseResults &clauseResults);
 
 private:
 	QueryObject queryObject;
 	PKB pkb;
 	bool validQuery;
-	list<string> invalidQueryMessage;
+	string invalidQueryMessage;
 };
