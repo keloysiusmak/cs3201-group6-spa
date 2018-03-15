@@ -87,34 +87,3 @@ int EvaluatorHelper::getParamInt(Param p, IntermediateTable &iTable) {
 	return -1;
 };
 
-/* Returns the selected params from the intermediate table */
-list<string> EvaluatorHelper::extractParams(vector<Param> selectedParams, IntermediateTable &iTable) {
-	if (selectedParams.size() == 1) {
-		Param selected = selectedParams[0];
-		if (selected.type == BOOLEAN) { // Boolean
-			if (iTable.resultsTable.size() > 0) return{ "true" };
-			else return{ "false" };
-		}
-		else { // Synonym
-				
-		}
-	}
-	else { // Tuple
-
-	}
-	return{};
-};
-
-list<string> EvaluatorHelper::paramList(Param p, IntermediateTable &iTable) {
-	int paramInt = getParamInt(p, iTable);
-	list<string> paramValues;
-	for (vector<int> tableRow : iTable.resultsTable) {
-		string paramVal;
-		if (p.type == VARIABLE) {
-			paramVal = pkb.getVariableFromInt(p.value);
-		} else {
-			paramVal = to_string(paramVal);
-		}
-		paramValues.push_back(paramVal);
-	}
-};
