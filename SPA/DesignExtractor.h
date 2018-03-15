@@ -5,10 +5,11 @@
 class DesignExtractor
 {
 public:
-	void extract(PKB &);
+	bool extract(PKB &);
 	
 private:
 	void extractNext(PKB &);
+	void processStatementList(PKB &, int, std::vector<int>, int);
 	void extractNextStar(PKB &);
 	void extractCallsInverse(PKB &);
 	void extractCallsStar(PKB &);

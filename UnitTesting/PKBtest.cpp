@@ -52,7 +52,7 @@ namespace UnitTesting
 					tableValuesCount = 1;
 					break;
 				case 9:
-					tableValuesCount = 2;
+					tableValuesCount = 1;
 					break;
 				case 10:
 					tableValuesCount = 1;
@@ -1148,6 +1148,61 @@ namespace UnitTesting
 
 			Assert::AreEqual(true, (pkb.getAllProcedureModifiesVariables() == procs));
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesProcedures() == vars));
+		}
+
+		TEST_METHOD(PKBGetNextBefore)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getNextBefore(3) == data));
+			Assert::AreEqual(true, (pkb.getNextBefore(1) == data));
+
+//			pkb.insertToTable(NEXT_INVERSE_TABLE, 1, { { 0 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 2, { { 1 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 3, { { 1 } });
+
+			/* Null Tests */
+			Assert::AreEqual(true, (pkb.getNextBefore(1) == data));
+			data = { {1} };
+			Assert::AreEqual(true, (pkb.getNextBefore(3) == data));
+			Assert::AreEqual(true, (pkb.getNextBefore(3) == data));
+		}
+
+		TEST_METHOD(PKBGetNextAfter)
+		{
+
+		}
+
+		TEST_METHOD(PKBGetNextBeforeStar)
+		{
+
+		}
+
+		TEST_METHOD(PKBGetNextAfterStar)
+		{
+
+		}
+
+		TEST_METHOD(PKBGetAllNext)
+		{
+
+		}
+
+		TEST_METHOD(PKBGetAllNextStar)
+		{
+
+		}
+
+		TEST_METHOD(PKBCheckNext)
+		{
+
+		}
+
+		TEST_METHOD(PKBCheckNextStar)
+		{
+
 		}
 		
 		TEST_METHOD(PKBConstant)

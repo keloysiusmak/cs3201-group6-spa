@@ -40,7 +40,7 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 		tableValuesCount = 1;
 		break;
 	case 9:
-		tableValuesCount = 2;
+		tableValuesCount = 1;
 		break;
 	case 10:
 		tableValuesCount = 1;
@@ -226,7 +226,6 @@ std::vector<std::vector<int>> PKB::getAllStatementsWithType(int stmt_type) {
 
 std::vector<std::vector<int>> PKB::getAllProcedures() {
 
-	std::vector<int> data;
 	std::vector<std::vector<int>> new_data;
 
 	unordered_map<int, std::vector<string>> table = nameTables[PROC_TABLE - PATTERN_TABLE];
