@@ -54,10 +54,10 @@ queue<string> Parser::getRPN(queue<string> expr)
 				int var_id = pkb.insertToNameTable(VAR_TABLE, { var_name });
 
 				// get parents and insert parents
-				vector<int> parents = pkb.getParentStar(currentStmNum)[0];
+				vector<vector<int>> parents = pkb.getParentStar(currentStmNum);
 				for (int i = 0; i < static_cast<int>(parents.size()); i++) {
-					pkb.insertToTable(STATEMENT_TABLE, parents[i], { {},{ var_id },{},{} });
-					pkb.insertToTable(USES_TABLE, var_id, { { parents[i] },{} });
+					pkb.insertToTable(STATEMENT_TABLE, parents[i][0], { {},{ var_id },{},{} });
+					pkb.insertToTable(USES_TABLE, var_id, { { parents[i][0] },{} });
 				}
 
 				// insert uses
@@ -226,10 +226,10 @@ bool Parser::ifStatement() {
 	int var_id = pkb.insertToNameTable(VAR_TABLE, { var_name });
 
 	// get parents and insert parents
-	vector<int> parents = pkb.getParentStar(currentStmNum)[0];
+	vector<vector<int>> parents = pkb.getParentStar(currentStmNum);
 	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
-		pkb.insertToTable(STATEMENT_TABLE, parents[i], { {},{ var_id },{},{} });
-		pkb.insertToTable(USES_TABLE, var_id, { { parents[i] },{ } });
+		pkb.insertToTable(STATEMENT_TABLE, parents[i][0], { {},{ var_id },{},{} });
+		pkb.insertToTable(USES_TABLE, var_id, { { parents[i][0] },{ } });
 	}
 
 	// insert uses to tables 1,3,4
@@ -274,10 +274,10 @@ bool Parser::whileStatement() {
 	int var_id = pkb.insertToNameTable(VAR_TABLE, { var_name });
 
 	// get parents and insert parents
-	vector<int> parents = pkb.getParentStar(currentStmNum)[0];
+	vector<vector<int>> parents = pkb.getParentStar(currentStmNum);
 	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
-		pkb.insertToTable(STATEMENT_TABLE, parents[i], { {},{ var_id },{},{} });
-		pkb.insertToTable(USES_TABLE, var_id, { { parents[i] },{} });
+		pkb.insertToTable(STATEMENT_TABLE, parents[i][0], { {},{ var_id },{},{} });
+		pkb.insertToTable(USES_TABLE, var_id, { { parents[i][0] },{} });
 	}
 
 	// insert uses to table 1,3,4
@@ -321,10 +321,10 @@ bool Parser::assignmentStatement() {
 
 	// INSERT MODIFIES
 	// get parents and insert modifies for parents
-	vector<int> parents = pkb.getParentStar(currentStmNum)[0];
+	vector<vector<int>> parents = pkb.getParentStar(currentStmNum);
 	for (int i = 0; i < static_cast<int>(parents.size()); i++) {
-		pkb.insertToTable(STATEMENT_TABLE, parents[i], { {},{},{ var_id },{} });
-		pkb.insertToTable(MODIFIES_TABLE, var_id, { { parents[i] },{} });
+		pkb.insertToTable(STATEMENT_TABLE, parents[i][0], { {},{},{ var_id },{} });
+		pkb.insertToTable(MODIFIES_TABLE, var_id, { { parents[i][0] },{} });
 	}
 
 	// insert modifies to table 1,3,5
