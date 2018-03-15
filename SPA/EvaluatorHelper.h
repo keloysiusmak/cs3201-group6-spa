@@ -10,6 +10,9 @@ class EvaluatorHelper {
   static void mergeWithoutOverlap(ClauseResults &clauseResults, IntermediateTable &iTable);
   static void mergeWithOverlap(ClauseResults &clauseResults, IntermediateTable &iTable);
 
+  static void handleWithValueAssignment(IntermediateTable &iTable);
+  static void handleWithEquateVariables(IntermediateTable &iTable);
+
   static int getParamInt(Param p, IntermediateTable &iTable);
   static bool paramInTable(ClauseResults &clauseResults, IntermediateTable &iTable);
 };

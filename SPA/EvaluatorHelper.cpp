@@ -69,6 +69,16 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 	}
 };
 
+/* Filters table for with assignment */
+void EvaluatorHelper::handleWithEquateVariables(IntermediateTable &iTable) {
+
+};
+
+/* Filters table for with equating two variables */
+void EvaluatorHelper::handleWithValueAssignment(IntermediateTable &iTable) {
+
+};
+
 /* Returns true if param in clause result is in table */
 bool EvaluatorHelper::paramInTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
 	for (Param p : iTable.tableParams) {
