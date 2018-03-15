@@ -166,7 +166,7 @@ bool Preprocessor::isValidQuery(string query) {
 	//Populate the selectType of QueryObject
 	auto searchSynonym = declarationMap.find(queryArr.at(1));
 	auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-	queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
+	queryObject.insertSelectStmtParam(searchDeclareType->second, searchSynonym->first);
 
 	//Check if there is any such that or pattern clause
 	if (queryArr.size() == 2) {
