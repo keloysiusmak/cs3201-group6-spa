@@ -2,19 +2,21 @@
 #include "CppUnitTest.h"
 
 #include "../source/PKB.h";
-#include "../SPA/Parser.h"
+#include "../SPA/Parser.h";
+#include "../SPA/DesignExtractor.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-namespace PKBParserIntegrationTesting
+namespace PKBDEParserIntegrationTesting
 {
 	PKB pkb;
 	Parser parser;
 	string simpleSource;
 	string testString;
+	DesignExtractor de;
 
-	TEST_CLASS(PKBParserIntegration)
+	TEST_CLASS(PKBDEParserIntegration)
 	{
 	public:
 
@@ -27,7 +29,7 @@ namespace PKBParserIntegrationTesting
 				1.	a = b; 
 				2.	while c { 
 				3.		b = a;
-				4.		d = 7; } 
+				4.		call b; } 
 				5.	if a then { 
 				6.		while e { 
 				7.			c = 4; }} 
@@ -42,80 +44,81 @@ namespace PKBParserIntegrationTesting
 				13.			a = 1; }}}
 			
 			*/
-			testString = "procedure a {a = b; while c { b = a; d = 7; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { a = 1; }} }";
+			testString = "procedure a {a = b; while c { b = a; d = 7; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { call a; }} }";
 			pkb = parser.Parse(simpleSource, pkb, true, testString);
+			de.extract(pkb);
 		}
 
-		TEST_METHOD(PKBParserGetFollowsBeforeInvalid)
+		TEST_METHOD(PKBDEParserGetFollowsBeforeInvalid)
 		{
 			std::vector<std::vector<int>> data;
 			Assert::AreEqual(true, (data == pkb.getFollowsBefore(1)));
 		}
 
-		TEST_METHOD(PKBParserGetFollowsBefore)
+		TEST_METHOD(PKBDEParserGetFollowsBefore)
 		{
 			std::vector<std::vector<int>> data = { {1} };
 			Assert::AreEqual(true, (data == pkb.getFollowsBefore(2)));
 		}
 
-		TEST_METHOD(PKBParserGetFollowsAfter)
+		TEST_METHOD(PKDEBParserGetFollowsAfter)
 		{
 			std::vector<std::vector<int>> data = { {2} };
 			Assert::AreEqual(true, (data == pkb.getFollowsAfter(1)));
 		}
 
-		TEST_METHOD(PKBParserGetFollowsAfterInvalid)
+		TEST_METHOD(PKBDEParserGetFollowsAfterInvalid)
 		{
 			std::vector<std::vector<int>> data;
 			Assert::AreEqual(true, (data == pkb.getFollowsAfter(13)));
 		}
 
 
-		TEST_METHOD(PKBParserGetFollowsBeforeStarInvalid)
+		TEST_METHOD(PKBDEParserGetFollowsBeforeStarInvalid)
 		{
 			std::vector<std::vector<int>> data;;
 			Assert::AreEqual(true, (data == pkb.getFollowsBeforeStar(1)));
 		}
 
-		TEST_METHOD(PKBParserGetFollowsBeforeStar)
+		TEST_METHOD(PKBDEParserGetFollowsBeforeStar)
 		{
 			std::vector<std::vector<int>> data = { {1}, {2}, {5} };
 			Assert::AreEqual(true, (data == pkb.getFollowsBeforeStar(9)));
 		}
 
-		TEST_METHOD(PKBParserGetFollowsAfterStar)
+		TEST_METHOD(PKBDEParserGetFollowsAfterStar)
 		{
 			std::vector<std::vector<int>> data = { {5}, {9} };
 			Assert::AreEqual(true, (data == pkb.getFollowsAfterStar(2)));
 		}
 
-		TEST_METHOD(PKBParserGetFollowsAfterStarInvalid)
+		TEST_METHOD(PKBDEParserGetFollowsAfterStarInvalid)
 		{
 			std::vector<std::vector<int>> data;
 			Assert::AreEqual(true, (data == pkb.getFollowsAfterStar(9)));
 		}
 
-		TEST_METHOD(PKBParserCheckFollows)
+		TEST_METHOD(PKBDEParserCheckFollows)
 		{
 			Assert::AreEqual(true, pkb.checkFollows(1, 2));
 		}
 
-		TEST_METHOD(PKBParserCheckFollowsInvalid)
+		TEST_METHOD(PKBDEParserCheckFollowsInvalid)
 		{
 			Assert::AreEqual(false, pkb.checkFollows(2, 3));
 		}
 
-		TEST_METHOD(PKBParserCheckFollowsStar)
+		TEST_METHOD(PKBDEParserCheckFollowsStar)
 		{
 			Assert::AreEqual(true, pkb.checkFollowsStar(1, 9));
 		}
 
-		TEST_METHOD(PKBParserCheckFollowsStarInvalid)
+		TEST_METHOD(PKBDEParserCheckFollowsStarInvalid)
 		{
 			Assert::AreEqual(false, pkb.checkFollowsStar(9, 2));
 		}
 
-		TEST_METHOD(PKBParserGetAllFollows)
+		TEST_METHOD(PKBDEParserGetAllFollows)
 		{
 			std::vector <std::vector<int>> output = pkb.getAllFollows();
 			std::vector <std::vector<int>> data = { {3,4},{ 1,2 },{ 2,5 },{ 5,9 } ,{10,11} };
@@ -124,7 +127,7 @@ namespace PKBParserIntegrationTesting
 			}
 		}
 
-		TEST_METHOD(PKBParserGetAllFollowsStar)
+		TEST_METHOD(PKBDEParserGetAllFollowsStar)
 		{
 			std::vector<std::vector<int>> data;
 			data.push_back({ 3,4 });
@@ -140,76 +143,76 @@ namespace PKBParserIntegrationTesting
 			Assert::AreEqual(true, (data == output));
 		}
 
-		TEST_METHOD(PKBParserGetParentInvalid)
+		TEST_METHOD(PKBDEParserGetParentInvalid)
 		{
 			std::vector<std::vector<int>> data = { {0} };
 			Assert::AreEqual(true, (data == pkb.getParent(1)));
 		}
 
-		TEST_METHOD(PKBParserGetParent)
+		TEST_METHOD(PKBDEParserGetParent)
 		{
 			std::vector<std::vector<int>> data = { {2} };
 			Assert::AreEqual(true, (data == pkb.getParent(3)));
 		}
 
-		TEST_METHOD(PKBParserGetChildren)
+		TEST_METHOD(PKBDEParserGetChildren)
 		{
 			std::vector<std::vector<int>> data = { {3}, {4} };
 			Assert::AreEqual(true, (data == pkb.getChildren(2)));
 		}
 
-		TEST_METHOD(PKBParserGetChildrenInvalid)
+		TEST_METHOD(PKBDEParserGetChildrenInvalid)
 		{
 			std::vector<std::vector<int>> data;
 			Assert::AreEqual(true, (data == pkb.getChildren(1)));
 		}
 
 
-		TEST_METHOD(PKBParserGetParentStarInvalid)
+		TEST_METHOD(PKBDEParserGetParentStarInvalid)
 		{
 			std::vector<std::vector<int>> data;
 			Assert::AreEqual(true, (data == pkb.getParentStar(1)));
 		}
 
-		TEST_METHOD(PKBParserGetParentStar)
+		TEST_METHOD(PKBDEParserGetParentStar)
 		{
 			std::vector<std::vector<int>> data = { {6}, {5} };
 			Assert::AreEqual(true, (data == pkb.getParentStar(7)));
 		}
 
-		TEST_METHOD(PKBParserGetChildrenStar)
+		TEST_METHOD(PKBDEParserGetChildrenStar)
 		{
 			std::vector<std::vector<int>> data = { {6}, {8}, {7} };
 			Assert::AreEqual(true, (data == pkb.getChildrenStar(5)));
 		}
 
-		TEST_METHOD(PKBParserGetChildrenStarInvalid)
+		TEST_METHOD(PKBDEParserGetChildrenStarInvalid)
 		{
 			std::vector<std::vector<int>> data;
 			Assert::AreEqual(true, (data == pkb.getChildrenStar(1)));
 		}
 
-		TEST_METHOD(PKBParserCheckParent)
+		TEST_METHOD(PKBDEParserCheckParent)
 		{
 			Assert::AreEqual(true, pkb.checkParent(2, 3));
 		}
 
-		TEST_METHOD(PKBParserCheckParentInvalid)
+		TEST_METHOD(PKBDEParserCheckParentInvalid)
 		{
 			Assert::AreEqual(false, pkb.checkParent(1, 2));
 		}
 
-		TEST_METHOD(PKBParserCheckParentStar)
+		TEST_METHOD(PKBDEParserCheckParentStar)
 		{
 			Assert::AreEqual(true, pkb.checkParentStar(5, 7));
 		}
 
-		TEST_METHOD(PKBParserCheckParentStarInvalid)
+		TEST_METHOD(PKBDEParserCheckParentStarInvalid)
 		{
 			Assert::AreEqual(false, pkb.checkParentStar(7, 5));
 		}
 
-		TEST_METHOD(PKBParserGetAllParent)
+		TEST_METHOD(PKBDEParserGetAllParent)
 		{
 			std::vector <std::vector<int>> output = pkb.getAllParent();
 			std::vector <std::vector<int>> data = { { 2, 3 },{ 2, 4 },{ 5, 6 },{ 6, 7 } ,{ 5, 8 } , {11,12}, {12,13} };
@@ -218,7 +221,7 @@ namespace PKBParserIntegrationTesting
 			}
 		}
 
-		TEST_METHOD(PKBParserGetAllParentStar)
+		TEST_METHOD(PKBDEParserGetAllParentStar)
 		{
 			std::vector <std::vector<int>> data;
 			data.push_back({ 2,3 });
@@ -235,31 +238,31 @@ namespace PKBParserIntegrationTesting
 			Assert::AreEqual(true, (data == output));
 		}
 
-		TEST_METHOD(PKBParserGetUsesVariablesFromStatement)
+		TEST_METHOD(PKBDEParserGetUsesVariablesFromStatement)
 		{
 			std::vector<std::vector<int>> data = { {2} };
 			Assert::AreEqual(true, (pkb.getUsesVariablesFromStatement(1) == data));
 		}
 
-		TEST_METHOD(PKBParserGetStatementsFromUsesVariables)
+		TEST_METHOD(PKBDEParserGetStatementsFromUsesVariables)
 		{
 			std::vector<std::vector<int>> data = { {2},{3},{5},{11} };
 			Assert::AreEqual(true, (pkb.getStatementsFromUsesVariable(1) == data));
 		}
 
-		TEST_METHOD(PKBParserGetUsesVariablesFromProcedure)
+		TEST_METHOD(PKBDEParserGetUsesVariablesFromProcedure)
 		{
 			std::vector<std::vector<int>> data = { {1},{2},{3},{5} };
 			Assert::AreEqual(true, (pkb.getUsesVariablesFromProcedure(1) == data));
 		}
 
-		TEST_METHOD(PKBParserGetProceduresFromUsesVariable)
+		TEST_METHOD(PKBDEParserGetProceduresFromUsesVariable)
 		{
 			std::vector<std::vector<int>> data = { {1},{2} };
 			Assert::AreEqual(true, (pkb.getProceduresFromUsesVariable(1) == data));
 		}
 
-		TEST_METHOD(PKBParserGetAllStatementUsesVariables)
+		TEST_METHOD(PKBDEParserGetAllStatementUsesVariables)
 		{
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,2 });
@@ -276,7 +279,7 @@ namespace PKBParserIntegrationTesting
 			Assert::AreEqual(true, (pkb.getAllStatementUsesVariables() == data));
 		}
 
-		TEST_METHOD(PKBParserGetAllVariableUsesStatements)
+		TEST_METHOD(PKBDEParserGetAllVariableUsesStatements)
 		{
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,2 });
@@ -294,7 +297,7 @@ namespace PKBParserIntegrationTesting
 			Assert::AreEqual(true, (pkb.getAllVariableUsesStatements() == data));
 		}
 
-		TEST_METHOD(PKBParserGetAllProcedureUsesVariables)
+		TEST_METHOD(PKBDEParserGetAllProcedureUsesVariables)
 		{
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,1 });
@@ -306,7 +309,7 @@ namespace PKBParserIntegrationTesting
 			Assert::AreEqual(true, (pkb.getAllProcedureUsesVariables() == data));
 		}
 
-		TEST_METHOD(PKBParserGetAllVariableUsesProcedures)
+		TEST_METHOD(PKBDEParserGetAllVariableUsesProcedures)
 		{
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,1 });
@@ -318,43 +321,43 @@ namespace PKBParserIntegrationTesting
 			Assert::AreEqual(true, (pkb.getAllVariableUsesProcedures() == data));
 		}
 
-		TEST_METHOD(PKBParserCheckStatementUsesVariable)
+		TEST_METHOD(PKBDEParserCheckStatementUsesVariable)
 		{
 			Assert::AreEqual(true, pkb.checkStatementUsesVariable(1, 2));
 			Assert::AreEqual(false, pkb.checkStatementUsesVariable(1, 3));
 		}
 
-		TEST_METHOD(PKBParserCheckProcedureUsesVariable)
+		TEST_METHOD(PKBDEParserCheckProcedureUsesVariable)
 		{
 			Assert::AreEqual(true, pkb.checkProcedureUsesVariable(1, 2));
 			Assert::AreEqual(false, pkb.checkProcedureUsesVariable(2, 3));
 		}
 
-		TEST_METHOD(PKBParserGetModifiesVariablesFromStatement)
+		TEST_METHOD(PKBDEParserGetModifiesVariablesFromStatement)
 		{
 			std::vector<std::vector<int>> data = { {1} };
 			Assert::AreEqual(true, (pkb.getModifiesVariablesFromStatement(1) == data));
 		}
 
-		TEST_METHOD(PKBParserGetStatementsFromModifiesVariables)
+		TEST_METHOD(PKBDEParserGetStatementsFromModifiesVariables)
 		{
 			std::vector<std::vector<int>> data = { {1},{10},{11},{12},{13} };
 			Assert::AreEqual(true, (pkb.getStatementsFromModifiesVariable(1) == data));
 		}
 
-		TEST_METHOD(PKBParserGetModifiesVariablesFromProcedure)
+		TEST_METHOD(PKBDEParserGetModifiesVariablesFromProcedure)
 		{
 			std::vector<std::vector<int>> data = { {1},{2},{3},{4},{5} };
 			Assert::AreEqual(true, (pkb.getModifiesVariablesFromProcedure(1) == data));
 		}
 
-		TEST_METHOD(PKBParserGetProceduresFromModifiesVariable)
+		TEST_METHOD(PKBDEParserGetProceduresFromModifiesVariable)
 		{
 			std::vector<std::vector<int>> data = { {1},{2} };
 			Assert::AreEqual(true, (pkb.getProceduresFromModifiesVariable(1) == data));
 		}
 
-		TEST_METHOD(PKBParserGetAllStatementModifiesVariables)
+		TEST_METHOD(PKBDEParserGetAllStatementModifiesVariables)
 		{
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,1 });
@@ -376,7 +379,7 @@ namespace PKBParserIntegrationTesting
 			Assert::AreEqual(true, (pkb.getAllStatementModifiesVariables() == data));
 		}
 
-		TEST_METHOD(PKBParserGetAllVariableModifiesStatements)
+		TEST_METHOD(PKBDEParserGetAllVariableModifiesStatements)
 		{
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,1 });
@@ -398,7 +401,7 @@ namespace PKBParserIntegrationTesting
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesStatements() == data));
 		}
 
-		TEST_METHOD(PKBParserGetAllProcedureModifiesVariables)
+		TEST_METHOD(PKBDEParserGetAllProcedureModifiesVariables)
 		{
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,1 });
@@ -410,7 +413,7 @@ namespace PKBParserIntegrationTesting
 			Assert::AreEqual(true, (pkb.getAllProcedureModifiesVariables() == data));
 		}
 
-		TEST_METHOD(PKBParserGetAllVariableModifiesProcedures)
+		TEST_METHOD(PKBDEParserGetAllVariableModifiesProcedures)
 		{
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,1 });
@@ -422,19 +425,19 @@ namespace PKBParserIntegrationTesting
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesProcedures() == data));
 		}
 
-		TEST_METHOD(PKBParserCheckStatementModifiesVariable)
+		TEST_METHOD(PKBDEParserCheckStatementModifiesVariable)
 		{
 			Assert::AreEqual(true, pkb.checkStatementModifiesVariable(1, 1));
 			Assert::AreEqual(false, pkb.checkStatementModifiesVariable(1, 2));
 		}
 
-		TEST_METHOD(PKBParserCheckProcedureModifiesVariable)
+		TEST_METHOD(PKBDEParserCheckProcedureModifiesVariable)
 		{
 			Assert::AreEqual(true, pkb.checkProcedureModifiesVariable(1, 2));
 			Assert::AreEqual(false, pkb.checkProcedureModifiesVariable(2, 2));
 		}
 
-		TEST_METHOD(PKBParserGetStatementsWithConstant)
+		TEST_METHOD(PKBDEParserGetStatementsWithConstant)
 		{
 			std::vector<std::vector<int>> data = { {8},{9},{13} };
 			Assert::AreEqual(true, (pkb.getStatementsWithConstant(1) == data));
