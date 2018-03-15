@@ -42,7 +42,6 @@ public:
 	// Helper Methods
 	int queryNumClauses(QueryObject &queryObj);
 	int queryNumPattern(QueryObject &queryObj);
-	bool hasClauseResults(ClauseResults &clauseResults);
 	list<string> extractParams(vector<Param> selectedParams, IntermediateTable &iTable);
 	list<string> paramToStringList(Param p, IntermediateTable &iTable);
 
