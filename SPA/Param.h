@@ -4,15 +4,9 @@
 
 using namespace std;
 
-enum ParamType { ASSIGN, STMT, STMTLST, WHILE, PROG_LINE, IF, CALL, //Synonym with statement number
-				VARIABLE, CONSTANT, //Synonym
-				PROCEDURE, //Synonym
-				INTEGER,  //Statement Number
-				EXPR, //For pattern assign (RHS)
-				IDENT, //IDENT refers to "x"
-				SYNONYM, //Synonym is the general term
-				BOOLEAN, //return true/false
-				ALL }; // ALL represents _
+enum ParamType { ASSIGN, STMT, VARIABLE, WHILE, PROG_LINE, IF,
+				INTEGER, CONSTANT, VAR_NAME, 
+				IDENT, SYNONYM, ALL };
 
 struct Param {
 	ParamType type;

@@ -5,9 +5,7 @@
 
 using namespace std;
 
-enum RelRef { Modifies, Uses, Parent, ParentT, Follows, FollowsT,
-				Next, NextT, Calls, CallsT };
-
+enum RelRef { ModifiesS, UsesS, Parent, ParentT, Follows, FollowsT, Next, NextT, Calls, CallsT};
 
 class Clause {
 private:
