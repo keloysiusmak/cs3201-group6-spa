@@ -894,7 +894,12 @@ std::vector<std::vector<int>> PKB::getNextBefore(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(NEXT_INVERSE_TABLE, stmt);
 	if (static_cast<int>(data.size()) > 0) {
-		return data;
+		std::vector<int> result = data[0];
+		std::vector<std::vector<int>> output;
+		for (int i = 0; i < result.size(); i++) {
+			output.push_back({result[i]});
+		}
+		return output;
 	}
 
 	std::vector<std::vector<int>> empty;
@@ -905,7 +910,12 @@ std::vector<std::vector<int>> PKB::getNextAfter(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(NEXT_TABLE, stmt);
 	if (static_cast<int>(data.size()) > 0) {
-		return data;
+		std::vector<int> result = data[0];
+		std::vector<std::vector<int>> output;
+		for (int i = 0; i < result.size(); i++) {
+			output.push_back({ result[i] });
+		}
+		return output;
 	}
 
 	std::vector<std::vector<int>> empty;
@@ -916,7 +926,12 @@ std::vector<std::vector<int>> PKB::getNextBeforeStar(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(NEXT_STAR_INVERSE_TABLE, stmt);
 	if (static_cast<int>(data.size()) > 0) {
-		return data;
+		std::vector<int> result = data[0];
+		std::vector<std::vector<int>> output;
+		for (int i = 0; i < result.size(); i++) {
+			output.push_back({ result[i] });
+		}
+		return output;
 	}
 
 	std::vector<std::vector<int>> empty;
@@ -927,7 +942,12 @@ std::vector<std::vector<int>> PKB::getNextAfterStar(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(NEXT_STAR_TABLE, stmt);
 	if (static_cast<int>(data.size()) > 0) {
-		return data;
+		std::vector<int> result = data[0];
+		std::vector<std::vector<int>> output;
+		for (int i = 0; i < result.size(); i++) {
+			output.push_back({ result[i] });
+		}
+		return output;
 	}
 
 	std::vector<std::vector<int>> empty;
@@ -935,20 +955,24 @@ std::vector<std::vector<int>> PKB::getNextAfterStar(int stmt) {
 }
 
 bool PKB::checkNext(int stmt1, int stmt2) {
-	std::vector<int> data = PKB::getNextAfter(stmt1)[0];
-	for (int i = 0; i < data.size(); i++) {
-		if (stmt2 == data[i]) {
-			return true;
+	std::vector<std::vector<int>> data = PKB::getNextAfter(stmt1);
+	if (data.size() > 0) {
+		for (int i = 0; i < data.size(); i++) {
+			if (stmt2 == data[i][0]) {
+				return true;
+			}
 		}
 	}
 	return false;
 }
 
 bool PKB::checkNextStar(int stmt1, int stmt2) {
-	std::vector<int> data = PKB::getNextAfterStar(stmt1)[0];
-	for (int i = 0; i < data.size(); i++) {
-		if (stmt2 == data[i]) {
-			return true;
+	std::vector<std::vector<int>> data = PKB::getNextAfterStar(stmt1);
+	if (data.size() > 0) {
+		for (int i = 0; i < data.size(); i++) {
+			if (stmt2 == data[i][0]) {
+				return true;
+			}
 		}
 	}
 	return false;
@@ -989,7 +1013,12 @@ std::vector<std::vector<int>> PKB::getCallsBefore(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(CALLS_INVERSE_TABLE, stmt);
 	if (static_cast<int>(data.size()) > 0) {
-		return data;
+		std::vector<int> result = data[0];
+		std::vector<std::vector<int>> output;
+		for (int i = 0; i < result.size(); i++) {
+			output.push_back({ result[i] });
+		}
+		return output;
 	}
 
 	std::vector<std::vector<int>> empty;
@@ -1000,7 +1029,12 @@ std::vector<std::vector<int>> PKB::getCallsAfter(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(CALLS_TABLE, stmt);
 	if (static_cast<int>(data.size()) > 0) {
-		return data;
+		std::vector<int> result = data[0];
+		std::vector<std::vector<int>> output;
+		for (int i = 0; i < result.size(); i++) {
+			output.push_back({ result[i] });
+		}
+		return output;
 	}
 
 	std::vector<std::vector<int>> empty;
@@ -1011,7 +1045,12 @@ std::vector<std::vector<int>> PKB::getCallsBeforeStar(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(CALLS_STAR_INVERSE_TABLE, stmt);
 	if (static_cast<int>(data.size()) > 0) {
-		return data;
+		std::vector<int> result = data[0];
+		std::vector<std::vector<int>> output;
+		for (int i = 0; i < result.size(); i++) {
+			output.push_back({ result[i] });
+		}
+		return output;
 	}
 
 	std::vector<std::vector<int>> empty;
@@ -1022,7 +1061,12 @@ std::vector<std::vector<int>> PKB::getCallsAfterStar(int stmt) {
 	std::vector<std::vector<int>> data;
 	data = PKB::getFromTable(CALLS_STAR_TABLE, stmt);
 	if (static_cast<int>(data.size()) > 0) {
-		return data;
+		std::vector<int> result = data[0];
+		std::vector<std::vector<int>> output;
+		for (int i = 0; i < result.size(); i++) {
+			output.push_back({ result[i] });
+		}
+		return output;
 	}
 
 	std::vector<std::vector<int>> empty;
@@ -1030,20 +1074,24 @@ std::vector<std::vector<int>> PKB::getCallsAfterStar(int stmt) {
 }
 
 bool PKB::checkCalls(int stmt1, int stmt2) {
-	std::vector<int> data = PKB::getCallsAfter(stmt1)[0];
-	for (int i = 0; i < data.size(); i++) {
-		if (stmt2 == data[i]) {
-			return true;
+std::vector<std::vector<int>> data = PKB::getCallsAfter(stmt1);
+	if (data.size() > 0) {
+		for (int i = 0; i < data.size(); i++) {
+			if (stmt2 == data[i][0]) {
+				return true;
+			}
 		}
 	}
 	return false;
 }
 
 bool PKB::checkCallsStar(int stmt1, int stmt2) {
-	std::vector<int> data = PKB::getCallsAfterStar(stmt1)[0];
-	for (int i = 0; i < data.size(); i++) {
-		if (stmt2 == data[i]) {
-			return true;
+	std::vector<std::vector<int>> data = PKB::getCallsAfterStar(stmt1);
+	if (data.size() > 0) {
+		for (int i = 0; i < data.size(); i++) {
+			if (stmt2 == data[i][0]) {
+				return true;
+			}
 		}
 	}
 	return false;

@@ -12,7 +12,17 @@ namespace UnitTesting
 	TEST_CLASS(PKBTest)
 	{
 	public:
+		TEST_METHOD(PKBGetFromTable)
+		{
+			PKB pkb;
 
+			std::vector<std::vector<int>> null;
+			std::vector<std::vector<int>> data = { { 1 },{},{},{} };
+			pkb.insertToTable(STATEMENT_TABLE, 1, data);
+
+			Assert::AreEqual(true, (data == pkb.getFromTable(STATEMENT_TABLE, 1)));
+			Assert::AreEqual(true, (null == pkb.getFromTable(STATEMENT_TABLE, 2)));
+		}
 		TEST_METHOD(PKBInsertToTable)
 		{
 			PKB pkb;
@@ -1159,50 +1169,299 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getNextBefore(3) == data));
 			Assert::AreEqual(true, (pkb.getNextBefore(1) == data));
 
-//			pkb.insertToTable(NEXT_INVERSE_TABLE, 1, { { 0 } });
 			pkb.insertToTable(NEXT_INVERSE_TABLE, 2, { { 1 } });
 			pkb.insertToTable(NEXT_INVERSE_TABLE, 3, { { 1 } });
 
 			/* Null Tests */
 			Assert::AreEqual(true, (pkb.getNextBefore(1) == data));
+
+			/* Valid Tests */
 			data = { {1} };
-			Assert::AreEqual(true, (pkb.getNextBefore(3) == data));
+			Assert::AreEqual(true, (pkb.getNextBefore(2) == data));
 			Assert::AreEqual(true, (pkb.getNextBefore(3) == data));
 		}
 
 		TEST_METHOD(PKBGetNextAfter)
 		{
+			PKB pkb;
 
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getNextAfter(2) == data));
+			Assert::AreEqual(true, (pkb.getNextAfter(1) == data));
+
+			pkb.insertToTable(NEXT_TABLE, 1, { { 2,3 } });
+
+			/* Valid Tests */
+			data = { { 2 }, {3} };
+			Assert::AreEqual(true, (pkb.getNextAfter(1) == data));
+			data.clear();
+			Assert::AreEqual(true, (pkb.getNextAfter(2) == data));
 		}
 
 		TEST_METHOD(PKBGetNextBeforeStar)
 		{
+			PKB pkb;
 
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getNextBeforeStar(3) == data));
+			Assert::AreEqual(true, (pkb.getNextBeforeStar(1) == data));
+
+			pkb.insertToTable(NEXT_STAR_INVERSE_TABLE, 2, { { 1 } });
+			pkb.insertToTable(NEXT_STAR_INVERSE_TABLE, 3, { { 1,2 } });
+
+			/* Null Tests */
+			Assert::AreEqual(true, (pkb.getNextBeforeStar(1) == data));
+
+			/* Valid Tests */
+			data = { { 1 } };
+			Assert::AreEqual(true, (pkb.getNextBeforeStar(2) == data));
+			data = { { 1 }, {2} };
+			Assert::AreEqual(true, (pkb.getNextBeforeStar(3) == data));
 		}
 
 		TEST_METHOD(PKBGetNextAfterStar)
 		{
+			PKB pkb;
 
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getNextAfterStar(2) == data));
+			Assert::AreEqual(true, (pkb.getNextAfterStar(1) == data));
+
+			pkb.insertToTable(NEXT_STAR_TABLE, 1, { { 2,3 } });
+			pkb.insertToTable(NEXT_STAR_TABLE, 2, { { 3 } });
+
+			/* Valid Tests */
+			data = { { 2 },{ 3 } };
+			Assert::AreEqual(true, (pkb.getNextAfterStar(1) == data));
+			data = { { 3 } };
+			Assert::AreEqual(true, (pkb.getNextAfterStar(2) == data));
 		}
 
 		TEST_METHOD(PKBGetAllNext)
 		{
+			PKB pkb;
 
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getAllNext() == data));
+
+			pkb.insertToTable(NEXT_TABLE, 1, { { 2,5 } });
+			pkb.insertToTable(NEXT_TABLE, 2, { { 3,4 } });
+			pkb.insertToTable(NEXT_TABLE, 3, { { 1 } });
+			pkb.insertToTable(NEXT_TABLE, 4, { { 1 } });
+
+			/* Valid Tests */
+			data = { { 1,2 },{ 1,5 }, {2,3}, {2,4}, {3,1}, {4,1} };
+			Assert::AreEqual(true, (pkb.getAllNext() == data));
 		}
 
 		TEST_METHOD(PKBGetAllNextStar)
 		{
+			PKB pkb;
 
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getAllNextStar() == data));
+
+			pkb.insertToTable(NEXT_STAR_TABLE, 1, { { 1,2,3 } });
+			pkb.insertToTable(NEXT_STAR_TABLE, 2, { { 1,2,3 } });
+			pkb.insertToTable(NEXT_STAR_TABLE, 3, { { 1,2,3 } });
+
+			/* Valid Tests */
+			data = { {1,1}, { 1,2 },{1,3}, {2,1}, {2,2},{2,3}, {3,1}, {3,2}, {3,3} };
+			Assert::AreEqual(true, (pkb.getAllNextStar() == data));
 		}
 
 		TEST_METHOD(PKBCheckNext)
 		{
+			PKB pkb;
 
+			/* Null Tests */
+			Assert::AreEqual(false, pkb.checkNext(1,2));
+
+			pkb.insertToTable(NEXT_TABLE, 1, { {2} });
+			pkb.insertToTable(NEXT_TABLE, 2, { {3} });
+
+			/* Valid Tests */
+			Assert::AreEqual(true, pkb.checkNext(1,2));
+			Assert::AreEqual(true, pkb.checkNext(2, 3));
+			Assert::AreEqual(false, pkb.checkNext(1, 3));
 		}
 
 		TEST_METHOD(PKBCheckNextStar)
 		{
+			PKB pkb;
 
+			/* Null Tests */
+			Assert::AreEqual(false, pkb.checkNextStar(1, 2));
+
+			pkb.insertToTable(NEXT_STAR_TABLE, 1, { { 2,3,4 } });
+			pkb.insertToTable(NEXT_STAR_TABLE, 2, { { 2,3,4 } });
+
+			/* Valid Tests */
+			Assert::AreEqual(true, pkb.checkNextStar(1, 2));
+			Assert::AreEqual(true, pkb.checkNextStar(1, 3));
+			Assert::AreEqual(true, pkb.checkNextStar(1, 4));
+			Assert::AreEqual(true, pkb.checkNextStar(2, 2));
+			Assert::AreEqual(true, pkb.checkNextStar(2, 3));
+			Assert::AreEqual(true, pkb.checkNextStar(2, 4));
+			Assert::AreEqual(false, pkb.checkNextStar(1, 1));
+			Assert::AreEqual(false, pkb.checkNextStar(3, 1));
+		}
+
+		TEST_METHOD(PKBGetCallsBefore)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getCallsBefore(3) == data));
+			Assert::AreEqual(true, (pkb.getCallsBefore(1) == data));
+
+			pkb.insertToTable(CALLS_INVERSE_TABLE, 2, { { 1 } });
+			pkb.insertToTable(CALLS_INVERSE_TABLE, 3, { { 1 } });
+
+			/* Null Tests */
+			Assert::AreEqual(true, (pkb.getCallsBefore(1) == data));
+
+			/* Valid Tests */
+			data = { { 1 } };
+			Assert::AreEqual(true, (pkb.getCallsBefore(2) == data));
+			Assert::AreEqual(true, (pkb.getCallsBefore(3) == data));
+		}
+
+		TEST_METHOD(PKBGetCallsAfter)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getCallsAfter(2) == data));
+			Assert::AreEqual(true, (pkb.getCallsAfter(1) == data));
+
+			pkb.insertToTable(CALLS_TABLE, 1, { { 2,3 },{} });
+
+			/* Valid Tests */
+			data = { { 2 },{ 3 } };
+			Assert::AreEqual(true, (pkb.getCallsAfter(1) == data));
+			data.clear();
+			Assert::AreEqual(true, (pkb.getCallsAfter(2) == data));
+		}
+
+		TEST_METHOD(PKBGetCallsBeforeStar)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getCallsBeforeStar(3) == data));
+			Assert::AreEqual(true, (pkb.getCallsBeforeStar(1) == data));
+
+			pkb.insertToTable(CALLS_STAR_INVERSE_TABLE, 2, { { 1 } });
+			pkb.insertToTable(CALLS_STAR_INVERSE_TABLE, 3, { { 1,2 } });
+
+			/* Null Tests */
+			Assert::AreEqual(true, (pkb.getCallsBeforeStar(1) == data));
+
+			/* Valid Tests */
+			data = { { 1 } };
+			Assert::AreEqual(true, (pkb.getCallsBeforeStar(2) == data));
+			data = { { 1 },{ 2 } };
+			Assert::AreEqual(true, (pkb.getCallsBeforeStar(3) == data));
+		}
+
+		TEST_METHOD(PKBGetCallsAfterStar)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getCallsAfterStar(2) == data));
+			Assert::AreEqual(true, (pkb.getCallsAfterStar(1) == data));
+
+			pkb.insertToTable(CALLS_STAR_TABLE, 1, { { 2,3 } });
+			pkb.insertToTable(CALLS_STAR_TABLE, 2, { { 3 } });
+
+			/* Valid Tests */
+			data = { { 2 },{ 3 } };
+			Assert::AreEqual(true, (pkb.getCallsAfterStar(1) == data));
+			data = { { 3 } };
+			Assert::AreEqual(true, (pkb.getCallsAfterStar(2) == data));
+		}
+
+		TEST_METHOD(PKBGetAllCalls)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getAllCalls() == data));
+
+			pkb.insertToTable(CALLS_TABLE, 1, { { 2,5 },{} });
+			pkb.insertToTable(CALLS_TABLE, 2, { { 3,4 },{} });
+			pkb.insertToTable(CALLS_TABLE, 3, { { 1 },{} });
+			pkb.insertToTable(CALLS_TABLE, 4, { { 1 },{} });
+
+			/* Valid Tests */
+			data = { { 1,2 },{ 1,5 },{ 2,3 },{ 2,4 },{ 3,1 },{ 4,1 } };
+			Assert::AreEqual(true, (pkb.getAllCalls() == data));
+		}
+
+		TEST_METHOD(PKBGetAllCallsStar)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getAllCallsStar() == data));
+
+			pkb.insertToTable(CALLS_STAR_TABLE, 1, { { 1,2,3 } });
+			pkb.insertToTable(CALLS_STAR_TABLE, 2, { { 1,2,3 } });
+			pkb.insertToTable(CALLS_STAR_TABLE, 3, { { 1,2,3 } });
+
+			/* Valid Tests */
+			data = { { 1,1 },{ 1,2 },{ 1,3 },{ 2,1 },{ 2,2 },{ 2,3 },{ 3,1 },{ 3,2 },{ 3,3 } };
+			Assert::AreEqual(true, (pkb.getAllCallsStar() == data));
+		}
+
+		TEST_METHOD(PKBCheckCalls)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			Assert::AreEqual(false, pkb.checkCalls(1, 2));
+
+			pkb.insertToTable(CALLS_TABLE, 1, { { 2 }, {} });
+			pkb.insertToTable(CALLS_TABLE, 2, { { 3 }, {} });
+
+			/* Valid Tests */
+			Assert::AreEqual(true, pkb.checkCalls(1, 2));
+			Assert::AreEqual(true, pkb.checkCalls(2, 3));
+			Assert::AreEqual(false, pkb.checkCalls(1, 3));
+		}
+
+		TEST_METHOD(PKBCheckCallsStar)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			Assert::AreEqual(false, pkb.checkCallsStar(1, 2));
+
+			pkb.insertToTable(CALLS_STAR_TABLE, 1, { { 2,3,4 } });
+			pkb.insertToTable(CALLS_STAR_TABLE, 2, { { 2,3,4 } });
+
+			/* Valid Tests */
+			Assert::AreEqual(true, pkb.checkCallsStar(1, 2));
+			Assert::AreEqual(true, pkb.checkCallsStar(1, 3));
+			Assert::AreEqual(true, pkb.checkCallsStar(1, 4));
+			Assert::AreEqual(true, pkb.checkCallsStar(2, 2));
+			Assert::AreEqual(true, pkb.checkCallsStar(2, 3));
+			Assert::AreEqual(true, pkb.checkCallsStar(2, 4));
+			Assert::AreEqual(false, pkb.checkCallsStar(1, 1));
+			Assert::AreEqual(false, pkb.checkCallsStar(3, 1));
 		}
 		
 		TEST_METHOD(PKBConstant)
