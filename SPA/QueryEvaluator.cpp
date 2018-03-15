@@ -435,9 +435,11 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 
 void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternResults)
 { 
-	/* patternResults.instantiatePattern(pattern);
+	patternResults.instantiatePattern(pattern);
 
-	Param leftParam = pattern.getLeftParam();
+	vector<vector<int>> results = pkb.getPattern(pattern);
+
+	/* Param leftParam = pattern.getLeftParam();
 	Param rightParam = pattern.getRightParam();
 
 	if (pattern.getEntity == IF) {
