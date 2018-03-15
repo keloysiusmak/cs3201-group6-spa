@@ -37,6 +37,10 @@ struct IntermediateTable {
   vector<Param> tableParams;
   vector<vector<int>> resultsTable;
 
+  void setTableParams(vector<Param> params) {
+	  tableParams = params;
+  };
+
   void addTableParams(Param p) {
 	tableParams.push_back(p);
   };
