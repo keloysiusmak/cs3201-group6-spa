@@ -6,23 +6,12 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
 namespace UnitTesting {
-
-	Evaluator evaluatorStub;
 	Preprocessor preprocessor;
 
 	TEST_CLASS(PreprocessorTest) {
 		public:
 
-			TEST_CLASS_INITIALIZE(setup) {
-				preprocessor.setEvaluator(evaluatorStub);
-			}
-
 			TEST_METHOD(PreprocessorIsValidDeclaration) {
-
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor;
-
-				preprocessor.setEvaluator(evaluatorStub);
 
 				string declaration1 = "assign a";
 				string declaration2 = "variable v1";
@@ -53,6 +42,8 @@ namespace UnitTesting {
 
 			TEST_METHOD(PreprocessorIsValidQuery) {
 
+				Preprocessor preprocessor;
+
 				//Populate the declarationMap
 				preprocessor.insertDeclarationToMap("a", "assign");
 				preprocessor.insertDeclarationToMap("w", "while");
@@ -60,43 +51,45 @@ namespace UnitTesting {
 
 				//Query without clause and pattern
 				string query1 = "Select a";
+				string query2 = "Select <a,w,v>";
+				string query3 = "Select BOOLEAN";
 
 				//Query for Uses and Modifies clause
-				string query2 = "Select a such that Modifies(a, \"x\")";
-				string query3 = "Select a such that Modifies(a, \"       x       \")";
-				string query4 = "Select a such that Modifies(a, _)";
-				string query5 = "Select a such that Modifies(a, v)";
-				string query6 = "Select a such that Modifies(3, _)";
-				string query7 = "Select a such that Modifies(3, \"       x       \")";
-				string query8 = "Select a such that Modifies(3, v)";
+				string query4 = "Select a such that Modifies(a, \"x\")";
+				string query5 = "Select a such that Modifies(a, \"       x       \")";
+				string query6 = "Select a such that Modifies(a, _)";
+				string query7 = "Select a such that Modifies(a, v)";
+				string query8 = "Select a such that Modifies(3, _)";
+				string query9 = "Select a such that Modifies(3, \"       x       \")";
+				string query10 = "Select a such that Modifies(3, v)";
 
 				//Query for Follows and Parent clause
-				string query9 = "Select a such that Parent*(a, 5)";
-				string query10 = "Select a such that Parent*(a, w)";
-				string query11 = "Select a such that Parent*(a, _)";
-				string query12 = "Select a such that Parent*   (  5  , w            )";
-				string query13 = "Select a such that Parent*   (5  , 7     )";
-				string query14 = "Select a such that Parent*   (5  , _     )";
-				string query15 = "Select a such that Parent*   (_  , 5     )";
-				string query16 = "Select a such that Parent*   (_  , w     )";
-				string query17 = "Select a such that Parent*   (_  , _     )";
+				string query11 = "Select a such that Parent*(a, 5)";
+				string query12 = "Select a such that Parent*(a, w)";
+				string query13 = "Select a such that Parent*(a, _)";
+				string query14 = "Select a such that Parent*   (  5  , w            )";
+				string query15 = "Select a such that Parent*   (5  , 7     )";
+				string query16 = "Select a such that Parent*   (5  , _     )";
+				string query17 = "Select a such that Parent*   (_  , 5     )";
+				string query18 = "Select a such that Parent*   (_  , w     )";
+				string query19 = "Select a such that Parent*   (_  , _     )";
 
 				//Query with pattern
-				string query18 = "Select a pattern a(v, _)";
-				string query19 = "Select a pattern a(v, _\"y\"_)";
-				string query20 = "Select a pattern a(v, _\"2\"_)";
-				string query21 = "Select a pattern a(\"    x    \", _\"y\"_)";
-				string query22 = "Select a pattern a(\"    x    \", _\"2	\"_)";
-				string query23 = "Select a pattern a(\"    x    \", _)";
-				string query24 = "Select a pattern a(   _    , _\"y\"_)";
-				string query25 = "Select a pattern a(   _    , _\"2\"_)";
-				string query26 = "Select a pattern a(   _    , _)";
+				string query20 = "Select a pattern a(v, _)";
+				string query21 = "Select a pattern a(v, _\"y\"_)";
+				string query22 = "Select a pattern a(v, _\"2\"_)";
+				string query23 = "Select a pattern a(\"    x    \", _\"y\"_)";
+				string query24 = "Select a pattern a(\"    x    \", _\"2	\"_)";
+				string query25 = "Select a pattern a(\"    x    \", _)";
+				string query26 = "Select a pattern a(   _    , _\"y\"_)";
+				string query27 = "Select a pattern a(   _    , _\"2\"_)";
+				string query28 = "Select a pattern a(   _    , _)";
 
 				//Query with clause and pattern
-				string query27 = "Select a such that Modifies(a, \"x\") pattern a(v, _)";
-				string query28 = "Select a such that Parent*(a, _) pattern a(v, _\"y\"_)";
-				string query29 = "Select a pattern a(v, _\"y\"_) such that Parent*(a, _)";
-				string query30 = "Select a such that Parent*(a, _) pattern a(v, _\"y\"_) such that Modifies(a, \"x\")";
+				string query29 = "Select a such that Modifies(a, \"x\") pattern a(v, _)";
+				string query30 = "Select a such that Parent*(a, _) pattern a(v, _\"y\"_)";
+				string query31 = "Select a pattern a(v, _\"y\"_) such that Parent*(a, _)";
+				string query32 = "Select a such that Parent*(a, _) pattern a(v, _\"y\"_) such that Modifies(a, \"x\")";
 
 
 				string invalidQuery1 = "Selecta"; //Must have space in between select and a
@@ -237,10 +230,7 @@ namespace UnitTesting {
 
 			TEST_METHOD(PreprocessorParseClauseArg1) {
 
-				Evaluator evaluatorStub;
 				Preprocessor preprocessor;
-
-				preprocessor.setEvaluator(evaluatorStub);
 
 				//Populate the declarationMap
 				preprocessor.insertDeclarationToMap("w", "while");
@@ -260,7 +250,7 @@ namespace UnitTesting {
 				
 				//Valid
 				Assert::AreEqual(true, preprocessor.parseClauseArg1(qo, relType, arg1, arg2));
-				Assert::AreEqual(static_cast<int>(ModifiesS), static_cast<int>(qo.getClauses().at(0).getRelRef()));
+				Assert::AreEqual(static_cast<int>(Modifies), static_cast<int>(qo.getClauses().at(0).getRelRef()));
 				Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qo.getClauses().at(0).getFirstParam().type));
 				Assert::AreEqual(firstParamValue, qo.getClauses().at(0).getFirstParam().value);
 				Assert::AreEqual(static_cast<int>(IDENT), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
@@ -296,10 +286,7 @@ namespace UnitTesting {
 
 			TEST_METHOD(PreprocessorParseClauseArg2) {
 
-				Evaluator evaluatorStub;
 				Preprocessor preprocessor;
-
-				preprocessor.setEvaluator(evaluatorStub);
 
 				//Populate the declarationMap
 				preprocessor.insertDeclarationToMap("s", "stmt");
@@ -356,8 +343,8 @@ namespace UnitTesting {
 			}
 
 			TEST_METHOD(PreprocessorParsePattern) {
-				Evaluator evaluatorStub;
-				Preprocessor preprocessor(evaluatorStub);
+
+				Preprocessor preprocessor;
 
 				//Populate the declarationMap
 				preprocessor.insertDeclarationToMap("s", "stmt");

@@ -44,8 +44,10 @@ public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stri
 		  void expression();
 		  bool ifStatement();
 		  bool whileStatement();
+		  bool callStatement();
 		  bool assignmentStatement();
 		  bool statement();
+		  string getExpressionQueueString();
 		  bool statementList();
 		  bool procedure();
 		  bool program();
@@ -60,23 +62,10 @@ public:   PKB Parse(string simpleSource, PKB, bool isString = false, string stri
 				  return "Name is invalid!";
 			  }
 		  } InvalidNameException;
+
 };
 
 namespace ParserConstants {
 	const string DELIM_STRING = " ;={}+*-() ";
 	const vector<char> DELIMITERS{ ';', '=', '{', '}', '+', '*', '-', '(', ')' };
-	const int STATEMENT_TABLE_1 = 1;
-	const int STATEMENT_LIST_TABLE_2 = 2;
-	const int PROC_INFO_TABLE_3 = 3;
-	const int USES_TABLE_4 = 4;
-	const int MODIFIES_TABLE_5 = 5;
-	const int CONST_TABLE_7 = 7;
-	const int PROC_TABLE_8 = 8;
-	const int VAR_TABLE_9 = 9;
-
-	const int ASSIGNMENT_TYPE = 1;
-	const int WHILE_TYPE = 2;
-	const int IF_TYPE = 3;
-
-	const int PROCEDURE_PARENT_ID = 0;
 }

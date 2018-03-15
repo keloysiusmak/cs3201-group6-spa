@@ -116,7 +116,7 @@ bool Utils::isSynonym(ParamType type) {
 		return false;
 	case CONSTANT:
 		return false;
-	case VAR_NAME:
+	case EXPR:
 		return false;
 	case IDENT:
 		return false;

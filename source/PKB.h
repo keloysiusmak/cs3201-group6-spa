@@ -6,22 +6,22 @@
 #include <vector>
 #include <unordered_map>
 
-#include "PatternObject.h"
+#include "../SPA/Pattern.h"
 
 using namespace std::tr1;
 
 class PKB {
 private:
 	/*  PKB Structure*/
-	unordered_map<int, std::vector<std::vector<int>>> tables[10];
-	unordered_map<int, std::string> nameTables[2];
+	unordered_map<int, std::vector<std::vector<int>>> tables[14];
+	unordered_map<int, std::vector<std::string>> nameTables[3];
 
 public:
 	/* Parser/DE Operations */
 	bool insertToTable(int, int, std::vector<std::vector<int>>);
-	int insertToNameTable(int, std::string);
+	int insertToNameTable(int, std::vector<std::string>);
 	std::vector<std::vector<int>> getFromTable(int, int);
-	std::string getFromNameTable(int, int);
+	std::vector<std::string> getFromNameTable(int, int);
 	std::string getProcedureName(int);
 	std::string getVariableName(int);
 	int getProcedureId(std::string);
@@ -38,10 +38,10 @@ public:
 	std::vector<std::vector<int>> getFollowsAfter(int);
 	std::vector<std::vector<int>> getFollowsBeforeStar(int);
 	std::vector<std::vector<int>> getFollowsAfterStar(int);
-	bool checkFollows(int, int);
-	bool checkFollowsStar(int, int);
 	std::vector<std::vector<int>> getAllFollows();
 	std::vector<std::vector<int>> getAllFollowsStar();
+	bool checkFollows(int, int);
+	bool checkFollowsStar(int, int);
 
 	/* Parent Operations */
 	std::vector<std::vector<int>> getParent(int);
@@ -76,6 +76,29 @@ public:
 	std::vector<std::vector<int>> getAllVariableModifiesProcedures();
 	bool checkStatementModifiesVariable(int, int);
 	bool checkProcedureModifiesVariable(int, int);
+
+	/* Next Operations */
+	std::vector<std::vector<int>> getNextBefore(int);
+	std::vector<std::vector<int>> getNextAfter(int);
+	std::vector<std::vector<int>> getNextBeforeStar(int);
+	std::vector<std::vector<int>> getNextAfterStar(int);
+	std::vector<std::vector<int>> getAllNext();
+	std::vector<std::vector<int>> getAllNextStar();
+	bool checkNext(int, int);
+	bool checkNextStar(int, int);
+
+	/* Calls Operations */
+	std::vector<std::vector<int>> getCallsBefore(int);
+	std::vector<std::vector<int>> getCallsAfter(int);
+	std::vector<std::vector<int>> getCallsBeforeStar(int);
+	std::vector<std::vector<int>> getCallsAfterStar(int);
+	std::vector<std::vector<int>> getAllCalls();
+	std::vector<std::vector<int>> getAllCallsStar();
+	bool checkCalls(int, int);
+	bool checkCallsStar(int, int);
+
+	/* Pattern Operations */
+	std::vector<std::vector<int>> getPattern(Pattern);
 
 	/* Constant Operations */
 	std::vector<std::vector<int>> getStatementsWithConstant(int);
