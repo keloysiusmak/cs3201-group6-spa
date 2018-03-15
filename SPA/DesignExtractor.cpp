@@ -13,7 +13,7 @@ bool DesignExtractor::extract(PKB &pkb) {
 	extractNextStar(pkb);
 	extractCallsInverse(pkb);
 	extractCallsStar(pkb);
-	//extractUsesModifies(pkb);
+	extractUsesModifies(pkb);
 	return true;
 }
 
@@ -246,26 +246,46 @@ void DesignExtractor::extractCallsStar(PKB &pkb) {
 void DesignExtractor::extractUsesModifies(PKB &pkb) {
 	std::vector<std::vector<int>> data = pkb.getAllProcedures();
 	if (data.size() > 0) {
-		int procCount = data[0].size();
+		int procCount = data.size();
 		Graph g(procCount);
 		int currProcedure = 1;
 
 		while (currProcedure <= procCount) {
-			std::vector<int> data = pkb.getFromTable(CALLS_TABLE, currProcedure)[0];
+			std::vector<std::vector<int>> data = pkb.getFromTable(CALLS_TABLE, currProcedure);
 
-			for (int i = 0; i < data.size(); i++) {
-				g.addEdge(currProcedure, data[i]);
+			if (data.size() > 0) {
+				for (int i = 0; i < data[0].size(); i++) {
+					g.addEdge(currProcedure - 1, data[0][i] - 1);
+				}
 			}
 
 			currProcedure++;
 		}
 
 		std::vector<int> sorted = g.topologicalSort();
+		std::vector<int> newSorted;
 
 		for (int i = 0; i < sorted.size(); i++) {
-			std::vector<int> callStmts = pkb.getFromTable(CALLS_TABLE, currProcedure)[1];
-			std::vector<int> procUses = pkb.getFromTable(PROC_TABLE, currProcedure)[1];
-			std::vector<int> procModifies = pkb.getFromTable(PROC_TABLE, currProcedure)[2];
+			newSorted.push_back(sorted[i] + 1);
+		}
+
+		for (int i = 0; i < sorted.size(); i++) {
+			std::vector<std::vector<int>> callStmtsPre = pkb.getFromTable(CALLS_TABLE, currProcedure);
+			std::vector<int> callStmts;
+			if (callStmtsPre.size() > 0) {
+				callStmts = callStmtsPre[1];
+			}
+			std::vector<std::vector<int>> procUsesPre = pkb.getFromTable(PROC_TABLE, currProcedure);
+			std::vector<int> procUses;
+			if (procUsesPre.size() > 0) {
+				procUses = pkb.getFromTable(PROC_TABLE, currProcedure)[1];
+			}
+
+			std::vector<std::vector<int>> procModifiesPre = pkb.getFromTable(PROC_TABLE, currProcedure);
+			std::vector<int> procModifies;
+			if (procModifiesPre.size() > 0) {
+				procModifies = pkb.getFromTable(PROC_TABLE, currProcedure)[2];
+			}
 
 			std::vector<int> stmts;
 
