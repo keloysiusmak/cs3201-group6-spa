@@ -488,13 +488,23 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 			else return{ "false" };
 		}
 		else { // Synonym
-				
+			return paramToStringList(selected, iTable);
 		}
 	}
 	else { // Tuple
-
+		list<string> tupleResult;
+		for (Param p : selectedParams) {
+			list<string> paramValues = paramToStringList(p, iTable);
+			/* Concat string values as  */
+			stringstream paramValSingleString;
+			for (string val : paramValues) {
+				paramValSingleString << val + " ";
+			}
+			paramValSingleString << ", ";
+			tupleResult.push_back(paramValSingleString.str());
+		}
+		return tupleResult;
 	}
-	return{};
 };
 
 list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTable) {
