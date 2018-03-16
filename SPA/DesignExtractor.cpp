@@ -21,12 +21,11 @@ void DesignExtractor::extractNext(PKB &pkb) {
 	
 	std::vector<std::vector<int>> data = pkb.getAllProcedures();
 	for (int i = 0; i < data.size(); i++) {
-		std::vector<int> blank;
-		DesignExtractor::processStatementList(pkb, pkb.getFromTable(PROC_INFO_TABLE, data[i][0])[0][0], blank, 0);
+		DesignExtractor::processStatementList(pkb, pkb.getFromTable(PROC_INFO_TABLE, data[i][0])[0][0], 0, 0, 0);
 	}
 }
 
-void DesignExtractor::processStatementList(PKB &pkb, int stmtListId, std::vector<int> prevWhile, int parent) {
+void DesignExtractor::processStatementList(PKB &pkb, int stmtListId, int prevWhile, int parent, int nextStmt) {
 	std::vector<std::vector<int>> stmts = pkb.getFromTable(STATEMENT_LIST_TABLE, stmtListId);
 	for (int i = 0; i < stmts[1].size(); i++) {
 		if (i == 0 && parent != 0) {
@@ -37,28 +36,40 @@ void DesignExtractor::processStatementList(PKB &pkb, int stmtListId, std::vector
 		int type = thisStmt[3][0];
 
 		if (type == 2 || type == 3) {
+			int nextStmtPush = 0;
+			if (i < stmts[1].size() - 1) {
+				nextStmtPush = stmts[1][i + 1];
+			}
 			if (type == 2) {
-				prevWhile.push_back(stmts[1][i]);
-				processStatementList(pkb, thisStmt[0][1], prevWhile, stmts[1][i]);
+				if (nextStmt != 0) {
+					pkb.insertToTable(NEXT_TABLE, stmts[1][i], { { nextStmt } });
+					pkb.insertToTable(NEXT_INVERSE_TABLE, nextStmt, { { stmts[1][i] } });
+				}
+				if (nextStmtPush != 0) {
+					pkb.insertToTable(NEXT_TABLE, stmts[1][i], { { nextStmtPush } });
+					pkb.insertToTable(NEXT_INVERSE_TABLE, nextStmtPush, { { stmts[1][i] } });
+				}
+				processStatementList(pkb, thisStmt[0][1], stmts[1][i], stmts[1][i], 0);
 			}
 			else if (type == 3) {
-				processStatementList(pkb, thisStmt[0][1], prevWhile, stmts[1][i]);
-				processStatementList(pkb, thisStmt[0][2], prevWhile, stmts[1][i]);
+				if (nextStmtPush != 0) {
+					processStatementList(pkb, thisStmt[0][1], prevWhile, stmts[1][i], nextStmtPush);
+					processStatementList(pkb, thisStmt[0][2], prevWhile, stmts[1][i], nextStmtPush);
+				}
 			}
 		}
 		else if (i < stmts[1].size() - 1) {
-			if (stmts[1][i] == stmts[1][i+1] - 1) {
-				pkb.insertToTable(NEXT_TABLE, stmts[1][i], { { stmts[1][i+1] } });
-				pkb.insertToTable(NEXT_INVERSE_TABLE, stmts[1][i+1], { { stmts[1][i] } });
-			}
+			pkb.insertToTable(NEXT_TABLE, stmts[1][i], { { stmts[1][i+1] } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, stmts[1][i+1], { { stmts[1][i] } });
 		}
 		else {
-			int bubbleUp = stmts[1][i];
-			while (prevWhile.size() > 0) {
-				pkb.insertToTable(NEXT_TABLE, bubbleUp, { { prevWhile.back() } });
-				pkb.insertToTable(NEXT_INVERSE_TABLE, prevWhile.back(), { { bubbleUp } });
-				bubbleUp = prevWhile.back();
-				prevWhile.pop_back();
+			if (nextStmt != 0) {
+				pkb.insertToTable(NEXT_TABLE, stmts[1][i], { { nextStmt } });
+				pkb.insertToTable(NEXT_INVERSE_TABLE, nextStmt, { { stmts[1][i] } });
+			}
+			else if (prevWhile != 0) {
+				pkb.insertToTable(NEXT_TABLE, stmts[1][i], { {prevWhile} });
+				pkb.insertToTable(NEXT_INVERSE_TABLE, prevWhile, { { stmts[1][i] } });
 			}
 		}
 	}
@@ -265,26 +276,29 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 		std::vector<int> sorted = g.topologicalSort();
 		std::vector<int> newSorted;
 
-		for (int i = 0; i < sorted.size(); i++) {
+		for (int i = sorted.size() - 1; i >= 0; i--) {
 			newSorted.push_back(sorted[i] + 1);
 		}
 
+		sorted = newSorted;
+
 		for (int i = 0; i < sorted.size(); i++) {
+			currProcedure = sorted[i];
 			std::vector<std::vector<int>> callStmtsPre = pkb.getFromTable(CALLS_TABLE, currProcedure);
 			std::vector<int> callStmts;
 			if (callStmtsPre.size() > 0) {
 				callStmts = callStmtsPre[1];
 			}
-			std::vector<std::vector<int>> procUsesPre = pkb.getFromTable(PROC_TABLE, currProcedure);
+			std::vector<std::vector<int>> procUsesPre = pkb.getFromTable(PROC_INFO_TABLE, currProcedure);
 			std::vector<int> procUses;
 			if (procUsesPre.size() > 0) {
-				procUses = pkb.getFromTable(PROC_TABLE, currProcedure)[1];
+				procUses = pkb.getFromTable(PROC_INFO_TABLE, currProcedure)[1];
 			}
 
-			std::vector<std::vector<int>> procModifiesPre = pkb.getFromTable(PROC_TABLE, currProcedure);
+			std::vector<std::vector<int>> procModifiesPre = pkb.getFromTable(PROC_INFO_TABLE, currProcedure);
 			std::vector<int> procModifies;
 			if (procModifiesPre.size() > 0) {
-				procModifies = pkb.getFromTable(PROC_TABLE, currProcedure)[2];
+				procModifies = pkb.getFromTable(PROC_INFO_TABLE, currProcedure)[2];
 			}
 
 			std::vector<int> stmts;
@@ -292,20 +306,21 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 			for (int j = 0; j < callStmts.size(); j++) {
 				stmts.push_back(callStmts[j]);
 				pkb.insertToTable(STATEMENT_TABLE, callStmts[j], { {}, procUses, procModifies, {} });
-				std::vector<int> parents = pkb.getParentStar(callStmts[j])[0];
+				std::vector<std::vector<int>> parents = pkb.getParentStar(callStmts[j]);
 				for (int k = 0; k < parents.size(); k++) {
-					stmts.push_back(parents[k]);
-					pkb.insertToTable(STATEMENT_TABLE, parents[k], { {}, procUses, procModifies,{} });
+					stmts.push_back(parents[k][0]);
+					pkb.insertToTable(STATEMENT_TABLE, parents[k][0], { {}, procUses, procModifies,{} });
 				}
-				int topStmtListId = pkb.getFromTable(STATEMENT_TABLE, parents[parents.size() - 1])[0][0];
-				int proc = pkb.getFromTable(STATEMENT_LIST_TABLE, topStmtListId)[2][0];
-				pkb.insertToTable(PROC_INFO_TABLE, proc, { {}, procUses, procModifies });
-
+				int topStmtListId = pkb.getFromTable(STATEMENT_TABLE, parents[parents.size() - 1][0])[0][0];
+				std::vector<std::vector<int>> proc = pkb.getFromTable(STATEMENT_LIST_TABLE, topStmtListId);
+				if (proc.size() > 2 && proc[2].size() > 0) {
+					pkb.insertToTable(PROC_INFO_TABLE, proc[2][0], { {}, procUses, procModifies });
+				}
 				for (int m = 0; m < procUses.size(); m++) {
-					pkb.insertToTable(USES_TABLE, procUses[m], { stmts, {proc} });
+					pkb.insertToTable(USES_TABLE, procUses[m], { {stmts }, { proc[2][0] }});
 				}
 				for (int m = 0; m < procModifies.size(); m++) {
-					pkb.insertToTable(USES_TABLE, procModifies[m], { stmts,{ proc } });
+					pkb.insertToTable(MODIFIES_TABLE, procModifies[m], { {stmts},{ proc[2][0] } });
 				}
 			}
 		}
