@@ -9,7 +9,7 @@ public:
 	
 private:
 	void extractNext(PKB &);
-	void processStatementList(PKB &, int, std::vector<int>, int);
+	void processStatementList(PKB &, int, int, int, int);
 	void extractNextStar(PKB &);
 	void extractCallsInverse(PKB &);
 	void extractCallsStar(PKB &);

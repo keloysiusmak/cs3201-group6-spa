@@ -123,12 +123,17 @@ int PKB::insertToNameTable(int table_id, std::vector<string> value)
 
 std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 {
-	std::unordered_map<int, std::vector<std::vector<int>>>::const_iterator got = tables[table_id - 1].find(key_id);
-	if (got == tables[table_id - 1].end()) {
+	if (table_id < 1 || table_id > NEXT_STAR_INVERSE_TABLE) {
 		std::vector<std::vector<int>> data;
 		return data;
+	} else {
+		std::unordered_map<int, std::vector<std::vector<int>>>::const_iterator got = tables[table_id - 1].find(key_id);
+		if (got == tables[table_id - 1].end()) {
+			std::vector<std::vector<int>> data;
+			return data;
+		}
+		return tables[table_id - 1][key_id];
 	}
-	return tables[table_id - 1][key_id];
 }
 
 std::vector<string> PKB::getFromNameTable(int table_id, int key_id)
