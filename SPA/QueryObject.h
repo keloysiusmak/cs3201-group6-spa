@@ -19,7 +19,7 @@ public:
 
 	void insertClause(RelRef, ParamType, string, ParamType, string);
 	void insertPattern(ParamType, string, ParamType, string, ParamType, string);
-	void insertSelectStmt(ParamType, string);
+	void insertSelectStmt(ParamType, string, AttributeType);
 
 	void updateWithClause(ParamType, string, ParamType, string);
 
