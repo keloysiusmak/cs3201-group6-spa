@@ -39,6 +39,9 @@ void QueryEvaluator::setInvalidQuery(list<string> message) {
   invalidQueryMessage = message;
 };
 
+/*
+  Possible Optimizations: Check if clauseresults or table is empty at any point of time, if yes, return null
+*/
 list<string> QueryEvaluator::evaluateQuery() {
   if (isValidQuery()) {
 
