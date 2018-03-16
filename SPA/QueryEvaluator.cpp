@@ -465,6 +465,44 @@ void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternR
 	patternResults.setResults(results);
 };
 
+/* Filters table for with assignment */
+void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable &iTable) {
+	Param lhs = clause.getFirstParam();
+	Param rhs = clause.getSecondParam();
+	int paramTableIndex = EvaluatorHelper::getParamInt(lhs, iTable);
+	int paramValue;
+	if (lhs.dotType == CONSTANT || lhs.dotType == VALUE || lhs.dotType == STMTNO) {
+		paramValue = stoi(rhs.value);
+	} else {
+		// Get pkb mapping from proc/var_name to int
+		// paramValue = ...
+	}
+
+	vector<vector<int>> updatedTable;
+	for (vector<int> tableRow : iTable.resultsTable) {
+		if (tableRow[paramTableIndex] == paramValue) updatedTable.push_back(tableRow);
+	}
+
+	iTable.setResultsTable(updatedTable);
+};
+
+/* Filters table for with equating two variables */
+void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable &iTable) {
+	Param lhs = clause.getFirstParam();
+	Param rhs = clause.getSecondParam();
+	int firstParamTableIndex = EvaluatorHelper::getParamInt(lhs, iTable);
+	int secondParamTableIndex = EvaluatorHelper::getParamInt(rhs, iTable);
+
+	vector<vector<int>> updatedTable;
+	for (vector<int> tableRow : iTable.resultsTable) {
+		if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) {
+			updatedTable.push_back(tableRow);
+		}
+	}
+
+	iTable.setResultsTable(updatedTable);
+};
+
 /* Returns the selected params from the intermediate table */
 list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, IntermediateTable &iTable) {
 	if (selectedParams.size() == 1) {

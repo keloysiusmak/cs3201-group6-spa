@@ -20,6 +20,7 @@ enum ParamType {
 enum AttrType {
 	NONE,
 	VALUE,
+	VARNAME,
 	PROCNAME,
 	STMTNO,
 };
