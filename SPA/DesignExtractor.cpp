@@ -276,7 +276,7 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 		std::vector<int> sorted = g.topologicalSort();
 		std::vector<int> newSorted;
 
-		for (int i = 0; i < sorted.size(); i++) {
+		for (int i = sorted.size() - 1; i >= 0; i--) {
 			newSorted.push_back(sorted[i] + 1);
 		}
 
@@ -306,21 +306,22 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 			for (int j = 0; j < callStmts.size(); j++) {
 				stmts.push_back(callStmts[j]);
 				pkb.insertToTable(STATEMENT_TABLE, callStmts[j], { {}, procUses, procModifies, {} });
-				std::vector<int> parents = pkb.getParentStar(callStmts[j])[0];
+				std::vector<std::vector<int>> parents = pkb.getParentStar(callStmts[j]);
 				for (int k = 0; k < parents.size(); k++) {
-					stmts.push_back(parents[k]);
-					pkb.insertToTable(STATEMENT_TABLE, parents[k], { {}, procUses, procModifies,{} });
+					stmts.push_back(parents[k][0]);
+					pkb.insertToTable(STATEMENT_TABLE, parents[k][0], { {}, procUses, procModifies,{} });
 				}
-				int topStmtListId = pkb.getFromTable(STATEMENT_TABLE, parents[parents.size() - 1])[0][0];
-				/*int proc = pkb.getFromTable(STATEMENT_LIST_TABLE, topStmtListId)[2][0];
-				pkb.insertToTable(PROC_INFO_TABLE, proc, { {}, procUses, procModifies });
-
+				int topStmtListId = pkb.getFromTable(STATEMENT_TABLE, parents[parents.size() - 1][0])[0][0];
+				std::vector<std::vector<int>> proc = pkb.getFromTable(STATEMENT_LIST_TABLE, topStmtListId);
+				if (proc.size() > 2 && proc[2].size() > 0) {
+					pkb.insertToTable(PROC_INFO_TABLE, proc[2][0], { {}, procUses, procModifies });
+				}
 				for (int m = 0; m < procUses.size(); m++) {
-					pkb.insertToTable(USES_TABLE, procUses[m], { stmts, {proc} });
+					pkb.insertToTable(USES_TABLE, procUses[m], { {stmts }, { proc[2][0] }});
 				}
 				for (int m = 0; m < procModifies.size(); m++) {
-					pkb.insertToTable(USES_TABLE, procModifies[m], { stmts,{ proc } });
-				}*/
+					pkb.insertToTable(MODIFIES_TABLE, procModifies[m], { {stmts},{ proc[2][0] } });
+				}
 			}
 		}
 	}
