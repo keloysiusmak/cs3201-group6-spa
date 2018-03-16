@@ -17,9 +17,15 @@ enum ParamType {
 	ALL
 }; // ALL represents _
 
+enum AttrType {
+	NONE,
+	VALUE,
+	PROCNAME,
+	STMTNO,
+};
+
 struct Param {
 	ParamType type;
 	string value;
-	ParamType withType;
-	string withValue;
+	AttrType dotType;
 };
