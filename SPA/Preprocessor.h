@@ -28,6 +28,7 @@ private:
 	string infixToPostFix(string infix);
 	int higherPrecedenceValidate(char operator1, char operator2);
 	int getPrecedence(char op);
+	bool checkBoolStmt(string query);
 public:
 	Preprocessor();
 	Preprocessor(QueryEvaluator &evaluator);
