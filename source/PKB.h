@@ -98,7 +98,7 @@ public:
 	bool checkCallsStar(int, int);
 
 	/* Pattern Operations */
-	std::vector<std::vector<int>> getPattern(Pattern);
+	std::vector<std::vector<int>> getStatementsWithPattern(Pattern);
 
 	/* Constant Operations */
 	std::vector<std::vector<int>> getStatementsWithConstant(int);

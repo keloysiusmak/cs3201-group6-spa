@@ -1133,15 +1133,101 @@ std::vector<std::vector<int>> PKB::getAllCallsStar() {
 }
 
 /* Pattern Operations */
-std::vector<std::vector<int>> PKB::getPattern(Pattern p) {
+std::vector<std::vector<int>> PKB::getStatementsWithPattern(Pattern p) {
+	std::vector<std::vector<int>> result;
+	std::vector<int> intermediate;
 	if (p.getEntity().type == ASSIGN) {
+		
+		//all, all
+		if (p.getLeftParam().type == ALL && p.getRightParam().type == ALL) {
+			return PKB::getAllStatementsWithType(1);
+		}
+		//right - all
+		else if (p.getRightParam().type == ALL) {
+			std::vector<std::vector<int>> temp = PKB::getAllStatementsWithType(1);
+			for (int i = 0; i < temp.size(); i++) {
+				intermediate.push_back(temp[i][0]);
+			}
+		}
+		//right - expr_exact
+		else if (p.getRightParam().type == EXPR_EXACT) {
+			unordered_map<int, std::vector<string>> table = nameTables[0];
+			for (auto it = table.begin(); it != table.end(); ++it) {
+				if (it->second.size() > 1) {
+					if (it->second[1] == p.getRightParam().value) {
+						intermediate.push_back(it->first);
+					}
+				}
+			}
+		}
+		//right - expr
+		else if (p.getRightParam().type == EXPR) {
+			unordered_map<int, std::vector<string>> table = nameTables[0];
+			std::size_t found;
+			for (auto it = table.begin(); it != table.end(); ++it) {
+				if (it->second.size() > 1) {
+					found = it->second[1].find(p.getRightParam().value);
+					if (found != string::npos) {
+						intermediate.push_back(it->first);
+					}
+				}
+			}
+		}
+
+		//continuing with intermediate
+		if (p.getLeftParam().type == VARIABLE) {
+			for (int i = 0; i < intermediate.size(); i++) {
+				string modifies = PKB::getFromNameTable(PATTERN_TABLE, intermediate[i])[0];
+				result.push_back({intermediate[i], PKB::getVariableId(modifies)});
+			}
+		} 
+		else if (p.getLeftParam().type == ALL) {
+			for (int i = 0; i < intermediate.size(); i++) {
+				result.push_back({ intermediate[i] });
+			}
+		} 
+		else if (p.getLeftParam().type == IDENT) {
+			for (int i = 0; i < intermediate.size(); i++) {
+				string modifies = PKB::getFromNameTable(PATTERN_TABLE, intermediate[i])[0];
+				if (modifies == p.getLeftParam().value) {
+					result.push_back({ intermediate[i] });
+				}
+			}
+		}
+
+		return result;
 
 	}
 	else if (p.getEntity().type == IF || p.getEntity().type == WHILE) {
 
+		int entityType = p.getEntity().type;
+		//entity(_,_,_) or (_,_)
+		std::vector<std::vector<int>> output;
+		if (entityType == IF) {
+			output = PKB::getAllStatementsWithType(3);
+		} else if (entityType == WHILE) {
+			output = PKB::getAllStatementsWithType(2);
+		}
+			
+		if (p.getLeftParam().type == VARIABLE || p.getLeftParam().type == IDENT) {
+			for (int i = 0; i < output.size(); i++) {
+				string modifies = PKB::getFromNameTable(PATTERN_TABLE, output[i][0])[0];
+				if (p.getLeftParam().type == VARIABLE){
+					output[i].push_back(PKB::getVariableId(modifies));
+				}
+				else if (p.getLeftParam().type == IDENT && p.getLeftParam().value != modifies) {
+					output.erase(output.begin() + i, output.begin() + i + 1);
+					i--;
+				}
+			}
+			return output;
+		}
+		else {
+			return output;
+		}
+
 	}
-	std::vector<std::vector<int>> a;
-	return a;
+	return result;
 }
 
 /* Constant Operations */
