@@ -24,7 +24,7 @@ namespace UnitTesting {
 
 			/* 8 rows table */
 			table.setResultsTable(createResultsTable(params, 8, table));
-	
+
 			/* 2 params in table */
 			ClauseResults clauseWithTwoParamsInTable = createClauseResult(Uses, ASSIGN, "a2", VARIABLE, "v");
 			Assert::AreEqual(true, EvaluatorHelper::paramInTable(clauseWithTwoParamsInTable, table));
@@ -52,7 +52,7 @@ namespace UnitTesting {
 
 			/* 8 rows table */
 			table.setResultsTable(createResultsTable(params, 8, table));
-	
+
 			/* second row index => 1 */
 			Param validParamToBeSelected = createParam(ASSIGN, "a2");
 			Assert::AreEqual(true, EvaluatorHelper::getParamInt(validParamToBeSelected, table) == 1);
@@ -105,12 +105,19 @@ namespace UnitTesting {
 			vector<Param> updatedParams;
 			updatedParams.push_back(p1); updatedParams.push_back(p2); updatedParams.push_back(p3);
 			updatedParams.push_back(p4); updatedParams.push_back(p5);
-			
-			/* Merge */
+
+			/* Merge and test */
 			EvaluatorHelper::mergeWithoutOverlap(clauseResults, table);
 
-			Assert::AreEqual(true, table.resultsTable == resultsAfterMerge);
-			Assert::AreEqual(true, table.tableParams == updatedParams);
+			for (size_t i = 0; i < resultsAfterMerge.size(); i++) {
+				for (size_t j = 0; j < resultsAfterMerge[i].size(); j++) {
+					Assert::AreEqual(true, table.resultsTable[i][j] == resultsAfterMerge[i][j]);
+				}
+			}
+
+			for (size_t k = 0; k < updatedParams.size(); k++) {
+				Assert::AreEqual(true, Utils::isSameParam(table.tableParams[k], updatedParams[k]));
+			}
 		}
 
 		TEST_METHOD(MergeWithoutOverlapTwoParamsTest) {
@@ -136,7 +143,7 @@ namespace UnitTesting {
 			table.setTableParams(params);
 			table.setResultsTable(resultsBeforeMerge);
 
-			/*  */
+			/* ClauseResults Instantiation */
 			ClauseResults clauseResults = createClauseResult(Follows, STMT, "s2", STMT, "s3");
 			vector<vector<int>> clauseResultsTable = { {1, 3}, {2, 4} };
 			clauseResults.setResults(clauseResultsTable);
@@ -157,12 +164,19 @@ namespace UnitTesting {
 			vector<Param> updatedParams;
 			updatedParams.push_back(p1); updatedParams.push_back(p2); updatedParams.push_back(p3);
 			updatedParams.push_back(p4); updatedParams.push_back(p5); updatedParams.push_back(p6);
-			
+
 			/* Merge */
 			EvaluatorHelper::mergeWithoutOverlap(clauseResults, table);
 
-			Assert::AreEqual(true, table.resultsTable == resultsAfterMerge);
-			Assert::AreEqual(true, table.tableParams == updatedParams);
+			for (size_t i = 0; i < resultsAfterMerge.size(); i++) {
+				for (size_t j = 0; j < resultsAfterMerge[i].size(); j++) {
+					Assert::AreEqual(true, table.resultsTable[i][j] == resultsAfterMerge[i][j]);
+				}
+			}
+
+			for (size_t k = 0; k < updatedParams.size(); k++) {
+				Assert::AreEqual(true, Utils::isSameParam(table.tableParams[k], updatedParams[k]));
+			}
 		}
 
 		/* Randomly generates x rows of values for given params */
