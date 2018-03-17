@@ -62,6 +62,109 @@ namespace UnitTesting {
 			Assert::AreEqual(true, EvaluatorHelper::getParamInt(invalidParamToBeSelected, table) == -1);
 		}
 
+		TEST_METHOD(MergeWithoutOverlapOneParamTest) {
+			/* Instantiate table*/
+			IntermediateTable table;
+
+			/* Generate params and initial table values */
+			vector<Param> params;
+			Param p1, p2, p3, p4;
+			p1 = createParam(ASSIGN, "a1");
+			p2 = createParam(ASSIGN, "a2");
+			p3 = createParam(VARIABLE, "v");
+			p4 = createParam(STMT, "s");
+			params.push_back(p1); params.push_back(p2); params.push_back(p3); params.push_back(p4);
+
+			vector<vector<int>> resultsBeforeMerge = {
+				{1, 2, 3, 4},
+				{2, 3, 4, 5},
+				{3, 4, 5, 6},
+				{4, 5, 6, 7}
+			};
+
+			table.setTableParams(params);
+			table.setResultsTable(resultsBeforeMerge);
+
+			/* ClauseResults instantiation */
+			ClauseResults clauseResults = createClauseResult(Follows, STMT, "s2", INTEGER, "5");
+			vector<vector<int>> clauseResultsTable = { {1}, {2} };
+			clauseResults.setResults(clauseResultsTable);
+
+			/* Final params and results table after merge */
+			vector<vector<int>> resultsAfterMerge = {
+				{1, 2, 3, 4, 1},
+				{2, 3, 4, 5, 1},
+				{3, 4, 5, 6, 1},
+				{4, 5, 6, 7, 1},
+				{1, 2, 3, 4, 2},
+				{2, 3, 4, 5, 2},
+				{3, 4, 5, 6, 2},
+				{4, 5, 6, 7, 2},
+			};
+			Param p5 = createParam(STMT, "s2");
+			vector<Param> updatedParams;
+			updatedParams.push_back(p1); updatedParams.push_back(p2); updatedParams.push_back(p3);
+			updatedParams.push_back(p4); updatedParams.push_back(p5);
+			
+			/* Merge */
+			EvaluatorHelper::mergeWithoutOverlap(clauseResults, table);
+
+			Assert::AreEqual(true, table.resultsTable == resultsAfterMerge);
+			Assert::AreEqual(true, table.tableParams == updatedParams);
+		}
+
+		TEST_METHOD(MergeWithoutOverlapTwoParamsTest) {
+			/* Instantiate table*/
+			IntermediateTable table;
+
+			/* Generate params and initial table values */
+			vector<Param> params;
+			Param p1, p2, p3, p4;
+			p1 = createParam(ASSIGN, "a1");
+			p2 = createParam(ASSIGN, "a2");
+			p3 = createParam(VARIABLE, "v");
+			p4 = createParam(STMT, "s");
+			params.push_back(p1); params.push_back(p2); params.push_back(p3); params.push_back(p4);
+
+			vector<vector<int>> resultsBeforeMerge = {
+				{1, 2, 3, 4},
+				{2, 3, 4, 5},
+				{3, 4, 5, 6},
+				{4, 5, 6, 7}
+			};
+
+			table.setTableParams(params);
+			table.setResultsTable(resultsBeforeMerge);
+
+			/*  */
+			ClauseResults clauseResults = createClauseResult(Follows, STMT, "s2", STMT, "s3");
+			vector<vector<int>> clauseResultsTable = { {1, 3}, {2, 4} };
+			clauseResults.setResults(clauseResultsTable);
+
+			/* Final params and results table after merge */
+			vector<vector<int>> resultsAfterMerge = {
+				{1, 2, 3, 4, 1, 3},
+				{2, 3, 4, 5, 1, 3},
+				{3, 4, 5, 6, 1, 3},
+				{4, 5, 6, 7, 1, 3},
+				{1, 2, 3, 4, 2, 4},
+				{2, 3, 4, 5, 2, 4},
+				{3, 4, 5, 6, 2, 4},
+				{4, 5, 6, 7, 2, 4},
+			};
+			Param p5 = createParam(STMT, "s2");
+			Param p6 = createParam(STMT, "s3");
+			vector<Param> updatedParams;
+			updatedParams.push_back(p1); updatedParams.push_back(p2); updatedParams.push_back(p3);
+			updatedParams.push_back(p4); updatedParams.push_back(p5); updatedParams.push_back(p6);
+			
+			/* Merge */
+			EvaluatorHelper::mergeWithoutOverlap(clauseResults, table);
+
+			Assert::AreEqual(true, table.resultsTable == resultsAfterMerge);
+			Assert::AreEqual(true, table.tableParams == updatedParams);
+		}
+
 		/* Randomly generates x rows of values for given params */
 		vector<vector<int>> createResultsTable(vector<Param> params, int x, IntermediateTable &iTable) {
 			iTable.setTableParams(params);

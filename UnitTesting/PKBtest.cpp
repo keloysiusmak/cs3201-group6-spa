@@ -22,6 +22,7 @@ namespace UnitTesting
 
 			Assert::AreEqual(true, (data == pkb.getFromTable(STATEMENT_TABLE, 1)));
 			Assert::AreEqual(true, (null == pkb.getFromTable(STATEMENT_TABLE, 2)));
+			Assert::AreEqual(true, (null == pkb.getFromTable(99999, 2)));
 		}
 		TEST_METHOD(PKBInsertToTable)
 		{

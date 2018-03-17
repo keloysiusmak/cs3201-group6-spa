@@ -44,6 +44,8 @@ public:
 	int queryNumPattern(QueryObject &queryObj);
 	list<string> extractParams(vector<Param> selectedParams, IntermediateTable &iTable);
 	list<string> paramToStringList(Param p, IntermediateTable &iTable);
+	void handleWithValueAssignment(Clause &clause, IntermediateTable &iTable);
+	void handleWithEquateVariables(Clause &clause, IntermediateTable &iTable);
 
 private:
 	QueryObject queryObject;

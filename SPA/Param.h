@@ -16,12 +16,14 @@ enum ParamType {
 	ALL
 }; // ALL represents _
 
-enum AttributeType {
+
+	/* Attribute type to account for with statements */
+enum AttrType {
 	PROCNAME, VARNAME, VALUE, STMT_NO, NONE //attrName for with clause
 };
 
 struct Param {
 	ParamType type;
 	string value;
-	AttributeType attribute;
+	AttrType attribute;
 };

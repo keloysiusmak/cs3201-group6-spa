@@ -39,7 +39,7 @@ const unordered_map<string, RelRef> KEYWORDS_CLAUSES = { { "Modifies", Modifies 
 { "Parent", Parent },{ "Parent*", ParentT },{ "Follows", Follows },{ "Follows*", FollowsT }, 
 { "Next", Next },{ "NextT", NextT },{ "Calls", Calls },{ "Calls*", CallsT } };
 
-const unordered_map<string, AttributeType> KEYWORDS_WITH_TYPE = { { "procName", PROCNAME },
+const unordered_map<string, AttrType> KEYWORDS_WITH_TYPE = { { "procName", PROCNAME },
 { "varName", VARNAME },
 { "value", VALUE },
 { "stmt#", STMT_NO } };
@@ -199,7 +199,7 @@ bool Preprocessor::isValidQuery(string query) {
 					}
 
 					//insert selectType of QueryObject
-					AttributeType getAttrName = KEYWORDS_WITH_TYPE.find(attrRef.at(1))->second;
+					AttrType getAttrName = KEYWORDS_WITH_TYPE.find(attrRef.at(1))->second;
 					queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first, getAttrName);
 				}
 				else if (isValidSynonym(elem)) {
@@ -256,7 +256,7 @@ bool Preprocessor::isValidQuery(string query) {
 			}
 
 			//insert selectType of QueryObject
-			AttributeType getAttrName = KEYWORDS_WITH_TYPE.find(attrRef.at(1))->second;
+			AttrType getAttrName = KEYWORDS_WITH_TYPE.find(attrRef.at(1))->second;
 			queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first, getAttrName);
 		}
 		else if (isValidSynonym(elem)) {

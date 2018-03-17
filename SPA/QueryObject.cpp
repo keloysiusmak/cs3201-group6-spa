@@ -52,7 +52,7 @@ void QueryObject::insertPattern(ParamType entityType, string entity, ParamType l
 	_Patterns.push_back(pattern);
 }
 
-void QueryObject::insertSelectStmt(ParamType selectType, string synonym, AttributeType attr) {
+void QueryObject::insertSelectStmt(ParamType selectType, string synonym, AttrType attr) {
 	Param result;
 	result.type = selectType;
 	result.value = synonym;
