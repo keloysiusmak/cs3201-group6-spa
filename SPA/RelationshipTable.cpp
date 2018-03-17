@@ -17,7 +17,7 @@ RelationshipTable::RelationshipTable() {
 	rightArg = { STMT, ASSIGN, WHILE, PROG_LINE, IF, CALL, INTEGER, ALL };
 	Relationship rel2(2, leftArg, rightArg);
 	relTable["Parent"] = rel2;
-	relTable["Parent*"] = rel2;
+	relTable["ParentT"] = rel2;
 	leftArg.clear();
 	rightArg.clear();
 
@@ -26,7 +26,7 @@ RelationshipTable::RelationshipTable() {
 	rightArg = { STMT, ASSIGN, WHILE, PROG_LINE, IF, CALL, IDENT, ALL };
 	Relationship rel3(2, leftArg, rightArg);
 	relTable["Follows"] = rel3;
-	relTable["Follows*"] = rel3;
+	relTable["FollowsT"] = rel3;
 	leftArg.clear();
 	rightArg.clear();
 
@@ -35,7 +35,7 @@ RelationshipTable::RelationshipTable() {
 	rightArg = { STMT, ASSIGN, WHILE, IF, CALL, PROG_LINE, INTEGER, ALL };
 	Relationship rel4(2, leftArg, rightArg);
 	relTable["Next"] = rel4;
-	relTable["Next*"] = rel4;
+	relTable["NextT"] = rel4;
 	leftArg.clear();
 	rightArg.clear();
 
@@ -44,7 +44,7 @@ RelationshipTable::RelationshipTable() {
 	rightArg = { PROCEDURE, IDENT, ALL };
 	Relationship rel5(2, leftArg, rightArg);
 	relTable["Calls"] = rel5;
-	relTable["Calls*"] = rel5;
+	relTable["CallsT"] = rel5;
 	leftArg.clear();
 	rightArg.clear();
 
