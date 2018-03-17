@@ -2,7 +2,6 @@
 #include "CppUnitTest.h"
 
 #include "../source/PKB.h";
-#include "../SPA/Evaluator.h";
 #include "../SPA/QueryObject.h";
 #include "../SPA/Pattern.h";
 #include "../SPA/Clause.h";

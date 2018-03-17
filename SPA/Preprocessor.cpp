@@ -641,7 +641,27 @@ bool Preprocessor::isValidQuery(string query) {
 			}
 			//with
 			else if (prevAndClause == 3) {
+				if ((i + 1) >= queryArr.size() ||
+					(i + 2) >= queryArr.size() ||
+					(i + 3) >= queryArr.size()) {
+					return false;
+				}
 
+				string ref1 = Utils::sanitise(queryArr.at(i + 1));
+				char equalSign = Utils::sanitise(queryArr.at(i + 2)).at(0);
+				string ref2 = Utils::sanitise(queryArr.at(i + 3));
+
+				if (!isValidRef(ref1) ||
+					equalSign != SYMBOL_EQUALS ||
+					!isValidRef(ref2)) {
+					return false;
+				}
+
+				if (!parseWithClause(queryObject, ref1, ref2)) {
+					return false;
+				}
+
+				i += 3;
 			}
 			else {
 				return false;
@@ -1008,52 +1028,99 @@ bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string right
 	AttrType leftAttrType = NONE;
 	AttrType rightAttrType = NONE;
 
-	if (isValidAttrRef(leftRef)) {
+	bool isWithString = false;
 
+	if (isValidAttrRef(leftRef)) {
+		vector<string> leftAttrRef = Utils::split(leftRef, SYMBOL_FULL_STOP);
+
+		if (!isDeclarationSynonymExist(leftAttrRef.at(0))) {
+			return false;
+		}
+
+		auto searchSynonym = declarationMap.find(leftAttrRef.at(0));
+		leftArgType = KEYWORDS_DECLARATIONS.find(searchSynonym->second)->second;
+
+		//Check whether the declaration can have the attribute
+		if (!isValidAttrName(leftArgType, leftAttrRef.at(1))) {
+			return false;
+		}
+
+		leftAttrType = KEYWORDS_WITH_TYPE.find(leftAttrRef.at(1))->second;
+		leftArg = leftAttrRef.at(0);
+
+		switch (leftAttrType) {
+		case PROCNAME:
+		case VARNAME:
+			isWithString = true;
+		}
+	}
+	// if is synonym, it must be prog_line
+	else if (isValidSynonym(leftRef)) {
+		auto searchSynonym = declarationMap.find(leftRef);
+		leftArgType = KEYWORDS_DECLARATIONS.find(searchSynonym->second)->second;
+
+		if (leftArgType != PROG_LINE) {
+			return false;
+		}
+
+		leftArg = leftRef;
+	}
+	else if (Utils::isInteger(leftRef)) {
+		leftArgType = INTEGER;
+		leftArg = leftRef;
+	}
+	else if (isValidIdent(leftRef)) {
+		leftArgType = IDENT;
+		leftArg = Utils::sanitise((Utils::split(leftRef, SYMBOL_DOUBLE_QUOTE)).at(1));
+
+		isWithString = true;
+	}
+	else {
+		return false;
 	}
 
 	if (isValidAttrRef(rightRef)) {
+		vector<string> rightAttrRef = Utils::split(rightRef, SYMBOL_FULL_STOP);
 
+		if (!isDeclarationSynonymExist(rightAttrRef.at(0))) {
+			return false;
+		}
+
+		auto searchSynonym = declarationMap.find(rightAttrRef.at(0));
+		rightArgType = KEYWORDS_DECLARATIONS.find(searchSynonym->second)->second;
+
+		//Check whether the declaration can have the attribute
+		if (!isValidAttrName(rightArgType, rightAttrRef.at(1))) {
+			return false;
+		}
+		rightAttrType = KEYWORDS_WITH_TYPE.find(rightAttrRef.at(1))->second;
+		rightArg = rightAttrRef.at(0);
 	}
-	//vector<string> attrRefArr = Utils::split(attrRef, SYMBOL_FULL_STOP);
+	// if is synonym, it must be prog_line
+	else if (isValidSynonym(rightRef)) {
+		auto searchSynonym = declarationMap.find(rightRef);
+		rightArgType = KEYWORDS_DECLARATIONS.find(searchSynonym->second)->second;
 
-	//if (!isDeclarationSynonymExist(attrRefArr.at(0))) {
-	//	return false;
-	//}
+		if (rightArgType != PROG_LINE) {
+			return false;
+		}
 
-	////Change the synonym of attrRef to the declaration type with reference to the declarationMap
-	//auto searchSynonym = declarationMap.find(attrRefArr.at(0));
-	//auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+		rightArg = rightRef;
+	}
+	else if (Utils::isInteger(rightRef)) {
+		rightArgType = INTEGER;
+		rightArg = rightRef;
+	}
+	else if (isValidIdent(rightRef)) {
+		rightArgType = IDENT;
+		rightArg = Utils::sanitise((Utils::split(rightRef, SYMBOL_DOUBLE_QUOTE)).at(1));
+	}
+	else {
+		return false;
+	}
 
-	//if (!isValidAttrName(searchDeclareType->second, attrRefArr.at(1))) {
-	//	return false;
-	//}
-
-	//auto getAttrName = KEYWORDS_WITH_TYPE.find(attrRefArr.at(1));
-
-	//if (!isValidAttrCond(getAttrName->second, ref)) {
-	//	return false;
-	//}
-
-	////attrRef
-	//if (isValidAttrRef(ref)) {
-
-	//	vector<string> refArr = Utils::split(ref, SYMBOL_FULL_STOP);
-	//	auto getRef_AttrName = KEYWORDS_WITH_TYPE.find(refArr.at(1));
-
-	//	qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
-	//		getRef_AttrName->second, ref);
-	//}
-	////INTEGER
-	//else if (Utils::isInteger(ref)) {
-	//	qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
-	//		INTEGER, ref);
-	//}
-	////IDENTITY
-	//else {
-	//	qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
-	//		IDENT, ref);
-	//}
+	qo.insertWithClause(leftArgType, leftArg, leftAttrType, 
+		rightArgType, rightArg, rightAttrType);
 
 	return true;
 }
