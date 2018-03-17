@@ -47,10 +47,6 @@ list<string> QueryEvaluator::evaluateQuery() {
 
 		vector<Param> selectParams = queryObject.getSelectStatements();
 
-		/* For storing clause results for pattern and such that clauses */
-		vector<Clause> clauses;
-		vector<Pattern> patterns;
-
 		IntermediateTable iTable;
 
 		/* Evaluation of clauses */
@@ -70,11 +66,22 @@ list<string> QueryEvaluator::evaluateQuery() {
 			if (!patternResults.hasResults()) return{};
 			if (patternResults.numParamsInResult() != 0) EvaluatorHelper::mergeClauseTable(patternResults, iTable);
 		}
+
+		/* Evaluation of with clauses */
+		for (Clause withClause : queryObject.getWithClauses()) {
+			Param rhs = withClause.getSecondParam();
+			if (rhs.type == INTEGER || rhs.type == CONSTANT) { // If rhs is a concrete value
+				handleWithValueAssignment(withClause, iTable);
+			} else { // If rhs is a synonym
+				handleWithEquateVariables(withClause, iTable);
+			}
+		}
+
 		return extractParams(selectParams, iTable);
 
 	}
 	else { // Return no value
-		return{};
+		return invalidQueryMessage;
 	}
 }
 
@@ -472,7 +479,6 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 	int paramTableIndex = EvaluatorHelper::getParamInt(lhs, iTable);
 	int paramValue;
 	if (lhs.attribute == VALUE || lhs.attribute == STMT_NO) {
-	//if (lhs.attribute == CONSTANT || lhs.attribute == VALUE || lhs.attribute == STMT_NO) {
 		paramValue = stoi(rhs.value);
 	} else {
 		// Get pkb mapping from proc/var_name to int

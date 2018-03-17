@@ -74,6 +74,10 @@ vector<Pattern> QueryObject::getPatterns() {
 	return _Patterns;
 }
 
+vector<Clause> QueryObject::getWithClauses() {
+	return _withClauses;
+}
+
 vector<Param> QueryObject::getSelectStatements() {
 	return _selectStmt;
 }
