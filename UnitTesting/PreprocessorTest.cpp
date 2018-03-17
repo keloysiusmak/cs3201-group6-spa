@@ -45,6 +45,9 @@ public:
 	TEST_METHOD(PreprocessorIsValidQuery) {
 
 		Preprocessor preprocessor;
+		QueryEvaluator evaluatorStub;
+
+		preprocessor.setEvaluator(evaluatorStub);
 
 		//Populate the declarationMap
 		preprocessor.insertDeclarationToMap("a", "assign");
@@ -213,19 +216,6 @@ public:
 		Assert::AreNotEqual(true, preprocessor.isValidEntRef("\"321\""));
 		Assert::AreNotEqual(true, preprocessor.isValidEntRef("\"1x\""));
 		Assert::AreNotEqual(true, preprocessor.isValidEntRef("\"#x\""));
-	}
-
-	TEST_METHOD(PreprocessorIsValidExpressSpec) {
-
-		Assert::AreEqual(true, preprocessor.isValidExpressSpec("_"));
-		Assert::AreEqual(true, preprocessor.isValidExpressSpec("_\"x\"_"));
-		Assert::AreEqual(true, preprocessor.isValidExpressSpec("_\"x1\"_"));
-		Assert::AreEqual(true, preprocessor.isValidExpressSpec("_\"5\"_"));
-
-		Assert::AreNotEqual(true, preprocessor.isValidExpressSpec(""));
-		Assert::AreNotEqual(true, preprocessor.isValidExpressSpec("123"));
-		Assert::AreNotEqual(true, preprocessor.isValidExpressSpec("1a"));
-		Assert::AreNotEqual(true, preprocessor.isValidExpressSpec("#a"));
 	}
 
 	TEST_METHOD(PreprocessorIsDeclarationSynonymExist) {
