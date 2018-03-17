@@ -34,7 +34,7 @@ namespace ParserTest
 			Assert::IsTrue(parser.match("a", false));
 			Assert::IsTrue(parser.match("abc", true));
 		};
-	
+
 		TEST_METHOD(ParserIfStatement)
 		{
 			parser.tokenize("if x then { x = x + 1; } else { x = x + 1; }");
@@ -42,7 +42,7 @@ namespace ParserTest
 			parser.stmListIdStack.push(1);
 			Assert::IsTrue(parser.ifStatement());
 
-		}
+		};
 
 		TEST_METHOD(ParserWhileStatement)
 		{
@@ -50,5 +50,6 @@ namespace ParserTest
 			string nextToken = parser.getToken();
 			parser.stmListIdStack.push(1);
 			Assert::IsTrue(parser.whileStatement());
-		}
+		};
+	}
 }
