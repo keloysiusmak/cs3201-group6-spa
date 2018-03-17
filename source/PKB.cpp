@@ -1142,6 +1142,13 @@ std::vector<std::vector<int>> PKB::getStatementsWithPattern(Pattern p) {
 		if (p.getLeftParam().type == ALL && p.getRightParam().type == ALL) {
 			return PKB::getAllStatementsWithType(1);
 		}
+		//right - all
+		else if (p.getRightParam().type == ALL) {
+			std::vector<std::vector<int>> temp = PKB::getAllStatementsWithType(1);
+			for (int i = 0; i < temp.size(); i++) {
+				intermediate.push_back(temp[i][0]);
+			}
+		}
 		//right - expr_exact
 		else if (p.getRightParam().type == EXPR_EXACT) {
 			unordered_map<int, std::vector<string>> table = nameTables[0];
@@ -1179,7 +1186,7 @@ std::vector<std::vector<int>> PKB::getStatementsWithPattern(Pattern p) {
 			for (int i = 0; i < intermediate.size(); i++) {
 				string modifies = PKB::getFromNameTable(PATTERN_TABLE, intermediate[i])[0];
 				if (modifies == p.getLeftParam().value) {
-					result.push_back({ intermediate[i], PKB::getVariableId(modifies) });
+					result.push_back({ intermediate[i] });
 				}
 			}
 		}
