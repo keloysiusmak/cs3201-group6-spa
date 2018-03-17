@@ -468,8 +468,8 @@ void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternR
 {
 	patternResults.instantiatePattern(pattern);
 
-	vector<vector<int>> results = pkb.getStatementsWithPattern(pattern);
-	patternResults.setResults(results);
+	// vector<vector<int>> results = pkb.getStatementsWithPattern(pattern);
+	// patternResults.setResults(results);
 };
 
 /* Filters table for with assignment */

@@ -36,6 +36,9 @@ void EvaluatorHelper::mergeWithoutOverlap(ClauseResults &clauseResults, Intermed
 Possible optimization: Hash results / Sort merge tables
 */
 void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, IntermediateTable &iTable) {
+	/* Add table params */
+	addClauseParamToTable(clauseResults, iTable);
+
 	int firstParamInt = getParamInt(clauseResults.tableParams[0], iTable);
 	if (clauseResults.numParamsInResult() == 2) {
 		int secondParamInt = getParamInt(clauseResults.tableParams[1], iTable);
@@ -51,10 +54,12 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 					}
 				} else if (firstParamInt >= 0) { // First param in table
 					if (resultRow[0] == tableRow[firstParamInt]) {
+						tableRow.push_back(resultRow[1]); // Add in second param value
 						newTable.push_back(tableRow);
 					}
 				} else { // Second param in table
 					if (resultRow[1] == tableRow[secondParamInt]) {
+						tableRow.push_back(resultRow[0]); // Add in first param value
 						newTable.push_back(tableRow);
 					}
 				}
