@@ -61,11 +61,6 @@ void QueryObject::insertSelectStmt(ParamType selectType, string synonym, AttrTyp
 	_selectStmt.push_back(result);
 }
 
-
-void QueryObject::updateWithClause(ParamType attrRef_AttrName, string attrRefSynonym, ParamType ref_AttrName, string ref) {
-
-}
-
 vector<Clause> QueryObject::getClauses() {
 	return _clauses;
 }

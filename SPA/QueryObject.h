@@ -22,8 +22,6 @@ public:
 	void insertPattern(ParamType, string, ParamType, string, ParamType, string);
 	void insertSelectStmt(ParamType, string, AttrType);
 
-	void updateWithClause(ParamType, string, ParamType, string);
-
 	vector<Clause> getClauses();
 	vector<Pattern> getPatterns();
 	vector<Clause> getWithClauses();
