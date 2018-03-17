@@ -1,7 +1,7 @@
 #pragma once
 
 #include "QueryObject.h"
-#include "Evaluator.h"
+#include "QueryEvaluator.h"
 #include "QueryObject.h"
 #include "Utils.h"
 #include "RelationshipTable.h"
@@ -18,7 +18,7 @@ class Preprocessor {
 private:
 	unordered_map<string, string> declarationMap;
 	RelationshipTable relTable;
-	//Evaluator * _evaluator;
+	QueryEvaluator * _evaluator;
 
 	int retrieveClauseArgType(string arg);
 	int retrieveExpressionType(string expression);
@@ -30,8 +30,8 @@ private:
 	int getPrecedence(char op);
 public:
 	Preprocessor();
-	//Preprocessor(Evaluator &evaluator);
-	//void setEvaluator(Evaluator &evaluator);
+	Preprocessor(QueryEvaluator &evaluator);
+	void setEvaluator(QueryEvaluator &evaluator);
 	void insertDeclarationToMap(string synonym, string declaration);
 	unordered_map<string, string> getDeclarationMap();
 	void preprocessQuery(string query);
