@@ -22,8 +22,8 @@ RelationshipTable::RelationshipTable() {
 	rightArg.clear();
 
 	//Follows & Follows*
-	leftArg = { STMT, ASSIGN, WHILE, PROG_LINE, IF, CALL, IDENT, ALL };
-	rightArg = { STMT, ASSIGN, WHILE, PROG_LINE, IF, CALL, IDENT, ALL };
+	leftArg = { STMT, ASSIGN, WHILE, PROG_LINE, IF, CALL, INTEGER, ALL };
+	rightArg = { STMT, ASSIGN, WHILE, PROG_LINE, IF, CALL, INTEGER, ALL };
 	Relationship rel3(2, leftArg, rightArg);
 	relTable["Follows"] = rel3;
 	relTable["FollowsT"] = rel3;
@@ -48,11 +48,46 @@ RelationshipTable::RelationshipTable() {
 	leftArg.clear();
 	rightArg.clear();
 
+	//Affects & Affects*
+	leftArg = { PROG_LINE, STMT, ASSIGN, INTEGER, ALL };
+	rightArg = { PROG_LINE, STMT, ASSIGN, INTEGER, ALL };
+	Relationship rel6(2, leftArg, rightArg);
+	relTable["Affects"] = rel6;
+	relTable["AffectsT"] = rel6;
+	leftArg.clear();
+	rightArg.clear();
+
 	//Pattern assign
 	leftArg = { VARIABLE, IDENT, ALL };
 	rightArg = { EXPR, EXPR_EXACT, ALL };
-	Relationship rel6(2, leftArg, rightArg);
-	relTable["assignpt"] = rel6;
+	Relationship rel7(2, leftArg, rightArg);
+	relTable["assignpt"] = rel7;
+	leftArg.clear();
+	rightArg.clear();
+
+	//Pattern if & Pattern while
+	leftArg = { VARIABLE, IDENT, ALL };
+	rightArg = { ALL };
+	Relationship rel8(3, leftArg, rightArg);
+	Relationship rel9(2, leftArg, rightArg);
+	relTable["ifpt"] = rel8;
+	relTable["whilept"] = rel9;
+	leftArg.clear();
+	rightArg.clear();
+
+	//With Number
+	leftArg = { STMT, ASSIGN, WHILE, IF, CALL, CONSTANT, PROG_LINE, INTEGER };
+	rightArg = { STMT, ASSIGN, WHILE, IF, CALL, CONSTANT, PROG_LINE, INTEGER };
+	Relationship rel10(2, leftArg, rightArg);
+	relTable["withNumber"] = rel10;
+	leftArg.clear();
+	rightArg.clear();
+
+	//With String
+	leftArg = { PROCEDURE, CALL, VARIABLE, IDENT };
+	rightArg = { PROCEDURE, CALL, VARIABLE, IDENT };
+	Relationship rel11(2, leftArg, rightArg);
+	relTable["withString"] = rel11;
 	leftArg.clear();
 	rightArg.clear();
 }

@@ -378,7 +378,7 @@ bool Preprocessor::isValidQuery(string query) {
 			patternLength++;
 
 			//check whether open_bracket exists
-			if ((i + 3) >= queryArr.size() || queryArr.at(i + 3).at(0) != SYMBOL_OPEN_BRACKET) {
+			if ((i + 2) >= queryArr.size() || queryArr.at(i + 2).at(0) != SYMBOL_OPEN_BRACKET) {
 				return false;
 			}
 
@@ -501,12 +501,22 @@ bool Preprocessor::isValidQuery(string query) {
 			//such that
 			if (prevAndClause == 1) {
 
+				int clauseLength = 1;
+
 				//Not a valid such that clause
 				if (KEYWORDS_CLAUSES.find(queryArr.at(i + 1)) == KEYWORDS_CLAUSES.end()) {
 					return false;
 				}
 
-				int clauseLength = 2;
+				clauseLength++;
+
+				//check whether open_bracket exists
+				if ((i + 2) >= queryArr.size() || queryArr.at(i + 2).at(0) != SYMBOL_OPEN_BRACKET) {
+					return false;
+				}
+
+				//Add Open Bracket
+				clauseLength++;
 
 				//Add all the left Param
 				string leftArg = retrieveParamFromQuery(queryArr, clauseLength, i, string(1, SYMBOL_COMMA));
@@ -545,13 +555,21 @@ bool Preprocessor::isValidQuery(string query) {
 				//Add patternType
 				patternLength++;
 
+				//check whether open_bracket exists
+				if ((i + 2) >= queryArr.size() || queryArr.at(i + 2).at(0) != SYMBOL_OPEN_BRACKET) {
+					return false;
+				}
+
+				//Add Open Bracket
+				patternLength++;
+
 				//Add all the left Param
 				string leftArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_COMMA));
 
 				//Add all the right Param if is assignpt
 				string rightArg;
 				if (searchDeclareType->second == ASSIGN) {
-					rightArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_CLOSE_BRACKET));
+					rightArg = retrievePatternFromQuery(queryArr, patternLength, i, string(1, SYMBOL_CLOSE_BRACKET));
 				}
 				else {
 					rightArg = EMPTY_STRING;
@@ -695,8 +713,8 @@ bool Preprocessor::isValidAttrRef(string attrRef) {
 	return regex_match(attrRef, attrRefRegex);
 }
 
-bool Preprocessor::isValidAttrName(ParamType synonymType, string attrRef) {
-	auto checkAttrRef = KEYWORDS_WITH_TYPE.find(attrRef);
+bool Preprocessor::isValidAttrName(ParamType synonymType, string attrName) {
+	auto checkAttrRef = KEYWORDS_WITH_TYPE.find(attrName);
 
 	switch (checkAttrRef->second)
 	{
@@ -826,6 +844,32 @@ bool Preprocessor::parseClauseArg(QueryObject &qo, string relType, string arg1, 
 		sameIntegerValue = leftArg.compare(rightArg) == 0;
 	}
 
+	switch (searchRelType->second)
+	{
+	case Uses: case Modifies:
+		if (!isValidEntRef(leftArg) || !isValidVarRef(rightArg)) {
+			return false;
+		}
+		break;
+	case Calls: case CallsT:
+		if (!isValidEntRef(leftArg) || !isValidEntRef(rightArg)) {
+			return false;
+		}
+		break;
+	case Parent: case ParentT: case Follows: case FollowsT: case Next:
+		if (!isValidStmtRef(leftArg) || !isValidStmtRef(rightArg) || sameSynonymValue || sameIntegerValue) {
+			return false;
+		}
+		break;
+	case NextT:
+		if (!isValidStmtRef(leftArg) || !isValidStmtRef(rightArg)) {
+			return false;
+		}
+		break;
+	default:
+		return false;
+	}
+
 	//Check if synonym exists in declarations and convert the type to the corresponding type
 	if (leftArgType == SYNONYM) {
 		if (!isDeclarationSynonymExist(leftArg)) {
@@ -866,32 +910,6 @@ bool Preprocessor::parseClauseArg(QueryObject &qo, string relType, string arg1, 
 	}
 	else if (rightArgType == IDENT) {
 		rightArg = Utils::sanitise((Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1));
-	}
-
-	switch (searchRelType->second)
-	{
-	case Uses: case Modifies:
-		if (!isValidEntRef(leftArg) || !isValidVarRef(rightArg)) {
-			return false;
-		}
-		break;
-	case Calls: case CallsT:
-		if (!isValidEntRef(leftArg) || !isValidEntRef(rightArg)) {
-			return false;
-		}
-		break;
-	case Parent: case ParentT: case Follows: case FollowsT: case Next: 
-		if (!isValidStmtRef(leftArg) || !isValidStmtRef(rightArg) || sameSynonymValue || sameIntegerValue) {
-			return false;
-		}
-		break;
-	case NextT:
-		if (!isValidStmtRef(leftArg) || !isValidStmtRef(rightArg)) {
-			return false;
-		}
-		break;
-	default:
-		return false;
 	}
 
 	if (!relTable.isValidArg(rel, leftArgType, rightArgType)) {
@@ -979,7 +997,7 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	return true;
 }
 
-bool Preprocessor::parseWithClause(QueryObject &qo, string attrRef, string ref) {
+bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string rightRef) {
 
 	//vector<string> attrRefArr = Utils::split(attrRef, SYMBOL_FULL_STOP);
 
@@ -1057,14 +1075,16 @@ int Preprocessor::retrieveClauseArgType(string arg) {
 */
 int Preprocessor::retrieveExpressionType(string expression) {
 	//check for underscore & double quote at the front and end
-	if (expression.at(0) == SYMBOL_UNDERSCORE &&
+	if (expression.size() > 4 &&
+		expression.at(0) == SYMBOL_UNDERSCORE &&
 		expression.at(1) == SYMBOL_DOUBLE_QUOTE &&
 		expression.at(expression.size() - 2) == SYMBOL_DOUBLE_QUOTE &&
 		expression.at(expression.size() - 1) == SYMBOL_UNDERSCORE) {
 		return 1;
 	}
 	//check for double quote at the front and end 
-	else if (expression.at(0) == SYMBOL_DOUBLE_QUOTE &&
+	else if (expression.size() > 2 &&
+		expression.at(0) == SYMBOL_DOUBLE_QUOTE &&
 		expression.at(expression.size() - 1) == SYMBOL_DOUBLE_QUOTE) {
 		return 2;
 	}

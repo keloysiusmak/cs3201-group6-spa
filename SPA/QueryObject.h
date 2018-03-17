@@ -21,6 +21,7 @@ public:
 	void insertClause(RelRef, ParamType, string, ParamType, string);
 	void insertPattern(ParamType, string, ParamType, string, ParamType, string);
 	void insertSelectStmt(ParamType, string, AttrType);
+	void insertWithClause(ParamType, string, AttrType, ParamType, string, AttrType);
 
 	vector<Clause> getClauses();
 	vector<Pattern> getPatterns();

@@ -61,6 +61,24 @@ void QueryObject::insertSelectStmt(ParamType selectType, string synonym, AttrTyp
 	_selectStmt.push_back(result);
 }
 
+void QueryObject::insertWithClause(ParamType leftArgType, string leftArg, AttrType leftAttr,
+	ParamType rightArgType, string rightArg, AttrType rightAttr) {
+
+	Param leftParam;
+	leftParam.type = leftArgType;
+	leftParam.value = leftArg;
+	leftParam.attribute = leftAttr;
+
+	Param rightParam;
+	rightParam.type = rightArgType;
+	rightParam.value = rightArg;
+	rightParam.attribute = rightAttr;
+
+	Clause withClause(With, leftParam, rightParam);
+
+	_withClauses.push_back(withClause);
+}
+
 vector<Clause> QueryObject::getClauses() {
 	return _clauses;
 }
