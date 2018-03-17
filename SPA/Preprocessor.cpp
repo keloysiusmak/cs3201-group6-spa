@@ -73,7 +73,7 @@ const regex stmtRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|([0-9]+$)))
 const regex entRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$)|([0-9]+$))");
 const regex varRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$))");
 const regex attrRefRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*[.](procName|varName|value|stmt#)$)");
-const regex refRegex("(^(([0-9]+$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$|[a-zA-Z]([a-zA-Z]|[0-9]|[#])*[.](procName|varName|value|stmt#)))");
+const regex refRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([0-9]+$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$|[a-zA-Z]([a-zA-Z]|[0-9]|[#])*[.](procName|varName|value|stmt#)))");
 
 Preprocessor::Preprocessor() {
 
@@ -111,16 +111,30 @@ void Preprocessor::preprocessQuery(string query) {
 
 	//if queryIndex is 0, means no declarations at all
 	if (queryIndex <= 0) {
-		// insert evaluator invalid query api here
-		(*_evaluator).setInvalidQuery("Invalid Query");
+
+		//Check if select statement requires return BOOLEAN
+		if (checkBoolStmt(q)) {
+			(*_evaluator).setInvalidQuery("false");
+		}
+		else {
+			// insert evaluator invalid query api here
+			(*_evaluator).setInvalidQuery("Invalid Query");
+		}
+		return;
 	}
 
 	for (int i = 0; i < queryIndex; i++) {
 		bool validateDeclaration = isValidDeclaration(Utils::sanitise(declarations.at(i)));
 
 		if (!validateDeclaration) {
-			// insert evaluator invalid query api here
-			(*_evaluator).setInvalidQuery("Invalid Query");
+			//Check if select statement requires return BOOLEAN
+			if (checkBoolStmt(q)) {
+				(*_evaluator).setInvalidQuery("false");
+			}
+			else {
+				// insert evaluator invalid query api here
+				(*_evaluator).setInvalidQuery("Invalid Query");
+			}
 			return;
 		}
 	}
@@ -131,8 +145,14 @@ void Preprocessor::preprocessQuery(string query) {
 	bool validQuery = isValidQuery(queryPortion);
 
 	if (!validQuery) {
-		// insert evaluator invalid query api here
-		(*_evaluator).setInvalidQuery("Invalid Query");
+		//Check if select statement requires return BOOLEAN
+		if (checkBoolStmt(q)) {
+			(*_evaluator).setInvalidQuery("false");
+		}
+		else {
+			// insert evaluator invalid query api here
+			(*_evaluator).setInvalidQuery("Invalid Query");
+		}
 	}
 };
 
@@ -395,7 +415,7 @@ bool Preprocessor::isValidQuery(string query) {
 				rightArg = retrievePatternFromQuery(queryArr, patternLength, i, string(1, SYMBOL_CLOSE_BRACKET));
 			}
 			else {
-				rightArg = EMPTY_STRING;
+				rightArg = string(1, SYMBOL_UNDERSCORE);
 				//keep track of the number of underscore
 				int countUnderscore = 0;
 
@@ -403,8 +423,8 @@ bool Preprocessor::isValidQuery(string query) {
 					//iterate through the syntax
 
 					while (queryArr.at(i + patternLength).at(0) != SYMBOL_CLOSE_BRACKET) {
-						//even position must be underscore
-						if (patternLength % 2) {
+						//Odd position must be underscore
+						if (patternLength % 2 != 0) {
 							if (queryArr.at(i + patternLength).at(0) == SYMBOL_UNDERSCORE) {
 								countUnderscore++;
 							}
@@ -430,8 +450,8 @@ bool Preprocessor::isValidQuery(string query) {
 				else {
 
 					while (queryArr.at(i + patternLength).at(0) != SYMBOL_CLOSE_BRACKET) {
-						//even position must be underscore
-						if (patternLength % 2) {
+						//Odd position must be underscore
+						if (patternLength % 2 != 0) {
 							if (queryArr.at(i + patternLength).at(0) == SYMBOL_UNDERSCORE) {
 								countUnderscore++;
 							}
@@ -573,7 +593,7 @@ bool Preprocessor::isValidQuery(string query) {
 					rightArg = retrievePatternFromQuery(queryArr, patternLength, i, string(1, SYMBOL_CLOSE_BRACKET));
 				}
 				else {
-					rightArg = EMPTY_STRING;
+					rightArg = string(1, SYMBOL_UNDERSCORE);
 					//keep track of the number of underscore
 					int countUnderscore = 0;
 
@@ -581,8 +601,8 @@ bool Preprocessor::isValidQuery(string query) {
 						//iterate through the syntax
 
 						while (queryArr.at(i + patternLength).at(0) != SYMBOL_CLOSE_BRACKET) {
-							//even position must be underscore
-							if (patternLength % 2) {
+							//odd position must be underscore
+							if (patternLength % 2 != 0) {
 								if (queryArr.at(i + patternLength).at(0) == SYMBOL_UNDERSCORE) {
 									countUnderscore++;
 								}
@@ -607,8 +627,8 @@ bool Preprocessor::isValidQuery(string query) {
 					else {
 
 						while (queryArr.at(i + patternLength).at(0) != SYMBOL_CLOSE_BRACKET) {
-							//even position must be underscore
-							if (patternLength % 2) {
+							//odd position must be underscore
+							if (patternLength % 2 != 0) {
 								if (queryArr.at(i + patternLength).at(0) == SYMBOL_UNDERSCORE) {
 									countUnderscore++;
 								}
@@ -939,14 +959,8 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 		return false;
 	}
 
-	if (entityType == ASSIGN) {
-		qo.insertPattern(entityType, entity, leftArgType,
-			leftArg, rightArgType, rightArg);
-	}
-	else {
-		qo.insertPattern(entityType, entity, leftArgType,
-			leftArg, ALL, Utils::trim(SYMBOL_UNDERSCORE + rightArg));
-	}
+	qo.insertPattern(entityType, entity, leftArgType,
+		leftArg, rightArgType, rightArg);
 
 	return true;
 }
@@ -1355,4 +1369,17 @@ int Preprocessor::getPrecedence(char op) {
 		break;
 	}
 	return weight;
+}
+
+bool Preprocessor::checkBoolStmt(string query) {
+	vector<string> queryArr = Utils::explode(query + SYMBOL_SPACE, DELIM_STRING, DELIMITERS_QUERY);
+
+	for (size_t i = 0; i < queryArr.size(); i++) {
+		if (queryArr.at(i) == SELECT_WORD) {
+			if (i + 1 < queryArr.size() && queryArr.at(i + 1).compare(BOOLEAN_WORD)) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
