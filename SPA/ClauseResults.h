@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include "Clause.h"
 #include "Pattern.h"
+#include "Utils.h"
 
 class ClauseResults {
  private:

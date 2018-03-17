@@ -4,7 +4,7 @@ using namespace std;
 
 /* Merges the clauseResults into the intermediate table */
 void EvaluatorHelper::mergeClauseTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
-	if (paramInTable(clauseResults, iTable)) {
+	if (clauseParamsInTable(clauseResults, iTable)) {
 		mergeWithOverlap(clauseResults, iTable);
 	}
 	else {
@@ -14,17 +14,22 @@ void EvaluatorHelper::mergeClauseTable(ClauseResults &clauseResults, Intermediat
 
 /* Cross Product when there are no overlaps */
 void EvaluatorHelper::mergeWithoutOverlap(ClauseResults &clauseResults, IntermediateTable &iTable) {
+	/* Add table params */
+	addClauseParamToTable(clauseResults, iTable);
+
+	/* Update table */
 	vector<vector<int>> newTable;
 	for (vector<int> tableRow : iTable.resultsTable) {
 		for (vector<int> resultsRow : clauseResults.results) {
 			vector<int> newTableRow = tableRow;
-			resultsRow.push_back(resultsRow[0]);
+			newTableRow.push_back(resultsRow[0]);
 			if (clauseResults.numParamsInResult() == 2) { // Two syns
-				resultsRow.push_back(resultsRow[1]);
+				newTableRow.push_back(resultsRow[1]);
 			}
+			newTable.push_back(newTableRow);
 		}
 	}
-	return iTable.setResultsTable(newTable);
+	iTable.setResultsTable(newTable);
 };
 
 /* With overlapping synonyms
@@ -70,13 +75,22 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 };
 
 /* Returns true if param in clause result is in table */
-bool EvaluatorHelper::paramInTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
+bool EvaluatorHelper::clauseParamsInTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
 	for (Param p : iTable.tableParams) {
 		if (Utils::isSameParam(p, clauseResults.entRef)) return true;
 		if (Utils::isSameParam(p, clauseResults.lhs)) return true;
 		if (Utils::isSameParam(p, clauseResults.rhs)) return true;
 	}
 	return false;
+};
+
+/* Adds clauseResults params into table */
+void EvaluatorHelper::addClauseParamToTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
+	for (Param p : clauseResults.tableParams) {
+		if (getParamInt(p, iTable) == -1) { // Param does not exist in param table
+			iTable.addTableParams(p);
+		}
+	}
 };
 
 /* Returns index of param for intermediate table, if param does not exist, return -1 */

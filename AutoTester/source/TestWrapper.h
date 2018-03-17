@@ -10,6 +10,7 @@
 #include "PKB.h"
 //#include "../SPA/Evaluator.h"
 #include "../SPA/Preprocessor.h"
+#include "../SPA/QueryEvaluator.h"
 #include "../SPA/DesignExtractor.h"
 #include "../SPA/Parser.h"
 
@@ -18,8 +19,8 @@ private:
 
 	//================== Main Component =======================
 	PKB pkb;
-	//Evaluator evaluator;
-	//Preprocessor preprocessor;
+	QueryEvaluator evaluator;
+	Preprocessor preprocessor;
 	Parser parser;
 	DesignExtractor de;
 	//=========================================================
@@ -31,7 +32,6 @@ private:
   // destructor
   ~TestWrapper();
 
-	
   
   // method for parsing the SIMPLE source
   virtual void parse(std::string filename);
