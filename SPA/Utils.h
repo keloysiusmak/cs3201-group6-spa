@@ -16,6 +16,7 @@ public:
 	static bool isValidName(string);
 	static vector<string> split(const string& s, char delimiter);
 	static string trim(const string& str);
+	static void find_and_replace(string& source, string const& find, string const& replace);
 	static string getWordAndPop(queue<string>&);
 	static bool isInteger(const string& s);
 	static bool isSynonym(ParamType type);

@@ -92,6 +92,13 @@ string Utils::trim(const string& str) {
 	return str.substr(first, (last - first + 1));
 }
 
+void Utils::find_and_replace(string& source, string const& find, string const& replace) {
+	for (string::size_type i = 0; (i = source.find(find, i)) != string::npos;) {
+		source.replace(i, find.length(), replace);
+		i += replace.length();
+	}
+}
+
 //checks that the queue is not empty, then gets the next element of the queue and pop the head
 string Utils::getWordAndPop(queue<string> &originalExpression) {
 	if (originalExpression.empty()) {

@@ -7,6 +7,7 @@
 #include "RelationshipTable.h"
 #include <string>
 #include <vector>
+#include <stack>
 #include <unordered_set>
 #include <unordered_map>
 #include <regex>
@@ -22,7 +23,11 @@ private:
 	int retrieveClauseArgType(string arg);
 	int retrieveExpressionType(string expression);
 	string retrieveParamFromQuery(vector<string> queryArr, int &paramLength, int pos, string end);
-
+	string retrievePatternFromQuery(vector<string> queryArr, int &patternLength, int pos, string end);
+	void replaceStarWithT(string& source);
+	string infixToPostFix(string infix);
+	int higherPrecedenceValidate(char operator1, char operator2);
+	int getPrecedence(char op);
 public:
 	Preprocessor();
 	//Preprocessor(Evaluator &evaluator);
