@@ -370,6 +370,7 @@ public:
 
 		string secondParamValue;
 		secondParamValue += arg2.at(2);
+		secondParamValue += "|";
 
 		//valid
 		Assert::AreEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, arg2));
@@ -377,7 +378,7 @@ public:
 		Assert::AreEqual(entity, qo.getPatterns().at(0).getEntity().value);
 		Assert::AreEqual(static_cast<int>(IDENT), static_cast<int>(qo.getPatterns().at(0).getLeftParam().type));
 		Assert::AreEqual(firstParamValue, qo.getPatterns().at(0).getLeftParam().value);
-		Assert::AreEqual(static_cast<int>(CONSTANT), static_cast<int>(qo.getPatterns().at(0).getRightParam().type));
+		Assert::AreEqual(static_cast<int>(EXPR), static_cast<int>(qo.getPatterns().at(0).getRightParam().type));
 		Assert::AreEqual(secondParamValue, qo.getPatterns().at(0).getRightParam().value);
 
 		//Invalid
