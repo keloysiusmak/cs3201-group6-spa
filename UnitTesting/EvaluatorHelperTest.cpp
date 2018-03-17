@@ -38,6 +38,28 @@ namespace UnitTesting {
 			Assert::AreEqual(false, EvaluatorHelper::clauseParamsInTable(clauseWithNoParamInTable, table));
 		}
 
+		TEST_METHOD(AddClauseParamToTableTest) {
+			IntermediateTable table;
+
+			/* Generate params */
+			vector<Param> params;
+			Param p1, p2, p3, p4;
+			p1 = createParam(ASSIGN, "a1");
+			p2 = createParam(ASSIGN, "a2");
+			p3 = createParam(VARIABLE, "v");
+			p4 = createParam(STMT, "s");
+			params.push_back(p1); params.push_back(p2); params.push_back(p3); params.push_back(p4);
+
+			/* 8 rows table */
+			table.setResultsTable(createResultsTable(params, 8, table));
+
+			/* 1 param not in table */
+			ClauseResults clauseWithOneParamNotInTable = createClauseResult(Uses, ASSIGN, "a2", VARIABLE, "v1");
+
+			EvaluatorHelper::addClauseParamToTable(clauseWithOneParamNotInTable, table);
+			Assert::AreEqual(true, table.tableParams.size() == 5);
+		}
+
 		TEST_METHOD(GetParamIntTest) {
 			IntermediateTable table;
 
