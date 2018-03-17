@@ -78,13 +78,13 @@ Preprocessor::Preprocessor() {
 
 }
 
-//Preprocessor::Preprocessor(Evaluator &evaluator) {
-//	_evaluator = &evaluator;
-//}
+Preprocessor::Preprocessor(QueryEvaluator &evaluator) {
+	_evaluator = &evaluator;
+}
 
-//void Preprocessor::setEvaluator(Evaluator &evaluator) {
-//	_evaluator = &evaluator;
-//}
+void Preprocessor::setEvaluator(QueryEvaluator &evaluator) {
+	_evaluator = &evaluator;
+}
 
 void Preprocessor::insertDeclarationToMap(string synonym, string declaration) {
 	declarationMap.insert({ synonym, declaration });
@@ -111,7 +111,7 @@ void Preprocessor::preprocessQuery(string query) {
 	//if queryIndex is 0, means no declarations at all
 	if (queryIndex <= 0) {
 		// insert evaluator invalid query api here
-		//(*_evaluator).setInvalidQuery("Invalid Query");
+		(*_evaluator).setInvalidQuery("Invalid Query");
 	}
 
 	for (int i = 0; i < queryIndex; i++) {
@@ -119,7 +119,7 @@ void Preprocessor::preprocessQuery(string query) {
 
 		if (!validateDeclaration) {
 			// insert evaluator invalid query api here
-			//(*_evaluator).setInvalidQuery("Invalid Query");
+			(*_evaluator).setInvalidQuery("Invalid Query");
 			return;
 		}
 	}
@@ -131,7 +131,7 @@ void Preprocessor::preprocessQuery(string query) {
 
 	if (!validQuery) {
 		// insert evaluator invalid query api here
-		//(*_evaluator).setInvalidQuery("Invalid Query");
+		(*_evaluator).setInvalidQuery("Invalid Query");
 	}
 };
 
@@ -295,7 +295,7 @@ bool Preprocessor::isValidQuery(string query) {
 	//Check if there is any such that or pattern clause
 	if (queryArr.size() == endOfSelectStatement) {
 		// insert evaluator query api here
-		//(*_evaluator).setQueryObject(queryObject);
+		(*_evaluator).setQueryObject(queryObject);
 		return true;
 	}
 
@@ -473,17 +473,17 @@ bool Preprocessor::isValidQuery(string query) {
 				return false;
 			}
 
-			string attrRef = Utils::sanitise(queryArr.at(i + 1));
+			string ref1 = Utils::sanitise(queryArr.at(i + 1));
 			char equalSign = Utils::sanitise(queryArr.at(i + 2)).at(0);
-			string ref = Utils::sanitise(queryArr.at(i + 3));
+			string ref2 = Utils::sanitise(queryArr.at(i + 3));
 
-			if (!isValidAttrRef(attrRef) ||
+			if (!isValidRef(ref1) ||
 				equalSign != SYMBOL_EQUALS ||
-				!isValidRef(ref)) {
+				!isValidRef(ref2)) {
 				return false;
 			}
 
-			if (!parseWithClause(queryObject, attrRef, ref)) {
+			if (!parseWithClause(queryObject, ref1, ref2)) {
 				return false;
 			}
 
@@ -653,7 +653,7 @@ bool Preprocessor::isValidQuery(string query) {
 	}
 
 	// insert evaluator query api here
-	//(*_evaluator).setQueryObject(queryObject);
+	(*_evaluator).setQueryObject(queryObject);
 	return true;
 };
 
@@ -998,7 +998,23 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 }
 
 bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string rightRef) {
+	
+	string leftArg;
+	string rightArg;
 
+	ParamType leftArgType;
+	ParamType rightArgType;
+
+	AttrType leftAttrType = NONE;
+	AttrType rightAttrType = NONE;
+
+	if (isValidAttrRef(leftRef)) {
+
+	}
+
+	if (isValidAttrRef(rightRef)) {
+
+	}
 	//vector<string> attrRefArr = Utils::split(attrRef, SYMBOL_FULL_STOP);
 
 	//if (!isDeclarationSynonymExist(attrRefArr.at(0))) {

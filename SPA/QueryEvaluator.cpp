@@ -34,9 +34,9 @@ bool QueryEvaluator::isValidQuery() {
 	return validQuery;
 };
 
-void QueryEvaluator::setInvalidQuery(list<string> message) {
+void QueryEvaluator::setInvalidQuery(string message) {
 	validQuery = false;
-	invalidQueryMessage = message;
+	invalidQueryMessage.push_back(message);
 };
 
 /*
