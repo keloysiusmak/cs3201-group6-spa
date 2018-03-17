@@ -3,18 +3,24 @@
 #include "../source/PKB.h"
 #include "../source/PatternObject.h"
 #include "../SPA/Parser.h"
+#include "../SPA/Constants.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-namespace UnitTesting
+namespace ParserTest
 {
+	PKB pkb;
+	Parser parser;
+
 	TEST_CLASS(ParserTest)
 	{
 	public:
-
+		TEST_CLASS_INITIALIZE(setup)
+		{
+			parser = Parser();
+		}
 		TEST_METHOD(ParserGetToken) {
-			Parser parser;
 			parser.tokenize("a b c");
 			string a = "a";
 			Assert::AreEqual(a, parser.getToken());
@@ -23,7 +29,6 @@ namespace UnitTesting
 
 		TEST_METHOD(ParserMatch)
 		{
-			Parser parser;
 			parser.tokenize("a b c");
 			string nextToken = parser.getToken();
 			Assert::IsTrue(parser.match("a", false));
@@ -32,7 +37,6 @@ namespace UnitTesting
 	
 		TEST_METHOD(ParserIfStatement)
 		{
-			Parser parser;
 			parser.tokenize("if x then { x = x + 1; } else { x = x + 1; }");
 			string nextToken = parser.getToken();
 			parser.stmListIdStack.push(1);
@@ -42,14 +46,9 @@ namespace UnitTesting
 
 		TEST_METHOD(ParserWhileStatement)
 		{
-			Parser parser;
 			parser.tokenize("while y { x = x + 1; b = a;} ");
 			string nextToken = parser.getToken();
 			parser.stmListIdStack.push(1);
 			Assert::IsTrue(parser.whileStatement());
 		}
-
-
-
-	};
 }
