@@ -18,10 +18,12 @@ void QueryObject::insertClause(RelRef relRef, ParamType firstParamType, string f
 	Param fp;
 	fp.type = firstParamType;
 	fp.value = firstParam;
+	fp.attribute = NONE;
 
 	Param sp;
 	sp.type = secondParamType;
 	sp.value = secondParam;
+	sp.attribute = NONE;
 
 	Clause clause(relRef, fp, sp);
 
@@ -33,27 +35,32 @@ void QueryObject::insertPattern(ParamType entityType, string entity, ParamType l
 	Param ep;
 	ep.type = entityType;
 	ep.value = entity;
+	ep.attribute = NONE;
 
 	Param lp;
 	lp.type = leftParamType;
 	lp.value = leftParam;
+	lp.attribute = NONE;
 
 	Param rp;
 	rp.type = rightParamType;
 	rp.value = rightParam;
+	rp.attribute = NONE;
 
 	Pattern pattern(ep, lp, rp);
 
 	_Patterns.push_back(pattern);
 }
 
-void QueryObject::insertSelectStmt(ParamType selectType, string synonym) {
+void QueryObject::insertSelectStmt(ParamType selectType, string synonym, AttrType attr) {
 	Param result;
 	result.type = selectType;
 	result.value = synonym;
+	result.attribute = attr;
 
 	_selectStmt.push_back(result);
 }
+
 
 void QueryObject::updateWithClause(ParamType attrRef_AttrName, string attrRefSynonym, ParamType ref_AttrName, string ref) {
 

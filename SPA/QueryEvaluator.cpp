@@ -471,7 +471,8 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 	Param rhs = clause.getSecondParam();
 	int paramTableIndex = EvaluatorHelper::getParamInt(lhs, iTable);
 	int paramValue;
-	if (lhs.dotType == CONSTANT || lhs.dotType == VALUE || lhs.dotType == STMTNO) {
+	if (lhs.attribute == VALUE || lhs.attribute == STMT_NO) {
+	//if (lhs.attribute == CONSTANT || lhs.attribute == VALUE || lhs.attribute == STMT_NO) {
 		paramValue = stoi(rhs.value);
 	} else {
 		// Get pkb mapping from proc/var_name to int

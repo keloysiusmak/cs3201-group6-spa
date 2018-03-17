@@ -9,25 +9,21 @@ enum ParamType {
 	VARIABLE, CONSTANT, //Synonym
 	PROCEDURE, //Synonym
 	INTEGER,  //Statement Number
-	EXPR, //For pattern assign (RHS)
-	STMT_NO, //attrName for with clause
+	EXPR, EXPR_EXACT, //For pattern assign (RHS)
 	IDENT, //IDENT refers to "x"
 	SYNONYM, //Synonym is the general term
 	BOOLEAN, //return true/false
 	ALL
 }; // ALL represents _
 
-/* Attribute type to account for with statements */
+
+	/* Attribute type to account for with statements */
 enum AttrType {
-	NONE,
-	VALUE,
-	VARNAME,
-	PROCNAME,
-	STMTNO,
+	PROCNAME, VARNAME, VALUE, STMT_NO, NONE //attrName for with clause
 };
 
 struct Param {
 	ParamType type;
 	string value;
-	AttrType dotType;
+	AttrType attribute;
 };

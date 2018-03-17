@@ -10,7 +10,7 @@ namespace UnitTesting {
 	public:
 		TEST_METHOD(QueryObjectInsertSelectStmt) {
 			QueryObject queryObject;
-			queryObject.insertSelectStmt(ASSIGN, "a");
+			queryObject.insertSelectStmt(ASSIGN, "a", NONE);
 
 			Param testParam;
 			testParam.type = ASSIGN;

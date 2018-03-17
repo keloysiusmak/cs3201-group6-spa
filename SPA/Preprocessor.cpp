@@ -35,12 +35,11 @@ const string CONSTANT_WORD = "constant";
 const string VAR_NAME_WORD = "var_name";
 
 const unordered_set<string> KEYWORDS_PATTERN_TYPE = { "assign", "while", "if" };
-const unordered_map<string, RelRef> KEYWORDS_CLAUSES_1 = { { "Modifies", Modifies },{ "Uses", Uses } };
-const unordered_map<string, RelRef> KEYWORDS_CLAUSES_2 = { { "Parent", Parent },{ "Parent*", ParentT },
-{ "Follows", Follows },{ "Follows*", FollowsT },
-{ "Next", Next },{ "NextT", NextT } };
-const unordered_map<string, RelRef> KEYWORDS_CLAUSES_3 = { { "Calls", Calls },{ "Calls*", CallsT } };
-const unordered_map<string, ParamType> KEYWORDS_WITH_TYPE = { { "procName", PROCNAME },
+const unordered_map<string, RelRef> KEYWORDS_CLAUSES = { { "Modifies", Modifies }, { "Uses", Uses }, 
+{ "Parent", Parent },{ "Parent*", ParentT },{ "Follows", Follows },{ "Follows*", FollowsT }, 
+{ "Next", Next },{ "NextT", NextT },{ "Calls", Calls },{ "Calls*", CallsT } };
+
+const unordered_map<string, AttrType> KEYWORDS_WITH_TYPE = { { "procName", PROCNAME },
 { "varName", VARNAME },
 { "value", VALUE },
 { "stmt#", STMT_NO } };
@@ -51,11 +50,11 @@ const unordered_map<string, ParamType> KEYWORDS_DECLARATIONS = { { "assign", ASS
 { "if", IF },{ "stmtLst", STMTLST },
 { "procedure", PROCEDURE },{ "call", CALL } };
 
-const unordered_map<int, ParamType> NUMBER_MAPPING_REF_TYPE = { { 1, INTEGER },{ 2, CONSTANT },
-{ 3, EXPR },{ 4, IDENT },{ 5, SYNONYM },
-{ 6, ALL } };
+const unordered_map<int, ParamType> NUMBER_MAPPING_CLAUSE_ARG_TYPE = { { 1, INTEGER }, { 2, IDENT }, 
+{ 3, SYNONYM }, { 4, ALL } };
 
 const regex synonymRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)");
+const regex identRegex("(^(\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$))");
 const regex stmtRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|([0-9]+$)))");
 const regex entRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$)|([0-9]+$))");
 const regex varRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$))");
@@ -200,7 +199,8 @@ bool Preprocessor::isValidQuery(string query) {
 					}
 
 					//insert selectType of QueryObject
-
+					AttrType getAttrName = KEYWORDS_WITH_TYPE.find(attrRef.at(1))->second;
+					queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first, getAttrName);
 				}
 				else if (isValidSynonym(elem)) {
 					//check if select synonym exist in the declarationMap
@@ -211,7 +211,7 @@ bool Preprocessor::isValidQuery(string query) {
 					//Populate the selectType of QueryObject
 					auto searchSynonym = declarationMap.find(elem);
 					auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-					queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
+					queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first, NONE);
 				}
 				else {
 					return false;
@@ -234,7 +234,7 @@ bool Preprocessor::isValidQuery(string query) {
 	}
 	//if is a BOOLEAN
 	else if (Utils::sanitise(queryArr.at(endOfSelectStatement)).compare(BOOLEAN_WORD) == 0) {
-		queryObject.insertSelectStmt(BOOLEAN, BOOLEAN_WORD);
+		queryObject.insertSelectStmt(BOOLEAN, BOOLEAN_WORD, NONE);
 	}
 	//single elem
 	else {
@@ -256,7 +256,8 @@ bool Preprocessor::isValidQuery(string query) {
 			}
 
 			//insert selectType of QueryObject
-
+			AttrType getAttrName = KEYWORDS_WITH_TYPE.find(attrRef.at(1))->second;
+			queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first, getAttrName);
 		}
 		else if (isValidSynonym(elem)) {
 			//check if select synonym exist in the declarationMap
@@ -267,7 +268,7 @@ bool Preprocessor::isValidQuery(string query) {
 			//Populate the selectType of QueryObject
 			auto searchSynonym = declarationMap.find(elem);
 			auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-			queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first);
+			queryObject.insertSelectStmt(searchDeclareType->second, searchSynonym->first, NONE);
 		}
 		else {
 			return false;
@@ -320,23 +321,7 @@ bool Preprocessor::isValidQuery(string query) {
 			//Add all the right Param
 			string rightArg = retrieveParamFromQuery(queryArr, clauseLength, i, string(1, SYMBOL_CLOSE_BRACKET));
 
-			//Check whether is a valid clause
-			if (KEYWORDS_CLAUSES_1.find(queryArr.at(i + 2)) != KEYWORDS_CLAUSES_1.end()) {
-				if (!parseClauseArg1(queryObject, queryArr.at(i + 2), leftArg, rightArg)) {
-					return false;
-				}
-			}
-			else if (KEYWORDS_CLAUSES_2.find(queryArr.at(i + 2)) != KEYWORDS_CLAUSES_2.end()) {
-				if (!parseClauseArg2(queryObject, queryArr.at(i + 2), leftArg, rightArg)) {
-					return false;
-				}
-			}
-			else if (KEYWORDS_CLAUSES_3.find(queryArr.at(i + 2)) != KEYWORDS_CLAUSES_3.end()) {
-				if (!parseClauseArg3(queryObject, queryArr.at(i + 2), leftArg, rightArg)) {
-					return false;
-				}
-			}
-			else {
+			if (!parseClauseArg(queryObject, queryArr.at(i + 2), leftArg, rightArg)) {
 				return false;
 			}
 
@@ -486,9 +471,7 @@ bool Preprocessor::isValidQuery(string query) {
 			if (prevAndClause == 1) {
 
 				//Not a valid such that clause
-				if (KEYWORDS_CLAUSES_1.find(queryArr.at(i + 1)) == KEYWORDS_CLAUSES_1.end() &&
-					KEYWORDS_CLAUSES_2.find(queryArr.at(i + 1)) == KEYWORDS_CLAUSES_2.end() &&
-					KEYWORDS_CLAUSES_3.find(queryArr.at(i + 1)) == KEYWORDS_CLAUSES_3.end()) {
+				if (KEYWORDS_CLAUSES.find(queryArr.at(i + 1)) == KEYWORDS_CLAUSES.end()) {
 					return false;
 				}
 
@@ -500,23 +483,7 @@ bool Preprocessor::isValidQuery(string query) {
 				//Add all the right Param
 				string rightArg = retrieveParamFromQuery(queryArr, clauseLength, i, string(1, SYMBOL_CLOSE_BRACKET));
 
-				//Check whether is a valid clause
-				if (KEYWORDS_CLAUSES_1.find(queryArr.at(i + 1)) != KEYWORDS_CLAUSES_1.end()) {
-					if (!parseClauseArg1(queryObject, queryArr.at(i + 1), leftArg, rightArg)) {
-						return false;
-					}
-				}
-				else if (KEYWORDS_CLAUSES_2.find(queryArr.at(i + 1)) != KEYWORDS_CLAUSES_2.end()) {
-					if (!parseClauseArg2(queryObject, queryArr.at(i + 1), leftArg, rightArg)) {
-						return false;
-					}
-				}
-				else if (KEYWORDS_CLAUSES_3.find(queryArr.at(i + 1)) != KEYWORDS_CLAUSES_3.end()) {
-					if (!parseClauseArg3(queryObject, queryArr.at(i + 1), leftArg, rightArg)) {
-						return false;
-					}
-				}
-				else {
+				if (!parseClauseArg(queryObject, queryArr.at(i + 1), leftArg, rightArg)) {
 					return false;
 				}
 
@@ -534,8 +501,8 @@ bool Preprocessor::isValidQuery(string query) {
 				if ((i + 1) >= queryArr.size() || !isDeclarationSynonymExist(queryArr.at(i + 1))) {
 					return false;
 				}
-
-				auto searchSynonym = declarationMap.find(queryArr.at(i + 1));
+				string entityType = Utils::sanitise(queryArr.at(i + 1));
+				auto searchSynonym = declarationMap.find(entityType);
 
 				//check whether patternType is valid
 				if (KEYWORDS_PATTERN_TYPE.find(searchSynonym->second) == KEYWORDS_PATTERN_TYPE.end()) {
@@ -616,7 +583,7 @@ bool Preprocessor::isValidQuery(string query) {
 					patternLength++;
 				}
 
-				if (!parsePattern(queryObject, searchDeclareType->second, queryArr.at(i + 1), leftArg, rightArg)) {
+				if (!parsePattern(queryObject, searchDeclareType->second, entityType, leftArg, rightArg)) {
 					return false;
 				}
 
@@ -647,6 +614,14 @@ bool Preprocessor::isValidSynonym(string synonym) {
 	}
 
 	return regex_match(synonym, synonymRegex);
+}
+
+bool Preprocessor::isValidIdent(string ident) {
+	if (ident.length() == 0) {
+		return false;
+	}
+
+	return regex_match(ident, identRegex);
 }
 
 bool Preprocessor::isValidStmtRef(string stmtRef) {
@@ -695,13 +670,14 @@ bool Preprocessor::isValidAttrName(ParamType synonymType, string attrRef) {
 	switch (checkAttrRef->second)
 	{
 	case PROCNAME:
-		return synonymType == PROCEDURE;
+		return synonymType == PROCEDURE || synonymType == CALL;
 	case VARNAME:
 		return synonymType == VARIABLE;
 	case VALUE:
 		return synonymType == CONSTANT;
 	case STMT_NO:
-		return (synonymType != PROCEDURE) && (synonymType != VARIABLE) && (synonymType != CONSTANT);
+		return (synonymType != PROCEDURE) && (synonymType != VARIABLE) 
+				&& (synonymType != CONSTANT) && (synonymType != PROG_LINE);
 	default:
 		return false;
 	}
@@ -784,281 +760,115 @@ bool Preprocessor::isDeclarationSynonymExist(string synonym) {
 	return true;
 }
 
-/*UsesS, UsesP, ModifiesS, ModifiesP*/
-bool Preprocessor::parseClauseArg1(QueryObject &qo, string relType, string arg1, string arg2) {
+bool Preprocessor::parseClauseArg(QueryObject &qo, string relType, string arg1, string arg2) {
 
-	//Clear all the unwanted spaces on left and right arguments
+	//Clear all the unwanted spaces on relType, left and right arguments
+	string rel = Utils::sanitise(relType);
 	string leftArg = Utils::sanitise(arg1);
 	string rightArg = Utils::sanitise(arg2);
-
-	if (leftArg.length() < 1 || !isValidEntRef(leftArg)) {
+	
+	if (!relTable.isValidRelationship(rel) ||
+		leftArg.length() < 1 ||
+		rightArg.length() < 1) {
 		return false;
 	}
 
-	if (rightArg.length() < 1 || !isValidVarRef(rightArg)) {
+	auto searchRelType = KEYWORDS_CLAUSES.find(relType);
+
+	int leftArgMappingNum = retrieveClauseArgType(leftArg);
+	int rightArgMappingNum = retrieveClauseArgType(rightArg);
+
+	if (leftArgMappingNum == 0 || rightArgMappingNum == 0) {
 		return false;
 	}
 
-	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
-	ParamType insertLeftType = leftArgType->second;
+	ParamType leftArgType = NUMBER_MAPPING_CLAUSE_ARG_TYPE.find(leftArgMappingNum)->second;
+	ParamType rightArgType = NUMBER_MAPPING_CLAUSE_ARG_TYPE.find(rightArgMappingNum)->second;
 
-	//Check if is synonym and whether the synonym exists in declarationMap
-	if (insertLeftType == SYNONYM) {
+	bool sameSynonymValue = false;
+	bool sameIntegerValue = false;
+
+	//Check if both synonym are the same value
+	if (leftArgType == SYNONYM && rightArgType == SYNONYM) {
+		sameSynonymValue = leftArg.compare(rightArg) == 0;
+	} else if (leftArgType == INTEGER && rightArgType == INTEGER) {
+		sameIntegerValue = leftArg.compare(rightArg) == 0;
+	}
+
+	//Check if synonym exists in declarations and convert the type to the corresponding type
+	if (leftArgType == SYNONYM) {
 		if (!isDeclarationSynonymExist(leftArg)) {
 			return false;
 		}
 
-		//Check if is a variable, constant declaration
 		auto searchSynonym = declarationMap.find(leftArg);
 		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
 
-		// if is a variable, constant declaration for the left Param, return false
-		if (searchDeclareType->second == VARIABLE ||
-			searchDeclareType->second == CONSTANT) {
-			return false;
-		}
-
-		//Change the synonym to the declaration type with reference to the declarationMap
-		insertLeftType = searchDeclareType->second;
+		leftArgType = searchDeclareType->second;
 	}
-	//Check if is Integer
-	else if (insertLeftType == INTEGER) {
-		//invalid if is 0 and below
+	//invalid if is 0 and below
+	else if (leftArgType == INTEGER) {
 		if (stoi(leftArg) < 1) {
 			return false;
 		}
 	}
-	//Check if is Ident and store the content between the double quotes
-	else if (insertLeftType == IDENT) {
+	else if (leftArgType == IDENT) {
 		leftArg = (Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1);
 	}
-	// Underscore
-	// Uses and Modifies left Param must not be underscore
-	else {
-		return false;
-	}
 
-	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
-	ParamType insertRightType = rightArgType->second;
-
-	//Check if is synonym and whether the synonym exists in declarationMap
-	if (insertRightType == SYNONYM) {
+	//Check if synonym exists in declarations and convert the type to the corresponding type
+	if (rightArgType == SYNONYM) {
 		if (!isDeclarationSynonymExist(rightArg)) {
 			return false;
 		}
 
-		//Change the synonym to the declaration type with reference to the declarationMap
 		auto searchSynonym = declarationMap.find(rightArg);
 		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
 
-		// if is not a variable declaration for the right Param, return false
-		if (searchDeclareType->second != VARIABLE) {
-			return false;
-		}
-
-		insertRightType = searchDeclareType->second;
+		rightArgType = searchDeclareType->second;
 	}
-	//Check if is Ident and store the content between the double quotes
-	else if (insertRightType == IDENT) {
-		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
-	}
-
-
-	auto searchRelType = KEYWORDS_CLAUSES_1.find(relType);
-	qo.insertClause(searchRelType->second, insertLeftType, leftArg,
-		insertRightType, rightArg);
-
-	return true;
-}
-
-/*Follows, FollowsT, Parent, ParentT, Next, NextT*/
-bool Preprocessor::parseClauseArg2(QueryObject &qo, string relType, string arg1, string arg2) {
-
-	string leftArg = Utils::sanitise(arg1);
-	string rightArg = Utils::sanitise(arg2);
-
-	if (leftArg.length() < 1 || !isValidStmtRef(leftArg)) {
-		return false;
-	}
-
-	if (rightArg.length() < 1 || !isValidStmtRef(rightArg)) {
-		return false;
-	}
-
-	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
-	ParamType insertLeftType = leftArgType->second;
-	bool isLeftSynonym = false;
-	bool isLeftInteger = false;
-	//Check if is synonym and whether the synonym exists in declarationMap
-	if (insertLeftType == SYNONYM) {
-		if (!isDeclarationSynonymExist(leftArg)) {
-			return false;
-		}
-
-		//Change the synonym to the declaration type with reference to the declarationMap
-		auto searchSynonym = declarationMap.find(leftArg);
-		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-
-		// if is a variable, constant declaration for the left Param, return false
-		if (searchDeclareType->second == VARIABLE ||
-			searchDeclareType->second == CONSTANT) {
-			return false;
-		}
-
-		insertLeftType = searchDeclareType->second;
-		isLeftSynonym = true;
-	}
-	//Check if is Integer
-	else if (insertLeftType == INTEGER) {
-		//invalid if is 0 and below
-		if (stoi(leftArg) < 1) {
-			return false;
-		}
-		isLeftInteger = true;
-	}
-
-	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
-	ParamType insertRightType = rightArgType->second;
-	bool isRightSynonym = false;
-	bool isRightInteger = false;
-
-	//Check if is synonym and whether the synonym exists in declarationMap
-	if (insertRightType == SYNONYM) {
-		if (!isDeclarationSynonymExist(rightArg)) {
-			return false;
-		}
-
-		//Change the synonym to the declaration type with reference to the declarationMap
-		auto searchSynonym = declarationMap.find(rightArg);
-		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-
-		// if is a variable, constant declaration for the left Param, return false
-		if (searchDeclareType->second == VARIABLE ||
-			searchDeclareType->second == CONSTANT) {
-			return false;
-		}
-
-		insertRightType = searchDeclareType->second;
-		isRightSynonym = true;
-	}
-	//Check if is Integer
-	else if (insertRightType == INTEGER) {
-		//invalid if is 0 and below
+	//invalid if is 0 and below
+	else if (rightArgType == INTEGER) {
 		if (stoi(rightArg) < 1) {
 			return false;
 		}
-		isRightInteger = true;
 	}
-
-	auto searchRelType = KEYWORDS_CLAUSES_2.find(relType);
-
-	//Check for same synonym or statement number on the left and right param
-	//only for Follows/FollowsT, Parent/ParentT, Next
-	if (searchRelType->second != NextT &&
-		((isLeftSynonym && isRightSynonym) ||
-		(isLeftInteger && isRightInteger)) &&
-		leftArg.compare(rightArg) == 0) {
-		return false;
-	}
-
-
-	qo.insertClause(searchRelType->second, insertLeftType, leftArg,
-		insertRightType, rightArg);
-
-	return true;
-}
-
-/*Calls, CallsT*/
-bool Preprocessor::parseClauseArg3(QueryObject &qo, string relType, string arg1, string arg2) {
-	string leftArg = Utils::sanitise(arg1);
-	string rightArg = Utils::sanitise(arg2);
-
-	if (leftArg.length() < 1 || !isValidEntRef(leftArg)) {
-		return false;
-	}
-
-	if (rightArg.length() < 1 || !isValidEntRef(rightArg)) {
-		return false;
-	}
-
-	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
-	ParamType insertLeftType = leftArgType->second;
-	bool isLeftSynonym = false;
-	bool isLeftIdent = false;
-
-	//Check if is synonym and whether the synonym exists in declarationMap
-	if (insertLeftType == SYNONYM) {
-		if (!isDeclarationSynonymExist(leftArg)) {
-			return false;
-		}
-
-		//Change the synonym to the declaration type with reference to the declarationMap
-		auto searchSynonym = declarationMap.find(leftArg);
-		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-
-		// if is not procedure synonym, return false
-		if (searchDeclareType->second != PROCEDURE) {
-			return false;
-		}
-
-		insertLeftType = searchDeclareType->second;
-		isLeftSynonym = true;
-	}
-	//Check if is Ident and store the content between the double quotes
-	else if (insertLeftType == IDENT) {
-		leftArg = (Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1);
-		isLeftIdent = true;
-	}
-	//Check if is Integer
-	else if (insertLeftType == INTEGER) {
-		return false;
-	}
-
-	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
-	ParamType insertRightType = rightArgType->second;
-	bool isRightSynonym = false;
-	bool isRightIdent = false;
-
-	//Check if is synonym and whether the synonym exists in declarationMap
-	if (insertRightType == SYNONYM) {
-		if (!isDeclarationSynonymExist(rightArg)) {
-			return false;
-		}
-
-		//Change the synonym to the declaration type with reference to the declarationMap
-		auto searchSynonym = declarationMap.find(rightArg);
-		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-
-		// if is not procedure synonym, return false
-		if (searchDeclareType->second != PROCEDURE) {
-			return false;
-		}
-
-		insertRightType = searchDeclareType->second;
-		isRightSynonym = true;
-	}
-	//Check if is Ident and store the content between the double quotes
-	else if (insertRightType == IDENT) {
+	else if (rightArgType == IDENT) {
 		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
-		isRightIdent = true;
 	}
-	//Check if is Integer
-	else if (insertRightType == INTEGER) {
+
+	switch (searchRelType->second)
+	{
+	case Uses: case Modifies:
+		if (!isValidEntRef(leftArg) || !isValidVarRef(rightArg)) {
+			return false;
+		}
+		break;
+	case Calls: case CallsT:
+		if (!isValidEntRef(leftArg) || !isValidEntRef(rightArg)) {
+			return false;
+		}
+		break;
+	case Parent: case ParentT: case Follows: case FollowsT: case Next: 
+		if (!isValidStmtRef(leftArg) || !isValidStmtRef(rightArg) || sameSynonymValue || sameIntegerValue) {
+			return false;
+		}
+		break;
+	case NextT:
+		if (!isValidStmtRef(leftArg) || !isValidStmtRef(rightArg)) {
+			return false;
+		}
+		break;
+	default:
 		return false;
 	}
 
-	auto searchRelType = KEYWORDS_CLAUSES_3.find(relType);
-
-	//Check for same synonym or statement number on the left and right param
-	if (((isLeftSynonym && isRightSynonym) ||
-		(isLeftIdent && isRightIdent)) &&
-		leftArg.compare(rightArg) == 0) {
+	if (!relTable.isValidArg(rel, leftArgType, rightArgType)) {
 		return false;
 	}
 
-
-	qo.insertClause(searchRelType->second, insertLeftType, leftArg,
-		insertRightType, rightArg);
+	qo.insertClause(searchRelType->second, leftArgType, leftArg,
+		rightArgType, rightArg);
 
 	return true;
 }
@@ -1073,124 +883,133 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 		return false;
 	}
 
-	if (entityType == ASSIGN && (rightArg.length() < 1 || !isValidExpressSpec(rightArg))) {
-		return false;
-	}
+	//if (entityType == ASSIGN && (rightArg.length() < 1 || !isValidExpressSpec(rightArg))) {
+	//	return false;
+	//}
 
 
-	auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
-	ParamType insertLeftArgType = leftArgType->second;
+	//auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
+	//ParamType insertLeftArgType = leftArgType->second;
 
-	//Check if is synonym and whether the synonym exists in declarationMap
-	if (insertLeftArgType == SYNONYM) {
-		if (!isDeclarationSynonymExist(leftArg)) {
-			return false;
-		}
+	////Check if is synonym and whether the synonym exists in declarationMap
+	//if (insertLeftArgType == SYNONYM) {
+	//	if (!isDeclarationSynonymExist(leftArg)) {
+	//		return false;
+	//	}
 
-		//Change the synonym to the declaration type with reference to the declarationMap
-		auto searchSynonym = declarationMap.find(leftArg);
-		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+	//	//Change the synonym to the declaration type with reference to the declarationMap
+	//	auto searchSynonym = declarationMap.find(leftArg);
+	//	auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
 
-		// if is not a variable declaration for the right Param, return false
-		if (searchDeclareType->second != VARIABLE) {
-			return false;
-		}
+	//	// if is not a variable declaration for the right Param, return false
+	//	if (searchDeclareType->second != VARIABLE) {
+	//		return false;
+	//	}
 
-		insertLeftArgType = searchDeclareType->second;
-	}
-	//Check if is Ident and store the content between the double quotes
-	else if (leftArgType->second == IDENT) {
-		leftArg = Utils::sanitise((Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1));
-	}
+	//	insertLeftArgType = searchDeclareType->second;
+	//}
+	////Check if is Ident and store the content between the double quotes
+	//else if (leftArgType->second == IDENT) {
+	//	leftArg = Utils::sanitise((Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1));
+	//}
 
-	if (entityType == ASSIGN) {
-		auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
+	//if (entityType == ASSIGN) {
+	//	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
 
-		//Check if is factor expresson-spec and store the content between the double quotes
-		if (rightArgType->second == EXPR) {
-			rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
-		}
+	//	//Check if is factor expresson-spec and store the content between the double quotes
+	//	if (rightArgType->second == EXPR) {
+	//		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+	//	}
 
-		qo.insertPattern(entityType, entity, insertLeftArgType,
-			leftArg, rightArgType->second, rightArg);
-	}
-	else {
-		qo.insertPattern(entityType, entity, insertLeftArgType,
-			leftArg, ALL, Utils::trim(SYMBOL_UNDERSCORE + rightArg));
-	}
+	//	qo.insertPattern(entityType, entity, insertLeftArgType,
+	//		leftArg, rightArgType->second, rightArg);
+	//}
+	//else {
+	//	qo.insertPattern(entityType, entity, insertLeftArgType,
+	//		leftArg, ALL, Utils::trim(SYMBOL_UNDERSCORE + rightArg));
+	//}
 
 	return true;
 }
 
 bool Preprocessor::parseWithClause(QueryObject &qo, string attrRef, string ref) {
 
-	vector<string> attrRefArr = Utils::split(attrRef, SYMBOL_FULL_STOP);
+	//vector<string> attrRefArr = Utils::split(attrRef, SYMBOL_FULL_STOP);
 
-	if (!isDeclarationSynonymExist(attrRefArr.at(0))) {
-		return false;
-	}
+	//if (!isDeclarationSynonymExist(attrRefArr.at(0))) {
+	//	return false;
+	//}
 
-	//Change the synonym of attrRef to the declaration type with reference to the declarationMap
-	auto searchSynonym = declarationMap.find(attrRefArr.at(0));
-	auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+	////Change the synonym of attrRef to the declaration type with reference to the declarationMap
+	//auto searchSynonym = declarationMap.find(attrRefArr.at(0));
+	//auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
 
-	if (!isValidAttrName(searchDeclareType->second, attrRefArr.at(1))) {
-		return false;
-	}
+	//if (!isValidAttrName(searchDeclareType->second, attrRefArr.at(1))) {
+	//	return false;
+	//}
 
-	auto getAttrName = KEYWORDS_WITH_TYPE.find(attrRefArr.at(1));
+	//auto getAttrName = KEYWORDS_WITH_TYPE.find(attrRefArr.at(1));
 
-	if (!isValidAttrCond(getAttrName->second, ref)) {
-		return false;
-	}
+	//if (!isValidAttrCond(getAttrName->second, ref)) {
+	//	return false;
+	//}
 
-	//attrRef
-	if (isValidAttrRef(ref)) {
+	////attrRef
+	//if (isValidAttrRef(ref)) {
 
-		vector<string> refArr = Utils::split(ref, SYMBOL_FULL_STOP);
-		auto getRef_AttrName = KEYWORDS_WITH_TYPE.find(refArr.at(1));
+	//	vector<string> refArr = Utils::split(ref, SYMBOL_FULL_STOP);
+	//	auto getRef_AttrName = KEYWORDS_WITH_TYPE.find(refArr.at(1));
 
-		qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
-			getRef_AttrName->second, ref);
-	}
-	//INTEGER
-	else if (Utils::isInteger(ref)) {
-		qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
-			INTEGER, ref);
-	}
-	//IDENTITY
-	else {
-		qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
-			IDENT, ref);
-	}
+	//	qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
+	//		getRef_AttrName->second, ref);
+	//}
+	////INTEGER
+	//else if (Utils::isInteger(ref)) {
+	//	qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
+	//		INTEGER, ref);
+	//}
+	////IDENTITY
+	//else {
+	//	qo.updateWithClause(getAttrName->second, attrRefArr.at(0),
+	//		IDENT, ref);
+	//}
 
 	return true;
 }
 
-int Preprocessor::retrieveArgType(string arg) {
+/*
+1 == INTEGER
+2 == IDENT
+3 == SYNONYM
+4 == ALL
+0 == INVALID
+*/
+int Preprocessor::retrieveClauseArgType(string arg) {
 	if (Utils::isInteger(arg)) {
 		return 1;
 	}
-	else if (arg.find(SYMBOL_UNDERSCORE) != string::npos && arg.find(SYMBOL_DOUBLE_QUOTE) != string::npos) {
-
-		vector<string> argSplit = Utils::split(arg, SYMBOL_DOUBLE_QUOTE);
-
-		if (Utils::isInteger(argSplit.at(1))) {
-			return 2;
-		}
-		else {
-			return 3;
-		}
+	else if (isValidIdent(arg)) {
+		return 2;
 	}
-	else if (arg.find(SYMBOL_DOUBLE_QUOTE) != string::npos) {
+	else if (isValidSynonym(arg)) {
+		return 3;
+	}
+	else if (arg.find(SYMBOL_UNDERSCORE) != string::npos) {
 		return 4;
 	}
-	else if (arg.size() == 1 && arg.find(SYMBOL_UNDERSCORE) != string::npos) {
-		return 6;
-	}
 	else {
-		return 5;
+		return 0;
 	}
+}
+
+/*
+1 == EXPR
+2 == EXPR_EXACT
+3 == ALL
+0 == INVALID
+*/
+int Preprocessor::retrieveExpressionType(string expression) {
+	return 0;
 }
 
 string Preprocessor::retrieveParamFromQuery(vector<string> queryArr, int &paramLength, int pos, string end) {
