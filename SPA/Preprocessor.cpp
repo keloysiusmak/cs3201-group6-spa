@@ -65,12 +65,13 @@ const unordered_map<int, ParamType> NUMBER_MAPPING_CLAUSE_ARG_TYPE = { { 1, INTE
 const unordered_map<int, ParamType> NUMBER_MAPPING_EXPRESSION_TYPE = { { 1, EXPR },
 { 2, EXPR_EXACT }, { 3, ALL } };
 
+const unordered_map<bool, string> WITH_RELTABLE = { { true, "withString" }, { false, "withNumber" } };
+
 const regex synonymRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)");
 const regex identRegex("(^(\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$))");
 const regex stmtRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|([0-9]+$)))");
 const regex entRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$)|([0-9]+$))");
 const regex varRefRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([_]$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$))");
-const regex expressSpecRegex("(^((_\"(([a-zA-Z]([a-zA-Z]|[0-9])*)|([0-9]+))\"_$)|[_]$))");
 const regex attrRefRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*[.](procName|varName|value|stmt#)$)");
 const regex refRegex("(^(([0-9]+$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$|[a-zA-Z]([a-zA-Z]|[0-9]|[#])*[.](procName|varName|value|stmt#)))");
 
@@ -717,14 +718,6 @@ bool Preprocessor::isValidVarRef(string varRef) {
 	return regex_match(varRef, varRefRegex);
 }
 
-bool Preprocessor::isValidExpressSpec(string expressSpec) {
-	if (expressSpec.length() == 0) {
-		return false;
-	}
-
-	return regex_match(expressSpec, expressSpecRegex);
-}
-
 bool Preprocessor::isValidAttrRef(string attrRef) {
 	if (attrRef.length() == 0) {
 		return false;
@@ -758,65 +751,6 @@ bool Preprocessor::isValidRef(string ref) {
 	}
 
 	return regex_match(ref, refRegex);
-}
-
-bool Preprocessor::isValidAttrCond(ParamType attrRef, string ref) {
-
-	//attrRef
-	if (isValidAttrRef(ref)) {
-
-		vector<string> refArr = Utils::split(ref, SYMBOL_FULL_STOP);
-
-		if (!isDeclarationSynonymExist(refArr.at(0))) {
-			return false;
-		}
-
-		//Change the synonym of attrRef to the declaration type with reference to the declarationMap
-		auto searchSynonym = declarationMap.find(refArr.at(0));
-		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-
-		if (!isValidAttrName(searchDeclareType->second, refArr.at(1))) {
-			return false;
-		}
-
-		auto getAttrName = KEYWORDS_WITH_TYPE.find(refArr.at(1));
-
-		if (attrRef == PROCNAME || attrRef == VARNAME) {
-			if (getAttrName->second == PROCNAME || getAttrName->second == VARNAME) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-		else {
-			if (getAttrName->second == VALUE || getAttrName->second == STMT_NO) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-	}
-	//IDENT or INTEGER
-	else {
-		if (Utils::isInteger(ref)) {
-			if (attrRef == VALUE || attrRef == STMT_NO) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-		else {
-			if (attrRef == PROCNAME || attrRef == VARNAME) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-	}
 }
 
 bool Preprocessor::isDeclarationSynonymExist(string synonym) {
@@ -1116,6 +1050,10 @@ bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string right
 		rightArg = Utils::sanitise((Utils::split(rightRef, SYMBOL_DOUBLE_QUOTE)).at(1));
 	}
 	else {
+		return false;
+	}
+
+	if (!relTable.isValidArg(WITH_RELTABLE.find(isWithString)->second, leftArgType, rightArgType)) {
 		return false;
 	}
 
