@@ -12,12 +12,16 @@ const char SYMBOL_FULL_STOP = '.';
 const char SYMBOL_UNDERSCORE = '_';
 const char SYMBOL_ANGLE_OPEN_BRACKETS = '<';
 const char SYMBOL_ANGLE_CLOSE_BRACKETS = '>';
+const char SYMBOL_PLUS = '+';
+const char SYMBOL_MINUS = '-';
+const char SYMBOL_MULTIPLICATION = '*';
+const char SYMBOL_DIVIDER = '|';
 
 const string EMPTY_STRING = "";
-const string DELIM_STRING = " ,()<>=";
+const string DELIM_STRING = " ,()<>=+-*";
 const vector<char> DELIMITERS_DECLARATION{};
-const vector<char> DELIMITERS_QUERY{ SYMBOL_COMMA, SYMBOL_CLOSE_BRACKET, SYMBOL_ANGLE_OPEN_BRACKETS,
-SYMBOL_ANGLE_CLOSE_BRACKETS, SYMBOL_EQUALS };
+const vector<char> DELIMITERS_QUERY{ SYMBOL_COMMA, SYMBOL_OPEN_BRACKET, SYMBOL_CLOSE_BRACKET, SYMBOL_ANGLE_OPEN_BRACKETS,
+SYMBOL_ANGLE_CLOSE_BRACKETS, SYMBOL_EQUALS, SYMBOL_PLUS, SYMBOL_MINUS, SYMBOL_MULTIPLICATION };
 
 const string SELECT_WORD = "Select";
 const string SUCH_WORD = "such";
@@ -33,10 +37,13 @@ const string INTEGER_WORD = "integer";
 const string IDENT_WORD = "ident";
 const string CONSTANT_WORD = "constant";
 const string VAR_NAME_WORD = "var_name";
+const string INVALID_EXPRESSION = "Invalid Expression";
 
+const vector<string> CLAUSES_WITH_STAR = { "Calls*", "Parent*", "Follows*", "Next*", "Affects*" };
+const vector<string> CLAUSES_WITH_T = { "CallsT", "ParentT", "FollowsT", "NextT", "AffectsT" };
 const unordered_set<string> KEYWORDS_PATTERN_TYPE = { "assign", "while", "if" };
 const unordered_map<string, RelRef> KEYWORDS_CLAUSES = { { "Modifies", Modifies }, { "Uses", Uses }, 
-{ "Parent", Parent },{ "Parent*", ParentT },{ "Follows", Follows },{ "Follows*", FollowsT }, 
+{ "Parent", Parent },{ "ParentT", ParentT },{ "Follows", Follows },{ "FollowsT", FollowsT }, 
 { "Next", Next },{ "NextT", NextT },{ "Calls", Calls },{ "Calls*", CallsT } };
 
 const unordered_map<string, AttrType> KEYWORDS_WITH_TYPE = { { "procName", PROCNAME },
@@ -52,6 +59,9 @@ const unordered_map<string, ParamType> KEYWORDS_DECLARATIONS = { { "assign", ASS
 
 const unordered_map<int, ParamType> NUMBER_MAPPING_CLAUSE_ARG_TYPE = { { 1, INTEGER }, { 2, IDENT }, 
 { 3, SYNONYM }, { 4, ALL } };
+
+const unordered_map<int, ParamType> NUMBER_MAPPING_EXPRESSION_TYPE = { { 1, EXPR },
+{ 2, EXPR_EXACT }, { 3, ALL } };
 
 const regex synonymRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)");
 const regex identRegex("(^(\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$))");
@@ -161,6 +171,9 @@ bool Preprocessor::isValidQuery(string query) {
 	if (!isValidSuchThatKeyword(q)) {
 		return false;
 	}
+
+	//Replace all the clauses with * to T
+	replaceStarWithT(q);
 
 	QueryObject queryObject;
 	vector<string> queryArr = Utils::explode(q + SYMBOL_SPACE, DELIM_STRING, DELIMITERS_QUERY);
@@ -315,6 +328,14 @@ bool Preprocessor::isValidQuery(string query) {
 			//Add relRef
 			clauseLength++;
 
+			//check whether open_bracket exists
+			if ((i + 3) >= queryArr.size() || queryArr.at(i + 3).at(0) != SYMBOL_OPEN_BRACKET) {
+				return false;
+			}
+
+			//Add Open Bracket
+			clauseLength++;
+
 			//Add all the left Param
 			string leftArg = retrieveParamFromQuery(queryArr, clauseLength, i, string(1, SYMBOL_COMMA));
 
@@ -354,13 +375,21 @@ bool Preprocessor::isValidQuery(string query) {
 			//Add patternType
 			patternLength++;
 
+			//check whether open_bracket exists
+			if ((i + 3) >= queryArr.size() || queryArr.at(i + 3).at(0) != SYMBOL_OPEN_BRACKET) {
+				return false;
+			}
+
+			//Add Open Bracket
+			patternLength++;
+
 			//Add all the left Param
 			string leftArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_COMMA));
 
 			//Add all the right Param if is assignpt
 			string rightArg;
 			if (searchDeclareType->second == ASSIGN) {
-				rightArg = retrieveParamFromQuery(queryArr, patternLength, i, string(1, SYMBOL_CLOSE_BRACKET));
+				rightArg = retrievePatternFromQuery(queryArr, patternLength, i, string(1, SYMBOL_CLOSE_BRACKET));
 			}
 			else {
 				rightArg = EMPTY_STRING;
@@ -416,7 +445,7 @@ bool Preprocessor::isValidQuery(string query) {
 						patternLength++;
 					}
 
-					//whilept should have 2 underscore (right param)
+					//whilept should have 1 underscore (right param)
 					if (countUnderscore != 1) {
 						return false;
 					}
@@ -883,35 +912,54 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 		return false;
 	}
 
-	//if (entityType == ASSIGN && (rightArg.length() < 1 || !isValidExpressSpec(rightArg))) {
-	//	return false;
-	//}
+	//only for assignpt RHS argument
+	string postfix;
+	ParamType rightArgType = ALL;
 
+	if (entityType == ASSIGN) {
+		int rightArgMappingNum = retrieveExpressionType(rightArg);
 
-	//auto leftArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(leftArg));
-	//ParamType insertLeftArgType = leftArgType->second;
+		if (rightArgMappingNum == 0) {
+			return false;
+		}
 
-	////Check if is synonym and whether the synonym exists in declarationMap
-	//if (insertLeftArgType == SYNONYM) {
-	//	if (!isDeclarationSynonymExist(leftArg)) {
-	//		return false;
-	//	}
+		rightArgType = NUMBER_MAPPING_EXPRESSION_TYPE.find(rightArgMappingNum)->second;
 
-	//	//Change the synonym to the declaration type with reference to the declarationMap
-	//	auto searchSynonym = declarationMap.find(leftArg);
-	//	auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+		if (rightArgType == EXPR || rightArgType == EXPR_EXACT) {
+			vector<string> exprArr = Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE);
+			string expression = exprArr.at(1);
 
-	//	// if is not a variable declaration for the right Param, return false
-	//	if (searchDeclareType->second != VARIABLE) {
-	//		return false;
-	//	}
+			postfix = infixToPostFix(expression);
 
-	//	insertLeftArgType = searchDeclareType->second;
-	//}
-	////Check if is Ident and store the content between the double quotes
-	//else if (leftArgType->second == IDENT) {
-	//	leftArg = Utils::sanitise((Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1));
-	//}
+			if (postfix.compare(INVALID_EXPRESSION) == 0) {
+				return false;
+			}
+		}
+	}
+
+	//check whether leftArg is synonym, _ or identity
+	int leftArgMappingNum = retrieveClauseArgType(leftArg);
+
+	if (leftArgMappingNum == 0) {
+		return false;
+	}
+
+	ParamType leftArgType = NUMBER_MAPPING_CLAUSE_ARG_TYPE.find(leftArgMappingNum)->second;
+
+	if (leftArgType == SYNONYM) {
+		if (!isDeclarationSynonymExist(leftArg)) {
+			return false;
+		}
+
+		auto searchSynonym = declarationMap.find(leftArg);
+		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+
+		leftArgType = searchDeclareType->second;
+	}
+	else if (leftArgType == IDENT) {
+		leftArg = (Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+	}
+
 
 	//if (entityType == ASSIGN) {
 	//	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
@@ -921,11 +969,11 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	//		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
 	//	}
 
-	//	qo.insertPattern(entityType, entity, insertLeftArgType,
+	//	qo.insertPattern(entityType, entity, leftArgType,
 	//		leftArg, rightArgType->second, rightArg);
 	//}
 	//else {
-	//	qo.insertPattern(entityType, entity, insertLeftArgType,
+	//	qo.insertPattern(entityType, entity, leftArgType,
 	//		leftArg, ALL, Utils::trim(SYMBOL_UNDERSCORE + rightArg));
 	//}
 
@@ -1009,7 +1057,24 @@ int Preprocessor::retrieveClauseArgType(string arg) {
 0 == INVALID
 */
 int Preprocessor::retrieveExpressionType(string expression) {
-	return 0;
+	//check for underscore & double quote at the front and end
+	if (expression.at(0) == SYMBOL_UNDERSCORE &&
+		expression.at(1) == SYMBOL_DOUBLE_QUOTE &&
+		expression.at(expression.size() - 2) == SYMBOL_DOUBLE_QUOTE &&
+		expression.at(expression.size() - 1) == SYMBOL_UNDERSCORE) {
+		return 1;
+	}
+	//check for double quote at the front and end 
+	else if (expression.at(0) == SYMBOL_DOUBLE_QUOTE &&
+		expression.at(expression.size() - 1) == SYMBOL_DOUBLE_QUOTE) {
+		return 2;
+	}
+	else if (expression.size() == 1 && expression.at(0) == SYMBOL_UNDERSCORE) {
+		return 3;
+	}
+	else {
+		return 0;
+	}
 }
 
 string Preprocessor::retrieveParamFromQuery(vector<string> queryArr, int &paramLength, int pos, string end) {
@@ -1032,6 +1097,40 @@ string Preprocessor::retrieveParamFromQuery(vector<string> queryArr, int &paramL
 			arg += queryArr.at(pos + paramLength);
 		}
 		paramLength++;
+	}
+
+	return arg;
+}
+
+string Preprocessor::retrievePatternFromQuery(vector<string> queryArr, int &patternLength, int pos, string end) {
+	//Add all the Param
+	string arg;
+	stack<string> s;
+	while (true) {
+		//if counter exceeded array size
+		if ((pos + patternLength) >= queryArr.size()) {
+			return EMPTY_STRING;
+		}
+
+		string temp = Utils::sanitise(queryArr.at(pos + patternLength));
+
+		if (temp.compare(end) == 0 && s.empty()) {
+			//end of left param
+			patternLength++;
+			break;
+		}
+		else {
+
+			if (temp.at(0) == SYMBOL_OPEN_BRACKET) {
+				s.push(temp);
+			}
+			else if (temp.at(0) == SYMBOL_CLOSE_BRACKET) {
+				s.pop();
+			}
+
+			arg += temp;
+		}
+		patternLength++;
 	}
 
 	return arg;
@@ -1061,4 +1160,155 @@ bool Preprocessor::isValidSuchThatKeyword(string query) {
 	}
 
 	return true;
+}
+
+void Preprocessor::replaceStarWithT(string& source) {
+	for (size_t i = 0; i < CLAUSES_WITH_STAR.size(); i++) {
+		Utils::find_and_replace(source, CLAUSES_WITH_STAR.at(i), CLAUSES_WITH_T.at(i));
+	}
+}
+
+string Preprocessor::infixToPostFix(string infix) {
+
+	vector<string> infixArr = Utils::explode(infix + SYMBOL_SPACE, DELIM_STRING, DELIMITERS_QUERY);
+
+	stack<char> operators;
+	bool isMathOperatorRepeated = false;
+	bool isOperandRepeated = false;
+	string postfix;
+
+	for (size_t i = 0; i < infixArr.size(); i++) {
+		//Checking operator
+		if (infixArr.at(i).at(0) == SYMBOL_PLUS ||
+			infixArr.at(i).at(0) == SYMBOL_MINUS ||
+			infixArr.at(i).at(0) == SYMBOL_MULTIPLICATION) {
+
+			if (isMathOperatorRepeated) {
+				postfix = INVALID_EXPRESSION;
+
+				/*
+				After this for loop there is while loop
+				which is checking rest of the char and add it with postfix string.
+				So this pushed char should be pop out
+				because infix espression is wrong.
+				*/
+				while (!operators.empty()) {
+					operators.pop();
+				}
+				break;
+			}
+
+			while (!operators.empty() && higherPrecedenceValidate(operators.top(), infixArr.at(i).at(0))) {
+				postfix += operators.top() + SYMBOL_DIVIDER;
+				operators.pop();
+			}
+
+			operators.push(infixArr.at(i).at(0));
+			isMathOperatorRepeated = true;
+			isOperandRepeated = false;
+		}
+		//checking operand
+		else if (Utils::isInteger(infixArr.at(i)) || isValidSynonym(infixArr.at(i))) {
+			if (isOperandRepeated) {
+				postfix = INVALID_EXPRESSION;
+
+				/*
+				After this for loop there is while loop
+				which is checking rest of the char and add it with postfix string.
+				So this pushed char should be pop out
+				because infix espression is wrong.
+				*/
+				while (!operators.empty()) {
+					operators.pop();
+				}
+				break;
+			}
+			postfix += infixArr.at(i) + SYMBOL_DIVIDER;
+			isMathOperatorRepeated = false;
+			isOperandRepeated = true;
+		}
+		//Checking open bracket
+		else if (infixArr.at(i).at(0) == SYMBOL_OPEN_BRACKET) {
+			operators.push(infixArr.at(i).at(0));
+			isMathOperatorRepeated = false;
+			isOperandRepeated = false;
+		}
+		//Checking closing bracket
+		else if (infixArr.at(i).at(0) == SYMBOL_CLOSE_BRACKET) {
+			while (!operators.empty() && operators.top() != SYMBOL_OPEN_BRACKET) {
+				postfix = postfix + operators.top() + SYMBOL_DIVIDER;
+				operators.pop();
+			}
+
+			/*
+			checking stack because we know
+			that if the infix char is ')'
+			and the stack is empty then the infix expression is wrong
+			*/
+			if (operators.empty()) {
+				postfix = INVALID_EXPRESSION;
+				break;
+			}
+			else {
+				operators.pop();
+			}
+			//popping the opening bracket
+			isMathOperatorRepeated = false;
+			isOperandRepeated = false;
+		}
+
+		//checking that infix expression has invalid char
+		else {
+			postfix = INVALID_EXPRESSION;
+
+			/*
+			After this for loop there is while loop
+			which is checking rest of the char and add it with postfix string.
+			So this pushed char should be pop out
+			because infix espression is wrong.
+			*/
+			while (!operators.empty()) {
+				operators.pop();
+			}
+			break;
+		}
+	}
+
+	// popping the rest of element from the stack..
+	while (!operators.empty()) {
+		if (operators.top() == SYMBOL_OPEN_BRACKET) {
+			postfix = INVALID_EXPRESSION;
+			break;
+		}
+		else {
+			postfix += operators.top() + SYMBOL_DIVIDER;
+			operators.pop();
+		}
+	}
+	return postfix;
+}
+
+int Preprocessor::higherPrecedenceValidate(char operator1, char operator2) {
+	int op1 = getPrecedence(operator1);
+	int op2 = getPrecedence(operator2);
+
+	if (op1 == op2) {
+		return true;
+	}
+
+	return op1 > op2 ? true : false;
+}
+
+int Preprocessor::getPrecedence(char op) {
+	int weight = 0;
+	switch (op) {
+	case SYMBOL_PLUS:
+	case SYMBOL_MINUS:
+		weight = 1;
+		break;
+	case SYMBOL_MULTIPLICATION:
+		weight = 2;
+		break;
+	}
+	return weight;
 }
