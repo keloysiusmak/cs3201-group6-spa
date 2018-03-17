@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../SPA/Preprocessor.h"
-#include "../SPA/Evaluator.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
