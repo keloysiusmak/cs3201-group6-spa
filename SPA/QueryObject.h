@@ -11,6 +11,7 @@ class QueryObject {
 private:
 	vector<Clause> _clauses;
 	vector<Pattern> _Patterns;
+	vector<Clause> _withClauses;
 	vector<Param> _selectStmt;
 
 public:
@@ -25,5 +26,6 @@ public:
 
 	vector<Clause> getClauses();
 	vector<Pattern> getPatterns();
+	vector<Clause> getWithClauses();
 	vector<Param> getSelectStatements();
 };
