@@ -1153,8 +1153,10 @@ std::vector<std::vector<int>> PKB::getStatementsWithPattern(Pattern p) {
 		else if (p.getRightParam().type == EXPR_EXACT) {
 			unordered_map<int, std::vector<string>> table = nameTables[0];
 			for (auto it = table.begin(); it != table.end(); ++it) {
-				if (it->second[1] == p.getRightParam().value) {
-					intermediate.push_back(it->first);
+				if (it->second.size() > 1) {
+					if (it->second[1] == p.getRightParam().value) {
+						intermediate.push_back(it->first);
+					}
 				}
 			}
 		}
@@ -1163,9 +1165,11 @@ std::vector<std::vector<int>> PKB::getStatementsWithPattern(Pattern p) {
 			unordered_map<int, std::vector<string>> table = nameTables[0];
 			std::size_t found;
 			for (auto it = table.begin(); it != table.end(); ++it) {
-				found = it->second[1].find(p.getRightParam().value);
-				if (found != string::npos) {
-					intermediate.push_back(it->first);
+				if (it->second.size() > 1) {
+					found = it->second[1].find(p.getRightParam().value);
+					if (found != string::npos) {
+						intermediate.push_back(it->first);
+					}
 				}
 			}
 		}
@@ -1197,12 +1201,29 @@ std::vector<std::vector<int>> PKB::getStatementsWithPattern(Pattern p) {
 	else if (p.getEntity().type == IF || p.getEntity().type == WHILE) {
 
 		int entityType = p.getEntity().type;
-		if (p.getLeftParam().type == ALL && p.getRightParam().type == ALL) {
-			if (entityType == IF) {
-				return PKB::getAllStatementsWithType(1);
-			} else if (entityType == WHILE) {
-				return PKB::getAllStatementsWithType(1);
+		//entity(_,_,_) or (_,_)
+		std::vector<std::vector<int>> output;
+		if (entityType == IF) {
+			output = PKB::getAllStatementsWithType(3);
+		} else if (entityType == WHILE) {
+			output = PKB::getAllStatementsWithType(2);
+		}
+			
+		if (p.getLeftParam().type == VARIABLE || p.getLeftParam().type == IDENT) {
+			for (int i = 0; i < output.size(); i++) {
+				string modifies = PKB::getFromNameTable(PATTERN_TABLE, output[i][0])[0];
+				if (p.getLeftParam().type == VARIABLE){
+					output[i].push_back(PKB::getVariableId(modifies));
+				}
+				else if (p.getLeftParam().type == IDENT && p.getLeftParam().value != modifies) {
+					output.erase(output.begin() + i, output.begin() + i + 1);
+					i--;
+				}
 			}
+			return output;
+		}
+		else {
+			return output;
 		}
 
 	}

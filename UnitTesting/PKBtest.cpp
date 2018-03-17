@@ -1491,12 +1491,24 @@ namespace UnitTesting
 			pkb.insertToNameTable(VAR_TABLE, { "g" });
 			pkb.insertToNameTable(VAR_TABLE, { "h" });
 			pkb.insertToNameTable(VAR_TABLE, { "i" });
+			pkb.insertToNameTable(VAR_TABLE, { "j" });
+			pkb.insertToNameTable(VAR_TABLE, { "k" });
+			pkb.insertToNameTable(VAR_TABLE, { "l" });
+			pkb.insertToNameTable(VAR_TABLE, { "m" });
 			pkb.insertToTable(STATEMENT_TABLE, 1, { {1}, {2,3,4,5,6,7}, {1}, {1} });
 			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1 },{ 4,5 },{ 8 },{ 1 } });
 			pkb.insertToTable(STATEMENT_TABLE, 3, { { 1 },{ 5,6 },{ 9 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 4, { { 1 },{ 10 },{  },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 5, { { 1 },{ 11 },{  },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 6, { { 1 },{ 12 },{},{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 7, { { 1 },{ 13 },{},{ 2 } });
 			pkb.insertToNameTable(PATTERN_TABLE, {"a", "b|c|+|d|*|e|f|*|g|+|"});
 			pkb.insertToNameTable(PATTERN_TABLE, { "h", "d|e|+|" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "i", "e|f|*|" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "j" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "k" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "l" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "m" });
 
 			//a(_,_)
 			ep.type = ASSIGN;
@@ -1684,6 +1696,176 @@ namespace UnitTesting
 			Pattern p11(ep, lp, rp);
 			expected.clear();
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p11) == expected));
+
+			//ifs(_,_,_)
+			ep.type = IF;
+			ep.value = "ifs";
+			ep.attribute = NONE;
+
+			lp.type = ALL;
+			lp.value = "_";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p12(ep, lp, rp);
+			expected = { {4}, {5} };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p12) == expected));
+
+			//ifs(v,_,_)
+			ep.type = IF;
+			ep.value = "ifs";
+			ep.attribute = NONE;
+
+			lp.type = VARIABLE;
+			lp.value = "v";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p13(ep, lp, rp);
+			expected = { { 4, 10 },{ 5, 11 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p13) == expected));
+
+			//ifs("j",_,_)
+			ep.type = IF;
+			ep.value = "ifs";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "j";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p14(ep, lp, rp);
+			expected = { { 4 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p14) == expected));
+
+			//ifs("k",_,_)
+			ep.type = IF;
+			ep.value = "ifs";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "k";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p15(ep, lp, rp);
+			expected = { { 5 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p15) == expected));
+
+			//ifs("l",_,_)
+			ep.type = IF;
+			ep.value = "ifs";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "l";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p16(ep, lp, rp);
+			expected.clear();
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p16) == expected));
+
+			//w(_,_)
+			ep.type = WHILE;
+			ep.value = "w";
+			ep.attribute = NONE;
+
+			lp.type = ALL;
+			lp.value = "_";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p17(ep, lp, rp);
+			expected = { { 6 },{ 7 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p17) == expected));
+
+			//w(v,_)
+			ep.type = WHILE;
+			ep.value = "w";
+			ep.attribute = NONE;
+
+			lp.type = VARIABLE;
+			lp.value = "v";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p18(ep, lp, rp);
+			expected = { { 6, 12 },{ 7, 13 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p18) == expected));
+
+			//w("l",_)
+			ep.type = WHILE;
+			ep.value = "w";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "l";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p19(ep, lp, rp);
+			expected = { { 6 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p19) == expected));
+
+			//w("m",_)
+			ep.type = WHILE;
+			ep.value = "w";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "m";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p20(ep, lp, rp);
+			expected = { { 7 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p20) == expected));
+
+			//w("n",_)
+			ep.type = WHILE;
+			ep.value = "w";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "n";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p21(ep, lp, rp);
+			expected.clear();
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p21) == expected));
 
 		}
 		
