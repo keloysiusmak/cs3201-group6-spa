@@ -51,5 +51,5 @@ namespace ParserTest
 			parser.stmListIdStack.push(1);
 			Assert::IsTrue(parser.whileStatement());
 		};
-	}
+	};
 }
