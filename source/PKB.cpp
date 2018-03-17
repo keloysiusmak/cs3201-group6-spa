@@ -1133,15 +1133,73 @@ std::vector<std::vector<int>> PKB::getAllCallsStar() {
 }
 
 /* Pattern Operations */
-std::vector<std::vector<int>> PKB::getPattern(Pattern p) {
+std::vector<std::vector<int>> PKB::getStatementsWithPattern(Pattern p) {
+	std::vector<std::vector<int>> result;
+	std::vector<int> intermediate;
 	if (p.getEntity().type == ASSIGN) {
+		
+		//all, all
+		if (p.getLeftParam().type == ALL && p.getRightParam().type == ALL) {
+			return PKB::getAllStatementsWithType(1);
+		}
+		//right - expr_exact
+		else if (p.getRightParam().type == EXPR_EXACT) {
+			unordered_map<int, std::vector<string>> table = nameTables[0];
+			for (auto it = table.begin(); it != table.end(); ++it) {
+				if (it->second[1] == p.getRightParam().value) {
+					intermediate.push_back(it->first);
+				}
+			}
+		}
+		//right - expr
+		else if (p.getRightParam().type == EXPR) {
+			unordered_map<int, std::vector<string>> table = nameTables[0];
+			std::size_t found;
+			for (auto it = table.begin(); it != table.end(); ++it) {
+				found = it->second[1].find(p.getRightParam().value);
+				if (found != string::npos) {
+					intermediate.push_back(it->first);
+				}
+			}
+		}
+
+		//continuing with intermediate
+		if (p.getLeftParam().type == VARIABLE) {
+			for (int i = 0; i < intermediate.size(); i++) {
+				string modifies = PKB::getFromNameTable(PATTERN_TABLE, intermediate[i])[0];
+				result.push_back({intermediate[i], PKB::getVariableId(modifies)});
+			}
+		} 
+		else if (p.getLeftParam().type == ALL) {
+			for (int i = 0; i < intermediate.size(); i++) {
+				result.push_back({ intermediate[i] });
+			}
+		} 
+		else if (p.getLeftParam().type == IDENT) {
+			for (int i = 0; i < intermediate.size(); i++) {
+				string modifies = PKB::getFromNameTable(PATTERN_TABLE, intermediate[i])[0];
+				if (modifies == p.getLeftParam().value) {
+					result.push_back({ intermediate[i], PKB::getVariableId(modifies) });
+				}
+			}
+		}
+
+		return result;
 
 	}
 	else if (p.getEntity().type == IF || p.getEntity().type == WHILE) {
 
+		int entityType = p.getEntity().type;
+		if (p.getLeftParam().type == ALL && p.getRightParam().type == ALL) {
+			if (entityType == IF) {
+				return PKB::getAllStatementsWithType(1);
+			} else if (entityType == WHILE) {
+				return PKB::getAllStatementsWithType(1);
+			}
+		}
+
 	}
-	std::vector<std::vector<int>> a;
-	return a;
+	return result;
 }
 
 /* Constant Operations */

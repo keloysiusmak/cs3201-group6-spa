@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../source/PKB.h"
-#include "../source/PatternObject.h"
+#include "../SPA/Pattern.h"
 #include "../SPA/Constants.h";
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -1463,6 +1463,194 @@ namespace UnitTesting
 			Assert::AreEqual(true, pkb.checkCallsStar(2, 4));
 			Assert::AreEqual(false, pkb.checkCallsStar(1, 1));
 			Assert::AreEqual(false, pkb.checkCallsStar(3, 1));
+		}
+		
+		TEST_METHOD(PKBGetStatementsWithPattern)
+		{
+			PKB pkb;
+
+			Pattern p;
+			Param ep;
+			Param lp;
+			Param rp;
+
+			std::vector<std::vector<int>> null;
+
+			/* Null Tests */
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p) == null));
+
+			//a = (b + c) * d + e * f + g; 
+			//h = d + e;
+			//i = e * f;
+			pkb.insertToNameTable(VAR_TABLE, { "a" });
+			pkb.insertToNameTable(VAR_TABLE, { "b" });
+			pkb.insertToNameTable(VAR_TABLE, { "c" });
+			pkb.insertToNameTable(VAR_TABLE, { "d" });
+			pkb.insertToNameTable(VAR_TABLE, { "e" });
+			pkb.insertToNameTable(VAR_TABLE, { "f" });
+			pkb.insertToNameTable(VAR_TABLE, { "g" });
+			pkb.insertToNameTable(VAR_TABLE, { "h" });
+			pkb.insertToNameTable(VAR_TABLE, { "i" });
+			pkb.insertToTable(STATEMENT_TABLE, 1, { {1}, {2,3,4,5,6,7}, {1}, {1} });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1 },{ 4,5 },{ 8 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 1 },{ 5,6 },{ 9 },{ 1 } });
+			pkb.insertToNameTable(PATTERN_TABLE, {"a", "bc+d*ef*+g+"});
+			pkb.insertToNameTable(PATTERN_TABLE, { "h", "de+" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "i", "ef*" });
+
+			//a(_,_)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = ALL;
+			lp.value = "_";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p1(ep, lp, rp);
+			std::vector<std::vector<int>> expected = { {1}, {2}, {3} };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p1) == expected));
+
+			//a(_,_"e*f"_)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = ALL;
+			lp.value = "_";
+			lp.attribute = NONE;
+
+			rp.type = EXPR;
+			rp.value = "ef*";
+			rp.attribute = NONE;
+
+			Pattern p2(ep, lp, rp);
+			expected = { {1},{3} };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p2) == expected));
+
+			//a(_,"e*f")
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = ALL;
+			lp.value = "_";
+			lp.attribute = NONE;
+
+			rp.type = EXPR_EXACT;
+			rp.value = "ef*";
+			rp.attribute = NONE;
+
+			Pattern p3(ep, lp, rp);
+			expected = { { 3 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p3) == expected));
+
+			//a(v, _)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = VARIABLE;
+			lp.value = "v";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p4(ep, lp, rp);
+			expected = { {1,1}, {2,8}, { 3,9 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p4) == expected));
+
+			//a("a", _)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "a";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p5(ep, lp, rp);
+			expected = { { 1 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p5) == expected));
+
+			//a(v,_"e*f"_)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = VARIABLE;
+			lp.value = "v";
+			lp.attribute = NONE;
+
+			rp.type = EXPR;
+			rp.value = "ef*";
+			rp.attribute = NONE;
+
+			Pattern p6(ep, lp, rp);
+			expected = { {1, 1}, {3, 8} };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p6) == expected));
+
+			//a(v,"e*f")
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = VARIABLE;
+			lp.value = "v";
+			lp.attribute = NONE;
+
+			rp.type = EXPR_EXACT;
+			rp.value = "ef*";
+			rp.attribute = NONE;
+
+			Pattern p7(ep, lp, rp);
+			expected = { { 3, 9 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p7) == expected));
+
+			//a("a", _"e*f"_)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "a";
+			lp.attribute = NONE;
+
+			rp.type = EXPR;
+			rp.value = "ef*";
+			rp.attribute = NONE;
+
+			Pattern p8(ep, lp, rp);
+			expected = { { 1 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p8) == expected));
+
+			//a("a", "e*f")
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "x";
+			lp.attribute = NONE;
+
+			rp.type = EXPR_EXACT;
+			rp.value = "ef*";
+			rp.attribute = NONE;
+
+			Pattern p9(ep, lp, rp);
+			expected.clear();
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p9) == expected));
+
 		}
 		
 		TEST_METHOD(PKBConstant)

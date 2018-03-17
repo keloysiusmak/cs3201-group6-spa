@@ -468,7 +468,7 @@ void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternR
 {
 	patternResults.instantiatePattern(pattern);
 
-	vector<vector<int>> results = pkb.getPattern(pattern);
+	vector<vector<int>> results = pkb.getStatementsWithPattern(pattern);
 	patternResults.setResults(results);
 };
 
