@@ -42,6 +42,8 @@ const string INVALID_EXPRESSION = "Invalid Expression";
 const vector<string> CLAUSES_WITH_STAR = { "Calls*", "Parent*", "Follows*", "Next*", "Affects*" };
 const vector<string> CLAUSES_WITH_T = { "CallsT", "ParentT", "FollowsT", "NextT", "AffectsT" };
 const unordered_set<string> KEYWORDS_PATTERN_TYPE = { "assign", "while", "if" };
+const unordered_map<ParamType, string> KEYWORDS_PATTERN_REL = { { ASSIGN, "assignpt" },
+{ WHILE, "whilept" }, { IF, "ifpt" } };
 const unordered_map<string, RelRef> KEYWORDS_CLAUSES = { { "Modifies", Modifies }, { "Uses", Uses }, 
 { "Parent", Parent },{ "ParentT", ParentT },{ "Follows", Follows },{ "FollowsT", FollowsT }, 
 { "Next", Next },{ "NextT", NextT },{ "Calls", Calls },{ "Calls*", CallsT } };
@@ -842,7 +844,7 @@ bool Preprocessor::parseClauseArg(QueryObject &qo, string relType, string arg1, 
 		}
 	}
 	else if (leftArgType == IDENT) {
-		leftArg = (Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+		leftArg = Utils::sanitise((Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1));
 	}
 
 	//Check if synonym exists in declarations and convert the type to the corresponding type
@@ -863,7 +865,7 @@ bool Preprocessor::parseClauseArg(QueryObject &qo, string relType, string arg1, 
 		}
 	}
 	else if (rightArgType == IDENT) {
-		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+		rightArg = Utils::sanitise((Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1));
 	}
 
 	switch (searchRelType->second)
@@ -908,12 +910,11 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	string leftArg = Utils::sanitise(arg1);
 	string rightArg = Utils::sanitise(arg2);
 
-	if (leftArg.length() < 1 || !isValidVarRef(leftArg)) {
+	if (leftArg.length() < 1 || !isValidVarRef(leftArg) || rightArg.length() < 1) {
 		return false;
 	}
 
 	//only for assignpt RHS argument
-	string postfix;
 	ParamType rightArgType = ALL;
 
 	if (entityType == ASSIGN) {
@@ -929,9 +930,9 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 			vector<string> exprArr = Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE);
 			string expression = exprArr.at(1);
 
-			postfix = infixToPostFix(expression);
+			rightArg = infixToPostFix(expression);
 
-			if (postfix.compare(INVALID_EXPRESSION) == 0) {
+			if (rightArg.compare(INVALID_EXPRESSION) == 0) {
 				return false;
 			}
 		}
@@ -957,25 +958,23 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 		leftArgType = searchDeclareType->second;
 	}
 	else if (leftArgType == IDENT) {
-		leftArg = (Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1);
+		leftArg = Utils::sanitise((Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1));
 	}
 
+	auto relPt = KEYWORDS_PATTERN_REL.find(entityType);
 
-	//if (entityType == ASSIGN) {
-	//	auto rightArgType = NUMBER_MAPPING_REF_TYPE.find(retrieveArgType(rightArg));
+	if (!relTable.isValidArg(relPt->second, leftArgType, rightArgType)) {
+		return false;
+	}
 
-	//	//Check if is factor expresson-spec and store the content between the double quotes
-	//	if (rightArgType->second == EXPR) {
-	//		rightArg = (Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1);
-	//	}
-
-	//	qo.insertPattern(entityType, entity, leftArgType,
-	//		leftArg, rightArgType->second, rightArg);
-	//}
-	//else {
-	//	qo.insertPattern(entityType, entity, leftArgType,
-	//		leftArg, ALL, Utils::trim(SYMBOL_UNDERSCORE + rightArg));
-	//}
+	if (entityType == ASSIGN) {
+		qo.insertPattern(entityType, entity, leftArgType,
+			leftArg, rightArgType, rightArg);
+	}
+	else {
+		qo.insertPattern(entityType, entity, leftArgType,
+			leftArg, ALL, Utils::trim(SYMBOL_UNDERSCORE + rightArg));
+	}
 
 	return true;
 }
@@ -1199,7 +1198,8 @@ string Preprocessor::infixToPostFix(string infix) {
 			}
 
 			while (!operators.empty() && higherPrecedenceValidate(operators.top(), infixArr.at(i).at(0))) {
-				postfix += operators.top() + SYMBOL_DIVIDER;
+				postfix += operators.top();
+				postfix += SYMBOL_DIVIDER;
 				operators.pop();
 			}
 
@@ -1223,7 +1223,8 @@ string Preprocessor::infixToPostFix(string infix) {
 				}
 				break;
 			}
-			postfix += infixArr.at(i) + SYMBOL_DIVIDER;
+			postfix += infixArr.at(i);
+			postfix += SYMBOL_DIVIDER;
 			isMathOperatorRepeated = false;
 			isOperandRepeated = true;
 		}
@@ -1236,7 +1237,8 @@ string Preprocessor::infixToPostFix(string infix) {
 		//Checking closing bracket
 		else if (infixArr.at(i).at(0) == SYMBOL_CLOSE_BRACKET) {
 			while (!operators.empty() && operators.top() != SYMBOL_OPEN_BRACKET) {
-				postfix = postfix + operators.top() + SYMBOL_DIVIDER;
+				postfix += operators.top();
+				postfix += SYMBOL_DIVIDER;
 				operators.pop();
 			}
 
@@ -1281,7 +1283,8 @@ string Preprocessor::infixToPostFix(string infix) {
 			break;
 		}
 		else {
-			postfix += operators.top() + SYMBOL_DIVIDER;
+			postfix += operators.top();
+			postfix += SYMBOL_DIVIDER;
 			operators.pop();
 		}
 	}
