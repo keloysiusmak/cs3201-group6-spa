@@ -5,7 +5,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-namespace UnitTesting {
+namespace PreprocessorTesting {
 	Preprocessor preprocessor;
 
 	TEST_CLASS(PreprocessorTest) {

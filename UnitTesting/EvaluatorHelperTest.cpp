@@ -6,7 +6,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-namespace UnitTesting {
+namespace EvaluatorHelperTest {
 
 	TEST_CLASS(EvaluatorTest) {
 

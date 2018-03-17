@@ -102,7 +102,7 @@ queue<string> Parser::getRPN(queue<string> expr)
 		if (!Utils::isValidOperator(operationStack.top())) {
 			throw InvalidExpressionException("Invalid Expression!");
 		}
-		expressionQueue.push(operationStack.top());
+		expressionQueue.push(operationStack.top() + "|");
 		operationStack.pop();
 	}
 	return expressionQueue;
@@ -110,7 +110,7 @@ queue<string> Parser::getRPN(queue<string> expr)
 
 void Parser::parseFactor()
 {
-	expressionQueue.push(word);
+	expressionQueue.push(word + "|");
 }
 
 void Parser::parseOperator()
@@ -118,7 +118,7 @@ void Parser::parseOperator()
 	//while there is an operator token, o2, at the top of the operator stack and the current operator o1 has precedence less than that of o2,
 	while (!operationStack.empty() && Utils::isValidOperator(operationStack.top()) && UtilsConstants::OPERATOR_PRIORITIES.at(word) <= UtilsConstants::OPERATOR_PRIORITIES.at(operationStack.top())) {
 		//then pop o2 off the operator stack, onto the output queue;
-		expressionQueue.push(operationStack.top());
+		expressionQueue.push(operationStack.top() + "|");
 		operationStack.pop();
 	}
 	//push o1 onto the operator stack.
@@ -138,7 +138,7 @@ void Parser::parseCloseBracket()
 			return;
 		}
 		else {
-			expressionQueue.push(operationStack.top());
+			expressionQueue.push(operationStack.top()+"|");
 			operationStack.pop();
 		}
 	}

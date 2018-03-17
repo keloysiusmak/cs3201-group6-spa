@@ -5,7 +5,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-namespace UnitTesting {
+namespace QueryObjectTest {
 	TEST_CLASS(QueryObjectTest) {
 	public:
 		TEST_METHOD(QueryObjectInsertSelectStmt) {
