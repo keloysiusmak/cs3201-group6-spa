@@ -4,6 +4,8 @@ using namespace std;
 void ClauseResults::instantiateClause(Clause clause) {
 	lhs = clause.getFirstParam();
 	rhs = clause.getSecondParam();
+	if (Utils::isSynonym(lhs.type)) { tableParams.push_back(lhs); }
+	if (Utils::isSynonym(rhs.type)) { tableParams.push_back(rhs); }
 };
 
 void ClauseResults::instantiatePattern(Pattern pattern) {
