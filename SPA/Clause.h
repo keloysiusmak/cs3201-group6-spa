@@ -6,7 +6,7 @@
 using namespace std;
 
 enum RelRef { Modifies, Uses, Parent, ParentT, Follows, FollowsT,
-				Next, NextT, Calls, CallsT };
+				Next, NextT, Calls, CallsT, With };
 
 
 class Clause {
