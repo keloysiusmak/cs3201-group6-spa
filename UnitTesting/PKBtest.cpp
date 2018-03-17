@@ -1494,7 +1494,7 @@ namespace UnitTesting
 			pkb.insertToTable(STATEMENT_TABLE, 1, { {1}, {2,3,4,5,6,7}, {1}, {1} });
 			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1 },{ 4,5 },{ 8 },{ 1 } });
 			pkb.insertToTable(STATEMENT_TABLE, 3, { { 1 },{ 5,6 },{ 9 },{ 1 } });
-			pkb.insertToNameTable(PATTERN_TABLE, {"a", "b|c|+|d|*|e|f|*|+|g|+|"});
+			pkb.insertToNameTable(PATTERN_TABLE, {"a", "b|c|+|d|*|e|f|*|g|+|"});
 			pkb.insertToNameTable(PATTERN_TABLE, { "h", "d|e|+|" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "i", "e|f|*|" });
 
