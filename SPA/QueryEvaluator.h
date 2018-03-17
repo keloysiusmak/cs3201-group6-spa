@@ -20,7 +20,7 @@ public:
 
 	// Linkage to other components
 	void setQueryObject(QueryObject);
-	void setInvalidQuery(list<string>);
+	void setInvalidQuery(string);
 	void setPKB(PKB);
 
 	// Main Evaluation methods
