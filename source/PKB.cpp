@@ -1290,3 +1290,14 @@ std::vector<std::vector<int>> PKB::getStatementsWithConstant(int constant) {
 	return data;
 
 }
+
+std::vector<std::vector<int>> PKB::getAllConstants() {
+	std::vector<std::vector<int>> data;
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[CONST_TABLE - 1];
+
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		data.push_back({ it->first });
+	}
+
+	return data;
+}
