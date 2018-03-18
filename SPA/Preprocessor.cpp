@@ -1071,8 +1071,15 @@ bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string right
 		return false;
 	}
 
-	qo.insertWithClause(leftArgType, leftArg, leftAttrType, 
-		rightArgType, rightArg, rightAttrType);
+	//Evaluate both arguments if both arguments are constant value like INTEGER and IDENT
+	if ((leftArgType == INTEGER && rightArgType == INTEGER) ||
+		(leftArgType == IDENT && rightArgType == IDENT)) {
+		return leftArg.compare(rightArg) == 0;
+	}
+	else {
+		qo.insertWithClause(leftArgType, leftArg, leftAttrType,
+			rightArgType, rightArg, rightAttrType);
+	}
 
 	return true;
 }

@@ -110,19 +110,22 @@ public:
 		string query36 = "Select a with c.value =	7";
 		string query37 = "Select a with n = c.value";
 		string query38 = "Select p.procName with p.procName = c1.procName";
+		string query39 = "Select a with 3=3";
+		string query40 = "Select a with \"x\"=\"y\"";
+		string query41 = "Select a with 3=a.stmt#";
 
 		//Query with whilept
-		string query39 = "Select a pattern w(v, _)";
-		string query40 = "Select a pattern ifs(v,_,_)";
+		string query42 = "Select a pattern w(v, _)";
+		string query43 = "Select a pattern ifs(v,_,_)";
 
 		//Query with and
-		string query41 = "Select a such that Parent*(w, a) and Follows(a, n)";
-		string query42 = "Select a pattern a(v, \"x	+     y - z\") and w(v, _)";
-		string query43 = "Select v with v.varName = c1.procName and c1.procName = \"haha\"";
+		string query44 = "Select a such that Parent*(w, a) and Follows(a, n)";
+		string query45 = "Select a pattern a(v, \"x	+     y - z\") and w(v, _)";
+		string query46 = "Select v with v.varName = c1.procName and c1.procName = \"haha\"";
 
 		//Query with tuple, BOOLEAN, such that, pattern, and, with
-		string query44 = "Select <a.stmt#,n, c1.procName> such that Parent*(w, a) pattern a(v, _\"(x+y)*z\"_) and w(v,_) with c1.stmt# = 5";
-		string query45 = "Select BOOLEAN with c1.stmt# = 5		 pattern a(v, _\"(x+y)*z\"_) and w(v,_) such that Parent*(w, a)";
+		string query47 = "Select <a.stmt#,n, c1.procName> such that Parent*(w, a) pattern a(v, _\"(x+y)*z\"_) and w(v,_) with c1.stmt# = 5";
+		string query48 = "Select BOOLEAN with c1.stmt# = 5		 pattern a(v, _\"(x+y)*z\"_) and w(v,_) such that Parent*(w, a)";
 
 		string invalidQuery1 = "Selecta"; //Must have space in between select and a
 		string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
@@ -182,12 +185,15 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query37));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query38));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query39));
-		Assert::AreEqual(true, preprocessor.isValidQuery(query40));
+		Assert::AreEqual(false, preprocessor.isValidQuery(query40));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query41));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query42));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query43));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query44));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query45));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query46));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query47));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query48));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
@@ -558,6 +564,18 @@ public:
 		Assert::AreEqual(static_cast<int>(CALL), static_cast<int>(qo.getWithClauses().at(3).getSecondParam().type));
 		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qo.getWithClauses().at(3).getSecondParam().attribute));
 		Assert::AreEqual(secondParamValue, qo.getWithClauses().at(3).getSecondParam().value);
+
+		arg1 = "5";
+		arg2 = "5";
+
+		//Valid
+		Assert::AreEqual(true, preprocessor.parseWithClause(qo, arg1, arg2));
+
+		arg1 = "\"x\"";
+		arg2 = "\"y\"";
+
+		//Valid
+		Assert::AreEqual(false, preprocessor.parseWithClause(qo, arg1, arg2));
 	}
 
 	TEST_METHOD(PreprocessorIsValidSuchThatKeyword) {
