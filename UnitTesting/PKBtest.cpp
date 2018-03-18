@@ -1652,7 +1652,7 @@ namespace UnitTesting
 			ep.attribute = NONE;
 
 			lp.type = IDENT;
-			lp.value = "x";
+			lp.value = "a";
 			lp.attribute = NONE;
 
 			rp.type = EXPR_EXACT;
