@@ -554,20 +554,50 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 	set<string> paramValueSet;
 	list<string> paramValues;
 
-	/* Store values into set */
-	for (vector<int> tableRow : iTable.resultsTable) {
-		string paramVal;
-		if (p.type == VARIABLE) {
-			paramVal = pkb.getVariableName(tableRow[paramInt]);
-		} else {
-			paramVal = to_string(tableRow[paramInt]);
+	if (paramInt > -1) {
+		/* Store values into set */
+		for (vector<int> tableRow : iTable.resultsTable) {
+			string paramVal;
+			if (p.type == VARIABLE) {
+				paramVal = pkb.getVariableName(tableRow[paramInt]);
+			} else {
+				paramVal = to_string(tableRow[paramInt]);
+			}
+			paramValueSet.insert(paramVal);
 		}
-		paramValueSet.insert(paramVal);
+
+		/* Transfer set values into list */
+		for (string value : paramValueSet) {
+			paramValues.push_back(value);
+		}
+		return paramValues;
+	} else {
+		return getAllParamsOfType(p.type);
 	}
 
-	/* Transfer set values into list */
-	for (string value : paramValueSet) {
-		paramValues.push_back(value);
+};
+
+/* Returns the values of given param */
+list<string> QueryEvaluator::getAllParamsOfType(ParamType pType) {
+	vector<vector<int>> returnedAllParams;
+	list<string> allParams;
+
+	if (pType == VARIABLE) { returnedAllParams = pkb.getAllVariables(); }
+	else if (pType == STMT || pType == PROG_LINE) { returnedAllParams = pkb.getAllStatements(); }
+	else if (pType == ASSIGN) { returnedAllParams = pkb.getAllStatementsWithType(1); }
+	else if (pType == WHILE) { returnedAllParams = pkb.getAllStatementsWithType(2); }
+	else if (pType == IF) { returnedAllParams = pkb.getAllStatementsWithType(3); }
+	else if (pType == PROCEDURE) { returnedAllParams = pkb.getAllProcedures(); }
+	else { ; }
+
+	for (vector<int> valueArray : returnedAllParams) {
+		int value = valueArray[0];
+		string valueString;
+		if (pType == VARIABLE) { valueString = pkb.getVariableName(value); }
+		else if (pType == PROCEDURE) { valueString = pkb.getVariableName(value); }
+		else { valueString = to_string(value); }
+		allParams.push_back(valueString);
 	}
-	return paramValues;
+
+	return allParams;
 };
