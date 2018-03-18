@@ -73,12 +73,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 
 		/* Evaluation of with clauses */
 		for (Clause withClause : queryObject.getWithClauses()) {
-			Param rhs = withClause.getSecondParam();
-			if (rhs.type == INTEGER || rhs.type == CONSTANT) { // If rhs is a concrete value
-				handleWithValueAssignment(withClause, iTable);
-			} else { // If rhs is a synonym
-				handleWithEquateVariables(withClause, iTable);
-			}
+			handleWithClause(withClause, iTable);
 		}
 
 		return extractParams(selectParams, iTable);
@@ -89,39 +84,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 	}
 }
 
-/* for any seleced param that is not in any of the clauses, return all instances of that param */
-/* uncomment this out later when bugs are fixed*/
-/* add to intermediate table later on*/
-/* vector<vector<int>> QueryEvaluator::getAllSelectedParam(Param p) {
-   int paramIntType = statementTypeToIntMap(p.type);
-   vector<int> pkbResults;
-   if (paramIntType != 0) {
-   pkbResults = pkb.getAllStatementsWithType(paramIntType);
-   }
-   else if (p.type == STMT || p.type == PROG_LINE) {
-   pkbResults = pkb.getAllStatements();
-   }
-   else if (p.type == VARIABLE) {
-   pkbResults = pkb.getAllVariables();
-   }
-
-   vector<vector<int>> results;
-   for (int ans : pkbResults) {
-   (p.type == VARIABLE) ?
-   results.push_back(pkb.getVariableName(ans)) :
-   results.push_back(to_string(ans));
-   }
-   return results;
-   }; */
-
-int QueryEvaluator::queryNumClauses(QueryObject &queryObj) {
-	return queryObj.getClauses().size();
-};
-
-int QueryEvaluator::queryNumPattern(QueryObject &queryObj) {
-	return queryObj.getPatterns().size();
-}
-
+/* Main evaluation method */
 void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResults)
 {
 	clauseResults.instantiateClause(queryObject.getClauses()[0]);
@@ -431,8 +394,8 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 
 		}
 		else { // (concrete, conrete)
-			// bool result = pkb.checkCall(stoi(leftParam.value), stoi(rightParam.value));
-			// clauseResults.setValid(result);
+			bool result = pkb.checkCalls(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
 		}
 	}
 }
@@ -477,24 +440,48 @@ void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternR
 };
 
 /* Filters table for with assignment */
+void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable) {
+
+	if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 1) {
+		handleWithValueAssignment(clause, iTable);
+	} else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 2)  {
+		handleWithEquateVariables(clause, iTable);
+	} else { ; }
+
+};
+
+/* Filters table rows according to assigned value of param */
 void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable &iTable) {
-	Param lhs = clause.getFirstParam();
-	Param rhs = clause.getSecondParam();
-	int paramTableIndex = EvaluatorHelper::getParamInt(lhs, iTable);
-	int paramValue;
-	if (lhs.attribute == VALUE || lhs.attribute == STMT_NO) {
-		paramValue = stoi(rhs.value);
-	} else {
-		// Get pkb mapping from proc/var_name to int
-		// paramValue = ...
+
+	Param paramInTable;
+	Param paramWithValue;
+	if (Utils::isSynonym(clause.getFirstParam().type)) {
+		paramInTable = clause.getFirstParam();
+		paramWithValue = clause.getSecondParam();
+	}
+	if (Utils::isSynonym(clause.getSecondParam().type)) {
+		paramInTable = clause.getSecondParam();
+		paramWithValue = clause.getFirstParam();
+	}
+
+	int paramIndex;
+	paramIndex = EvaluatorHelper::getParamInt(paramInTable, iTable);
+	
+	int valueOfParam;
+	if (paramInTable.attribute == PROCNAME) { // Constant is procedure name
+		valueOfParam = pkb.getVariableId(paramWithValue.value);
+	} else if (paramInTable.attribute == VARNAME) { // Constant is variable name
+		valueOfParam = pkb.getProcedureId(paramWithValue.value);
+	} else { // Constant is integer
+		valueOfParam = stoi(paramWithValue.value);
 	}
 
 	vector<vector<int>> updatedTable;
 	for (vector<int> tableRow : iTable.resultsTable) {
-		if (tableRow[paramTableIndex] == paramValue) updatedTable.push_back(tableRow);
+		if (tableRow[paramIndex] == valueOfParam) updatedTable.push_back(tableRow);
 	}
-
 	iTable.setResultsTable(updatedTable);
+
 };
 
 /* Filters table for with equating two variables */
@@ -506,12 +493,32 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 
 	vector<vector<int>> updatedTable;
 	for (vector<int> tableRow : iTable.resultsTable) {
-		if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) {
-			updatedTable.push_back(tableRow);
-		}
-	}
+		int lhsIntValue = tableRow[firstParamTableIndex];
+		int rhsIntValue = tableRow[secondParamTableIndex];
 
+		if (lhs.attribute == PROCNAME || lhs.attribute == VARNAME) { // Compare string value
+			if (getProcOrVarName(lhs.attribute, lhsIntValue) ==
+				getProcOrVarName(rhs.attribute, rhsIntValue)) {
+				updatedTable.push_back(tableRow);
+			}
+		}
+		else if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
+			updatedTable.push_back(tableRow);
+		} else { ; }
+
+	}
 	iTable.setResultsTable(updatedTable);
+};
+
+/* Returns the name of the procedure or variable id */
+string QueryEvaluator::getProcOrVarName(AttrType type, int id) {
+	if (type == PROCNAME) {
+		return pkb.getProcedureName(id);
+	} else if (type == VARNAME) {
+		return pkb.getVariableName(id);
+	} else {
+		return "";
+	}
 };
 
 /* Returns the selected params from the intermediate table */
