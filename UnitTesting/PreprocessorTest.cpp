@@ -118,6 +118,11 @@ public:
 		//Query with and
 		string query41 = "Select a such that Parent*(w, a) and Follows(a, n)";
 		string query42 = "Select a pattern a(v, \"x	+     y - z\") and w(v, _)";
+		string query43 = "Select v with v.varName = c1.procName and c1.procName = \"haha\"";
+
+		//Query with tuple, BOOLEAN, such that, pattern, and, with
+		string query44 = "Select <a.stmt#,n, c1.procName> such that Parent*(w, a) pattern a(v, _\"(x+y)*z\"_) and w(v,_) with c1.stmt# = 5";
+		string query45 = "Select BOOLEAN with c1.stmt# = 5		 pattern a(v, _\"(x+y)*z\"_) and w(v,_) such that Parent*(w, a)";
 
 		string invalidQuery1 = "Selecta"; //Must have space in between select and a
 		string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
@@ -132,6 +137,10 @@ public:
 		//the 2nd such that keyword can only have one white space in between
 		string invalidQuery11 = "Select a such that Uses()";
 		string invalidQuery12 = "Select a such that Uses(a,a,a)";
+		string invalidQuery13 = "Select a with";
+		string invalidQuery14 = "Select a with prog_line.stmt# = 3";
+		string invalidQuery15 = "Select a with c1.procName = n";
+		string invalidQuery16 = "Select a such that Parent*(a, 2) and a(v, _)";
 
 		//Valid
 		Assert::AreEqual(true, preprocessor.isValidQuery(query1));
@@ -176,6 +185,9 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query40));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query41));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query42));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query43));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query44));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query45));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
@@ -190,6 +202,10 @@ public:
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery10));
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery11));
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery12));
+		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery13));
+		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery14));
+		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery15));
+		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery16));
 	}
 
 	TEST_METHOD(PreprocessorIsValidSynonym) {
