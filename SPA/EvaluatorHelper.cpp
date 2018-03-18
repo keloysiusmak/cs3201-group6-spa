@@ -52,20 +52,21 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 			
 		for (vector<int> tableRow : iTable.resultsTable) {
 			for (vector<int> resultRow : clauseResults.results) {
-
-				if (firstParamInt >= 0 && secondParamInt >= 0) { // Both params in table
-					if (resultRow[0] == tableRow[firstParamInt] &&
-						resultRow[1] == tableRow[secondParamInt]) {
+				int resultFirstParamValue = resultRow[0];
+				int resultSecondParamValue = resultRow[1];
+				if (firstParamInt > -1 && secondParamInt > -1) { // Both params in table
+					if (resultFirstParamValue == tableRow[firstParamInt] &&
+						resultSecondParamValue == tableRow[secondParamInt]) {
 						newTable.push_back(tableRow);
 					}
-				} else if (firstParamInt >= 0) { // First param in table
-					if (resultRow[0] == tableRow[firstParamInt]) {
-						tableRow.push_back(resultRow[1]); // Add in second param value
+				} else if (firstParamInt > -1) { // First param in table
+					if (resultFirstParamValue == tableRow[firstParamInt]) {
+						tableRow.push_back(resultSecondParamValue); // Add in second param value
 						newTable.push_back(tableRow);
 					}
 				} else { // Second param in table
-					if (resultRow[1] == tableRow[secondParamInt]) {
-						tableRow.push_back(resultRow[0]); // Add in first param value
+					if (resultSecondParamValue == tableRow[secondParamInt]) {
+						tableRow.push_back(resultFirstParamValue); // Add in first param value
 						newTable.push_back(tableRow);
 					}
 				}
@@ -76,7 +77,8 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 		vector<vector<int>> newTable;
 		for (vector<int> tableRow : iTable.resultsTable) {
 			for (vector<int> resultRow : clauseResults.results) {
-				if (resultRow[0] == tableRow[firstParamInt]) {
+				int resultsParamValue = resultRow[0];
+				if (resultsParamValue == tableRow[firstParamInt]) {
 					newTable.push_back(tableRow);
 				}
 			}

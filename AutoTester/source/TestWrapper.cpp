@@ -26,6 +26,7 @@ void TestWrapper::parse(std::string filename) {
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
+	preprocessor.setEvaluator(evaluator);
 	preprocessor.preprocessQuery(query);
 	results = evaluator.evaluateQuery();
 }

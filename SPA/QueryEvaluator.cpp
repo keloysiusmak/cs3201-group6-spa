@@ -66,7 +66,9 @@ list<string> QueryEvaluator::evaluateQuery() {
 			evaluatePattern(clause, patternResults);
 
 			if (!patternResults.hasResults()) return{};
-			if (patternResults.numParamsInResult() != 0) EvaluatorHelper::mergeClauseTable(patternResults, iTable);
+			if (patternResults.numParamsInResult() != 0) {
+				EvaluatorHelper::mergeClauseTable(patternResults, iTable);
+			}
 		}
 
 		/* Evaluation of with clauses */
@@ -470,8 +472,8 @@ void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternR
 {
 	patternResults.instantiatePattern(pattern);
 
-	// vector<vector<int>> results = pkb.getStatementsWithPattern(pattern);
-	// patternResults.setResults(results);
+	vector<vector<int>> results = pkb.getStatementsWithPattern(pattern);
+	patternResults.setResults(results);
 };
 
 /* Filters table for with assignment */
