@@ -126,6 +126,9 @@ public:
 		//Query with tuple, BOOLEAN, such that, pattern, and, with
 		string query47 = "Select <a.stmt#,n, c1.procName> such that Parent*(w, a) pattern a(v, _\"(x+y)*z\"_) and w(v,_) with c1.stmt# = 5";
 		string query48 = "Select BOOLEAN with c1.stmt# = 5		 pattern a(v, _\"(x+y)*z\"_) and w(v,_) such that Parent*(w, a)";
+		string query49 = "Select BOOLEAN with 3=3";
+		string query50 = "Select BOOLEAN with c5.procName=\"haha\"";
+		string query51 = "Select BOOLEAN";
 
 		string invalidQuery1 = "Selecta"; //Must have space in between select and a
 		string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
@@ -194,6 +197,9 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query46));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query47));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query48));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query49));
+		Assert::AreEqual(false, preprocessor.isValidQuery(query50));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query51));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
