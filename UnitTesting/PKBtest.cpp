@@ -80,6 +80,9 @@ namespace UnitTesting
 				case 14:
 					tableValuesCount = 1;
 					break;
+				case 15:
+					tableValuesCount = 1;
+					break;
 				}
 				data.clear();
 				for (int j = 0; j < tableValuesCount; j++) {
@@ -144,6 +147,9 @@ namespace UnitTesting
 					tableValuesCount = 1;
 					break;
 				case 14:
+					tableValuesCount = 1;
+					break;
+				case 15:
 					tableValuesCount = 1;
 					break;
 				}
@@ -1464,6 +1470,76 @@ namespace UnitTesting
 			Assert::AreEqual(false, pkb.checkCallsStar(1, 1));
 			Assert::AreEqual(false, pkb.checkCallsStar(3, 1));
 		}
+
+		TEST_METHOD(PKBGetCallStatementsCallingProcedure)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getCallStatementsCallingProcedure(2) == data));
+
+			pkb.insertToTable(CALLS_TABLE, 2, { {}, { 2,3,4 } });
+
+			/* Valid Tests */
+			data = { {2}, {3}, {4} };
+			Assert::AreEqual(true, (pkb.getCallStatementsCallingProcedure(2) == data));
+			
+		}
+
+		TEST_METHOD(PKBGetProcedureCalledByCallStatement)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getProcedureCalledByCallStatement(1) == data));
+
+			pkb.insertToTable(CALL_STATEMENT_TABLE, 1, { { 2 } });
+
+			/* Valid Tests */
+			data = { { 2 } };
+			Assert::AreEqual(true, (pkb.getProcedureCalledByCallStatement(1) == data));
+
+		}
+
+		TEST_METHOD(PKBGetAllCallStatementsCallingProcedure)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getAllCallStatementsCallingProcedure() == data));
+
+			pkb.insertToTable(CALLS_TABLE, 2, { {}, { 2,3,4 } });
+			pkb.insertToTable(CALLS_TABLE, 3, { {},{ 5,6 } });
+
+			pkb.insertToNameTable(PROC_TABLE, { "a" });
+			pkb.insertToNameTable(PROC_TABLE, { "b" });
+			pkb.insertToNameTable(PROC_TABLE, { "c" });
+
+			/* Valid Tests */
+			data = { {2,2}, {2,3}, {2,4}, {3,5}, {3,6} };
+			Assert::AreEqual(true, (pkb.getAllCallStatementsCallingProcedure() == data));
+			
+		}
+
+		TEST_METHOD(PKBGetAllProcedureCalledByCallStatement)
+		{
+			PKB pkb;
+
+			/* Null Tests */
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (pkb.getAllProcedureCalledByCallStatement() == data));
+
+			pkb.insertToTable(CALL_STATEMENT_TABLE, 1, { { 2 } });
+			pkb.insertToTable(CALL_STATEMENT_TABLE, 2, { { 3 } });
+
+			/* Valid Tests */
+			data = { { 1,2 }, {2,3} };
+			Assert::AreEqual(true, (pkb.getAllProcedureCalledByCallStatement() == data));
+
+		}
 		
 		TEST_METHOD(PKBGetStatementsWithPattern)
 		{
@@ -1869,7 +1945,7 @@ namespace UnitTesting
 
 		}
 		
-		TEST_METHOD(PKBConstant)
+		TEST_METHOD(PKBGetStatementsWithConstant)
 		{
 			PKB pkb;
 			
@@ -1882,6 +1958,22 @@ namespace UnitTesting
 			std::vector<std::vector<int>> data = { {1} };
 			Assert::AreEqual(true, (pkb.getStatementsWithConstant(1) == data));
 			Assert::AreEqual(true, (pkb.getStatementsWithConstant(2) == initial_data));
+
+		}
+
+		TEST_METHOD(PKBGetAllConstants)
+		{
+			PKB pkb;
+
+			std::vector<std::vector<int>> initial_data;
+
+			/* Null Tests */
+			Assert::AreEqual(true, (pkb.getAllConstants() == initial_data));
+
+			pkb.insertToTable(CONST_TABLE, 1, { { 1 } });
+			pkb.insertToTable(CONST_TABLE, 2, { { 1 } });
+			std::vector<std::vector<int>> data = { { 1 }, {2} };
+			Assert::AreEqual(true, (pkb.getAllConstants() == data));
 
 		}
 

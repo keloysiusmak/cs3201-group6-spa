@@ -156,6 +156,16 @@ namespace DesignExtractorTest
 				Assert::AreEqual(8, pkb.getFromTable(NEXT_STAR_INVERSE_TABLE, i)[0][7]);
 			}
 		}
+		TEST_METHOD(DesignExtractorExtractCallStatements)
+		{
+			de.extract(pkb);
+			std::vector<std::vector<int>> result;
+			Assert::AreEqual(true, (result == pkb.getFromTable(CALL_STATEMENT_TABLE, 1)));
+			Assert::AreEqual(2, pkb.getFromTable(CALL_STATEMENT_TABLE, 5)[0][0]);
+			Assert::AreEqual(3, pkb.getFromTable(CALL_STATEMENT_TABLE, 7)[0][0]);
+			result.clear();
+			Assert::AreEqual(true, (result == pkb.getFromTable(CALL_STATEMENT_TABLE, 4)));
+		}
 		TEST_METHOD(DesignExtractorExtractCallsInverse)
 		{
 			de.extract(pkb);
@@ -167,7 +177,7 @@ namespace DesignExtractorTest
 			result.clear();
 			Assert::AreEqual(true, (result == pkb.getFromTable(CALLS_INVERSE_TABLE, 4)));
 		}
-		TEST_METHOD(DesignExtractorExtractCalls)
+		TEST_METHOD(DesignExtractorExtractCallsStar)
 		{
 			de.extract(pkb);
 			std::vector<std::vector<int>> result;
