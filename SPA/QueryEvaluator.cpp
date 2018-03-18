@@ -35,7 +35,8 @@ bool QueryEvaluator::isValidQuery() {
 
 void QueryEvaluator::setInvalidQuery(string message) {
 	validQuery = false;
-	invalidQueryMessage = { message };
+	if (message != "") invalidQueryMessage = { message } ;
+	else invalidQueryMessage = {};
 };
 
 /*
@@ -578,8 +579,12 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 	if (selectedParams.size() == 1) {
 		Param selected = selectedParams[0];
 		if (selected.type == BOOLEAN) { // Boolean
-			if (iTable.resultsTable.size() > 0) return{ "true" };
-			else return{ "false" };
+			if (iTable.resultsTable.size() > 0 || // Table not empty
+				iTable.tableParams.size() == 0) { // No statement to evaluate
+				return{ "true" };
+			} else {
+				return{ "false" };
+			}
 		}
 		else { // Synonym
 			return paramToStringList(selected, iTable);
