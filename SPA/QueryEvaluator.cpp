@@ -329,15 +329,15 @@ void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults
 			clauseResults.setResults(results);
 		}
 		else { // (concrete, concrete)
-		  //bool result;
+		  bool result;
 			if (rightParam.type == IDENT) {
 				int varId = pkb.getVariableId(rightParam.value);
-				// result = pkb.checkNext(stoi(leftParam.value), varId);
+				result = pkb.checkNext(stoi(leftParam.value), varId);
 			}
 			else {
-				// result = pkb.checkNext(stoi(leftParam.value), stoi(rightParam.value));
+				result = pkb.checkNext(stoi(leftParam.value), stoi(rightParam.value));
 			}
-			// clauseResults.setValid(result);
+			clauseResults.setValid(result);
 		}
 	}
 }
@@ -384,7 +384,7 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 		}
 		else { // (syn, concrete)
 			vector<vector<int>> results = pkb.getCallsBefore(stoi(rightParam.value));
-			// clauseResults.setValues(results);
+			clauseResults.setResults(results);
 		}
 	}
 	else {
