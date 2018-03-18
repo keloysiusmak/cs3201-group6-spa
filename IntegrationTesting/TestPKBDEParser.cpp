@@ -38,13 +38,13 @@ namespace PKBDEParserIntegrationTesting
 				9.	e = 1; }
 
 				procedure b{
-				10.	a = b;
-				11.	while a {
-				12.		while b {
-				13.			a = 1; }}}
+				10.	g = b;
+				11.	while h {
+				12.		while i {
+				13.			j = 1; }}}
 			
 			*/
-			testString = "procedure a {a = b; while c { b = a; d = 7; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { call a; }} }";
+			testString = "procedure a {a = b; while c { b = a; d = 7; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ f = g; while h { while i { j = 1; }} }";
 			pkb = parser.Parse(simpleSource, pkb, true, testString);
 			de.extract(pkb);
 		}
