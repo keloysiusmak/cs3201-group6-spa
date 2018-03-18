@@ -13,4 +13,6 @@ class EvaluatorHelper {
   static int getParamInt(Param p, IntermediateTable &iTable);
   static bool clauseParamsInTable(ClauseResults &clauseResults, IntermediateTable &iTable);
   static void addClauseParamToTable(ClauseResults &clauseResults, IntermediateTable &iTable);
+
+  static int withClauseNumSyns(Clause &clause, IntermediateTable &iTable);
 };
