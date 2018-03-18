@@ -49,11 +49,7 @@ bool ClauseResults::hasResults() {
 
 /* Returns number of synonyms of results: 0/1/2 */
 int ClauseResults::numParamsInResult() {
-	if (results.size() == 0) {
-		return 0;
-	} else {
-		return results[0].size();
-	}
+	return tableParams.size();
 };
 
 /* Remove ALL Syns */
@@ -90,6 +86,7 @@ void ClauseResults::removeALLSyns() {
 		Param param = tableParams[0];
 		if (param.type == ALL) {
 			clearResults();
+			clearParamsTable();
 		}
 	} else { ; }
 }

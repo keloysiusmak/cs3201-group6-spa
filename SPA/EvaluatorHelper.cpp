@@ -56,16 +56,19 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 					if (resultFirstParamValue == tableRow[firstParamInt] &&
 						resultSecondParamValue == tableRow[secondParamInt]) {
 						newTable.push_back(tableRow);
+						tableRow.pop_back();
 					}
 				} else if (firstParamInt > -1) { // First param in table
 					if (resultFirstParamValue == tableRow[firstParamInt]) {
 						tableRow.push_back(resultSecondParamValue); // Add in second param value
 						newTable.push_back(tableRow);
+						tableRow.pop_back();
 					}
 				} else { // Second param in table
 					if (resultSecondParamValue == tableRow[secondParamInt]) {
 						tableRow.push_back(resultFirstParamValue); // Add in first param value
 						newTable.push_back(tableRow);
+						tableRow.pop_back();
 					}
 				}
 			}
