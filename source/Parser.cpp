@@ -430,7 +430,7 @@ bool Parser::procedure() {
 
 	match("{");
 	// insert proc id to STATEMENT_LIST_TABLE_2
-	pkb.insertToTable(STATEMENT_LIST_TABLE, nextStmListId, { { PROCEDURE_PARENT_ID },{},{ PROCEDURE_PARENT_ID } });
+	pkb.insertToTable(STATEMENT_LIST_TABLE, nextStmListId, { { PROCEDURE_PARENT_ID },{},{ currentProcId } });
 	// insert statement list id to PROC_INFO_TABLE_3
 	pkb.insertToTable(PROC_INFO_TABLE, currentProcId, { { nextStmListId },{},{} });
 	statementList();

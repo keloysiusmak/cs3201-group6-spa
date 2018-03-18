@@ -46,7 +46,9 @@ namespace PKBDEParserIntegrationTesting
 			*/
 			testString = "procedure a {a = b; while c { b = a; call b; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ f = g; while h { while i { j = 1; }} }";
 			pkb = parser.Parse(simpleSource, pkb, true, testString);
+			de = DesignExtractor();
 			de.extract(pkb);
+			int a = 1;
 		}
 
 		TEST_METHOD(PKBDEParserGetFollowsBeforeInvalid)
@@ -224,8 +226,6 @@ namespace PKBDEParserIntegrationTesting
 		TEST_METHOD(PKBDEParserGetAllParentStar)
 		{
 			std::vector <std::vector<int>> data;
-			data.push_back({ 2,3 });
-			data.push_back({ 2,4 });
 			data.push_back({ 6,7 });
 			data.push_back({ 5,6 });
 			data.push_back({ 5,8 });
@@ -233,6 +233,8 @@ namespace PKBDEParserIntegrationTesting
 			data.push_back({ 12,13 });
 			data.push_back({ 11,12 });
 			data.push_back({ 11,13 });
+			data.push_back({ 2,3 });
+			data.push_back({ 2,4 });
 			std::vector <std::vector<int>> output = pkb.getAllParentStar();
 
 			Assert::AreEqual(true, (data == output));
@@ -246,20 +248,20 @@ namespace PKBDEParserIntegrationTesting
 
 		TEST_METHOD(PKBDEParserGetStatementsFromUsesVariables)
 		{
-			std::vector<std::vector<int>> data = { {2},{3},{5},{11} };
+			std::vector<std::vector<int>> data = { {2},{3},{5} };
 			Assert::AreEqual(true, (pkb.getStatementsFromUsesVariable(1) == data));
 		}
 
 		TEST_METHOD(PKBDEParserGetUsesVariablesFromProcedure)
 		{
-			std::vector<std::vector<int>> data = { {1},{2},{3},{5} };
+			std::vector<std::vector<int>> data = { {1},{2},{3},{4}, {7}, {8}, {9} };
 			Assert::AreEqual(true, (pkb.getUsesVariablesFromProcedure(1) == data));
 		}
 
 		TEST_METHOD(PKBDEParserGetProceduresFromUsesVariable)
 		{
 			std::vector<std::vector<int>> data = { {1},{2} };
-			Assert::AreEqual(true, (pkb.getProceduresFromUsesVariable(1) == data));
+			Assert::AreEqual(true, (pkb.getProceduresFromUsesVariable(9) == data));
 		}
 
 		TEST_METHOD(PKBDEParserGetAllStatementUsesVariables)
@@ -267,32 +269,45 @@ namespace PKBDEParserIntegrationTesting
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,2 });
 			data.push_back({ 3,1 });
+			data.push_back({ 6,4 });
+			data.push_back({ 5,1 });
+			data.push_back({ 5,4 });
+			data.push_back({ 10,7 });
+			data.push_back({ 12,9 });
+			data.push_back({ 11,8 });
+			data.push_back({ 11,9 });
+			data.push_back({ 4,7 });
+			data.push_back({ 4,8 });
+			data.push_back({ 4,9 });
 			data.push_back({ 2,1 });
 			data.push_back({ 2,3 });
-			data.push_back({ 6,5 });
-			data.push_back({ 5,1 });
-			data.push_back({ 5,5 });
-			data.push_back({ 10,2 });
-			data.push_back({ 12,2 });
-			data.push_back({ 11,1 });
-			data.push_back({ 11,2 });
+			data.push_back({ 2,7 });
+			data.push_back({ 2,8 });
+			data.push_back({ 2,9 });
 			Assert::AreEqual(true, (pkb.getAllStatementUsesVariables() == data));
 		}
 
 		TEST_METHOD(PKBDEParserGetAllVariableUsesStatements)
 		{
 			std::vector<std::vector<int>> data;
+			data.push_back({ 9,2 });
+			data.push_back({ 9,4 });
+			data.push_back({ 9,11 });
+			data.push_back({ 9,12 });
 			data.push_back({ 1,2 });
 			data.push_back({ 1,3 });
 			data.push_back({ 1,5 });
-			data.push_back({ 1,11 });
 			data.push_back({ 2,1 });
-			data.push_back({ 2,10 });
-			data.push_back({ 2,11 });
-			data.push_back({ 2,12 });
 			data.push_back({ 3,2 });
-			data.push_back({ 5,5 });
-			data.push_back({ 5,6 });
+			data.push_back({ 4,5 });
+			data.push_back({ 4,6 });
+			data.push_back({ 7,2 });
+			data.push_back({ 7,4 });
+			data.push_back({ 7,10 });
+			data.push_back({ 8,2 });
+			data.push_back({ 8,4 });
+			data.push_back({ 8,11 });
+			vector<vector<int>> a = pkb.getAllVariableUsesStatements();
 
 			Assert::AreEqual(true, (pkb.getAllVariableUsesStatements() == data));
 		}
@@ -303,21 +318,30 @@ namespace PKBDEParserIntegrationTesting
 			data.push_back({ 1,1 });
 			data.push_back({ 1,2 });
 			data.push_back({ 1,3 });
-			data.push_back({ 1,5 });
-			data.push_back({ 2,1 });
-			data.push_back({ 2,2 });
+			data.push_back({ 1,4 });
+			data.push_back({ 1,7 });
+			data.push_back({ 1,8 });
+			data.push_back({ 1,9 });
+			data.push_back({ 2,7 });
+			data.push_back({ 2,8 });
+			data.push_back({ 2,9 });
 			Assert::AreEqual(true, (pkb.getAllProcedureUsesVariables() == data));
 		}
 
 		TEST_METHOD(PKBDEParserGetAllVariableUsesProcedures)
 		{
 			std::vector<std::vector<int>> data;
+			data.push_back({ 9,1 });
+			data.push_back({ 9,2 });
 			data.push_back({ 1,1 });
-			data.push_back({ 1,2 });
 			data.push_back({ 2,1 });
-			data.push_back({ 2,2 });
 			data.push_back({ 3,1 });
-			data.push_back({ 5,1 });
+			data.push_back({ 4,1 });
+			data.push_back({ 7,1 });
+			data.push_back({ 7,2 });
+			data.push_back({ 8,1 });
+			data.push_back({ 8,2 });
+
 			Assert::AreEqual(true, (pkb.getAllVariableUsesProcedures() == data));
 		}
 
@@ -341,20 +365,20 @@ namespace PKBDEParserIntegrationTesting
 
 		TEST_METHOD(PKBDEParserGetStatementsFromModifiesVariables)
 		{
-			std::vector<std::vector<int>> data = { {1},{10},{11},{12},{13} };
-			Assert::AreEqual(true, (pkb.getStatementsFromModifiesVariable(1) == data));
+			std::vector<std::vector<int>> data = { {2},{4},{11},{12},{13} };
+			Assert::AreEqual(true, (pkb.getStatementsFromModifiesVariable(10) == data));
 		}
 
 		TEST_METHOD(PKBDEParserGetModifiesVariablesFromProcedure)
 		{
-			std::vector<std::vector<int>> data = { {1},{2},{3},{4},{5} };
+			std::vector<std::vector<int>> data = { {1},{2},{3},{4},{5}, {6},{10} };
 			Assert::AreEqual(true, (pkb.getModifiesVariablesFromProcedure(1) == data));
 		}
 
 		TEST_METHOD(PKBDEParserGetProceduresFromModifiesVariable)
 		{
 			std::vector<std::vector<int>> data = { {1},{2} };
-			Assert::AreEqual(true, (pkb.getProceduresFromModifiesVariable(1) == data));
+			Assert::AreEqual(true, (pkb.getProceduresFromModifiesVariable(6) == data));
 		}
 
 		TEST_METHOD(PKBDEParserGetAllStatementModifiesVariables)
@@ -362,19 +386,21 @@ namespace PKBDEParserIntegrationTesting
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,1 });
 			data.push_back({ 3,2 });
-			data.push_back({ 2,2 });
-			data.push_back({ 2,4 });
-			data.push_back({ 4,4 });
 			data.push_back({ 6,3 });
 			data.push_back({ 7,3 });
 			data.push_back({ 5,3 });
-			data.push_back({ 5,4 });
-			data.push_back({ 8,4 });
-			data.push_back({ 9,5 });
-			data.push_back({ 10,1 });
-			data.push_back({ 12,1 });
-			data.push_back({ 11,1 });
-			data.push_back({ 13,1 });
+			data.push_back({ 5,5 });
+			data.push_back({ 8,5 });
+			data.push_back({ 9,4 });
+			data.push_back({ 10,6 });
+			data.push_back({ 12,10 });
+			data.push_back({ 11,10 });
+			data.push_back({ 13,10 });
+			data.push_back({ 4,6 });
+			data.push_back({ 4,10 });
+			data.push_back({ 2,2 });
+			data.push_back({ 2,6 });
+			data.push_back({ 2,10 });
 
 			Assert::AreEqual(true, (pkb.getAllStatementModifiesVariables() == data));
 		}
@@ -383,20 +409,22 @@ namespace PKBDEParserIntegrationTesting
 		{
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,1 });
-			data.push_back({ 1,10 });
-			data.push_back({ 1,11 });
-			data.push_back({ 1,12 });
-			data.push_back({ 1,13 });
 			data.push_back({ 2,2 });
 			data.push_back({ 2,3 });
 			data.push_back({ 3,5 });
 			data.push_back({ 3,6 });
 			data.push_back({ 3,7 });
-			data.push_back({ 4,2 });
-			data.push_back({ 4,4 });
-			data.push_back({ 4,5 });
-			data.push_back({ 4,8 });
-			data.push_back({ 5,9 });
+			data.push_back({ 4,9 });
+			data.push_back({ 5,5 });
+			data.push_back({ 5,8 });
+			data.push_back({ 6,2 });
+			data.push_back({ 6,4 });
+			data.push_back({ 6,10 });
+			data.push_back({ 10,2 });
+			data.push_back({ 10,4 });
+			data.push_back({ 10,11 });
+			data.push_back({ 10,12 });
+			data.push_back({ 10,13 });
 
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesStatements() == data));
 		}
@@ -409,7 +437,10 @@ namespace PKBDEParserIntegrationTesting
 			data.push_back({ 1,3 });
 			data.push_back({ 1,4 });
 			data.push_back({ 1,5 });
-			data.push_back({ 2,1 });
+			data.push_back({ 1,6 });
+			data.push_back({ 1,10 });
+			data.push_back({ 2,6 });
+			data.push_back({ 2,10 });
 			Assert::AreEqual(true, (pkb.getAllProcedureModifiesVariables() == data));
 		}
 
@@ -417,11 +448,14 @@ namespace PKBDEParserIntegrationTesting
 		{
 			std::vector<std::vector<int>> data;
 			data.push_back({ 1,1 });
-			data.push_back({ 1,2 });
 			data.push_back({ 2,1 });
 			data.push_back({ 3,1 });
 			data.push_back({ 4,1 });
 			data.push_back({ 5,1 });
+			data.push_back({ 6,1 });
+			data.push_back({ 6,2 });
+			data.push_back({ 10,1 });
+			data.push_back({ 10,2 });
 			Assert::AreEqual(true, (pkb.getAllVariableModifiesProcedures() == data));
 		}
 

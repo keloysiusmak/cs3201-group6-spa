@@ -285,20 +285,24 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 		for (int i = 0; i < sorted.size(); i++) {
 			currProcedure = sorted[i];
 			std::vector<std::vector<int>> callStmtsPre = pkb.getFromTable(CALLS_TABLE, currProcedure);
-			std::vector<int> callStmts;
-			if (callStmtsPre.size() > 0) {
+			std::vector<int> callStmts = {};
+			callStmts.clear();
+			if (callStmtsPre.size() > 1 && callStmtsPre[1].size() > 0) {
 				callStmts = callStmtsPre[1];
 			}
-			std::vector<std::vector<int>> procUsesPre = pkb.getFromTable(PROC_INFO_TABLE, currProcedure);
 			std::vector<int> procUses;
-			if (procUsesPre.size() > 0) {
-				procUses = pkb.getFromTable(PROC_INFO_TABLE, currProcedure)[1];
-			}
-
-			std::vector<std::vector<int>> procModifiesPre = pkb.getFromTable(PROC_INFO_TABLE, currProcedure);
 			std::vector<int> procModifies;
-			if (procModifiesPre.size() > 0) {
-				procModifies = pkb.getFromTable(PROC_INFO_TABLE, currProcedure)[2];
+
+			if (callStmts.size() > 0) {
+				std::vector<std::vector<int>> procUsesPre = pkb.getFromTable(PROC_INFO_TABLE, currProcedure);
+				if (procUsesPre.size() > 0) {
+					procUses = pkb.getFromTable(PROC_INFO_TABLE, currProcedure)[1];
+				}
+
+				std::vector<std::vector<int>> procModifiesPre = pkb.getFromTable(PROC_INFO_TABLE, currProcedure);
+				if (procModifiesPre.size() > 0) {
+					procModifies = pkb.getFromTable(PROC_INFO_TABLE, currProcedure)[2];
+				}
 			}
 
 			std::vector<int> stmts;
