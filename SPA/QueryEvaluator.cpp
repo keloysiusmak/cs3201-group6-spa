@@ -53,6 +53,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 		for (Clause clause : queryObject.getClauses()) {
 			ClauseResults clauseResults;
 			evaluateClause(clause, clauseResults);
+			filterStmts(clauseResults);
 
 			if (!clauseResults.hasResults()) return{};
 			if (clauseResults.numParamsInResult() != 0) {
@@ -64,6 +65,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 		for (Pattern clause : queryObject.getPatterns()) {
 			ClauseResults patternResults;
 			evaluatePattern(clause, patternResults);
+			filterStmts(patternResults);
 
 			if (!patternResults.hasResults()) return{};
 			if (patternResults.numParamsInResult() != 0) {
@@ -121,7 +123,6 @@ void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResul
 void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResults) {
 	Param leftParam = clause.getFirstParam();
 	Param rightParam = clause.getSecondParam();
-
 
 	if (Utils::isSynonym(leftParam.type)) {
 		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
@@ -439,6 +440,58 @@ void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternR
 	patternResults.setResults(results);
 };
 
+void QueryEvaluator::filterStmts(ClauseResults &clauseResults) {
+	if (clauseResults.numParamsInResult() == 2) {
+		set<int> leftParamSet = getParamSet(clauseResults.tableParams[0]);
+		set<int> rightParamSet = getParamSet(clauseResults.tableParams[1]);
+
+		vector<vector<int>> newTable;
+		for (vector<int> tableRow : clauseResults.results) {
+			if (leftParamSet.find(tableRow[0]) != leftParamSet.end() &&
+				rightParamSet.find(tableRow[1]) != rightParamSet.end()) {
+				newTable.push_back(tableRow);
+			}
+		}
+
+		clauseResults.setResults(newTable);
+
+	} else if (clauseResults.numParamsInResult() == 1) {
+		set<int> paramSet = getParamSet(clauseResults.tableParams[0]);
+
+		vector<vector<int>> newTable;
+		for (vector<int> tableRow : clauseResults.results) {
+			if (paramSet.find(tableRow[0]) != paramSet.end()) {
+				newTable.push_back(tableRow);
+			}
+		}
+
+		clauseResults.setResults(newTable);
+	}
+	else { ; }
+};
+
+/* Get param type as a set of values */
+set<int> QueryEvaluator::getParamSet(Param p) {
+	ParamType pType = p.type;
+	vector<vector<int>> results;
+	set<int> paramSet;
+
+	if (pType == VARIABLE) { results = pkb.getAllVariables(); }
+	else if (pType == STMT || pType == PROG_LINE) { results = pkb.getAllStatements(); }
+	else if (pType == ASSIGN) { results = pkb.getAllStatementsWithType(1); }
+	else if (pType == WHILE) { results = pkb.getAllStatementsWithType(2); }
+	else if (pType == IF) { results = pkb.getAllStatementsWithType(3); }
+	else if (pType == PROCEDURE) { results = pkb.getAllProcedures(); }
+	else if (pType == CONSTANT) { results = pkb.getAllConstants();  }
+	else { ; }
+	
+	for (vector<int> values : results) {
+		paramSet.insert(values[0]);
+	}
+
+	return paramSet;
+}
+
 /* Filters table for with assignment */
 void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable) {
 
@@ -554,7 +607,7 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 	set<string> paramValueSet;
 	list<string> paramValues;
 
-	if (paramInt > -1) {
+	if (paramInt > -1) { // Selected Param is in table
 		/* Store values into set */
 		for (vector<int> tableRow : iTable.resultsTable) {
 			string paramVal;
@@ -571,27 +624,18 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 			paramValues.push_back(value);
 		}
 		return paramValues;
-	} else {
-		return getAllParamsOfType(p.type);
+	} else { // Selected param not in table
+		return getAllParamsOfType(p);
 	}
-
 };
 
 /* Returns the values of given param */
-list<string> QueryEvaluator::getAllParamsOfType(ParamType pType) {
-	vector<vector<int>> returnedAllParams;
+list<string> QueryEvaluator::getAllParamsOfType(Param p) {
+	set<int> paramSet = getParamSet(p);
+	ParamType pType = p.type;
 	list<string> allParams;
 
-	if (pType == VARIABLE) { returnedAllParams = pkb.getAllVariables(); }
-	else if (pType == STMT || pType == PROG_LINE) { returnedAllParams = pkb.getAllStatements(); }
-	else if (pType == ASSIGN) { returnedAllParams = pkb.getAllStatementsWithType(1); }
-	else if (pType == WHILE) { returnedAllParams = pkb.getAllStatementsWithType(2); }
-	else if (pType == IF) { returnedAllParams = pkb.getAllStatementsWithType(3); }
-	else if (pType == PROCEDURE) { returnedAllParams = pkb.getAllProcedures(); }
-	else { ; }
-
-	for (vector<int> valueArray : returnedAllParams) {
-		int value = valueArray[0];
+	for (int value : paramSet) {
 		string valueString;
 		if (pType == VARIABLE) { valueString = pkb.getVariableName(value); }
 		else if (pType == PROCEDURE) { valueString = pkb.getVariableName(value); }
