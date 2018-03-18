@@ -46,16 +46,16 @@ list<string> QueryEvaluator::evaluateQuery() {
 	if (isValidQuery()) {
 
 		vector<Param> selectParams = queryObject.getSelectStatements();
-
 		IntermediateTable iTable;
 
 		/* Evaluation of clauses */
 		for (Clause clause : queryObject.getClauses()) {
 			ClauseResults clauseResults;
 			evaluateClause(clause, clauseResults);
+			if (!clauseResults.hasResults()) return{};
+			clauseResults.removeALLSyns(); // Sanitization
 			filterStmts(clauseResults);
 
-			if (!clauseResults.hasResults()) return{};
 			if (clauseResults.numParamsInResult() != 0) {
 				EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
 			}
@@ -65,9 +65,10 @@ list<string> QueryEvaluator::evaluateQuery() {
 		for (Pattern clause : queryObject.getPatterns()) {
 			ClauseResults patternResults;
 			evaluatePattern(clause, patternResults);
+			if (!patternResults.hasResults()) return{};
+			patternResults.removeALLSyns(); // Sanitization
 			filterStmts(patternResults);
 
-			if (!patternResults.hasResults()) return{};
 			if (patternResults.numParamsInResult() != 0) {
 				EvaluatorHelper::mergeClauseTable(patternResults, iTable);
 			}
@@ -439,6 +440,7 @@ void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternR
 	vector<vector<int>> results = pkb.getStatementsWithPattern(pattern);
 	patternResults.setResults(results);
 };
+
 
 void QueryEvaluator::filterStmts(ClauseResults &clauseResults) {
 	if (clauseResults.numParamsInResult() == 2) {
