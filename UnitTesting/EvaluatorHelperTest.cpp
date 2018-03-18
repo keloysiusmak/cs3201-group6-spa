@@ -8,9 +8,9 @@ using namespace std;
 
 namespace EvaluatorHelperTest {
 
-	TEST_CLASS(EvaluatorTest) {
+	TEST_CLASS(EvaluatorHelperTest) {
 
-		TEST_METHOD(ParamInTableTest) {
+		TEST_METHOD(EvaluatorHelperParamInTableTest) {
 			IntermediateTable table;
 
 			/* Generate params */
@@ -38,7 +38,7 @@ namespace EvaluatorHelperTest {
 			Assert::AreEqual(false, EvaluatorHelper::clauseParamsInTable(clauseWithNoParamInTable, table));
 		}
 
-		TEST_METHOD(AddClauseParamToTableTest) {
+		TEST_METHOD(EvaluatorHelperAddClauseParamToTableTest) {
 			IntermediateTable table;
 
 			/* Generate params */
@@ -84,7 +84,7 @@ namespace EvaluatorHelperTest {
 			Assert::AreEqual(true, EvaluatorHelper::getParamInt(invalidParamToBeSelected, table) == -1);
 		}
 
-		TEST_METHOD(MergeWithoutOverlapOneParamTest) {
+		TEST_METHOD(EvaluatorHelperMergeWithoutOverlapOneParamTest) {
 			/* Instantiate table*/
 			IntermediateTable table;
 
@@ -142,7 +142,7 @@ namespace EvaluatorHelperTest {
 			}
 		}
 
-		TEST_METHOD(MergeWithoutOverlapTwoParamsTest) {
+		TEST_METHOD(EvaluatorHelperMergeWithoutOverlapTwoParamsTest) {
 			/* Instantiate table*/
 			IntermediateTable table;
 
@@ -199,6 +199,68 @@ namespace EvaluatorHelperTest {
 			for (size_t k = 0; k < updatedParams.size(); k++) {
 				Assert::AreEqual(true, Utils::isSameParam(table.tableParams[k], updatedParams[k]));
 			}
+		}
+
+		TEST_METHOD(EvaluatorHelperMergeWithOverlapOneParamTest) {
+			/* Instantiate table*/
+			IntermediateTable table;
+
+			/* Generate params and initial table values */
+			vector<Param> params;
+			Param p1, p2, p3, p4;
+			p1 = createParam(ASSIGN, "a1");
+			p2 = createParam(ASSIGN, "a2");
+			p3 = createParam(VARIABLE, "v");
+			p4 = createParam(STMT, "s");
+			params.push_back(p1); params.push_back(p2); params.push_back(p3); params.push_back(p4);
+
+			vector<vector<int>> resultsBeforeMerge = {
+				{1, 2, 3, 4},
+				{2, 3, 4, 5},
+				{3, 4, 5, 6},
+				{4, 5, 6, 7}
+			};
+
+			table.setTableParams(params);
+			table.setResultsTable(resultsBeforeMerge);
+
+			/* ClauseResults Instantiation */
+			ClauseResults clauseResults = createClauseResult(Follows, STMT, "a2", STMT, "s3");
+			vector<vector<int>> clauseResultsTable = { {2, 3}, {3, 4} };
+			clauseResults.setResults(clauseResultsTable);
+
+			/* Final params and results table after merge */
+			vector<vector<int>> resultsAfterMerge = {
+				{1, 2, 3, 4, 3},
+				{2, 3, 4, 5, 4},
+			};
+			Param p5 = createParam(STMT, "s3");
+			vector<Param> updatedParams;
+			updatedParams.push_back(p1); updatedParams.push_back(p2); updatedParams.push_back(p3);
+			updatedParams.push_back(p4); updatedParams.push_back(p5);
+
+			/* Merge */
+			EvaluatorHelper::mergeWithOverlap(clauseResults, table);
+
+			for (size_t i = 0; i < resultsAfterMerge.size(); i++) {
+				for (size_t j = 0; j < resultsAfterMerge[i].size(); j++) {
+
+					Logger::WriteMessage(to_string(table.resultsTable[i][j]).c_str());
+					Logger::WriteMessage(to_string(resultsAfterMerge[i][j]).c_str());
+
+					Logger::WriteMessage(to_string(table.resultsTable[i][j] == resultsAfterMerge[i][j]).c_str());
+
+					Assert::AreEqual(true, table.resultsTable[i][j] == resultsAfterMerge[i][j]);
+				}
+			}
+
+			for (size_t k = 0; k < updatedParams.size(); k++) {
+				Logger::WriteMessage(to_string(Utils::isSameParam(table.tableParams[k], updatedParams[k])).c_str());
+				Assert::AreEqual(true, Utils::isSameParam(table.tableParams[k], updatedParams[k]));
+			}
+		}
+
+		TEST_METHOD(EvaluatorHelperMergeWithOverlapTwoParamTest) {
 		}
 
 		/* Randomly generates x rows of values for given params */

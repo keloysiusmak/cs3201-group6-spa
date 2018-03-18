@@ -4,14 +4,18 @@ using namespace std;
 void ClauseResults::instantiateClause(Clause clause) {
 	lhs = clause.getFirstParam();
 	rhs = clause.getSecondParam();
-	if (Utils::isSynonym(lhs.type)) { tableParams.push_back(lhs); }
-	if (Utils::isSynonym(rhs.type)) { tableParams.push_back(rhs); }
+	if (Utils::isSynonym(lhs.type)) tableParams.push_back(lhs);
+	if (Utils::isSynonym(rhs.type)) tableParams.push_back(rhs);
 };
 
 void ClauseResults::instantiatePattern(Pattern pattern) {
 	entRef = pattern.getEntity();
 	lhs = pattern.getLeftParam();
 	rhs = pattern.getRightParam();
+	tableParams.push_back(entRef);
+	if (Utils::isSynonym(lhs.type) && lhs.type != ALL) {
+		tableParams.push_back(lhs);
+	}
 };
 
 void ClauseResults::setResults(vector<vector<int>> &pkbResults) {

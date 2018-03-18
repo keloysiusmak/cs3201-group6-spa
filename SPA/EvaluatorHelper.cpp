@@ -17,16 +17,22 @@ void EvaluatorHelper::mergeWithoutOverlap(ClauseResults &clauseResults, Intermed
 	/* Add table params */
 	addClauseParamToTable(clauseResults, iTable);
 
-	/* Update table */
 	vector<vector<int>> newTable;
-	for (vector<int> tableRow : iTable.resultsTable) {
+	if (iTable.resultsTable.size() == 0) { // Table has no values
 		for (vector<int> resultsRow : clauseResults.results) {
-			vector<int> newTableRow = tableRow;
-			newTableRow.push_back(resultsRow[0]);
-			if (clauseResults.numParamsInResult() == 2) { // Two syns
-				newTableRow.push_back(resultsRow[1]);
+			newTable.push_back(resultsRow);
+		}
+	}
+	else { // Update table for existing values
+		for (vector<int> tableRow : iTable.resultsTable) {
+			for (vector<int> resultsRow : clauseResults.results) {
+				vector<int> newTableRow = tableRow;
+				newTableRow.push_back(resultsRow[0]);
+				if (clauseResults.numParamsInResult() == 2) { // Two syns
+					newTableRow.push_back(resultsRow[1]);
+				}
+				newTable.push_back(newTableRow);
 			}
-			newTable.push_back(newTableRow);
 		}
 	}
 	iTable.setResultsTable(newTable);
@@ -36,6 +42,7 @@ void EvaluatorHelper::mergeWithoutOverlap(ClauseResults &clauseResults, Intermed
 Possible optimization: Hash results / Sort merge tables
 */
 void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, IntermediateTable &iTable) {
+
 	int firstParamInt = getParamInt(clauseResults.tableParams[0], iTable);
 	if (clauseResults.numParamsInResult() == 2) {
 		int secondParamInt = getParamInt(clauseResults.tableParams[1], iTable);
@@ -43,35 +50,43 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 			
 		for (vector<int> tableRow : iTable.resultsTable) {
 			for (vector<int> resultRow : clauseResults.results) {
-
-				if (firstParamInt >= 0 && secondParamInt >= 0) { // Both params in table
-					if (resultRow[0] == tableRow[firstParamInt] &&
-						resultRow[1] == tableRow[secondParamInt]) {
+				int resultFirstParamValue = resultRow[0];
+				int resultSecondParamValue = resultRow[1];
+				if (firstParamInt > -1 && secondParamInt > -1) { // Both params in table
+					if (resultFirstParamValue == tableRow[firstParamInt] &&
+						resultSecondParamValue == tableRow[secondParamInt]) {
 						newTable.push_back(tableRow);
 					}
-				} else if (firstParamInt >= 0) { // First param in table
-					if (resultRow[0] == tableRow[firstParamInt]) {
+				} else if (firstParamInt > -1) { // First param in table
+					if (resultFirstParamValue == tableRow[firstParamInt]) {
+						tableRow.push_back(resultSecondParamValue); // Add in second param value
 						newTable.push_back(tableRow);
 					}
 				} else { // Second param in table
-					if (resultRow[1] == tableRow[secondParamInt]) {
+					if (resultSecondParamValue == tableRow[secondParamInt]) {
+						tableRow.push_back(resultFirstParamValue); // Add in first param value
 						newTable.push_back(tableRow);
 					}
 				}
 			}
 		}
+		iTable.setResultsTable(newTable);
 	}
 	else { // Only 1 synonym
 		vector<vector<int>> newTable;
 		for (vector<int> tableRow : iTable.resultsTable) {
 			for (vector<int> resultRow : clauseResults.results) {
-				if (resultRow[0] == tableRow[firstParamInt]) {
+				int resultsParamValue = resultRow[0];
+				if (resultsParamValue == tableRow[firstParamInt]) {
 					newTable.push_back(tableRow);
 				}
 			}
 		}
 		iTable.setResultsTable(newTable);
 	}
+
+	/* Add table params */
+	addClauseParamToTable(clauseResults, iTable);
 };
 
 /* Returns true if param in clause result is in table */

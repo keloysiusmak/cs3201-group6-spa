@@ -36,7 +36,7 @@ bool QueryEvaluator::isValidQuery() {
 
 void QueryEvaluator::setInvalidQuery(string message) {
 	validQuery = false;
-	invalidQueryMessage.push_back(message);
+	invalidQueryMessage = { message };
 };
 
 /*
@@ -55,7 +55,9 @@ list<string> QueryEvaluator::evaluateQuery() {
 			evaluateClause(clause, clauseResults);
 
 			if (!clauseResults.hasResults()) return{};
-			if (clauseResults.numParamsInResult() != 0) EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
+			if (clauseResults.numParamsInResult() != 0) {
+				EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
+			}
 		}
 
 		/* Evaluation of patterns */
@@ -64,7 +66,9 @@ list<string> QueryEvaluator::evaluateQuery() {
 			evaluatePattern(clause, patternResults);
 
 			if (!patternResults.hasResults()) return{};
-			if (patternResults.numParamsInResult() != 0) EvaluatorHelper::mergeClauseTable(patternResults, iTable);
+			if (patternResults.numParamsInResult() != 0) {
+				EvaluatorHelper::mergeClauseTable(patternResults, iTable);
+			}
 		}
 
 		/* Evaluation of with clauses */
@@ -540,16 +544,23 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 
 list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTable) {
 	int paramInt = EvaluatorHelper::getParamInt(p, iTable);
+	set<string> paramValueSet;
 	list<string> paramValues;
+
+	/* Store values into set */
 	for (vector<int> tableRow : iTable.resultsTable) {
 		string paramVal;
 		if (p.type == VARIABLE) {
 			paramVal = pkb.getVariableName(tableRow[paramInt]);
-		}
-		else {
+		} else {
 			paramVal = to_string(tableRow[paramInt]);
 		}
-		paramValues.push_back(paramVal);
+		paramValueSet.insert(paramVal);
+	}
+
+	/* Transfer set values into list */
+	for (string value : paramValueSet) {
+		paramValues.push_back(value);
 	}
 	return paramValues;
 };
