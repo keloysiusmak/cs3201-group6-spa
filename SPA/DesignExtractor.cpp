@@ -12,6 +12,7 @@ bool DesignExtractor::extract(PKB &pkb) {
 	extractNext(pkb);
 	extractNextStar(pkb);
 	extractCallsInverse(pkb);
+	extractCallStatements(pkb);
 	extractCallsStar(pkb);
 	extractUsesModifies(pkb);
 	return true;
@@ -48,6 +49,10 @@ void DesignExtractor::processStatementList(PKB &pkb, int stmtListId, int prevWhi
 				if (nextStmtPush != 0) {
 					pkb.insertToTable(NEXT_TABLE, stmts[1][i], { { nextStmtPush } });
 					pkb.insertToTable(NEXT_INVERSE_TABLE, nextStmtPush, { { stmts[1][i] } });
+				}
+				if (nextStmt == 0 && nextStmtPush == 0 && prevWhile != 0) {
+					pkb.insertToTable(NEXT_TABLE, stmts[1][i], { { prevWhile } });
+					pkb.insertToTable(NEXT_INVERSE_TABLE, prevWhile, { { stmts[1][i] } });
 				}
 				processStatementList(pkb, thisStmt[0][1], stmts[1][i], stmts[1][i], 0);
 			}
@@ -166,6 +171,24 @@ void DesignExtractor::extractCallsInverse(PKB &pkb) {
 			if (data.size() > 0) {
 				for (int i = 0; i < data[0].size(); i++) {
 					pkb.insertToTable(CALLS_INVERSE_TABLE, data[0][i], { { currProcedure} });
+				}
+			}
+			currProcedure++;
+		}
+	}
+}
+
+void DesignExtractor::extractCallStatements(PKB &pkb) {
+
+	std::vector<std::vector<int>> data = pkb.getAllProcedures();
+	if (data.size() > 0) {
+		int procCount = data.size();
+		int currProcedure = 1;
+		while (currProcedure <= procCount) {
+			std::vector<std::vector<int>> data = pkb.getFromTable(CALLS_TABLE, currProcedure);
+			if (data.size() > 0) {
+				for (int i = 0; i < data[1].size(); i++) {
+					pkb.insertToTable(CALL_STATEMENT_TABLE, data[1][i], { { currProcedure } });
 				}
 			}
 			currProcedure++;
