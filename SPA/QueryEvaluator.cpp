@@ -427,8 +427,8 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 
 		}
 		else { // (concrete, conrete)
-			// bool result = pkb.checkCall(stoi(leftParam.value), stoi(rightParam.value));
-			// clauseResults.setValid(result);
+			bool result = pkb.checkCalls(stoi(leftParam.value), stoi(rightParam.value));
+			clauseResults.setValid(result);
 		}
 	}
 }
