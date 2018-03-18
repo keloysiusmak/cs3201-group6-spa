@@ -461,6 +461,11 @@ public:
 
 		string invalidArg2Empty = "";
 		string invalidArg2ExpressSpec = "_x_"; //without ""
+		string invalidExpr1 = "\"-1+x\"";
+		string invalidExpr2 = "\"(-x+y)*z\"";
+		string invalidExpr3 = "\"(x+y)*\"";
+		string invalidExpr4 = "\"z(x+y)\"";
+		string invalidExpr5 = "\"(x+y)z\"";
 
 		Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1Empty, arg2));
 		Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, invalidArg1EntRef1, arg2));
@@ -469,7 +474,11 @@ public:
 
 		Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidArg2Empty));
 		Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidArg2ExpressSpec));
-
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidExpr1));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidExpr2));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidExpr3));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidExpr4));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, invalidExpr5));
 	}
 
 	TEST_METHOD(PreprocessorParseWithClause) {

@@ -1229,6 +1229,10 @@ string Preprocessor::infixToPostFix(string infix) {
 	stack<char> operators;
 	bool isMathOperatorRepeated = false;
 	bool isOperandRepeated = false;
+	bool isOperatorAtTheStart = false;
+	bool isOperatorAtTheEnd = false;
+	bool isOperandBesideStartBracket = false;
+	bool isCloseBracketBesideOperand = false;
 	string postfix;
 
 	for (size_t i = 0; i < infixArr.size(); i++) {
@@ -1237,7 +1241,16 @@ string Preprocessor::infixToPostFix(string infix) {
 			infixArr.at(i).at(0) == SYMBOL_MINUS ||
 			infixArr.at(i).at(0) == SYMBOL_MULTIPLICATION) {
 
-			if (isMathOperatorRepeated) {
+			//At the start, it cannot be an operator
+			if (i == 0) {
+				isOperatorAtTheStart = true;
+			}
+
+			if (i == (infixArr.size() - 1)) {
+				isOperatorAtTheEnd = true;
+			}
+
+			if (isMathOperatorRepeated || isOperatorAtTheStart || isOperatorAtTheEnd) {
 				postfix = INVALID_EXPRESSION;
 
 				/*
@@ -1261,10 +1274,14 @@ string Preprocessor::infixToPostFix(string infix) {
 			operators.push(infixArr.at(i).at(0));
 			isMathOperatorRepeated = true;
 			isOperandRepeated = false;
+			isOperatorAtTheStart = false;
+			isOperatorAtTheEnd = true;
+			isOperandBesideStartBracket = false;
+			isCloseBracketBesideOperand = false;
 		}
 		//checking operand
 		else if (Utils::isInteger(infixArr.at(i)) || isValidSynonym(infixArr.at(i))) {
-			if (isOperandRepeated) {
+			if (isOperandRepeated || isCloseBracketBesideOperand) {
 				postfix = INVALID_EXPRESSION;
 
 				/*
@@ -1282,12 +1299,36 @@ string Preprocessor::infixToPostFix(string infix) {
 			postfix += SYMBOL_DIVIDER;
 			isMathOperatorRepeated = false;
 			isOperandRepeated = true;
+			isOperatorAtTheStart = false;
+			isOperatorAtTheEnd = false;
+			isOperandBesideStartBracket = true;
+			isCloseBracketBesideOperand = false;
 		}
 		//Checking open bracket
 		else if (infixArr.at(i).at(0) == SYMBOL_OPEN_BRACKET) {
+
+			if (isOperandBesideStartBracket) {
+				postfix = INVALID_EXPRESSION;
+
+				/*
+				After this for loop there is while loop
+				which is checking rest of the char and add it with postfix string.
+				So this pushed char should be pop out
+				because infix espression is wrong.
+				*/
+				while (!operators.empty()) {
+					operators.pop();
+				}
+				break;
+			}
+
 			operators.push(infixArr.at(i).at(0));
 			isMathOperatorRepeated = false;
 			isOperandRepeated = false;
+			isOperatorAtTheEnd = false;
+			isOperatorAtTheStart = true;
+			isOperandBesideStartBracket = false;
+			isCloseBracketBesideOperand = false;
 		}
 		//Checking closing bracket
 		else if (infixArr.at(i).at(0) == SYMBOL_CLOSE_BRACKET) {
@@ -1309,9 +1350,30 @@ string Preprocessor::infixToPostFix(string infix) {
 			else {
 				operators.pop();
 			}
+
+			//Check if operator is at the end before close bracket
+			if (isOperatorAtTheEnd) {
+				postfix = INVALID_EXPRESSION;
+
+				/*
+				After this for loop there is while loop
+				which is checking rest of the char and add it with postfix string.
+				So this pushed char should be pop out
+				because infix espression is wrong.
+				*/
+				while (!operators.empty()) {
+					operators.pop();
+				}
+				break;
+			}
+
 			//popping the opening bracket
 			isMathOperatorRepeated = false;
 			isOperandRepeated = false;
+			isOperatorAtTheStart = false;
+			isOperatorAtTheEnd = false;
+			isOperandBesideStartBracket = false;
+			isCloseBracketBesideOperand = true;
 		}
 
 		//checking that infix expression has invalid char
