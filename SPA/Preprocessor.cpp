@@ -38,6 +38,7 @@ const string IDENT_WORD = "ident";
 const string CONSTANT_WORD = "constant";
 const string VAR_NAME_WORD = "var_name";
 const string INVALID_EXPRESSION = "Invalid Expression";
+const string FALSE_WORD = "false";
 
 const vector<string> CLAUSES_WITH_STAR = { "Calls*", "Parent*", "Follows*", "Next*", "Affects*" };
 const vector<string> CLAUSES_WITH_T = { "CallsT", "ParentT", "FollowsT", "NextT", "AffectsT" };
@@ -112,13 +113,15 @@ void Preprocessor::preprocessQuery(string query) {
 	//if queryIndex is 0, means no declarations at all
 	if (queryIndex <= 0) {
 
-		//Check if select statement requires return BOOLEAN
-		if (checkBoolStmt(q)) {
-			(*_evaluator).setInvalidQuery("false");
-		}
-		else {
-			// insert evaluator invalid query api here
-			(*_evaluator).setInvalidQuery("Invalid Query");
+		if (!isValidQuery(q)) {
+			//Check if select statement requires return BOOLEAN
+			if (checkBoolStmt(q)) {
+				(*_evaluator).setInvalidQuery(FALSE_WORD);
+			}
+			else {
+				// insert evaluator invalid query api here
+				(*_evaluator).setInvalidQuery(EMPTY_STRING);
+			}
 		}
 		return;
 	}
@@ -129,11 +132,11 @@ void Preprocessor::preprocessQuery(string query) {
 		if (!validateDeclaration) {
 			//Check if select statement requires return BOOLEAN
 			if (checkBoolStmt(q)) {
-				(*_evaluator).setInvalidQuery("false");
+				(*_evaluator).setInvalidQuery(FALSE_WORD);
 			}
 			else {
 				// insert evaluator invalid query api here
-				(*_evaluator).setInvalidQuery("Invalid Query");
+				(*_evaluator).setInvalidQuery(EMPTY_STRING);
 			}
 			return;
 		}
@@ -147,11 +150,11 @@ void Preprocessor::preprocessQuery(string query) {
 	if (!validQuery) {
 		//Check if select statement requires return BOOLEAN
 		if (checkBoolStmt(q)) {
-			(*_evaluator).setInvalidQuery("false");
+			(*_evaluator).setInvalidQuery(FALSE_WORD);
 		}
 		else {
 			// insert evaluator invalid query api here
-			(*_evaluator).setInvalidQuery("Invalid Query");
+			(*_evaluator).setInvalidQuery(EMPTY_STRING);
 		}
 	}
 };
@@ -1445,7 +1448,7 @@ bool Preprocessor::checkBoolStmt(string query) {
 
 	for (size_t i = 0; i < queryArr.size(); i++) {
 		if (queryArr.at(i) == SELECT_WORD) {
-			if (i + 1 < queryArr.size() && queryArr.at(i + 1).compare(BOOLEAN_WORD)) {
+			if (i + 1 < queryArr.size() && queryArr.at(i + 1).compare(BOOLEAN_WORD) == 0) {
 				return true;
 			}
 		}
