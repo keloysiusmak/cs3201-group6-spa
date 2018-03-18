@@ -35,7 +35,8 @@ bool QueryEvaluator::isValidQuery() {
 
 void QueryEvaluator::setInvalidQuery(string message) {
 	validQuery = false;
-	invalidQueryMessage = { message };
+	if (message != "") invalidQueryMessage = { message } ;
+	else invalidQueryMessage = {};
 };
 
 /*
@@ -45,16 +46,16 @@ list<string> QueryEvaluator::evaluateQuery() {
 	if (isValidQuery()) {
 
 		vector<Param> selectParams = queryObject.getSelectStatements();
-
 		IntermediateTable iTable;
 
 		/* Evaluation of clauses */
 		for (Clause clause : queryObject.getClauses()) {
 			ClauseResults clauseResults;
 			evaluateClause(clause, clauseResults);
+			if (!clauseResults.hasResults()) return{};
+			clauseResults.removeALLSyns(); // Sanitization
 			filterStmts(clauseResults);
 
-			if (!clauseResults.hasResults()) return{};
 			if (clauseResults.numParamsInResult() != 0) {
 				EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
 			}
@@ -64,9 +65,10 @@ list<string> QueryEvaluator::evaluateQuery() {
 		for (Pattern clause : queryObject.getPatterns()) {
 			ClauseResults patternResults;
 			evaluatePattern(clause, patternResults);
+			if (!patternResults.hasResults()) return{};
+			patternResults.removeALLSyns(); // Sanitization
 			filterStmts(patternResults);
 
-			if (!patternResults.hasResults()) return{};
 			if (patternResults.numParamsInResult() != 0) {
 				EvaluatorHelper::mergeClauseTable(patternResults, iTable);
 			}
@@ -439,6 +441,7 @@ void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternR
 	patternResults.setResults(results);
 };
 
+
 void QueryEvaluator::filterStmts(ClauseResults &clauseResults) {
 	if (clauseResults.numParamsInResult() == 2) {
 		set<int> leftParamSet = getParamSet(clauseResults.tableParams[0]);
@@ -578,8 +581,12 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 	if (selectedParams.size() == 1) {
 		Param selected = selectedParams[0];
 		if (selected.type == BOOLEAN) { // Boolean
-			if (iTable.resultsTable.size() > 0) return{ "true" };
-			else return{ "false" };
+			if (iTable.resultsTable.size() > 0 || // Table not empty
+				iTable.tableParams.size() == 0) { // No statement to evaluate
+				return{ "true" };
+			} else {
+				return{ "false" };
+			}
 		}
 		else { // Synonym
 			return paramToStringList(selected, iTable);

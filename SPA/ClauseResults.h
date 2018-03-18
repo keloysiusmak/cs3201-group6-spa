@@ -26,11 +26,16 @@ class ClauseResults {
   // Setter methods
   void ClauseResults::setResults(vector<vector<int>> &pkbResults);
   void ClauseResults::setValid(bool validity);
+  void ClauseResults::clearResults();
+  void ClauseResults::clearParamsTable();
 
   // Getter methods
   bool ClauseResults::isValid();
   bool ClauseResults::hasResults();
   int ClauseResults::numParamsInResult();
+
+  // Helpers
+  void ClauseResults::removeALLSyns();
   
 };
 
