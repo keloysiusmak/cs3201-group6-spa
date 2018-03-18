@@ -57,6 +57,9 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 	case 14:
 		tableValuesCount = 1;
 		break;
+	case 15:
+		tableValuesCount = 1;
+		break;
 	default:
 		return false;
 	}
@@ -147,7 +150,7 @@ std::vector<string> PKB::getFromNameTable(int table_id, int key_id)
 }
 
 int PKB::getProcedureId(std::string proc_name) {
-	unordered_map<int, std::vector<string>> table = nameTables[PROC_TABLE - 15];
+	unordered_map<int, std::vector<string>> table = nameTables[PROC_TABLE - PATTERN_TABLE];
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		if (it->second[0] == proc_name) {
 			return it->first;
@@ -158,7 +161,7 @@ int PKB::getProcedureId(std::string proc_name) {
 }
 
 int PKB::getVariableId(std::string var_name) {
-	unordered_map<int, std::vector<string>> table = nameTables[VAR_TABLE - 15];
+	unordered_map<int, std::vector<string>> table = nameTables[VAR_TABLE - PATTERN_TABLE];
 	for (auto it = table.begin(); it != table.end(); ++it) {
 		if (it->second[0] == var_name) {
 			return it->first;
@@ -1129,6 +1132,49 @@ std::vector<std::vector<int>> PKB::getAllCallsStar() {
 		}
 	}
 
+	return output;
+}
+
+/* Call Statement Operations */
+std::vector<std::vector<int>> PKB::getCallStatementsCallingProcedure(int calledProc) {
+	std::vector<std::vector<int>> res = PKB::getFromTable(CALLS_TABLE, calledProc);
+	std::vector<std::vector<int>> output;
+	if (res.size() > 1) {
+		for (int i = 0; i < res[1].size(); i++) {
+			output.push_back({ res[1][i] });
+		}
+	}
+	return output;
+}
+std::vector<std::vector<int>> PKB::getProcedureCalledByCallStatement(int callStmt) {
+	std::vector<std::vector<int>> res = PKB::getFromTable(CALL_STATEMENT_TABLE, callStmt);
+	std::vector<std::vector<int>> output;
+	if (res.size() > 0) {
+		for (int i = 0; i < res[0].size(); i++) {
+			output.push_back({ res[0][i] });
+		}
+	}
+	return output;
+}
+std::vector<std::vector<int>> PKB::getAllCallStatementsCallingProcedure() {
+	std::vector<std::vector<int>> output;
+	std::vector<std::vector<int>> procs = PKB::getAllProcedures();
+	for (int j = 0; j < procs.size(); j++) {
+		std::vector<std::vector<int>> res = PKB::getFromTable(CALLS_TABLE, procs[j][0]);
+		if (res.size() > 1) {
+			for (int i = 0; i < res[1].size(); i++) {
+				output.push_back({ procs[j][0], res[1][i] });
+			}
+		}
+	}
+	return output;
+}
+std::vector<std::vector<int>> PKB::getAllProcedureCalledByCallStatement() {
+	std::vector<std::vector<int>> output;
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[CALL_STATEMENT_TABLE - 1];
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		output.push_back({ it->first, it->second[0][0] });
+	}
 	return output;
 }
 

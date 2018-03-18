@@ -12,6 +12,7 @@ bool DesignExtractor::extract(PKB &pkb) {
 	extractNext(pkb);
 	extractNextStar(pkb);
 	extractCallsInverse(pkb);
+	extractCallStatements(pkb);
 	extractCallsStar(pkb);
 	extractUsesModifies(pkb);
 	return true;
@@ -170,6 +171,24 @@ void DesignExtractor::extractCallsInverse(PKB &pkb) {
 			if (data.size() > 0) {
 				for (int i = 0; i < data[0].size(); i++) {
 					pkb.insertToTable(CALLS_INVERSE_TABLE, data[0][i], { { currProcedure} });
+				}
+			}
+			currProcedure++;
+		}
+	}
+}
+
+void DesignExtractor::extractCallStatements(PKB &pkb) {
+
+	std::vector<std::vector<int>> data = pkb.getAllProcedures();
+	if (data.size() > 0) {
+		int procCount = data.size();
+		int currProcedure = 1;
+		while (currProcedure <= procCount) {
+			std::vector<std::vector<int>> data = pkb.getFromTable(CALLS_TABLE, currProcedure);
+			if (data.size() > 0) {
+				for (int i = 0; i < data[1].size(); i++) {
+					pkb.insertToTable(CALL_STATEMENT_TABLE, data[1][i], { { currProcedure } });
 				}
 			}
 			currProcedure++;

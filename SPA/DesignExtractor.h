@@ -13,6 +13,7 @@ private:
 	void extractNextStar(PKB &);
 	void extractCallsInverse(PKB &);
 	void extractCallsStar(PKB &);
+	void extractCallStatements(PKB &);
 	void extractUsesModifies(PKB &);
 };
 

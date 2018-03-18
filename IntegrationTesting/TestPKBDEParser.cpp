@@ -632,6 +632,38 @@ namespace PKBDEParserIntegrationTesting
 			Assert::AreEqual(true, (pkb.getAllCallsStar() == data));
 		}
 
+		TEST_METHOD(PKBDEParserGetCallStatementsCallingProcedure)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 4 } };
+			Assert::AreEqual(true, (pkb.getCallStatementsCallingProcedure(2) == data));
+
+		}
+
+		TEST_METHOD(PKBDEParserGetProcedureCalledByCallStatement)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 2 } };
+			Assert::AreEqual(true, (pkb.getProcedureCalledByCallStatement(4) == data));
+
+		}
+
+		TEST_METHOD(PKBDEParserGetAllCallStatementsCallingProcedure)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 2,4 } };
+			Assert::AreEqual(true, (pkb.getAllCallStatementsCallingProcedure() == data));
+
+		}
+
+		TEST_METHOD(PKBDEParserGetAllProcedureCalledByCallStatement)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 4,2 } };
+			Assert::AreEqual(true, (pkb.getAllProcedureCalledByCallStatement() == data));
+
+		}
+
 		TEST_METHOD(PKBDEParserGetStatementsWithPattern)
 		{
 			Param ep;

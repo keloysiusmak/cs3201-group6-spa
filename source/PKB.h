@@ -13,7 +13,7 @@ using namespace std::tr1;
 class PKB {
 private:
 	/*  PKB Structure*/
-	unordered_map<int, std::vector<std::vector<int>>> tables[14];
+	unordered_map<int, std::vector<std::vector<int>>> tables[15];
 	unordered_map<int, std::vector<std::string>> nameTables[3];
 
 public:
@@ -96,6 +96,12 @@ public:
 	std::vector<std::vector<int>> getAllCallsStar();
 	bool checkCalls(int, int);
 	bool checkCallsStar(int, int);
+
+	/* Call Statement Operations */
+	std::vector<std::vector<int>> getCallStatementsCallingProcedure(int);
+	std::vector<std::vector<int>> getProcedureCalledByCallStatement(int);
+	std::vector<std::vector<int>> getAllCallStatementsCallingProcedure();
+	std::vector<std::vector<int>> getAllProcedureCalledByCallStatement();
 
 	/* Pattern Operations */
 	std::vector<std::vector<int>> getStatementsWithPattern(Pattern);
