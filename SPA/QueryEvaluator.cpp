@@ -36,7 +36,7 @@ bool QueryEvaluator::isValidQuery() {
 
 void QueryEvaluator::setInvalidQuery(string message) {
 	validQuery = false;
-	invalidQueryMessage.push_back(message);
+	invalidQueryMessage = { message };
 };
 
 /*
@@ -55,7 +55,9 @@ list<string> QueryEvaluator::evaluateQuery() {
 			evaluateClause(clause, clauseResults);
 
 			if (!clauseResults.hasResults()) return{};
-			if (clauseResults.numParamsInResult() != 0) EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
+			if (clauseResults.numParamsInResult() != 0) {
+				EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
+			}
 		}
 
 		/* Evaluation of patterns */

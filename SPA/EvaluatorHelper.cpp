@@ -17,16 +17,22 @@ void EvaluatorHelper::mergeWithoutOverlap(ClauseResults &clauseResults, Intermed
 	/* Add table params */
 	addClauseParamToTable(clauseResults, iTable);
 
-	/* Update table */
 	vector<vector<int>> newTable;
-	for (vector<int> tableRow : iTable.resultsTable) {
+	if (iTable.resultsTable.size() == 0) { // Table has no values
 		for (vector<int> resultsRow : clauseResults.results) {
-			vector<int> newTableRow = tableRow;
-			newTableRow.push_back(resultsRow[0]);
-			if (clauseResults.numParamsInResult() == 2) { // Two syns
-				newTableRow.push_back(resultsRow[1]);
+			newTable.push_back(resultsRow);
+		}
+	}
+	else { // Update table for existing values
+		for (vector<int> tableRow : iTable.resultsTable) {
+			for (vector<int> resultsRow : clauseResults.results) {
+				vector<int> newTableRow = tableRow;
+				newTableRow.push_back(resultsRow[0]);
+				if (clauseResults.numParamsInResult() == 2) { // Two syns
+					newTableRow.push_back(resultsRow[1]);
+				}
+				newTable.push_back(newTableRow);
 			}
-			newTable.push_back(newTableRow);
 		}
 	}
 	iTable.setResultsTable(newTable);
