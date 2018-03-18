@@ -244,16 +244,11 @@ namespace EvaluatorHelperTest {
 
 			for (size_t i = 0; i < resultsAfterMerge.size(); i++) {
 				for (size_t j = 0; j < resultsAfterMerge[i].size(); j++) {
-
-					Logger::WriteMessage(to_string(table.resultsTable[i][j]).c_str());
-					Logger::WriteMessage(to_string(resultsAfterMerge[i][j]).c_str());
-
 					Assert::AreEqual(true, table.resultsTable[i][j] == resultsAfterMerge[i][j]);
 				}
 			}
 
 			for (size_t k = 0; k < updatedParams.size(); k++) {
-				Logger::WriteMessage(to_string(Utils::isSameParam(table.tableParams[k], updatedParams[k])).c_str());
 				Assert::AreEqual(true, Utils::isSameParam(table.tableParams[k], updatedParams[k]));
 			}
 		}
@@ -300,18 +295,47 @@ namespace EvaluatorHelperTest {
 
 			for (size_t i = 0; i < resultsAfterMerge.size(); i++) {
 				for (size_t j = 0; j < resultsAfterMerge[i].size(); j++) {
-
-					Logger::WriteMessage(to_string(table.resultsTable[i][j]).c_str());
-					Logger::WriteMessage(to_string(resultsAfterMerge[i][j]).c_str());
-
 					Assert::AreEqual(true, table.resultsTable[i][j] == resultsAfterMerge[i][j]);
 				}
 			}
 
 			for (size_t k = 0; k < updatedParams.size(); k++) {
-				Logger::WriteMessage(to_string(Utils::isSameParam(table.tableParams[k], updatedParams[k])).c_str());
 				Assert::AreEqual(true, Utils::isSameParam(table.tableParams[k], updatedParams[k]));
 			}
+		}
+
+		TEST_METHOD(EvaluatorHelperWithClauseNumSynsTest) {
+			/* Instantiate table*/
+			IntermediateTable table;
+
+			/* Generate params and initial table values */
+			vector<Param> params;
+			Param p1, p2, p3, p4;
+			p1 = createParam(ASSIGN, "a1");
+			p2 = createParam(ASSIGN, "a2");
+			p3 = createParam(VARIABLE, "v");
+			p4 = createParam(STMT, "s");
+			params.push_back(p1); params.push_back(p2); params.push_back(p3); params.push_back(p4);
+
+			vector<vector<int>> resultsBeforeMerge = {
+				{1, 2, 3, 4},
+				{2, 3, 4, 5},
+				{3, 4, 5, 6},
+				{4, 5, 6, 7}
+			};
+
+			table.setTableParams(params);
+			table.setResultsTable(resultsBeforeMerge);
+
+			/* Clauses */
+			Param p5, p6, p7;
+			p5 = createParam(ASSIGN, "a1"); p6 = createParam(ASSIGN, "a2");
+			p7 = createParam(INTEGER, "4");
+
+			Clause oneSynInClause = Clause(With, p5, p7);
+			Clause twoSynInClause = Clause(With, p5, p6);
+			Assert::AreEqual(true, EvaluatorHelper::withClauseNumSyns(oneSynInClause, table) == 1);
+			Assert::AreEqual(true, EvaluatorHelper::withClauseNumSyns(twoSynInClause, table) == 2);
 		}
 
 		/* Randomly generates x rows of values for given params */

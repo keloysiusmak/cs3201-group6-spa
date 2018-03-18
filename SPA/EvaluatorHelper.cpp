@@ -121,8 +121,8 @@ int EvaluatorHelper::withClauseNumSyns(Clause &clause, IntermediateTable &iTable
 	int numSyns = 0;
 	Param lhs = clause.getFirstParam();
 	Param rhs = clause.getSecondParam();
-	if (getParamInt(lhs, iTable) > -1) numSyns++;
-	if (getParamInt(rhs, iTable) > -1) numSyns++;
+	if (getParamInt(lhs, iTable) > -1) numSyns++; // Assume syn param in table
+	if (getParamInt(rhs, iTable) > -1) numSyns++; // Assume syn param in table
 	return numSyns;
 }
 

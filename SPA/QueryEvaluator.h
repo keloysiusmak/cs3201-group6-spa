@@ -40,6 +40,7 @@ public:
 	// Helper Methods
 	list<string> extractParams(vector<Param> selectedParams, IntermediateTable &iTable);
 	list<string> paramToStringList(Param p, IntermediateTable &iTable);
+	list<string> getAllParamsOfType(ParamType pType);
 	string getProcOrVarName(AttrType type, int id);
 	void handleWithClause(Clause &clause, IntermediateTable &iTable);
 	void handleWithValueAssignment(Clause &clause, IntermediateTable &iTable);
