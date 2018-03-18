@@ -1,5 +1,4 @@
 #include "QueryEvaluator.h"
-#include <set>
 
 using namespace std;
 
@@ -482,7 +481,7 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 	else if (pType == WHILE) { results = pkb.getAllStatementsWithType(2); }
 	else if (pType == IF) { results = pkb.getAllStatementsWithType(3); }
 	else if (pType == PROCEDURE) { results = pkb.getAllProcedures(); }
-	else if (pType == CONSTANT) { results = pkb.getAllConstants();  }
+	else if (pType == CONSTANT) { results = pkb.getAllConstants(); }
 	else { ; }
 	
 	for (vector<int> values : results) {

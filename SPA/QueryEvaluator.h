@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <list>
+#include <set>
 #include "QueryObject.h"
 #include "../source/PKB.h"
 #include "Utils.h"
@@ -40,7 +41,6 @@ public:
 	// Evaluation Helpers
 	void filterStmts(ClauseResults &clauseResults);
 	set<int> getParamSet(Param p);
-
 
 	// Printing Helpers
 	list<string> extractParams(vector<Param> selectedParams, IntermediateTable &iTable);
