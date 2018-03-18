@@ -28,6 +28,7 @@ private:
 	string infixToPostFix(string infix);
 	int higherPrecedenceValidate(char operator1, char operator2);
 	int getPrecedence(char op);
+	bool checkBoolStmt(string query);
 public:
 	Preprocessor();
 	Preprocessor(QueryEvaluator &evaluator);
@@ -42,11 +43,9 @@ public:
 	bool isValidStmtRef(string stmtRef);
 	bool isValidEntRef(string entRef);
 	bool isValidVarRef(string varRef);
-	bool isValidExpressSpec(string expressSpec);
 	bool isValidAttrRef(string attrRef);
 	bool isValidAttrName(ParamType synonymType, string attrName);
 	bool isValidRef(string ref);
-	bool isValidAttrCond(ParamType attrRef, string ref);
 	bool isDeclarationSynonymExist(string synonym);
 	bool parseClauseArg(QueryObject &qo, string relType, string arg1, string arg2);
 	bool parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2);
