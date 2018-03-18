@@ -28,7 +28,7 @@ namespace PKBDEParserIntegrationTesting
 				procedure a{ 
 				1.	a = b; 
 				2.	while c { 
-				3.		b = a;
+				3.		b = (a+1)*4;
 				4.		call b; } 
 				5.	if a then { 
 				6.		while e { 
@@ -44,7 +44,7 @@ namespace PKBDEParserIntegrationTesting
 				13.			j = 1; }}}
 			
 			*/
-			testString = "procedure a {a = b; while c { b = a; call b; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ f = g; while h { while i { j = 1; }} }";
+			testString = "procedure a {a = b; while c { b = (a + 1 )* 4; call b; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ f = g; while h { while i { j = 1; }} }";
 			pkb = parser.Parse(simpleSource, pkb, true, testString);
 			de = DesignExtractor();
 			de.extract(pkb);
@@ -471,10 +471,520 @@ namespace PKBDEParserIntegrationTesting
 			Assert::AreEqual(false, pkb.checkProcedureModifiesVariable(2, 2));
 		}
 
+		TEST_METHOD(PKBDEParserGetNextBefore)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({ 5 });
+			data.push_back({ 7 });
+			Assert::AreEqual(true, (pkb.getNextBefore(6) == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetNextAfter)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({ 7 });
+			data.push_back({ 9 });
+			Assert::AreEqual(true, (pkb.getNextAfter(6) == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetNextBeforeStar)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({ 1 });
+			data.push_back({ 2 });
+			data.push_back({ 3 });
+			data.push_back({ 4 });
+			Assert::AreEqual(true, (pkb.getNextBeforeStar(5) == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetNextAfterStar)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({ 6 });
+			data.push_back({ 7 });
+			data.push_back({ 8 });
+			data.push_back({ 9 });
+			Assert::AreEqual(true, (pkb.getNextAfterStar(5) == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetAllNext)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({ 1,2 });
+			data.push_back({ 10,11 });
+			data.push_back({ 2,3 });
+			data.push_back({ 2,5 });
+			data.push_back({ 3,4 });
+			data.push_back({ 4,2 });
+			data.push_back({ 6,7 });
+			data.push_back({ 6,9 });
+			data.push_back({ 7,6 });
+			data.push_back({ 5,6 });
+			data.push_back({ 5,8 });
+			data.push_back({ 8,9 });
+			data.push_back({ 11,12 });
+			data.push_back({ 12,11 });
+			data.push_back({ 12,13 });
+			data.push_back({ 13,12 });
+			Assert::AreEqual(true, (pkb.getAllNext() == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetAllNextStar)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({ 1,2 });
+			data.push_back({ 1,3 });
+			data.push_back({ 1,4 });
+			data.push_back({ 1,5 });
+			data.push_back({ 1,6 });
+			data.push_back({ 1,7 });
+			data.push_back({ 1,8 });
+			data.push_back({ 1,9 });
+			data.push_back({ 10,11 });
+			data.push_back({ 10,12 });
+			data.push_back({ 10,13 });
+			data.push_back({ 2,2 });
+			data.push_back({ 2,3 });
+			data.push_back({ 2,4 });
+			data.push_back({ 2,5 });
+			data.push_back({ 2,6 });
+			data.push_back({ 2,7 });
+			data.push_back({ 2,8 });
+			data.push_back({ 2,9 });
+			data.push_back({ 3,2 });
+			data.push_back({ 3,3 });
+			data.push_back({ 3,4 });
+			data.push_back({ 3,5 });
+			data.push_back({ 3,6 });
+			data.push_back({ 3,7 });
+			data.push_back({ 3,8 });
+			data.push_back({ 3,9 });
+			data.push_back({ 4,2 });
+			data.push_back({ 4,3 });
+			data.push_back({ 4,4 });
+			data.push_back({ 4,5 });
+			data.push_back({ 4,6 });
+			data.push_back({ 4,7 });
+			data.push_back({ 4,8 });
+			data.push_back({ 4,9 });
+			data.push_back({ 5,6 });
+			data.push_back({ 5,7 });
+			data.push_back({ 5,8 });
+			data.push_back({ 5,9 });
+			data.push_back({ 6,6 });
+			data.push_back({ 6,7 });
+			data.push_back({ 6,9 });
+			data.push_back({ 7,6 });
+			data.push_back({ 7,7 });
+			data.push_back({ 7,9 });
+			data.push_back({ 8,9 });
+			data.push_back({ 11,11 });
+			data.push_back({ 11,12 });
+			data.push_back({ 11,13 });
+			data.push_back({ 12,11 });
+			data.push_back({ 12,12 });
+			data.push_back({ 12,13 });
+			data.push_back({ 13,11 });
+			data.push_back({ 13,12 });
+			data.push_back({ 13,13 });
+			Assert::AreEqual(true, (pkb.getAllNextStar() == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetCallsBefore)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({ 1 });
+			Assert::AreEqual(true, (pkb.getCallsBefore(2) == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetCallsAfter)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({ 2 });
+			Assert::AreEqual(true, (pkb.getCallsAfter(1) == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetCallsBeforeStar)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({ 1 });
+			Assert::AreEqual(true, (pkb.getCallsBeforeStar(2) == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetCallsAfterStar)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({ 2 });
+			Assert::AreEqual(true, (pkb.getCallsAfterStar(1) == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetAllCalls)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({1,2});
+			Assert::AreEqual(true, (pkb.getAllCalls() == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetAllCallsStar)
+		{
+			std::vector<std::vector<int>> data;
+			data.push_back({ 1,2 });
+			Assert::AreEqual(true, (pkb.getAllCallsStar() == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetStatementsWithPattern)
+		{
+			Param ep;
+			Param lp;
+			Param rp;
+
+			//a(_,_)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = ALL;
+			lp.value = "_";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p1(ep, lp, rp);
+			std::vector<std::vector<int>> expected = { { 1 },{ 3 },{ 7 }, {8}, {9}, {10},{13} };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p1) == expected));
+
+			//a(_,_"a+1"_)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = ALL;
+			lp.value = "_";
+			lp.attribute = NONE;
+
+			rp.type = EXPR;
+			rp.value = "a|1|+|";
+			rp.attribute = NONE;
+
+			Pattern p2(ep, lp, rp);
+			expected = { {3} };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p2) == expected));
+
+			//a(_,"a+1")
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = ALL;
+			lp.value = "_";
+			lp.attribute = NONE;
+
+			rp.type = EXPR_EXACT;
+			rp.value = "a|1|+|";
+			rp.attribute = NONE;
+
+			Pattern p3(ep, lp, rp);
+			expected.clear();
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p3) == expected));
+
+			//a(v, _)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = VARIABLE;
+			lp.value = "v";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p4(ep, lp, rp);
+			expected = { { 1,1 },{ 3,2 },{ 7,3 },{ 8,5 },{ 9,4 },{ 10,6 },{ 13,10 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p4) == expected));
+
+			//a("a", _)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "a";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p5(ep, lp, rp);
+			expected = { { 1 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p5) == expected));
+
+			//a(v,_"a+1"_)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = VARIABLE;
+			lp.value = "v";
+			lp.attribute = NONE;
+
+			rp.type = EXPR;
+			rp.value = "a|1|+|";
+			rp.attribute = NONE;
+
+			Pattern p6(ep, lp, rp);
+			expected = { { 3, 2 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p6) == expected));
+
+			//a(v,"a+1")
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = VARIABLE;
+			lp.value = "v";
+			lp.attribute = NONE;
+
+			rp.type = EXPR_EXACT;
+			rp.value = "a|1|+|";
+			rp.attribute = NONE;
+
+			Pattern p7(ep, lp, rp);
+			expected.clear();
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p7) == expected));
+
+			//a("b", _"a+1"_)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "b";
+			lp.attribute = NONE;
+
+			rp.type = EXPR;
+			rp.value = "a|1|+|";
+			rp.attribute = NONE;
+
+			Pattern p8(ep, lp, rp);
+			expected = { { 3 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p8) == expected));
+
+			//a("b", "a+1")
+			ep.type = ASSIGN;
+			ep.value = "A";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "B";
+			lp.attribute = NONE;
+
+			rp.type = EXPR_EXACT;
+			rp.value = "a|1|+|";
+			rp.attribute = NONE;
+
+			Pattern p9(ep, lp, rp);
+			expected.clear();
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p9) == expected));
+
+			//a(_, _"a+1"_)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = ALL;
+			lp.value = "_";
+			lp.attribute = NONE;
+
+			rp.type = EXPR;
+			rp.value = "a|1|+|";
+			rp.attribute = NONE;
+
+			Pattern p10(ep, lp, rp);
+			expected = { { 3 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p10) == expected));
+
+			//a("y", _"a+1"_)
+			ep.type = ASSIGN;
+			ep.value = "a";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "y";
+			lp.attribute = NONE;
+
+			rp.type = EXPR;
+			rp.value = "a|1|+|";
+			rp.attribute = NONE;
+
+			Pattern p11(ep, lp, rp);
+			expected.clear();
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p11) == expected));
+
+			//ifs(_,_,_)
+			ep.type = IF;
+			ep.value = "ifs";
+			ep.attribute = NONE;
+
+			lp.type = ALL;
+			lp.value = "_";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p12(ep, lp, rp);
+			expected = { { 5} };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p12) == expected));
+
+			//ifs(v,_,_)
+			ep.type = IF;
+			ep.value = "ifs";
+			ep.attribute = NONE;
+
+			lp.type = VARIABLE;
+			lp.value = "v";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p13(ep, lp, rp);
+			expected = { { 5,1 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p13) == expected));
+
+			//ifs("j",_,_)
+			ep.type = IF;
+			ep.value = "ifs";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "a";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p14(ep, lp, rp);
+			expected = { { 5 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p14) == expected));
+
+			//ifs("k",_,_)
+			ep.type = IF;
+			ep.value = "ifs";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "k";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p15(ep, lp, rp);
+			expected.clear();
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p15) == expected));
+
+			//w(_,_)
+			ep.type = WHILE;
+			ep.value = "w";
+			ep.attribute = NONE;
+
+			lp.type = ALL;
+			lp.value = "_";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p17(ep, lp, rp);
+			expected = { { 6}, {12}, {11}, {2} };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p17) == expected));
+
+			//w(v,_)
+			ep.type = WHILE;
+			ep.value = "w";
+			ep.attribute = NONE;
+
+			lp.type = VARIABLE;
+			lp.value = "v";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p18(ep, lp, rp);
+			expected = {{ 6,4 },{ 12,9 },{ 11,8 },{ 2,3 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p18) == expected));
+
+			//w("h",_)
+			ep.type = WHILE;
+			ep.value = "w";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "h";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p19(ep, lp, rp);
+			expected = { { 11 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p19) == expected));
+
+			//w("i",_)
+			ep.type = WHILE;
+			ep.value = "w";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "i";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p20(ep, lp, rp);
+			expected = { { 12 } };
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p20) == expected));
+
+			//w("n",_)
+			ep.type = WHILE;
+			ep.value = "w";
+			ep.attribute = NONE;
+
+			lp.type = IDENT;
+			lp.value = "n";
+			lp.attribute = NONE;
+
+			rp.type = ALL;
+			rp.value = "_";
+			rp.attribute = NONE;
+
+			Pattern p21(ep, lp, rp);
+			expected.clear();
+			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p21) == expected));
+		}
+
 		TEST_METHOD(PKBDEParserGetStatementsWithConstant)
 		{
-			std::vector<std::vector<int>> data = { {8},{9},{13} };
+			std::vector<std::vector<int>> data = { {3}, {8},{9},{13} };
 			Assert::AreEqual(true, (pkb.getStatementsWithConstant(1) == data));
+			data = { { 3 }, {7} };
+			Assert::AreEqual(true, (pkb.getStatementsWithConstant(4) == data));
 		}
 	};
 }

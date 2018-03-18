@@ -49,6 +49,10 @@ void DesignExtractor::processStatementList(PKB &pkb, int stmtListId, int prevWhi
 					pkb.insertToTable(NEXT_TABLE, stmts[1][i], { { nextStmtPush } });
 					pkb.insertToTable(NEXT_INVERSE_TABLE, nextStmtPush, { { stmts[1][i] } });
 				}
+				if (nextStmt == 0 && nextStmtPush == 0 && prevWhile != 0) {
+					pkb.insertToTable(NEXT_TABLE, stmts[1][i], { { prevWhile } });
+					pkb.insertToTable(NEXT_INVERSE_TABLE, prevWhile, { { stmts[1][i] } });
+				}
 				processStatementList(pkb, thisStmt[0][1], stmts[1][i], stmts[1][i], 0);
 			}
 			else if (type == 3) {
