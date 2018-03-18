@@ -629,12 +629,12 @@ Select n1 such that Uses(n1, _)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
 127 - Uses(p, v)
-proc p; variable v;
+procedure p; variable v;
 Select p such that Uses(p, v)
 
 5000
 128 - Uses(p, _)
-proc p;
+procedure p;
 Select p such that Uses(p, _)
 
 5000
@@ -674,12 +674,12 @@ Select n1 such that Modifies(n1, _)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 5000
 136 - Modifies(p, v)
-proc p; variable v;
+procedure p; variable v;
 Select p such that Modifies(p, v)
 
 5000
 137 - Modifies(p, _)
-proc p;
+procedure p;
 Select p such that Modifies(p, _)
 
 5000
@@ -768,8 +768,8 @@ while w; assign a;
 Select w such that Follows(1, 2) pattern a("x", _"x"_)
 6,9,10
 5000
-155 - proc p
-proc p; assign a;
+155 - procedure p
+procedure p; assign a;
 Select p such that Follows(1, 2) pattern a("x", _"x"_)
 
 5000
@@ -803,8 +803,8 @@ while w; assign a;
 Select w such that Parent(2, 3) pattern a("x", _"x"_)
 6,9,10
 5000
-162 - proc p
-proc p; assign a;
+162 - procedure p
+procedure p; assign a;
 Select p such that Parent(2, 3) pattern a("x", _"x"_)
 
 5000
@@ -838,8 +838,8 @@ while w; assign a;
 Select w such that Uses(1, "x") pattern a("x", _"x"_)
 6,9,10
 5000
-169 - proc p
-proc p; assign a;
+169 - procedure p
+procedure p; assign a;
 Select p such that Uses(1, "x") pattern a("x", _"x"_)
 
 5000
@@ -873,8 +873,8 @@ while w; assign a;
 Select w such that Modifies(1, "x") pattern a("x", _"x"_)
 6,9,10
 5000
-176 - proc p
-proc p; assign a;
+176 - procedure p
+procedure p; assign a;
 Select p such that Modifies(1, "x") pattern a("x", _"x"_)
 
 5000
@@ -909,7 +909,7 @@ Select w;
 6,9,10
 5000
 183 - no clause(6)
-proc p;
+procedure p;
 Select p;
 
 5000
@@ -929,7 +929,7 @@ Select a such that Uses(a, "x")
 1,4,5,7,8,11,13,14,15
 5000
 187 - Uses(p, 'x')
-proc p;
+procedure p;
 Select p such that Uses(p, "x")
 
 5000
@@ -959,7 +959,7 @@ Select a such that Modifies(a, "x")
 1,4,5,7,8,11,13,14,15
 5000
 193 - Modifies(p, 'x')
-proc p;
+procedure p;
 Select p such that Modifies(p, "x")
 
 5000
