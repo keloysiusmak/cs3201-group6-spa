@@ -26,6 +26,16 @@ void ClauseResults::setValid(bool validity) {
 	valid = validity;
 };
 
+void ClauseResults::clearResults() {
+	vector<vector<int>> emptyResults = {};
+	results = {};
+};
+
+void ClauseResults::clearParamsTable() {
+	vector<Param> emptyTableParams = {};
+	tableParams = {};
+};
+
 bool ClauseResults::isValid() {
 	return valid;
 };
@@ -46,6 +56,42 @@ int ClauseResults::numParamsInResult() {
 	}
 };
 
+/* Remove ALL Syns */
+void ClauseResults::removeALLSyns() {
+	if (numParamsInResult() == 2) {
+		Param leftParam = tableParams[0];
+		Param rightParam = tableParams[1];
 
+		vector<vector<int>> newTable;
+
+		if (leftParam.type == ALL && rightParam.type == ALL) {
+			clearResults();
+			clearParamsTable();
+
+		} else if (leftParam.type == ALL || rightParam.type == ALL) {
+
+			clearParamsTable();
+			if (leftParam.type == ALL) tableParams.push_back(rightParam);
+			if (rightParam.type == ALL) tableParams.push_back(leftParam);
+
+			for (vector<int> tableRow : results) {
+				vector<int> newRow;
+				if (leftParam.type == ALL) { // Left param is _
+					newRow.push_back(tableRow[1]); }
+				else { // Right param is _
+					newRow.push_back(tableRow[0]); }
+				newTable.push_back(newRow);
+			}
+
+			setResults(newTable);
+
+		} else { ; }
+	} else if (numParamsInResult() == 1) {
+		Param param = tableParams[0];
+		if (param.type == ALL) {
+			clearResults();
+		}
+	} else { ; }
+}
 
 
