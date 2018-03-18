@@ -37,13 +37,11 @@ public:
 	void evaluateCallsStar(Clause &clause, ClauseResults &clauseResults);
 	void evaluatePattern(Pattern &pattern, ClauseResults &patternResults);
 
-	//void getAllSelectedParam(Param p);
-
 	// Helper Methods
-	int queryNumClauses(QueryObject &queryObj);
-	int queryNumPattern(QueryObject &queryObj);
 	list<string> extractParams(vector<Param> selectedParams, IntermediateTable &iTable);
 	list<string> paramToStringList(Param p, IntermediateTable &iTable);
+	string getProcOrVarName(AttrType type, int id);
+	void handleWithClause(Clause &clause, IntermediateTable &iTable);
 	void handleWithValueAssignment(Clause &clause, IntermediateTable &iTable);
 	void handleWithEquateVariables(Clause &clause, IntermediateTable &iTable);
 

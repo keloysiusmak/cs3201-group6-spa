@@ -116,3 +116,13 @@ int EvaluatorHelper::getParamInt(Param p, IntermediateTable &iTable) {
 	return -1;
 };
 
+/* Returns number of params of With Clause in table */
+int EvaluatorHelper::withClauseNumSyns(Clause &clause, IntermediateTable &iTable) {
+	int numSyns = 0;
+	Param lhs = clause.getFirstParam();
+	Param rhs = clause.getSecondParam();
+	if (getParamInt(lhs, iTable) > -1) numSyns++;
+	if (getParamInt(rhs, iTable) > -1) numSyns++;
+	return numSyns;
+}
+
