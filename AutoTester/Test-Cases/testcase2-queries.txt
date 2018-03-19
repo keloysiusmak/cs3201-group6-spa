@@ -341,7 +341,7 @@ Select a1 such that Modifies(a1,"z") pattern a1("z", _"x"_)
 69 - Uses(s,v) pattern a1(v, _)
 stmt s; assign a1; variable v;
 Select a1 such that Uses(s,v) pattern a1(v, _)
-6,7,8,14,15,16,17
+6,7,8,14,15,16
 5000
 70 - Uses(s,v) pattern a1(v, _'1'_)
 stmt s; assign a1; variable v;
@@ -366,5 +366,5 @@ Select a1 such that Modifies(s,v) pattern a1(v, _"1"_)
 74 - Modifies(s,v) pattern a1(v, _'x'_)
 stmt s; assign a1; variable v;
 Select a1 such that Modifies(s,v) pattern a1(v, _"x"_)
-6,8,14,15,16
+6,8,14,15,16,7
 5000

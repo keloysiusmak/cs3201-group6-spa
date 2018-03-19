@@ -425,18 +425,18 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
-			vector<vector<int>> results = pkb.getCallsBefore(stoi(rightParam.value));
+			vector<vector<int>> results = pkb.getCallsBefore(pkb.getProcedureId(rightParam.value));
 			clauseResults.setResults(results);
 		}
 	}
 	else {
 		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
-			vector<vector<int>> results = pkb.getCallsAfter(stoi(leftParam.value));
+			vector<vector<int>> results = pkb.getCallsAfter(pkb.getProcedureId(leftParam.value));
 			clauseResults.setResults(results);
 
 		}
 		else { // (concrete, conrete)
-			bool result = pkb.checkCalls(stoi(leftParam.value), stoi(rightParam.value));
+			bool result = pkb.checkCalls(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
 			clauseResults.setValid(result);
 		}
 	}
@@ -531,6 +531,7 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 	else if (pType == ASSIGN) { results = pkb.getAllStatementsWithType(1); }
 	else if (pType == WHILE) { results = pkb.getAllStatementsWithType(2); }
 	else if (pType == IF) { results = pkb.getAllStatementsWithType(3); }
+	else if (pType == CALL) { results = pkb.getAllStatementsWithType(4); }
 	else if (pType == PROCEDURE) { results = pkb.getAllProcedures(); }
 	else if (pType == CONSTANT) { results = pkb.getAllConstants(); }
 	else { ; }
