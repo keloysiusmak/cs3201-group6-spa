@@ -1,23 +1,3 @@
-48 - 
-proc p1, p2;
-Select <p1, p2> such that Calls(p1,p2)
-First Second
-5000
-49 -
-proc p1, p2;
-Select <p1, p2> such that Calls*(p1,p2)
-First Second
-5000
-50 -
-variable v;
-Select v such that Uses(8,v)
-c,x,first,second,a,y,z
-5000
-51 -
-variable v;
-Select v such that Uses("Second",v)
-c,x,first,second,a,y,z
-5000
 1 -
 assign a;
 Select a such that Modifies("First", "x")
@@ -41,7 +21,7 @@ x
 5 - 
 call calls; variable v;
 Select v such that Modifies(calls, v)
-
+x
 5000
 6 - 
 assign a;
@@ -66,7 +46,7 @@ a,b,c,f,first,second,w,x,y,z
 10 - 
 call calls; variable v;
 Select v such that Uses(calls, v)
-
+a,c,first,second,x,y,z
 5000
 11 - 
 prog_line n; if ifs;
@@ -186,7 +166,7 @@ Select w pattern w("x", _)
 34 - 
 prog_line n; call calls;
 Select n such that Next(n, calls)
-
+6,7
 5000
 35 - 
 assign a; while w;
@@ -252,4 +232,24 @@ false
 
 Select BOOLEAN such that Next*(8,10)
 false
+5000
+48 - 
+procedure p1, p2;
+Select <p1, p2> such that Calls(p1,p2)
+First Second
+5000
+49 -
+procedure p1, p2;
+Select <p1, p2> such that Calls*(p1,p2)
+First Second
+5000
+50 -
+variable v;
+Select v such that Uses(8,v)
+c,x,first,second,a,y,z
+5000
+51 -
+variable v;
+Select v such that Uses("Second",v)
+c,x,first,second,a,y,z
 5000
