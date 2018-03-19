@@ -116,7 +116,13 @@ void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResul
 	else if (relation == NextT) {
 		evaluateNextStar(clause, clauseResults);
 	}
-	else { ; } //affects
+	else if (relation == Calls) {
+		evaluateCalls(clause, clauseResults);
+	}
+	else if (relation == CallsT) {
+		evaluateCallsStar(clause, clauseResults);
+	}
+	else { ; } // Extension
 }
 
 /* Right param: stmt syn or stmt no or _ */
@@ -238,7 +244,9 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 
 	if (Utils::isSynonym(leftParam.type)) {
 		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
-			vector<vector<int>> results = pkb.getAllStatementUsesVariables();
+			vector<vector<int>> results;
+			if (leftParam.type == PROCEDURE) { results = pkb.getAllProcedureUsesVariables();
+			} else { results = pkb.getAllStatementUsesVariables(); }
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
@@ -258,12 +266,12 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 			vector<vector<int>> results;
 			int lineId;
 			try { 
-				lineId = pkb.getProcedureId(leftParam.value);
-				results = pkb.getUsesVariablesFromProcedure(lineId);
-			}
-			catch (exception&) {
 				lineId = stoi(leftParam.value);
 				results = pkb.getUsesVariablesFromStatement(lineId);
+			}
+			catch (exception&) {
+				lineId = pkb.getProcedureId(leftParam.value);
+				results = pkb.getUsesVariablesFromProcedure(lineId);
 			}
 			clauseResults.setResults(results);
 		}
@@ -271,12 +279,12 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 			bool result;
 
 			int lineId;
-			try { lineId = pkb.getProcedureId(leftParam.value); }
-			catch (exception&) { lineId = stoi(leftParam.value); }
+			try { lineId = stoi(leftParam.value); }
+			catch (exception&) { lineId = pkb.getProcedureId(leftParam.value); }
 
 			int varId;
-			try { varId = pkb.getVariableId(rightParam.value); }
-			catch (exception&) { varId = stoi(rightParam.value); }
+			try { varId = stoi(rightParam.value); }
+			catch (exception&) { varId = pkb.getProcedureId(rightParam.value); }
 
 			result = pkb.checkStatementUsesVariable(lineId, varId);
 			clauseResults.setValid(result);
@@ -292,7 +300,9 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 
 	if (Utils::isSynonym(leftParam.type)) {
 		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
-			vector<vector<int>> results = pkb.getAllStatementModifiesVariables();
+			vector<vector<int>> results;
+			if (leftParam.type == PROCEDURE) { results = pkb.getAllProcedureModifiesVariables();
+			} else { results = pkb.getAllStatementModifiesVariables(); }
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
@@ -306,11 +316,11 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 			vector<vector<int>> results;
 			int lineId;
 			try { 
+				lineId = stoi(leftParam.value);
 				lineId = pkb.getProcedureId(leftParam.value);
-				results = pkb.getModifiesVariablesFromProcedure(lineId);
 			}
 			catch (exception&) {
-				lineId = stoi(leftParam.value);
+				results = pkb.getModifiesVariablesFromProcedure(lineId);
 				results = pkb.getModifiesVariablesFromStatement(lineId);
 			}
 			clauseResults.setResults(results);
@@ -410,7 +420,7 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 		}
 		else { // (syn, concrete)
 			vector<vector<int>> results = pkb.getCallsBefore(stoi(rightParam.value));
-			// clauseResults.setValues(results);
+			clauseResults.setResults(results);
 		}
 	}
 	else {
