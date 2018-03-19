@@ -47,7 +47,7 @@ const unordered_map<ParamType, string> KEYWORDS_PATTERN_REL = { { ASSIGN, "assig
 { WHILE, "whilept" }, { IF, "ifpt" } };
 const unordered_map<string, RelRef> KEYWORDS_CLAUSES = { { "Modifies", Modifies }, { "Uses", Uses }, 
 { "Parent", Parent },{ "ParentT", ParentT },{ "Follows", Follows },{ "FollowsT", FollowsT }, 
-{ "Next", Next },{ "NextT", NextT },{ "Calls", Calls },{ "Calls*", CallsT } };
+{ "Next", Next },{ "NextT", NextT },{ "Calls", Calls },{ "CallsT", CallsT } };
 
 const unordered_map<string, AttrType> KEYWORDS_WITH_TYPE = { { "procName", PROCNAME },
 { "varName", VARNAME },
