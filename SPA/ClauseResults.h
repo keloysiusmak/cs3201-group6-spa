@@ -5,53 +5,58 @@
 #include "Utils.h"
 
 class ClauseResults {
- private:
-  /* Boolean for when both params are concrete */
-  bool valid;
-  /* Solely used for pattern */
-  vector<int> assignmentsEnts;
- public:
-  Param entRef;
-  Param lhs;
-  Param rhs;
+private:
+	/* Boolean for when both params are concrete */
+	bool valid;
+	/* Solely used for pattern */
+	vector<int> assignmentsEnts;
+public:
+	Param entRef;
+	Param lhs;
+	Param rhs;
 
-  /* 2d table storing results from pkb */
-  vector<Param> tableParams;
-  vector<vector<int>> results;
+	/* 2d table storing results from pkb */
+	vector<Param> tableParams;
+	vector<vector<int>> results;
 
-  // Instantiation
-  void ClauseResults::instantiateClause(Clause clause);
-  void ClauseResults::instantiatePattern(Pattern pattern);
+	// Instantiation
+	void ClauseResults::instantiateClause(Clause clause);
+	void ClauseResults::instantiatePattern(Pattern pattern);
 
-  // Setter methods
-  void ClauseResults::setResults(vector<vector<int>> &pkbResults);
-  void ClauseResults::setValid(bool validity);
-  void ClauseResults::clearResults();
-  void ClauseResults::clearParamsTable();
+	// Setter methods
+	void ClauseResults::setResults(vector<vector<int>> &pkbResults);
+	void ClauseResults::setValid(bool validity);
+	void ClauseResults::clearResults();
+	void ClauseResults::clearParamsTable();
 
-  // Getter methods
-  bool ClauseResults::isValid();
-  bool ClauseResults::hasResults();
-  int ClauseResults::numParamsInResult();
+	// Getter methods
+	bool ClauseResults::isValid();
+	bool ClauseResults::hasResults();
+	int ClauseResults::numParamsInResult();
 
-  // Helpers
-  void ClauseResults::removeALLSyns();
-  
+	// Helpers
+	void ClauseResults::removeALLSyns();
+
 };
 
 struct IntermediateTable {
-  vector<Param> tableParams;
-  vector<vector<int>> resultsTable;
+	bool hasResults;
+	vector<Param> tableParams;
+	vector<vector<int>> resultsTable;
 
-  void setTableParams(vector<Param> params) {
-	  tableParams = params;
-  };
+	void instantiateTable() {
+		hasResults = true;
+	};
 
-  void addTableParams(Param p) {
-	tableParams.push_back(p);
-  };
+	void setTableParams(vector<Param> params) {
+		tableParams = params;
+	};
 
-  void setResultsTable(vector<vector<int>> &table) {
-	resultsTable = table;
-  }
+	void addTableParams(Param p) {
+		tableParams.push_back(p);
+	};
+
+	void setResultsTable(vector<vector<int>> &table) {
+		resultsTable = table;
+	};
 };

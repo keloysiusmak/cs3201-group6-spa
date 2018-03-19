@@ -46,13 +46,16 @@ list<string> QueryEvaluator::evaluateQuery() {
 	if (isValidQuery()) {
 
 		vector<Param> selectParams = queryObject.getSelectStatements();
-		IntermediateTable iTable;
+		IntermediateTable iTable; iTable.instantiateTable();
 
 		/* Evaluation of clauses */
 		for (Clause clause : queryObject.getClauses()) {
 			ClauseResults clauseResults;
 			evaluateClause(clause, clauseResults);
-			if (!clauseResults.hasResults()) return{};
+			if (!clauseResults.hasResults()) {
+				if (selectParams[0].type == BOOLEAN) return{ "false" };
+				else return{};
+			}
 			clauseResults.removeALLSyns(); // Sanitization
 			filterStmts(clauseResults);
 
@@ -65,7 +68,10 @@ list<string> QueryEvaluator::evaluateQuery() {
 		for (Pattern clause : queryObject.getPatterns()) {
 			ClauseResults patternResults;
 			evaluatePattern(clause, patternResults);
-			if (!patternResults.hasResults()) return{};
+			if (!patternResults.hasResults()) {
+				if (selectParams[0].type == BOOLEAN) return{ "false" };
+				else return{};
+			}
 			patternResults.removeALLSyns(); // Sanitization
 			filterStmts(patternResults);
 
@@ -475,7 +481,7 @@ void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternR
 	patternResults.setResults(results);
 };
 
-
+/* Filter stmts according to a/while/if */
 void QueryEvaluator::filterStmts(ClauseResults &clauseResults) {
 	if (clauseResults.numParamsInResult() == 2) {
 		Param leftParam = clauseResults.tableParams[0];
@@ -545,8 +551,9 @@ void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable)
 	else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 2) {
 		handleWithEquateVariables(clause, iTable);
 	}
-	else { ; }
-
+	else { // Evaluate with by itself
+		iTable.hasResults = handleWithEvaluation(clause, iTable);
+	}
 };
 
 /* Filters table rows according to assigned value of param */
@@ -612,6 +619,45 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 	iTable.setResultsTable(updatedTable);
 };
 
+/* Handles with evaluation when not found in table */
+bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable &iTable) {
+	Param lhs = withClause.getFirstParam();
+	Param rhs = withClause.getSecondParam();
+	vector<vector<int>> results; // For storage into iTable
+	if (Utils::isSynonym(lhs.type) && Utils::isSynonym(rhs.type)) { // Both are synonyms
+		set<int> lhsParamSet = getParamSet(lhs);
+		set<int> rhsParamSet = getParamSet(rhs);
+		for (int value : lhsParamSet) {
+			if (rhsParamSet.find(value) != rhsParamSet.end()) return true;
+		}
+	} else if (Utils::isSynonym(lhs.type)) { // LHS syn
+		set<int> lhsParamSet = getParamSet(lhs);
+		for (int value : lhsParamSet) {
+			if (value == getId(rhs)) return true;
+		}
+	} else if (Utils::isSynonym(rhs.type)) { // RHS syn
+		set<int> rhsParamSet = getParamSet(rhs);
+		for (int value : rhsParamSet) {
+			if (value == getId(lhs)) return true;
+		}
+	}
+	else {
+		return lhs.value == rhs.value;
+	}
+	return false;
+}
+
+/* Returns id for string value */
+int QueryEvaluator::getId(Param p) {
+	if (p.type == PROCEDURE) {
+		return pkb.getProcedureId(p.value);
+	} else if (p.type == VARNAME) {
+		return pkb.getVariableId(p.value);
+	} else { // Assumes integer value for other types
+		return stoi(p.value);
+	}
+};
+
 /* Returns the name of the procedure or variable id */
 string QueryEvaluator::getProcOrVarName(AttrType type, int id) {
 	if (type == PROCNAME) {
@@ -627,7 +673,9 @@ string QueryEvaluator::getProcOrVarName(AttrType type, int id) {
 
 /* Returns the selected params from the intermediate table */
 list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, IntermediateTable &iTable) {
-	if (selectedParams.size() == 1) {
+	if (!iTable.hasResults) {
+		return{};
+	} else if (selectedParams.size() == 1) {
 		Param selected = selectedParams[0];
 		if (selected.type == BOOLEAN) { // Boolean
 			if (iTable.resultsTable.size() > 0 || // Table not empty
