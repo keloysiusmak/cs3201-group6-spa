@@ -61,6 +61,11 @@ void DesignExtractor::processStatementList(PKB &pkb, int stmtListId, int prevWhi
 					processStatementList(pkb, thisStmt[0][1], prevWhile, stmts[1][i], nextStmtPush);
 					processStatementList(pkb, thisStmt[0][2], prevWhile, stmts[1][i], nextStmtPush);
 				}
+				else {
+					processStatementList(pkb, thisStmt[0][1], prevWhile, stmts[1][i], 0);
+					processStatementList(pkb, thisStmt[0][2], prevWhile, stmts[1][i], 0);
+
+				}
 			}
 		}
 		else if (i < stmts[1].size() - 1) {
