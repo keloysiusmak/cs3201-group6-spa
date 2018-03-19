@@ -35,7 +35,7 @@ bool QueryEvaluator::isValidQuery() {
 
 void QueryEvaluator::setInvalidQuery(string message) {
 	validQuery = false;
-	if (message != "") invalidQueryMessage = { message } ;
+	if (message != "") invalidQueryMessage = { message };
 	else invalidQueryMessage = {};
 };
 
@@ -254,19 +254,22 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 		}
 	}
 	else {
+		int lineId;
+		try { lineId = pkb.getProcedureId(leftParam.value); }
+		catch (exception&) { lineId = stoi(leftParam.value); }
+
 		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
-			vector<vector<int>> results = pkb.getUsesVariablesFromStatement(stoi(leftParam.value));
+			vector<vector<int>> results = pkb.getUsesVariablesFromStatement(lineId);
 			clauseResults.setResults(results);
 		}
 		else { // (concrete, concrete)
 			bool result;
-			if (rightParam.type == IDENT) {
-				int varId = pkb.getVariableId(rightParam.value);
-				result = pkb.checkStatementUsesVariable(stoi(leftParam.value), varId);
-			}
-			else {
-				result = pkb.checkStatementUsesVariable(stoi(leftParam.value), stoi(rightParam.value));
-			}
+
+			int varId;
+			try { varId = pkb.getVariableId(rightParam.value); }
+			catch (exception&) { varId = stoi(rightParam.value); }
+
+			result = pkb.checkStatementUsesVariable(lineId, varId);
 			clauseResults.setValid(result);
 		}
 	}
@@ -290,19 +293,22 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 		}
 	}
 	else {
+		int lineId;
+		try { lineId = pkb.getProcedureId(leftParam.value); }
+		catch (exception&) { lineId = stoi(leftParam.value); }
+
 		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
-			vector<vector<int>> results = pkb.getModifiesVariablesFromStatement(stoi(leftParam.value));
+			vector<vector<int>> results = pkb.getModifiesVariablesFromStatement(lineId);
 			clauseResults.setResults(results);
 		}
 		else { // (concrete, concrete)
 			bool result;
-			if (rightParam.type == IDENT) {
-				int varId = pkb.getVariableId(rightParam.value);
-				result = pkb.checkStatementModifiesVariable(stoi(leftParam.value), varId);
-			}
-			else {
-				result = pkb.checkStatementModifiesVariable(stoi(leftParam.value), stoi(rightParam.value));
-			}
+
+			int varId;
+			try { varId = pkb.getVariableId(rightParam.value); }
+			catch (exception&) { varId = stoi(rightParam.value); }
+
+			result = pkb.checkStatementModifiesVariable(lineId, varId);
 			clauseResults.setValid(result);
 		}
 	}
@@ -444,20 +450,28 @@ void QueryEvaluator::evaluatePattern(Pattern & pattern, ClauseResults & patternR
 
 void QueryEvaluator::filterStmts(ClauseResults &clauseResults) {
 	if (clauseResults.numParamsInResult() == 2) {
-		set<int> leftParamSet = getParamSet(clauseResults.tableParams[0]);
-		set<int> rightParamSet = getParamSet(clauseResults.tableParams[1]);
+		Param leftParam = clauseResults.tableParams[0];
+		Param rightParam = clauseResults.tableParams[1];
+		set<int> leftParamSet = getParamSet(leftParam);
+		set<int> rightParamSet = getParamSet(rightParam);
 
 		vector<vector<int>> newTable;
 		for (vector<int> tableRow : clauseResults.results) {
-			if (leftParamSet.find(tableRow[0]) != leftParamSet.end() &&
+			if (leftParam.value == rightParam.value) { // Same param value
+				if (tableRow[0] == tableRow[1] &&
+					leftParamSet.find(tableRow[0]) != leftParamSet.end()) {
+					newTable.push_back(tableRow);
+				}
+			} else if (leftParamSet.find(tableRow[0]) != leftParamSet.end() &&
 				rightParamSet.find(tableRow[1]) != rightParamSet.end()) {
 				newTable.push_back(tableRow);
-			}
+			} else { ; }
 		}
 
 		clauseResults.setResults(newTable);
 
-	} else if (clauseResults.numParamsInResult() == 1) {
+	}
+	else if (clauseResults.numParamsInResult() == 1) {
 		set<int> paramSet = getParamSet(clauseResults.tableParams[0]);
 
 		vector<vector<int>> newTable;
@@ -486,7 +500,7 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 	else if (pType == PROCEDURE) { results = pkb.getAllProcedures(); }
 	else if (pType == CONSTANT) { results = pkb.getAllConstants(); }
 	else { ; }
-	
+
 	for (vector<int> values : results) {
 		paramSet.insert(values[0]);
 	}
@@ -499,9 +513,11 @@ void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable)
 
 	if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 1) {
 		handleWithValueAssignment(clause, iTable);
-	} else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 2)  {
+	}
+	else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 2) {
 		handleWithEquateVariables(clause, iTable);
-	} else { ; }
+	}
+	else { ; }
 
 };
 
@@ -521,13 +537,15 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 
 	int paramIndex;
 	paramIndex = EvaluatorHelper::getParamInt(paramInTable, iTable);
-	
+
 	int valueOfParam;
 	if (paramInTable.attribute == PROCNAME) { // Constant is procedure name
 		valueOfParam = pkb.getVariableId(paramWithValue.value);
-	} else if (paramInTable.attribute == VARNAME) { // Constant is variable name
+	}
+	else if (paramInTable.attribute == VARNAME) { // Constant is variable name
 		valueOfParam = pkb.getProcedureId(paramWithValue.value);
-	} else { // Constant is integer
+	}
+	else { // Constant is integer
 		valueOfParam = stoi(paramWithValue.value);
 	}
 
@@ -559,7 +577,8 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 		}
 		else if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
 			updatedTable.push_back(tableRow);
-		} else { ; }
+		}
+		else { ; }
 
 	}
 	iTable.setResultsTable(updatedTable);
@@ -569,9 +588,11 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 string QueryEvaluator::getProcOrVarName(AttrType type, int id) {
 	if (type == PROCNAME) {
 		return pkb.getProcedureName(id);
-	} else if (type == VARNAME) {
+	}
+	else if (type == VARNAME) {
 		return pkb.getVariableName(id);
-	} else {
+	}
+	else {
 		return "";
 	}
 };
@@ -584,7 +605,8 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 			if (iTable.resultsTable.size() > 0 || // Table not empty
 				iTable.tableParams.size() == 0) { // No statement to evaluate
 				return{ "true" };
-			} else {
+			}
+			else {
 				return{ "false" };
 			}
 		}
@@ -619,9 +641,11 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 			string paramVal;
 			if (p.type == VARIABLE) {
 				paramVal = pkb.getVariableName(tableRow[paramInt]);
-			} else if (p.type == PROCEDURE) {
+			}
+			else if (p.type == PROCEDURE) {
 				paramVal = pkb.getProcedureName(tableRow[paramInt]);
-			} else {
+			}
+			else {
 				paramVal = to_string(tableRow[paramInt]);
 			}
 			paramValueSet.insert(paramVal);
@@ -632,7 +656,8 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 			paramValues.push_back(value);
 		}
 		return paramValues;
-	} else { // Selected param not in table
+	}
+	else { // Selected param not in table
 		return getAllParamsOfType(p);
 	}
 };
