@@ -4,8 +4,8 @@ RelationshipTable::RelationshipTable() {
 	unordered_set<ParamType> leftArg, rightArg;
 
 	//Uses & Modifies
-	leftArg = { STMT, ASSIGN, WHILE, PROG_LINE, IF, PROCEDURE, CALL, IDENT, INTEGER };
-	rightArg = { VARIABLE, IDENT, ALL };
+	leftArg = { STMT, ASSIGN, WHILE, PROG_LINE, IF, PROCEDURE, CALL, PROC_IDENT, INTEGER };
+	rightArg = { VARIABLE, VAR_IDENT, ALL };
 	Relationship rel1(2, leftArg, rightArg);
 	relTable["Uses"] = rel1;
 	relTable["Modifies"] = rel1;
@@ -40,8 +40,8 @@ RelationshipTable::RelationshipTable() {
 	rightArg.clear();
 
 	//Calls & Calls*
-	leftArg = { PROCEDURE, IDENT, ALL };
-	rightArg = { PROCEDURE, IDENT, ALL };
+	leftArg = { PROCEDURE, PROC_IDENT, ALL };
+	rightArg = { PROCEDURE, PROC_IDENT, ALL };
 	Relationship rel5(2, leftArg, rightArg);
 	relTable["Calls"] = rel5;
 	relTable["CallsT"] = rel5;
@@ -58,7 +58,7 @@ RelationshipTable::RelationshipTable() {
 	rightArg.clear();
 
 	//Pattern assign
-	leftArg = { VARIABLE, IDENT, ALL };
+	leftArg = { VARIABLE, VAR_IDENT, ALL };
 	rightArg = { EXPR, EXPR_EXACT, ALL };
 	Relationship rel7(2, leftArg, rightArg);
 	relTable["assignpt"] = rel7;
@@ -66,7 +66,7 @@ RelationshipTable::RelationshipTable() {
 	rightArg.clear();
 
 	//Pattern if & Pattern while
-	leftArg = { VARIABLE, IDENT, ALL };
+	leftArg = { VARIABLE, VAR_IDENT, ALL };
 	rightArg = { ALL };
 	Relationship rel8(3, leftArg, rightArg);
 	Relationship rel9(2, leftArg, rightArg);
@@ -84,8 +84,8 @@ RelationshipTable::RelationshipTable() {
 	rightArg.clear();
 
 	//With String
-	leftArg = { PROCEDURE, CALL, VARIABLE, IDENT };
-	rightArg = { PROCEDURE, CALL, VARIABLE, IDENT };
+	leftArg = { PROCEDURE, CALL, VARIABLE, VAR_IDENT, PROC_IDENT };
+	rightArg = { PROCEDURE, CALL, VARIABLE, VAR_IDENT, PROC_IDENT };
 	Relationship rel11(2, leftArg, rightArg);
 	relTable["withString"] = rel11;
 	leftArg.clear();

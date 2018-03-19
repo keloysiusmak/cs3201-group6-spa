@@ -66,6 +66,12 @@ const unordered_map<int, ParamType> NUMBER_MAPPING_CLAUSE_ARG_TYPE = { { 1, INTE
 const unordered_map<int, ParamType> NUMBER_MAPPING_EXPRESSION_TYPE = { { 1, EXPR },
 { 2, EXPR_EXACT }, { 3, ALL } };
 
+const unordered_map<string, ParamType> REL_MAPPING_LEFT_IDENT = { { "Modifies", PROC_IDENT },
+{ "Uses", PROC_IDENT }, { "Calls", PROC_IDENT }, { "CallsT", PROC_IDENT }, { "assignpt", VAR_IDENT } };
+
+const unordered_map<string, ParamType> REL_MAPPING_RIGHT_IDENT = { { "Modifies", VAR_IDENT },
+{ "Uses", VAR_IDENT },{ "Calls", PROC_IDENT },{ "CallsT", PROC_IDENT } };
+
 const unordered_map<bool, string> WITH_RELTABLE = { { true, "withString" }, { false, "withNumber" } };
 
 const regex synonymRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)");
@@ -866,6 +872,7 @@ bool Preprocessor::parseClauseArg(QueryObject &qo, string relType, string arg1, 
 	}
 	else if (leftArgType == IDENT) {
 		leftArg = Utils::sanitise((Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1));
+		leftArgType = REL_MAPPING_LEFT_IDENT.find(rel)->second;
 	}
 
 	//Check if synonym exists in declarations and convert the type to the corresponding type
@@ -887,6 +894,7 @@ bool Preprocessor::parseClauseArg(QueryObject &qo, string relType, string arg1, 
 	}
 	else if (rightArgType == IDENT) {
 		rightArg = Utils::sanitise((Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE)).at(1));
+		rightArgType = REL_MAPPING_RIGHT_IDENT.find(rel)->second;
 	}
 
 	if (!relTable.isValidArg(rel, leftArgType, rightArgType)) {
@@ -933,6 +941,8 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 		}
 	}
 
+	auto relPt = KEYWORDS_PATTERN_REL.find(entityType);
+
 	//check whether leftArg is synonym, _ or identity
 	int leftArgMappingNum = retrieveClauseArgType(leftArg);
 
@@ -954,9 +964,8 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 	}
 	else if (leftArgType == IDENT) {
 		leftArg = Utils::sanitise((Utils::split(leftArg, SYMBOL_DOUBLE_QUOTE)).at(1));
+		leftArgType = REL_MAPPING_LEFT_IDENT.find(relPt->second)->second;
 	}
-
-	auto relPt = KEYWORDS_PATTERN_REL.find(entityType);
 
 	if (!relTable.isValidArg(relPt->second, leftArgType, rightArgType)) {
 		return false;
@@ -981,6 +990,9 @@ bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string right
 
 	bool isWithString = false;
 
+	bool isLeftProcIdent = false;
+	bool isRightProcIdent = false;
+
 	if (isValidAttrRef(leftRef)) {
 		vector<string> leftAttrRef = Utils::split(leftRef, SYMBOL_FULL_STOP);
 
@@ -1001,8 +1013,12 @@ bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string right
 
 		switch (leftAttrType) {
 		case PROCNAME:
+			isWithString = true;
+			isRightProcIdent = true;
+			break;
 		case VARNAME:
 			isWithString = true;
+			break;
 		}
 	}
 	// if is synonym, it must be prog_line
@@ -1050,6 +1066,11 @@ bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string right
 		}
 		rightAttrType = KEYWORDS_WITH_TYPE.find(rightAttrRef.at(1))->second;
 		rightArg = rightAttrRef.at(0);
+
+		switch (rightAttrType) {
+		case PROCNAME:
+			isLeftProcIdent = true;
+		}
 	}
 	// if is synonym, it must be prog_line
 	else if (isValidSynonym(rightRef)) {
@@ -1078,6 +1099,25 @@ bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string right
 	else {
 		return false;
 	}
+	
+	//Convert either one side to the respective IDENT
+	if (leftArgType == IDENT) {
+		if (isLeftProcIdent) {
+			leftArgType = PROC_IDENT;
+		}
+		else {
+			leftArgType = VAR_IDENT;
+		}
+	}
+
+	if (rightArgType == IDENT) {
+		if (isRightProcIdent) {
+			rightArgType = PROC_IDENT;
+		}
+		else {
+			rightArgType = VAR_IDENT;
+		}
+	}
 
 	if (!relTable.isValidArg(WITH_RELTABLE.find(isWithString)->second, leftArgType, rightArgType)) {
 		return false;
@@ -1085,7 +1125,7 @@ bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string right
 
 	//Evaluate both arguments if both arguments are constant value like INTEGER and IDENT
 	if ((leftArgType == INTEGER && rightArgType == INTEGER) ||
-		(leftArgType == IDENT && rightArgType == IDENT)) {
+		(leftArgType == VAR_IDENT && rightArgType == VAR_IDENT)) {
 		return leftArg.compare(rightArg) == 0;
 	}
 	else {

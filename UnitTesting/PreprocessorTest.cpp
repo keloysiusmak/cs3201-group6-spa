@@ -306,7 +306,7 @@ public:
 		Assert::AreEqual(static_cast<int>(Modifies), static_cast<int>(qo.getClauses().at(0).getRelRef()));
 		Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qo.getClauses().at(0).getFirstParam().type));
 		Assert::AreEqual(firstParamValue, qo.getClauses().at(0).getFirstParam().value);
-		Assert::AreEqual(static_cast<int>(IDENT), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
+		Assert::AreEqual(static_cast<int>(VAR_IDENT), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
 		Assert::AreEqual(secondParamValue, qo.getClauses().at(0).getSecondParam().value);
 
 		//Invalid
@@ -414,7 +414,7 @@ public:
 		Assert::AreEqual(true, preprocessor.parsePattern(qo, ASSIGN, entity, arg1, arg2));
 		Assert::AreEqual(static_cast<int>(ASSIGN), static_cast<int>(qo.getPatterns().at(0).getEntity().type));
 		Assert::AreEqual(entity, qo.getPatterns().at(0).getEntity().value);
-		Assert::AreEqual(static_cast<int>(IDENT), static_cast<int>(qo.getPatterns().at(0).getLeftParam().type));
+		Assert::AreEqual(static_cast<int>(VAR_IDENT), static_cast<int>(qo.getPatterns().at(0).getLeftParam().type));
 		Assert::AreEqual(firstParamValue, qo.getPatterns().at(0).getLeftParam().value);
 		Assert::AreEqual(static_cast<int>(EXPR), static_cast<int>(qo.getPatterns().at(0).getRightParam().type));
 		Assert::AreEqual(secondParamValue, qo.getPatterns().at(0).getRightParam().value);
@@ -550,7 +550,7 @@ public:
 		Assert::AreEqual(static_cast<int>(PROCEDURE), static_cast<int>(qo.getWithClauses().at(2).getFirstParam().type));
 		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qo.getWithClauses().at(2).getFirstParam().attribute));
 		Assert::AreEqual(firstParamValue, qo.getWithClauses().at(2).getFirstParam().value);
-		Assert::AreEqual(static_cast<int>(IDENT), static_cast<int>(qo.getWithClauses().at(2).getSecondParam().type));
+		Assert::AreEqual(static_cast<int>(PROC_IDENT), static_cast<int>(qo.getWithClauses().at(2).getSecondParam().type));
 		Assert::AreEqual(static_cast<int>(NONE), static_cast<int>(qo.getWithClauses().at(2).getSecondParam().attribute));
 		Assert::AreEqual(secondParamValue, qo.getWithClauses().at(2).getSecondParam().value);
 
