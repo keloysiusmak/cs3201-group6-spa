@@ -1,0 +1,210 @@
+1 -
+assign a;
+Select a such that Modifies("first", "x")
+
+5000
+2 - 
+procedure p; variable v;
+Select v such that Modifies(p, v)
+
+5000
+3 - 
+prog_line n; variable v;
+Select v such that Modifies(n, v)
+
+5000
+4 - 
+variable v; while w;
+Select v.varName such that Modifies(w, v);
+
+5000
+5 - 
+call calls; variable v;
+Select v such that Modifies(calls, v)
+
+5000
+6 - 
+assign a;
+Select a such that Uses("first", "x")
+
+5000
+7 - 
+procedure p; variable v;
+Select v such that Uses(p, v)
+
+5000
+8 - 
+prog_line n; variable v;
+Select v such that Uses(n, v)
+
+5000
+9 - 
+while w; variable v;
+Select v such that Uses(w, v)
+
+5000
+10 - 
+call calls; variable v;
+Select v such that Uses(calls, v)
+
+5000
+11 - 
+prog_line n; if ifs;
+Select n such that Parent(n, ifs)
+
+5000
+12 - 
+assign a;
+Select a such that Parent(_, a)
+
+5000
+13 - 
+stmt s; assign a; while w;
+Select s such that Parent*(w, a)
+
+5000
+14 - 
+assign a; prog_line n;
+Select a such that Parent*(2, n)
+
+5000
+15 - 
+assign a; if ifs;
+Select a such that Parent*(ifs, a)
+
+5000
+16 - 
+prog_line n; if ifs;
+Select n such that Follows(n, ifs)
+
+5000
+17 - 
+assign a;
+Select a such that Follows(_, a)
+
+5000
+18 - 
+assign a;
+Select a such that Follows(a, _)
+
+5000
+19 - 
+assign a; while w;
+Select a such that Follows*(a, w)
+
+5000
+20 - 
+stmt s; prog_line n;
+Select s.stmt# such that Follows*(2, n)
+
+5000
+21 - 
+assign a; if ifs;
+Select a such that Follows*(ifs, a)
+
+5000
+22 - 
+assign a; variable v;
+Select a pattern a(v, _)
+
+5000
+23 - 
+assign a;
+Select a pattern a(_, _)
+
+5000
+24 - 
+assign a;
+Select a pattern a(v, "(x+y)*z")
+
+5000
+25 - 
+assign a; variable v;
+Select a pattern a(v, _"x+1"_)
+
+5000
+26 - 
+stmt s; assign a;
+Select s pattern a("y", "5*x")
+
+5000
+27 - 
+assign a;
+Select a pattern a(_, _"x*y*z"_)
+
+5000
+28 - 
+if ifs;
+Select ifs pattern ifs(_, _)
+
+5000
+29 - 
+if ifs; variable v;
+Select ifs pattern ifs(v, _)
+
+5000
+30 - 
+if ifs;
+Select ifs pattern ifs("x", _)
+
+5000
+31 - 
+while w;
+Select w pattern w(_, _)
+
+5000
+32 - 
+while w; variable v;
+Select w pattern w(v, _)
+
+5000
+33 - 
+while w;
+Select w pattern w("x", _)
+
+5000
+34 - 
+prog_line n; call calls;
+Select n such that Next(n, calls)
+
+5000
+35 - 
+assign a; while w;
+Select a such that Next*(a, w)
+
+5000
+36 - 
+stmt s;
+Select s such that Next(_, s)
+
+5000
+37 - 
+procedure p;
+Select p.procName such that Calls(p, "first")
+
+5000
+38 - 
+call calls; procedure p;
+Select calls.procName such that Calls*(_, p)
+
+5000
+39 - 
+procedure p;
+Select p such that Calls("first", "second")
+
+5000
+40 - 
+assign a; call calls;
+Select <a.stmt#, calls.procName, calls.stmt#> with calls.procName="first"
+
+5000
+41 - 
+prog_line n;
+Select BOOLEAN with n=8
+
+5000
+42 - 
+assign a; while w; call calls; variable v;
+Select <a,v,w> with a.stmt#=3 and v.varName="x" such that Parent(w, calls)
+
+5000

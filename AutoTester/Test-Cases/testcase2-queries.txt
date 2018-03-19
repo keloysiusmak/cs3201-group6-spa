@@ -366,5 +366,5 @@ Select a1 such that Modifies(s,v) pattern a1(v, _"1"_)
 74 - Modifies(s,v) pattern a1(v, _'x'_)
 stmt s; assign a1; variable v;
 Select a1 such that Modifies(s,v) pattern a1(v, _"x"_)
-6,7,8,14,15,16
+6,8,14,15,16
 5000
