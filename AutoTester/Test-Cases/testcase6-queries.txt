@@ -253,3 +253,6 @@ variable v;
 Select v such that Uses("Second",v)
 c,x,first,second,a,y,z
 5000
+52 -
+call calls; assign a;
+Select <a, calls.procName> such that Next*(calls, a)
