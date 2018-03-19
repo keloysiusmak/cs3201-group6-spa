@@ -455,17 +455,17 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
-			vector<vector<int>> results = pkb.getCallsBeforeStar(stoi(rightParam.value));
+			vector<vector<int>> results = pkb.getCallsBeforeStar(pkb.getProcedureId(rightParam.value));
 			clauseResults.setResults(results);
 		}
 	}
 	else {
 		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
-			vector<vector<int>> results = pkb.getCallsAfterStar(stoi(leftParam.value));
+			vector<vector<int>> results = pkb.getCallsAfterStar(pkb.getProcedureId(leftParam.value));
 			clauseResults.setResults(results);
 		}
 		else { // (concrete, concrete)
-			bool result = pkb.checkCallsStar(stoi(leftParam.value), stoi(rightParam.value));
+			bool result = pkb.checkCallsStar(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
 			clauseResults.setValid(result);
 		}
 	}
@@ -693,14 +693,21 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 	}
 	else { // Tuple
 		list<string> tupleResult;
+		std::vector<list<string>> paramValuesArray;
 		for (Param p : selectedParams) {
 			list<string> paramValues = paramToStringList(p, iTable);
+			paramValuesArray.push_back(paramValues);
+		}
+		for (int i = 0; i < paramValuesArray[0].size(); i++) {
 			/* Concat string values as  */
 			stringstream paramValSingleString;
-			for (string val : paramValues) {
-				paramValSingleString << val + " ";
+			for (int j = 0; j < paramValuesArray.size(); j++) {
+				paramValSingleString << paramValuesArray[j].front();
+				paramValuesArray[j].pop_front();
+				if (j < paramValuesArray.size() - 1) {
+					paramValSingleString << " ";
+				}
 			}
-			paramValSingleString << ", ";
 			tupleResult.push_back(paramValSingleString.str());
 		}
 		return tupleResult;
