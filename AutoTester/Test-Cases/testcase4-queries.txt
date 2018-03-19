@@ -176,7 +176,7 @@ Select n such that Follows*(3,n) pattern a ( _ ,_"f"_)
 32 - Combination of Parent* and pattern
 assign a; prog_line n;
 Select n such that Parent*(6,n) pattern a ( "p" ,_"f"_) 
-7,8,9
+
 5000
 33  - wrong number of argument for parent clause
 assign a; prog_line n;
