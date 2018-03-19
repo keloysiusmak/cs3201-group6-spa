@@ -46,12 +46,14 @@ public:
 	list<string> extractParams(vector<Param> selectedParams, IntermediateTable &iTable);
 	list<string> paramToStringList(Param p, IntermediateTable &iTable);
 	list<string> getAllParamsOfType(Param p);
+	int getId(Param p);
 	string getProcOrVarName(AttrType type, int id);
 
 	// With Clause Helpers
 	void handleWithClause(Clause &clause, IntermediateTable &iTable);
 	void handleWithValueAssignment(Clause &clause, IntermediateTable &iTable);
 	void handleWithEquateVariables(Clause &clause, IntermediateTable &iTable);
+	bool handleWithEvaluation(Clause &clause, IntermediateTable &iTable);
 
 private:
 	QueryObject queryObject;
