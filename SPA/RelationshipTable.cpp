@@ -4,7 +4,7 @@ RelationshipTable::RelationshipTable() {
 	unordered_set<ParamType> leftArg, rightArg;
 
 	//Uses & Modifies
-	leftArg = { STMT, ASSIGN, WHILE, PROG_LINE, IF, PROCEDURE, IDENT, INTEGER };
+	leftArg = { STMT, ASSIGN, WHILE, PROG_LINE, IF, PROCEDURE, CALL, IDENT, INTEGER };
 	rightArg = { VARIABLE, IDENT, ALL };
 	Relationship rel1(2, leftArg, rightArg);
 	relTable["Uses"] = rel1;

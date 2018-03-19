@@ -199,7 +199,6 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query48));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query49));
 		Assert::AreEqual(false, preprocessor.isValidQuery(query50));
-		Assert::AreEqual(true, preprocessor.isValidQuery(query51));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));

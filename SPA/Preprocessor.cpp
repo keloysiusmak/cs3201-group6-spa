@@ -1007,6 +1007,10 @@ bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string right
 	}
 	// if is synonym, it must be prog_line
 	else if (isValidSynonym(leftRef)) {
+
+		if (!isDeclarationSynonymExist(leftRef)) {
+			return false;
+		}
 		auto searchSynonym = declarationMap.find(leftRef);
 		leftArgType = KEYWORDS_DECLARATIONS.find(searchSynonym->second)->second;
 
@@ -1049,6 +1053,11 @@ bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string right
 	}
 	// if is synonym, it must be prog_line
 	else if (isValidSynonym(rightRef)) {
+
+		if (!isDeclarationSynonymExist(rightRef)) {
+			return false;
+		}
+
 		auto searchSynonym = declarationMap.find(rightRef);
 		rightArgType = KEYWORDS_DECLARATIONS.find(searchSynonym->second)->second;
 
