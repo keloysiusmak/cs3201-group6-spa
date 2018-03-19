@@ -646,7 +646,7 @@ list<string> QueryEvaluator::getAllParamsOfType(Param p) {
 	for (int value : paramSet) {
 		string valueString;
 		if (pType == VARIABLE) { valueString = pkb.getVariableName(value); }
-		else if (pType == PROCEDURE) { valueString = pkb.getVariableName(value); }
+		else if (pType == PROCEDURE) { valueString = pkb.getProcedureName(value); }
 		else { valueString = to_string(value); }
 		allParams.push_back(valueString);
 	}
