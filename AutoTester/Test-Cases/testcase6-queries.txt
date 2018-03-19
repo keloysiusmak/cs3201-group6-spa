@@ -1,3 +1,23 @@
+48 - 
+proc p1, p2;
+Select <p1, p2> such that Calls(p1,p2)
+First Second
+5000
+49 -
+proc p1, p2;
+Select <p1, p2> such that Calls*(p1,p2)
+First Second
+5000
+50 -
+variable v;
+Select v such that Uses(8,v)
+c,x,first,second,a,y,z
+5000
+51 -
+variable v;
+Select v such that Uses("Second",v)
+c,x,first,second,a,y,z
+5000
 1 -
 assign a;
 Select a such that Modifies("First", "x")
@@ -232,24 +252,4 @@ false
 
 Select BOOLEAN such that Next*(8,10)
 false
-5000
-48 - 
-proc p1, p2;
-Select <p1, p2> such that Calls(p1,p2)
-First Second
-5000
-49 -
-proc p1, p2;
-Select <p1, p2> such that Calls*(p1,p2)
-First Second
-5000
-50 -
-variable v;
-Select v such that Uses(8,v)
-c,x,first,second,a,y,z
-5000
-51 -
-variable v;
-Select v such that Uses("Second",v)
-c,x,first,second,a,y,z
 5000
