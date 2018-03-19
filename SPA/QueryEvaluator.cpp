@@ -46,13 +46,16 @@ list<string> QueryEvaluator::evaluateQuery() {
 	if (isValidQuery()) {
 
 		vector<Param> selectParams = queryObject.getSelectStatements();
-		IntermediateTable iTable;
+		IntermediateTable iTable; iTable.instantiateTable();
 
 		/* Evaluation of clauses */
 		for (Clause clause : queryObject.getClauses()) {
 			ClauseResults clauseResults;
 			evaluateClause(clause, clauseResults);
-			if (!clauseResults.hasResults()) return{};
+			if (!clauseResults.hasResults()) {
+				if (selectParams[0].type == BOOLEAN) return{ "false" };
+				else return{};
+			}
 			clauseResults.removeALLSyns(); // Sanitization
 			filterStmts(clauseResults);
 
@@ -65,7 +68,10 @@ list<string> QueryEvaluator::evaluateQuery() {
 		for (Pattern clause : queryObject.getPatterns()) {
 			ClauseResults patternResults;
 			evaluatePattern(clause, patternResults);
-			if (!patternResults.hasResults()) return{};
+			if (!patternResults.hasResults()) {
+				if (selectParams[0].type == BOOLEAN) return{ "false" };
+				else return{};
+			}
 			patternResults.removeALLSyns(); // Sanitization
 			filterStmts(patternResults);
 
