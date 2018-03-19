@@ -2,6 +2,7 @@
 using namespace std;
 
 void ClauseResults::instantiateClause(Clause clause) {
+	valid = false;
 	lhs = clause.getFirstParam();
 	rhs = clause.getSecondParam();
 	if (Utils::isSynonym(lhs.type)) tableParams.push_back(lhs);
@@ -9,6 +10,7 @@ void ClauseResults::instantiateClause(Clause clause) {
 };
 
 void ClauseResults::instantiatePattern(Pattern pattern) {
+	valid = false;
 	entRef = pattern.getEntity();
 	lhs = pattern.getLeftParam();
 	rhs = pattern.getRightParam();
