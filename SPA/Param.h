@@ -13,6 +13,7 @@ enum ParamType {
 	IDENT, //IDENT refers to "x"
 	SYNONYM, //Synonym is the general term
 	BOOLEAN, //return true/false
+	PROC_IDENT, VAR_IDENT, //differentiate IDENT
 	ALL
 }; // ALL represents _
 
