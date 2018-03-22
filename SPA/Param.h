@@ -18,7 +18,7 @@ enum ParamType {
 }; // ALL represents _
 
 
-	/* Attribute type to account for with statements */
+/* Attribute type to account for with statements */
 enum AttrType {
 	PROCNAME, VARNAME, VALUE, STMT_NO, NONE //attrName for with clause
 };

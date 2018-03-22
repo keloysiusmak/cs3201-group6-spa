@@ -523,6 +523,7 @@ void QueryEvaluator::filterStmts(ClauseResults &clauseResults) {
 /* Get param type as a set of values */
 set<int> QueryEvaluator::getParamSet(Param p) {
 	ParamType pType = p.type;
+	AttrType pAttr = p.attribute;
 	vector<vector<int>> results;
 	set<int> paramSet;
 
@@ -531,7 +532,16 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 	else if (pType == ASSIGN) { results = pkb.getAllStatementsWithType(1); }
 	else if (pType == WHILE) { results = pkb.getAllStatementsWithType(2); }
 	else if (pType == IF) { results = pkb.getAllStatementsWithType(3); }
-	else if (pType == CALL) { results = pkb.getAllStatementsWithType(4); }
+	else if (pType == CALL) {
+		vector<vector<int>> callStmts = pkb.getAllStatementsWithType(4);
+		if (pAttr == NONE) results = callStmts;
+		else if (pAttr == PROCNAME) {
+			for (vector<int> stmt : callStmts) {
+				vector<int> procId = pkb.getProcedureCalledByCallStatement(stmt[0])[0];
+				results.push_back(procId);
+			}
+		}
+	}
 	else if (pType == PROCEDURE) { results = pkb.getAllProcedures(); }
 	else if (pType == CONSTANT) { results = pkb.getAllConstants(); }
 	else { ; }
@@ -634,12 +644,7 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 	} else if (Utils::isSynonym(lhs.type)) { // LHS syn
 		set<int> lhsParamSet = getParamSet(lhs);
 		for (int value : lhsParamSet) {
-			if (lhs.type == CALL && lhs.attribute == PROCNAME) {
-				if (pkb.getProcedureCalledByCallStatement(value)[0][0] == getId(rhs, lhs.type, lhs.attribute)) return true;
-			}
-			else {
-				if (value == getId(rhs, lhs.type, lhs.attribute)) return true;
-			}
+			if (value == getId(rhs, lhs.type, lhs.attribute)) return true;
 		}
 	} else if (Utils::isSynonym(rhs.type)) { // RHS syn
 		set<int> rhsParamSet = getParamSet(rhs);
@@ -707,23 +712,35 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 	}
 	else { // Tuple
 		list<string> tupleResult;
-		std::vector<list<string>> paramValuesArray;
+		vector<int> paramIndexes;
+
 		for (Param p : selectedParams) {
-			list<string> paramValues = paramToStringList(p, iTable);
-			paramValuesArray.push_back(paramValues);
+			paramIndexes.push_back(EvaluatorHelper::getParamInt(p, iTable));
 		}
-		for (int i = 0; i < paramValuesArray[0].size(); i++) {
-			/* Concat string values as  */
-			stringstream paramValSingleString;
-			for (int j = 0; j < paramValuesArray.size(); j++) {
-				paramValSingleString << paramValuesArray[j].front();
-				paramValuesArray[j].pop_front();
-				if (j < paramValuesArray.size() - 1) {
-					paramValSingleString << " ";
+
+		stringstream tupleRowString;
+		for (size_t i = 0; i < iTable.resultsTable.size(); i++) {
+			vector<int> tableRow = iTable.resultsTable[i];
+			tupleRowString.str("");
+
+			for (size_t j = 0; j < paramIndexes.size(); j++) {
+				int indexOfParam = paramIndexes[j];
+				int paramValue = tableRow[indexOfParam];
+
+				string value;
+				if (selectedParams[j].type == PROCEDURE) {
+					value = pkb.getProcedureName(paramValue);
+				} else if (selectedParams[j].type == VARIABLE) {
+					value = pkb.getVariableName(paramValue);
+				} else {
+					value = to_string(tableRow[indexOfParam]);
 				}
+
+				if (j == paramIndexes.size() - 1) tupleRowString << value;
+				else tupleRowString << value << " ";
 			}
-			tupleResult.push_back(paramValSingleString.str());
-		}
+			tupleResult.push_back(tupleRowString.str());
+	}
 		return tupleResult;
 	}
 };
@@ -764,12 +781,14 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 list<string> QueryEvaluator::getAllParamsOfType(Param p) {
 	set<int> paramSet = getParamSet(p);
 	ParamType pType = p.type;
+	AttrType pAttr = p.attribute;
 	list<string> allParams;
 
 	for (int value : paramSet) {
 		string valueString;
 		if (pType == VARIABLE) { valueString = pkb.getVariableName(value); }
 		else if (pType == PROCEDURE) { valueString = pkb.getProcedureName(value); }
+		else if (pType == CALL && pAttr == PROCNAME) { valueString = pkb.getProcedureName(value);  }
 		else { valueString = to_string(value); }
 		allParams.push_back(valueString);
 	}
