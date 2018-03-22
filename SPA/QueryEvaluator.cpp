@@ -634,12 +634,17 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 	} else if (Utils::isSynonym(lhs.type)) { // LHS syn
 		set<int> lhsParamSet = getParamSet(lhs);
 		for (int value : lhsParamSet) {
-			if (value == getId(rhs)) return true;
+			if (lhs.type == CALL && lhs.attribute == PROCNAME) {
+				if (pkb.getProcedureCalledByCallStatement(value)[0][0] == getId(rhs, lhs.type, lhs.attribute)) return true;
+			}
+			else {
+				if (value == getId(rhs, lhs.type, lhs.attribute)) return true;
+			}
 		}
 	} else if (Utils::isSynonym(rhs.type)) { // RHS syn
 		set<int> rhsParamSet = getParamSet(rhs);
 		for (int value : rhsParamSet) {
-			if (value == getId(lhs)) return true;
+			if (value == getId(lhs, rhs.type, rhs.attribute)) return true;
 		}
 	}
 	else {
@@ -649,10 +654,19 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 }
 
 /* Returns id for string value */
-int QueryEvaluator::getId(Param p) {
-	if (p.type == PROCEDURE) {
+int QueryEvaluator::getId(Param p, ParamType type, AttrType attribute) {
+	if (type == PROCEDURE) {
 		return pkb.getProcedureId(p.value);
-	} else if (p.type == VARNAME) {
+	}
+	else if (type == CALL) {
+		if (attribute == PROCNAME) {
+			return pkb.getProcedureId(p.value);
+		}
+		else {
+			return stoi(p.value);
+		}
+	}
+	else if (type == VARIABLE) {
 		return pkb.getVariableId(p.value);
 	} else { // Assumes integer value for other types
 		return stoi(p.value);
