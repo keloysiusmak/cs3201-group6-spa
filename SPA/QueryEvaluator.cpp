@@ -523,6 +523,7 @@ void QueryEvaluator::filterStmts(ClauseResults &clauseResults) {
 /* Get param type as a set of values */
 set<int> QueryEvaluator::getParamSet(Param p) {
 	ParamType pType = p.type;
+	AttrType pAttr = p.attribute;
 	vector<vector<int>> results;
 	set<int> paramSet;
 
@@ -531,7 +532,16 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 	else if (pType == ASSIGN) { results = pkb.getAllStatementsWithType(1); }
 	else if (pType == WHILE) { results = pkb.getAllStatementsWithType(2); }
 	else if (pType == IF) { results = pkb.getAllStatementsWithType(3); }
-	else if (pType == CALL) { results = pkb.getAllStatementsWithType(4); }
+	else if (pType == CALL) {
+		vector<vector<int>> callStmts = pkb.getAllStatementsWithType(4);
+		if (pAttr == NONE) results = callStmts;
+		else if (pAttr == PROCNAME) {
+			for (vector<int> stmt : callStmts) {
+				vector<int> procId = pkb.getProcedureCalledByCallStatement(stmt[0])[0];
+				results.push_back(procId);
+			}
+		}
+	}
 	else if (pType == PROCEDURE) { results = pkb.getAllProcedures(); }
 	else if (pType == CONSTANT) { results = pkb.getAllConstants(); }
 	else { ; }
@@ -634,12 +644,7 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 	} else if (Utils::isSynonym(lhs.type)) { // LHS syn
 		set<int> lhsParamSet = getParamSet(lhs);
 		for (int value : lhsParamSet) {
-			if (lhs.type == CALL && lhs.attribute == PROCNAME) {
-				if (pkb.getProcedureCalledByCallStatement(value)[0][0] == getId(rhs, lhs.type, lhs.attribute)) return true;
-			}
-			else {
-				if (value == getId(rhs, lhs.type, lhs.attribute)) return true;
-			}
+			if (value == getId(rhs, lhs.type, lhs.attribute)) return true;
 		}
 	} else if (Utils::isSynonym(rhs.type)) { // RHS syn
 		set<int> rhsParamSet = getParamSet(rhs);
@@ -764,12 +769,14 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 list<string> QueryEvaluator::getAllParamsOfType(Param p) {
 	set<int> paramSet = getParamSet(p);
 	ParamType pType = p.type;
+	AttrType pAttr = p.attribute;
 	list<string> allParams;
 
 	for (int value : paramSet) {
 		string valueString;
 		if (pType == VARIABLE) { valueString = pkb.getVariableName(value); }
 		else if (pType == PROCEDURE) { valueString = pkb.getProcedureName(value); }
+		else if (pType == CALL && pAttr == PROCNAME) { valueString = pkb.getProcedureName(value);  }
 		else { valueString = to_string(value); }
 		allParams.push_back(valueString);
 	}
