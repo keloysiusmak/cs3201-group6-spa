@@ -1215,8 +1215,8 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getNextBeforeStar(3) == data));
 			Assert::AreEqual(true, (pkb.getNextBeforeStar(1) == data));
 
-			pkb.insertToTable(NEXT_STAR_INVERSE_TABLE, 2, { { 1 } });
-			pkb.insertToTable(NEXT_STAR_INVERSE_TABLE, 3, { { 1,2 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 2, { { 1 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 3, { { 2 } });
 
 			/* Null Tests */
 			Assert::AreEqual(true, (pkb.getNextBeforeStar(1) == data));
@@ -1237,8 +1237,8 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getNextAfterStar(2) == data));
 			Assert::AreEqual(true, (pkb.getNextAfterStar(1) == data));
 
-			pkb.insertToTable(NEXT_STAR_TABLE, 1, { { 2,3 } });
-			pkb.insertToTable(NEXT_STAR_TABLE, 2, { { 3 } });
+			pkb.insertToTable(NEXT_TABLE, 1, { { 2 } });
+			pkb.insertToTable(NEXT_TABLE, 2, { { 3 } });
 
 			/* Valid Tests */
 			data = { { 2 },{ 3 } };
@@ -1273,9 +1273,13 @@ namespace UnitTesting
 			std::vector<std::vector<int>> data;
 			Assert::AreEqual(true, (pkb.getAllNextStar() == data));
 
-			pkb.insertToTable(NEXT_STAR_TABLE, 1, { { 1,2,3 } });
-			pkb.insertToTable(NEXT_STAR_TABLE, 2, { { 1,2,3 } });
-			pkb.insertToTable(NEXT_STAR_TABLE, 3, { { 1,2,3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 1, { { 1 }, {}, {}, {2} });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 2 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 2 },{},{},{ 1 } });
+
+			pkb.insertToTable(NEXT_TABLE, 1, { { 2 } });
+			pkb.insertToTable(NEXT_TABLE, 2, { { 3 } });
+			pkb.insertToTable(NEXT_TABLE, 3, { { 1 } });
 
 			/* Valid Tests */
 			data = { {1,1}, { 1,2 },{1,3}, {2,1}, {2,2},{2,3}, {3,1}, {3,2}, {3,3} };
@@ -1305,8 +1309,10 @@ namespace UnitTesting
 			/* Null Tests */
 			Assert::AreEqual(false, pkb.checkNextStar(1, 2));
 
-			pkb.insertToTable(NEXT_STAR_TABLE, 1, { { 2,3,4 } });
-			pkb.insertToTable(NEXT_STAR_TABLE, 2, { { 2,3,4 } });
+			pkb.insertToTable(NEXT_TABLE, 1, { { 2 } });
+			pkb.insertToTable(NEXT_TABLE, 2, { { 3 } });
+			pkb.insertToTable(NEXT_TABLE, 3, { { 4 } });
+			pkb.insertToTable(NEXT_TABLE, 4, { { 2 } });
 
 			/* Valid Tests */
 			Assert::AreEqual(true, pkb.checkNextStar(1, 2));
