@@ -46,7 +46,7 @@ public:
 	list<string> extractParams(vector<Param> selectedParams, IntermediateTable &iTable);
 	list<string> paramToStringList(Param p, IntermediateTable &iTable);
 	list<string> getAllParamsOfType(Param p);
-	int getId(Param p);
+	int getId(Param p, ParamType type, AttrType attribute);
 	string getProcOrVarName(AttrType type, int id);
 
 	// With Clause Helpers
