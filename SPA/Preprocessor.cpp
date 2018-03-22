@@ -47,7 +47,8 @@ const unordered_map<ParamType, string> KEYWORDS_PATTERN_REL = { { ASSIGN, "assig
 { WHILE, "whilept" }, { IF, "ifpt" } };
 const unordered_map<string, RelRef> KEYWORDS_CLAUSES = { { "Modifies", Modifies }, { "Uses", Uses }, 
 { "Parent", Parent },{ "ParentT", ParentT },{ "Follows", Follows },{ "FollowsT", FollowsT }, 
-{ "Next", Next },{ "NextT", NextT },{ "Calls", Calls },{ "CallsT", CallsT } };
+{ "Next", Next },{ "NextT", NextT },{ "Calls", Calls },{ "CallsT", CallsT }, { "Affects", Affects },
+{ "AffectsT", AffectsT } };
 
 const unordered_map<string, AttrType> KEYWORDS_WITH_TYPE = { { "procName", PROCNAME },
 { "varName", VARNAME },
@@ -183,9 +184,11 @@ bool Preprocessor::isValidDeclaration(string declaration) {
 	}
 
 	for (int i = 1; i < declarationArr.size(); i++) {
-		//remove comma
-		vector<string> synonym = Utils::split(declarationArr.at(i), SYMBOL_COMMA);
-		string s = Utils::sanitise(synonym.at(0));
+		//skip comma
+		if (declarationArr.at(i).at(0) == SYMBOL_COMMA) {
+			continue;
+		}
+		string s = Utils::sanitise(declarationArr.at(i));
 
 		if (!isValidSynonym(s) || isDeclarationSynonymExist(s)) {
 			return false;
@@ -844,7 +847,7 @@ bool Preprocessor::parseClauseArg(QueryObject &qo, string relType, string arg1, 
 			return false;
 		}
 		break;
-	case NextT:
+	case NextT: case Affects: case AffectsT:
 		if (!isValidStmtRef(leftArg) || !isValidStmtRef(rightArg)) {
 			return false;
 		}
