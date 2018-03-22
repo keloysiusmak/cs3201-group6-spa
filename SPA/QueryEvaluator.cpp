@@ -712,23 +712,35 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 	}
 	else { // Tuple
 		list<string> tupleResult;
-		std::vector<list<string>> paramValuesArray;
+		vector<int> paramIndexes;
+
 		for (Param p : selectedParams) {
-			list<string> paramValues = paramToStringList(p, iTable);
-			paramValuesArray.push_back(paramValues);
+			paramIndexes.push_back(EvaluatorHelper::getParamInt(p, iTable));
 		}
-		for (int i = 0; i < paramValuesArray[0].size(); i++) {
-			/* Concat string values as  */
-			stringstream paramValSingleString;
-			for (int j = 0; j < paramValuesArray.size(); j++) {
-				paramValSingleString << paramValuesArray[j].front();
-				paramValuesArray[j].pop_front();
-				if (j < paramValuesArray.size() - 1) {
-					paramValSingleString << " ";
+
+		stringstream tupleRowString;
+		for (size_t i = 0; i < iTable.resultsTable.size(); i++) {
+			vector<int> tableRow = iTable.resultsTable[i];
+			tupleRowString.str("");
+
+			for (size_t j = 0; j < paramIndexes.size(); j++) {
+				int indexOfParam = paramIndexes[j];
+				int paramValue = tableRow[indexOfParam];
+
+				string value;
+				if (selectedParams[j].type == PROCEDURE) {
+					value = pkb.getProcedureName(paramValue);
+				} else if (selectedParams[j].type == VARIABLE) {
+					value = pkb.getVariableName(paramValue);
+				} else {
+					value = to_string(tableRow[indexOfParam]);
 				}
+
+				if (j == paramIndexes.size() - 1) tupleRowString << value;
+				else tupleRowString << value << " ";
 			}
-			tupleResult.push_back(paramValSingleString.str());
-		}
+			tupleResult.push_back(tupleRowString.str());
+	}
 		return tupleResult;
 	}
 };
