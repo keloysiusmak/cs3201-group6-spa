@@ -12,12 +12,10 @@ const int CALLS_INVERSE_TABLE = 9;
 const int CALLS_STAR_INVERSE_TABLE = 10;
 const int CALL_STATEMENT_TABLE = 11;
 const int NEXT_TABLE = 12;
-const int NEXT_STAR_TABLE = 13;
-const int NEXT_INVERSE_TABLE = 14;
-const int NEXT_STAR_INVERSE_TABLE = 15;
-const int PATTERN_TABLE = 16;
-const int PROC_TABLE = 17;
-const int VAR_TABLE = 18;
+const int NEXT_INVERSE_TABLE = 13;
+const int PATTERN_TABLE = 14;
+const int PROC_TABLE = 15;
+const int VAR_TABLE = 16;
 
 
 const int ASSIGNMENT_TYPE = 1;

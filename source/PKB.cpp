@@ -1,6 +1,8 @@
 #pragma once
 
 #include <algorithm>
+#include <set>;
+#include <queue>;
 
 using namespace std;
 
@@ -126,7 +128,7 @@ int PKB::insertToNameTable(int table_id, std::vector<string> value)
 
 std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 {
-	if (table_id < 1 || table_id > NEXT_STAR_INVERSE_TABLE) {
+	if (table_id < 1 || table_id > NEXT_INVERSE_TABLE) {
 		std::vector<std::vector<int>> data;
 		return data;
 	} else {
@@ -931,35 +933,86 @@ std::vector<std::vector<int>> PKB::getNextAfter(int stmt) {
 }
 
 std::vector<std::vector<int>> PKB::getNextBeforeStar(int stmt) {
-	std::vector<std::vector<int>> data;
-	data = PKB::getFromTable(NEXT_STAR_INVERSE_TABLE, stmt);
-	if (static_cast<int>(data.size()) > 0) {
-		std::vector<int> result = data[0];
-		std::vector<std::vector<int>> output;
-		for (int i = 0; i < result.size(); i++) {
-			output.push_back({ result[i] });
-		}
-		return output;
-	}
 
-	std::vector<std::vector<int>> empty;
-	return empty;
+	std::vector<std::vector<int>> output;
+	std::set<int> nextStar;
+	std::queue<int> next;
+
+	next.empty();
+
+	std::vector<std::vector<int>> data = PKB::getFromTable(NEXT_INVERSE_TABLE, stmt);
+	if (data.size() > 0 && data[0].size() > 0) {
+		while (data[0].size() > 0) {
+			next.push(data[0].back());
+			nextStar.insert(data[0].back());
+			data[0].pop_back();
+		}
+		while (next.size() > 0) {
+			int nextStatement = next.front();
+			next.pop();
+			data = PKB::getFromTable(NEXT_INVERSE_TABLE, nextStatement);
+			if (data.size() > 0) {
+				std::vector<std::vector<int>> tempData = data;
+				for (int i = 0; i < tempData[0].size(); i++) {
+					int initialSize = nextStar.size();
+					int newData = tempData[0][i];
+					nextStar.insert(newData);
+					if (nextStar.size() > initialSize) {
+						next.push(newData);
+					}
+				}
+			}
+		}
+
+		std::vector<int> insert(nextStar.begin(), nextStar.end());
+		for (int i = 0; i < insert.size(); i++) {
+			output.push_back({insert[i]});
+		}
+
+		nextStar.clear();
+	}
+	return output;
 }
 
 std::vector<std::vector<int>> PKB::getNextAfterStar(int stmt) {
-	std::vector<std::vector<int>> data;
-	data = PKB::getFromTable(NEXT_STAR_TABLE, stmt);
-	if (static_cast<int>(data.size()) > 0) {
-		std::vector<int> result = data[0];
-		std::vector<std::vector<int>> output;
-		for (int i = 0; i < result.size(); i++) {
-			output.push_back({ result[i] });
-		}
-		return output;
-	}
+	std::vector<std::vector<int>> output;
+	std::set<int> nextStar;
+	std::queue<int> next;
 
-	std::vector<std::vector<int>> empty;
-	return empty;
+	next.empty();
+
+	std::vector<std::vector<int>> data = PKB::getFromTable(NEXT_TABLE, stmt);
+	if (data.size() > 0 && data[0].size() > 0) {
+		while (data[0].size() > 0) {
+			next.push(data[0].back());
+			nextStar.insert(data[0].back());
+			data[0].pop_back();
+		}
+		while (next.size() > 0) {
+			int nextStatement = next.front();
+			next.pop();
+			data = PKB::getFromTable(NEXT_TABLE, nextStatement);
+			if (data.size() > 0) {
+				std::vector<std::vector<int>> tempData = data;
+				for (int i = 0; i < tempData[0].size(); i++) {
+					int initialSize = nextStar.size();
+					int newData = tempData[0][i];
+					nextStar.insert(newData);
+					if (nextStar.size() > initialSize) {
+						next.push(newData);
+					}
+				}
+			}
+		}
+
+		std::vector<int> insert(nextStar.begin(), nextStar.end());
+		for (int i = 0; i < insert.size(); i++) {
+			output.push_back({ insert[i] });
+		}
+
+		nextStar.clear();
+	}
+	return output;
 }
 
 bool PKB::checkNext(int stmt1, int stmt2) {
@@ -1004,12 +1057,12 @@ std::vector<std::vector<int>> PKB::getAllNext() {
 std::vector<std::vector<int>> PKB::getAllNextStar() {
 
 	std::vector<std::vector<int>> output;
-	unordered_map<int, std::vector<std::vector<int>>> table = tables[NEXT_STAR_TABLE - 1];
+	std::vector<std::vector<int>> stmts = PKB::getAllStatements();
 
-	for (auto it = table.begin(); it != table.end(); ++it) {
-		std::vector<int> stmtList = it->second[0];
-		for (unsigned int i = 0; i < static_cast<unsigned int>(stmtList.size()); i++) {
-			output.push_back({ it->first, stmtList[i] });
+	for (int i = 0; i < stmts.size(); i++) {
+		std::vector<std::vector<int>> stmtList = PKB::getNextAfterStar(stmts[i][0]);
+		for (int j = 0; j < stmtList.size(); j++) {
+			output.push_back({ stmts[i][0], stmtList[j][0] });
 		}
 	}
 

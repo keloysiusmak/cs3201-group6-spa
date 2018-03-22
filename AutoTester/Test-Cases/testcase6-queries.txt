@@ -174,9 +174,9 @@ Select a such that Next*(a, w)
 1,2,4,5,12,13,14,15
 5000
 36 - 
-stmt s;
-Select s such that Next(_, s)
-10,11,12,13,14,15,2,3,4,5,6,7,8,9
+stmt s1,s2;
+Select s1 such that Next*(s1, s2) and Modifies(s2,"x")
+
 5000
 37 - 
 procedure p;
@@ -204,9 +204,9 @@ Select BOOLEAN with n=8
 true
 5000
 42 - 
-assign a; if ifs; call calls; variable v;
-Select <a,v,ifs> with a.stmt#=2 and v.varName="x" such that Parent(ifs, calls)
-2 x 6
+assign a; if ifs; call calls;
+Select a such that Parent(ifs, calls)
+1,12,13,14,15,2,4,5,7
 5000
 43 -
 stmt s;
@@ -238,11 +238,6 @@ procedure p1, p2;
 Select <p1, p2> such that Calls(p1,p2)
 First Second
 5000
-49 -
-procedure p1, p2;
-Select <p1, p2> such that Calls*(p1,p2)
-First Second
-5000
 50 -
 variable v;
 Select v such that Uses(8,v)
@@ -253,6 +248,3 @@ variable v;
 Select v such that Uses("Second",v)
 c,x,first,second,a,y,z
 5000
-52 -
-call calls; assign a;
-Select <a, calls.procName> such that Next*(calls, a)

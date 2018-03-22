@@ -10,7 +10,6 @@ using namespace std;
 
 bool DesignExtractor::extract(PKB &pkb) {
 	extractNext(pkb);
-	extractNextStar(pkb);
 	extractCallsInverse(pkb);
 	extractCallStatements(pkb);
 	extractCallsStar(pkb);
@@ -62,8 +61,14 @@ void DesignExtractor::processStatementList(PKB &pkb, int stmtListId, int prevWhi
 					processStatementList(pkb, thisStmt[0][2], prevWhile, stmts[1][i], nextStmtPush);
 				}
 				else {
-					processStatementList(pkb, thisStmt[0][1], prevWhile, stmts[1][i], 0);
-					processStatementList(pkb, thisStmt[0][2], prevWhile, stmts[1][i], 0);
+					if (nextStmt != 0) {
+						processStatementList(pkb, thisStmt[0][1], prevWhile, stmts[1][i], nextStmt);
+						processStatementList(pkb, thisStmt[0][2], prevWhile, stmts[1][i], nextStmt);
+					}
+					else {
+						processStatementList(pkb, thisStmt[0][1], prevWhile, stmts[1][i], 0);
+						processStatementList(pkb, thisStmt[0][2], prevWhile, stmts[1][i], 0);
+					}
 
 				}
 			}
@@ -81,86 +86,6 @@ void DesignExtractor::processStatementList(PKB &pkb, int stmtListId, int prevWhi
 				pkb.insertToTable(NEXT_TABLE, stmts[1][i], { {prevWhile} });
 				pkb.insertToTable(NEXT_INVERSE_TABLE, prevWhile, { { stmts[1][i] } });
 			}
-		}
-	}
-}
-
-void DesignExtractor::extractNextStar(PKB &pkb) {
-
-	std::vector<std::vector<int>> data = pkb.getAllStatements();
-	if (data.size() > 0) {
-		int statementCount = data.size();
-		int currStatement = 1;
-		std::set<int> nextStar;
-		std::queue<int> next;
-
-		while (currStatement <= statementCount) {
-
-			next.empty();
-
-			/* Regular */
-			std::vector<std::vector<int>> data = pkb.getFromTable(NEXT_TABLE, currStatement);
-			if (data.size() > 0 && data[0].size() > 0) {
-				while (data[0].size() > 0) {
-					next.push(data[0].back());
-					nextStar.insert(data[0].back());
-					data[0].pop_back();
-				}
-				while (next.size() > 0) {
-					int nextStatement = next.front();
-					next.pop();
-					data = pkb.getFromTable(NEXT_TABLE, nextStatement);
-					if (data.size() > 0) {
-						std::vector<std::vector<int>> tempData = data;
-						for (int i = 0; i < tempData[0].size(); i++) {
-							int initialSize = nextStar.size();
-							int newData = tempData[0][i];
-							nextStar.insert(newData);
-							if (nextStar.size() > initialSize) {
-								next.push(newData);
-							}
-						}
-					}
-				}
-
-				std::vector<int> insert(nextStar.begin(), nextStar.end());
-
-				pkb.insertToTable(NEXT_STAR_TABLE, currStatement, { insert });
-				nextStar.clear();
-			}
-			/* Inverse */
-			data = pkb.getFromTable(NEXT_INVERSE_TABLE, currStatement);
-			nextStar.clear();
-			if (data.size() > 0 && data[0].size() > 0) {
-				while (data[0].size() > 0) {
-					next.push(data[0].back());
-					nextStar.insert(data[0].back());
-					data[0].pop_back();
-				}
-				while (next.size() > 0) {
-					int nextStatement = next.front();
-					next.pop();
-					data = pkb.getFromTable(NEXT_INVERSE_TABLE, nextStatement);
-					if (data.size() > 0) {
-						std::vector<std::vector<int>> tempData = data;
-						for (int i = 0; i < tempData[0].size(); i++) {
-							int initialSize = nextStar.size();
-							int newData = tempData[0][i];
-							nextStar.insert(newData);
-							if (nextStar.size() > initialSize) {
-								next.push(newData);
-							}
-						}
-					}
-				}
-
-				std::vector<int> insert(nextStar.begin(), nextStar.end());
-
-				pkb.insertToTable(NEXT_STAR_INVERSE_TABLE, currStatement, { insert });
-				nextStar.clear();
-			}
-
-			currStatement++;
 		}
 	}
 }
