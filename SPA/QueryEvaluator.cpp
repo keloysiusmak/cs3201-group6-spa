@@ -562,7 +562,7 @@ void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable)
 	else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 2) {
 		handleWithEquateVariables(clause, iTable);
 	}
-	else { // Evaluate with by itself
+	else { // Evaluate and store into with table
 		iTable.hasResults = handleWithEvaluation(clause, iTable);
 	}
 };
@@ -634,22 +634,59 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable &iTable) {
 	Param lhs = withClause.getFirstParam();
 	Param rhs = withClause.getSecondParam();
-	vector<vector<int>> results; // For storage into iTable
+	ClauseResults withClauseResults;
+	vector<vector<int>> withResults;
+
+	withClauseResults.instantiateClause(withClause);
 	if (Utils::isSynonym(lhs.type) && Utils::isSynonym(rhs.type)) { // Both are synonyms
 		set<int> lhsParamSet = getParamSet(lhs);
 		set<int> rhsParamSet = getParamSet(rhs);
+
 		for (int value : lhsParamSet) {
-			if (rhsParamSet.find(value) != rhsParamSet.end()) return true;
+			vector<int> withTableRow;
+			if (rhsParamSet.find(value) != rhsParamSet.end()) {
+				withTableRow.push_back(value); withTableRow.push_back(value);
+				withResults.push_back(withTableRow);
+			}
 		}
+		if (withResults.size() > 0) {
+			withClauseResults.setResults(withResults);
+			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+			return true;
+		}
+
 	} else if (Utils::isSynonym(lhs.type)) { // LHS syn
 		set<int> lhsParamSet = getParamSet(lhs);
+
 		for (int value : lhsParamSet) {
-			if (value == getId(rhs, lhs.type, lhs.attribute)) return true;
+			vector<int> withTableRow;
+			withTableRow.clear();
+			if (value == getId(rhs, lhs.type, lhs.attribute)) {
+				withTableRow.push_back(value);
+				withResults.push_back(withTableRow);
+			}
 		}
+
+		if (withResults.size() > 0) {
+			withClauseResults.setResults(withResults);
+			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+			return true;
+		}
+
 	} else if (Utils::isSynonym(rhs.type)) { // RHS syn
 		set<int> rhsParamSet = getParamSet(rhs);
+
 		for (int value : rhsParamSet) {
-			if (value == getId(lhs, rhs.type, rhs.attribute)) return true;
+			vector<int> withTableRow;
+			if (value == getId(lhs, rhs.type, rhs.attribute)) {
+				withTableRow.push_back(value);
+			}
+		}
+
+		if (withResults.size() > 0) {
+			withClauseResults.setResults(withResults);
+			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+			return true;
 		}
 	}
 	else {
@@ -711,6 +748,7 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 		}
 	}
 	else { // Tuple
+		set<string> tupleResultSet;
 		list<string> tupleResult;
 		vector<int> paramIndexes;
 
@@ -739,8 +777,11 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 				if (j == paramIndexes.size() - 1) tupleRowString << value;
 				else tupleRowString << value << " ";
 			}
-			tupleResult.push_back(tupleRowString.str());
+			tupleResultSet.insert(tupleRowString.str());
 	}
+		for (string ans : tupleResultSet) {
+			tupleResult.push_back(ans);
+		}
 		return tupleResult;
 	}
 };

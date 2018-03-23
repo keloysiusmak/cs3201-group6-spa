@@ -43,6 +43,8 @@ struct IntermediateTable {
 	bool hasResults;
 	vector<Param> tableParams;
 	vector<vector<int>> resultsTable;
+	vector<Param> withTableParams;
+	vector<vector<int>> withResultsTable; // Storage of independent with results
 
 	void instantiateTable() {
 		hasResults = true;
@@ -59,4 +61,12 @@ struct IntermediateTable {
 	void setResultsTable(vector<vector<int>> &table) {
 		resultsTable = table;
 	};
+
+	void addWithTableParams(Param p) {
+		withTableParams.push_back(p);
+	}
+
+	void setWithResultsTable(vector<vector<int>> &table) {
+		withResultsTable = table;
+	}
 };
