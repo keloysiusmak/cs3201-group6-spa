@@ -96,7 +96,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 /* Main evaluation method */
 void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResults)
 {
-	clauseResults.instantiateClause(queryObject.getClauses()[0]);
+	clauseResults.instantiateClause(clause);
 	RelRef relation = clause.getRelRef();
 	if (relation == Follows) {
 		evaluateFollows(clause, clauseResults);

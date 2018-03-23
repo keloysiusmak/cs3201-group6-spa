@@ -176,7 +176,7 @@ Select a such that Next*(a, w)
 36 - 
 stmt s1,s2;
 Select s1 such that Next*(s1, s2) and Modifies(s2,"x")
-
+1,2,3,4,5,6,7,10,11,12,13,14,15
 5000
 37 - 
 procedure p;
