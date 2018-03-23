@@ -5,8 +5,8 @@ Select a such that Modifies("First", "x")
 5000
 2 - 
 procedure p; variable v;
-Select v such that Modifies(p, v)
-a,d,x,y
+Select <p, v> such that Modifies(p, v)
+First a,First d,First x,First y,Second x
 5000
 3 - 
 prog_line n; variable v;
@@ -186,7 +186,7 @@ Select p.procName such that Calls(p, "first")
 38 - 
 call calls; procedure p;
 Select calls.procName such that Calls*(_, p)
-
+Second
 5000
 39 - 
 procedure p;
@@ -204,9 +204,9 @@ Select BOOLEAN with n=8
 true
 5000
 42 - 
-assign a; if ifs; call calls;
-Select a such that Parent(ifs, calls)
-1,12,13,14,15,2,4,5,7
+assign a; if ifs; call calls; variable v;
+Select <a,v,ifs> with a.stmt#=2 and v.varName="x" such that Parent(ifs, calls)
+2 x 6
 5000
 43 -
 stmt s;
@@ -236,6 +236,11 @@ false
 48 - 
 procedure p1, p2;
 Select <p1, p2> such that Calls(p1,p2)
+First Second
+5000
+49 -
+procedure p1, p2;
+Select <p1, p2> such that Calls*(p1,p2)
 First Second
 5000
 50 -
