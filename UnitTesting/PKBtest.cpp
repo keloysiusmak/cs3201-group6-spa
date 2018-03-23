@@ -2136,6 +2136,81 @@ namespace UnitTesting
 			Assert::AreEqual(true, pkb.checkAffects(13, 15));
 			Assert::AreEqual(true, pkb.checkAffects(14, 15));
 		}
+
+		TEST_METHOD(PKBGetAllAffects)
+		{
+			PKB pkb;
+			std::vector<std::vector<int>> data;
+
+			Assert::AreEqual(true, (pkb.getAllAffects() == data));
+
+			pkb.insertToTable(STATEMENT_TABLE, 1, { { 1 },{},{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1 },{ 1,2,3,4 },{ 1,2 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 2 },{ 1,2,3,4 },{ 1,2 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 4, { { 3 },{ 1 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 5, { { 3 },{ 3,4,2,1 },{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 6, { { 3 },{},{ 2 },{ 4 } });
+			pkb.insertToTable(STATEMENT_TABLE, 7, { { 3 },{ 1,2 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 8, { { 4 },{ 1,2 },{ 1 },{ 1 } });
+
+			pkb.insertToTable(STATEMENT_TABLE, 9, { { 5 },{},{ 1,2 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 10, { { 6 },{},{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 11, { { 7 },{},{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 12, { { 5 },{ 1,2 },{ 3,4 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 13, { { 8 },{ 1,2 },{ 3 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 14, { { 9 },{ 1,2 },{ 4 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 15, { { 5 },{ 1,2,3,4 },{ 1 },{ 1 } });
+
+			pkb.insertToTable(NEXT_TABLE, 1, { { 2 } });
+			pkb.insertToTable(NEXT_TABLE, 2, { { 3 } });
+			pkb.insertToTable(NEXT_TABLE, 3, { { 4,8 } });
+			pkb.insertToTable(NEXT_TABLE, 4, { { 5 } });
+			pkb.insertToTable(NEXT_TABLE, 5, { { 6 } });
+			pkb.insertToTable(NEXT_TABLE, 6, { { 7 } });
+			pkb.insertToTable(NEXT_TABLE, 7, { { 2 } });
+			pkb.insertToTable(NEXT_TABLE, 8, { { 2 } });
+
+			pkb.insertToTable(NEXT_TABLE, 9, { { 10,11 } });
+			pkb.insertToTable(NEXT_TABLE, 10, { { 12 } });
+			pkb.insertToTable(NEXT_TABLE, 11, { { 12 } });
+			pkb.insertToTable(NEXT_TABLE, 12, { { 13,14 } });
+			pkb.insertToTable(NEXT_TABLE, 13, { { 15 } });
+			pkb.insertToTable(NEXT_TABLE, 14, { { 15 } });
+
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 2, { { 1,7,8 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 3, { { 2 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 4, { { 3 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 5, { { 4 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 6, { { 5 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 7, { { 6 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 8, { { 3 } });
+
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 10, { { 9 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 11, { { 9 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 12, { { 10,11 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 13, { { 12 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 14, { { 12 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 15, { { 13,14 } });
+
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { {0}, {1,2}, {} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 2 },{ 3 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 3 },{ 4,5,6,7 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 4, { { 3 },{ 8 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 5, { { 0 },{9,12,15},{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 6, { { 9 },{ 10 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 7, { { 9 },{ 13 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 8, { { 12 },{ 14 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 9, { { 12 },{ 13 },{} });
+
+			pkb.insertToTable(PROC_INFO_TABLE, 1, { { 1 }, {}, {} });
+			pkb.insertToTable(PROC_INFO_TABLE, 2, { { 5 },{},{} });
+
+			pkb.insertToNameTable(PROC_TABLE, {"a"});
+			pkb.insertToNameTable(PROC_TABLE, { "b" });
+
+			data = { {1,4}, {1,5}, {1,8}, {4,5}, {4,7},{ 5,4 },{ 5,5 },{ 5,7 },{ 5,8 },{7,8}, {8, 4}, {8,5}, {8,8}, {10, 13}, {10,14}, {10,15}, {11,13}, {11,14}, {11,15},{13,15}, {14,15} };
+			Assert::AreEqual(true, (pkb.getAllAffects() == data));
+		}
 		
 		TEST_METHOD(PKBGetStatementsWithConstant)
 		{
