@@ -32,6 +32,7 @@ public:
 	std::vector<std::vector<int>> getAllStatements();
 	std::vector<std::vector<int>> getAllStatementsWithType(int);
 	std::vector<std::vector<int>> getAllProcedures();
+	bool checkStatementHasType(int, int);
 
 	/* Follows Operations */
 	std::vector<std::vector<int>> getFollowsBefore(int);
@@ -105,6 +106,12 @@ public:
 
 	/* Pattern Operations */
 	std::vector<std::vector<int>> getStatementsWithPattern(Pattern);
+
+	/* Affects Operations */
+	std::vector<std::vector<int>> getAffectsBefore(int);
+	std::vector<std::vector<int>> getAffectsAfter(int);
+	bool checkAffects(int, int);
+	std::vector<std::vector<int>> getAllAffects();
 
 	/* Constant Operations */
 	std::vector<std::vector<int>> getStatementsWithConstant(int);
