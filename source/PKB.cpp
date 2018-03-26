@@ -1479,6 +1479,163 @@ std::vector<std::vector<int>> PKB::getAffectsAfter(int stmt) {
 
 }
 
+std::vector<std::vector<int>> PKB::getAffectsAfterStar(int stmt) {
+
+	std::vector<std::vector<int>> output;
+	std::vector<std::vector<int>> allStmtsId;
+	unordered_map<int, std::vector<int>> allStmts;
+	std::vector<int> potentialAffects;
+	std::vector<int> stmts;
+	set<int> checkedStmts;
+	stack<int> whileStack;
+	set<int> completedWhiles;
+
+	int currStmt;
+	int firstStmt;
+
+	firstStmt = stmt;
+	stack<int> tempWhileStack;
+	std::vector<std::vector<int>> parent = PKB::getParent(firstStmt);
+	while (parent.size() > 0) {
+		if (PKB::checkStatementHasType(parent[0][0], 2)) {
+			tempWhileStack.push(parent[0][0]);
+		}
+		parent = PKB::getParent(parent[0][0]);
+	}
+	while (tempWhileStack.size() > 0) {
+		whileStack.push(tempWhileStack.top());
+		tempWhileStack.pop();
+	}
+
+	vector<int> variableAffect;
+	allStmtsId = PKB::getNextAfterStar(firstStmt);
+	allStmtsId.push_back({ firstStmt });
+	variableAffect.clear();
+	for (int i = 0; i < allStmtsId.size(); i++) {
+		allStmts.insert({ allStmtsId[i][0], variableAffect });
+	}
+
+	queue<int> next;
+	next.push(firstStmt);
+	while (next.size() > 0) {
+		currStmt = next.front();
+		next.pop();
+
+		variableAffect = allStmts[currStmt];
+
+		if (PKB::checkStatementHasType(currStmt, 1)) {
+			bool linkAffect;
+			if (checkedStmts.size() > 0) {
+				linkAffect = false;
+			}
+			else {
+				linkAffect = true;
+			}
+
+			/* What statements this statement uses */
+			std::vector<std::vector<int>> variableUses = PKB::getUsesVariablesFromStatement(currStmt);
+			potentialAffects = allStmts[currStmt]; 
+			for (int i = 0; i < variableUses.size(); i++) {
+				if (potentialAffects.size() > 0) {
+					for (int j = 0; j < potentialAffects.size(); j++) {
+						if (variableUses[i][0] == potentialAffects[j]) {
+							output.push_back({currStmt});
+							std::sort(output.begin(), output.end());
+							output.erase(unique(output.begin(), output.end()), output.end());
+							linkAffect = true;
+						}
+					}
+				}
+			}
+
+			/* What statements this statement modifies */
+			std::vector<std::vector<int>> variableModifies = PKB::getModifiesVariablesFromStatement(currStmt);
+			for (int i = 0; i < variableModifies.size(); i++) {
+				for (int j = 0; j < potentialAffects.size(); j++) {
+					if (variableModifies[i][0] == potentialAffects[j]) {
+						if (!linkAffect) {
+							potentialAffects.erase(potentialAffects.begin() + j);
+						}
+					}
+				}
+				if (linkAffect) {
+					potentialAffects.push_back({ variableModifies[i][0] });
+					std::sort(potentialAffects.begin(), potentialAffects.end());
+					potentialAffects.erase(unique(potentialAffects.begin(), potentialAffects.end()), potentialAffects.end());
+				}
+			}
+
+		}
+		else if (PKB::checkStatementHasType(currStmt, 2)) {
+			set<int>::iterator it = completedWhiles.find(currStmt);
+			if (it == completedWhiles.end()) {
+				whileStack.push(currStmt);
+			}
+		}
+
+		/* Push to next */
+		std::vector<std::vector<int>> newNext;
+
+		newNext = PKB::getNextAfter(currStmt);
+		for (int j = 0; j < newNext.size(); j++) {
+			if (!(PKB::checkStatementHasType(currStmt, 2) && PKB::checkStatementHasType(newNext[j][0], 2))) {
+				int initSize = checkedStmts.size();
+				checkedStmts.insert(newNext[j][0]);
+
+				std::vector<int> alreadyInserted = allStmts[newNext[j][0]];
+				std::vector<int> toInsert = potentialAffects;
+				for (int k = 0; k < toInsert.size(); k++) {
+					alreadyInserted.push_back(toInsert[k]);
+				}
+				std::sort(alreadyInserted.begin(), alreadyInserted.end());
+				alreadyInserted.erase(unique(alreadyInserted.begin(), alreadyInserted.end()), alreadyInserted.end());
+				allStmts.erase(newNext[j][0]);
+				allStmts.insert({ newNext[j][0], alreadyInserted });
+
+				if (checkedStmts.size() > initSize) {
+					next.push({ newNext[j][0] });
+				}
+			}
+		}
+
+		while (next.size() == 0 && whileStack.size() > 0) {
+			int returnWhile = whileStack.top();
+			whileStack.pop();
+			int initialSize = completedWhiles.size();
+			completedWhiles.insert(returnWhile);
+			if (completedWhiles.size() > initialSize) {
+
+				if (whileStack.size() > 0) {
+					std::vector<int> alreadyInserted = allStmts[whileStack.top()];
+					std::vector<int> toInsert = allStmts[returnWhile];
+					for (int k = 0; k < toInsert.size(); k++) {
+						alreadyInserted.push_back(toInsert[k]);
+					}
+					std::sort(alreadyInserted.begin(), alreadyInserted.end());
+					alreadyInserted.erase(unique(alreadyInserted.begin(), alreadyInserted.end()), alreadyInserted.end());
+					allStmts.erase(whileStack.top());
+					allStmts.insert({ whileStack.top(), alreadyInserted });
+				}
+
+				std::vector<std::vector<int>> children = PKB::getChildrenStar(returnWhile);
+				for (int i = 0; i < children.size(); i++) {
+					checkedStmts.erase(children[i][0]);
+				}
+				checkedStmts.erase(returnWhile);
+				next.push(returnWhile);
+			}
+		}
+
+	}
+
+
+
+
+
+	return output;
+
+}
+
 bool PKB::checkAffects(int stmt1, int stmt2) {
 
 	std::vector<std::vector<int>> data;
