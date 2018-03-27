@@ -128,7 +128,13 @@ void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResul
 	else if (relation == CallsT) {
 		evaluateCallsStar(clause, clauseResults);
 	}
-	else { ; } // Extension
+	else if (relation == Affects) {
+		evaluateAffects(clause, clauseResults);
+	}
+	/* else if (relation == AffectsT) {
+		evaluateAffectsStar(clause, clauseResults);
+	} */
+	else { ; } // for bonus feature?
 }
 
 /* Right param: stmt syn or stmt no or _ */
@@ -470,6 +476,65 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 		}
 	}
 }
+
+/* Right param: assignment syn or assignment no or _ */
+/* Left param: assignment syn or assignment no or _ */
+void QueryEvaluator::evaluateAffects(Clause & clause, ClauseResults & clauseResults)
+{
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (Utils::isSynonym(leftParam.type)) { // (syn, syn)
+		if (Utils::isSynonym(rightParam.type)) {
+			vector<vector<int>> results = pkb.getAllAffects();
+			clauseResults.setResults(results);
+		}
+		else { // (syn, concrete)
+			vector<vector<int>> results = pkb.getAffectsBefore(pkb.getProcedureId(rightParam.value));
+			clauseResults.setResults(results);
+		}
+	}
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+			vector<vector<int>> results = pkb.getAffectsAfter(pkb.getProcedureId(leftParam.value));
+			clauseResults.setResults(results);
+
+		}
+		else { // (concrete, conrete)
+			bool result = pkb.checkAffects(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
+			clauseResults.setValid(result);
+		}
+	}
+}
+
+/* Right param: assignment syn or assignment no or _ */
+/* Left param: assignment syn or assignment no or _ */
+/* void QueryEvaluator::evaluateAffectsStar(Clause & clause, ClauseResults & clauseResults)
+{
+	Param leftParam = clause.getFirstParam();
+	Param rightParam = clause.getSecondParam();
+
+	if (Utils::isSynonym(leftParam.type)) {
+		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+			vector<vector<int>> results = pkb.getAllAffectsStar();
+			clauseResults.setResults(results);
+		}
+		else { // (syn, concrete)
+			vector<vector<int>> results = pkb.getAffectsBeforeStar(pkb.getProcedureId(rightParam.value));
+			clauseResults.setResults(results);
+		}
+	}
+	else {
+		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+			vector<vector<int>> results = pkb.getAffectsAfterStar(pkb.getProcedureId(leftParam.value));
+			clauseResults.setResults(results);
+		}
+		else { // (concrete, concrete)
+			bool result = pkb.checkAffectsStar(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
+			clauseResults.setValid(result);
+		}
+	}
+} */
 
 /* right Param: _ or IDENT or SYN */
 /* left Param: _ or exprSpec */
