@@ -1,6 +1,7 @@
 #pragma once
 #include "ClauseResults.h"
 #include "Utils.h"
+#include "IntermediateTable.h"
 #include <list>
 
 class EvaluatorHelper {

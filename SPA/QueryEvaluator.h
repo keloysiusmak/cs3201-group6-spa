@@ -9,6 +9,7 @@
 #include "Utils.h"
 #include "ClauseResults.h"
 #include "EvaluatorHelper.h";
+#include "IntermediateTable.h"
 
 class QueryEvaluator {
 public:

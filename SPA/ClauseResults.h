@@ -1,5 +1,4 @@
 #pragma once
-#include <unordered_map>
 #include "Clause.h"
 #include "Pattern.h"
 #include "Utils.h"
@@ -36,37 +35,4 @@ public:
 
 	// Helpers
 	void ClauseResults::removeALLSyns();
-
-};
-
-struct IntermediateTable {
-	bool hasResults;
-	vector<Param> tableParams;
-	vector<vector<int>> resultsTable;
-	vector<Param> withTableParams;
-	vector<vector<int>> withResultsTable; // Storage of independent with results
-
-	void instantiateTable() {
-		hasResults = true;
-	};
-
-	void setTableParams(vector<Param> params) {
-		tableParams = params;
-	};
-
-	void addTableParams(Param p) {
-		tableParams.push_back(p);
-	};
-
-	void setResultsTable(vector<vector<int>> &table) {
-		resultsTable = table;
-	};
-
-	void addWithTableParams(Param p) {
-		withTableParams.push_back(p);
-	}
-
-	void setWithResultsTable(vector<vector<int>> &table) {
-		withResultsTable = table;
-	}
 };
