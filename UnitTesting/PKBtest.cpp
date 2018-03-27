@@ -2222,6 +2222,128 @@ namespace UnitTesting
 
 		}
 
+		TEST_METHOD(PKBGetAffectsBeforeStar)
+		{
+			PKB pkb;
+			std::vector<std::vector<int>> data;
+
+			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(4) == data));
+
+			pkb.insertToTable(STATEMENT_TABLE, 1, { { 1 },{},{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1 },{ 1,2,3,4 },{ 1,2 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 2 },{ 1,2,3,4 },{ 1,2 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 4, { { 3 },{ 1 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 5, { { 3 },{ 3,4,2,1 },{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 6, { { 3 },{},{ 2 },{ 4 } });
+			pkb.insertToTable(STATEMENT_TABLE, 7, { { 3 },{ 1,2 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 8, { { 4 },{ 1,2 },{ 1 },{ 1 } });
+
+			pkb.insertToTable(STATEMENT_TABLE, 9, { { 5 },{},{ 1,2 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 10, { { 6 },{},{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 11, { { 7 },{},{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 12, { { 5 },{ 1,2 },{ 3,4 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 13, { { 8 },{ 1,2 },{ 3 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 14, { { 9 },{ 1,2 },{ 4 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 15, { { 5 },{ 1,2,3,4 },{ 1 },{ 1 } });
+
+			pkb.insertToTable(STATEMENT_TABLE, 16, { { 10 },{ 1,2,3,4 },{ 1,2 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 17, { { 11 },{ 2 },{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 18, { { 11 },{ 1,3,4 },{ 2 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 19, { { 12 },{ 3,2 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 20, { { 12 },{ 1,4 },{ 3 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 21, { { 13 },{ 4,2 },{ 3 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 22, { { 13 },{ 4,3 },{ 2 },{ 1 } });
+
+			pkb.insertToTable(NEXT_TABLE, 1, { { 2 } });
+			pkb.insertToTable(NEXT_TABLE, 2, { { 3 } });
+			pkb.insertToTable(NEXT_TABLE, 3, { { 4,8 } });
+			pkb.insertToTable(NEXT_TABLE, 4, { { 5 } });
+			pkb.insertToTable(NEXT_TABLE, 5, { { 6 } });
+			pkb.insertToTable(NEXT_TABLE, 6, { { 7 } });
+			pkb.insertToTable(NEXT_TABLE, 7, { { 2 } });
+			pkb.insertToTable(NEXT_TABLE, 8, { { 2 } });
+
+			pkb.insertToTable(NEXT_TABLE, 9, { { 10,11 } });
+			pkb.insertToTable(NEXT_TABLE, 10, { { 12 } });
+			pkb.insertToTable(NEXT_TABLE, 11, { { 12 } });
+			pkb.insertToTable(NEXT_TABLE, 12, { { 13,14 } });
+			pkb.insertToTable(NEXT_TABLE, 13, { { 15 } });
+			pkb.insertToTable(NEXT_TABLE, 14, { { 15 } });
+
+			pkb.insertToTable(NEXT_TABLE, 16, { { 17 } });
+			pkb.insertToTable(NEXT_TABLE, 17, { { 18 } });
+			pkb.insertToTable(NEXT_TABLE, 18, { { 19,16 } });
+			pkb.insertToTable(NEXT_TABLE, 19, { { 20 } });
+			pkb.insertToTable(NEXT_TABLE, 20, { { 21,18 } });
+			pkb.insertToTable(NEXT_TABLE, 21, { { 22 } });
+			pkb.insertToTable(NEXT_TABLE, 22, { { 20 } });
+
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 2, { { 1,7,8 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 3, { { 2 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 4, { { 3 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 5, { { 4 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 6, { { 5 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 7, { { 6 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 8, { { 3 } });
+
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 10, { { 9 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 11, { { 9 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 12, { { 10,11 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 13, { { 12 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 14, { { 12 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 15, { { 13,14 } });
+
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 16, { { 18 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 17, { { 16 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 18, { { 17,20 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 19, { { 18 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 20, { { 19,22 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 21, { { 20 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 22, { { 21 } });
+
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { { 0 },{ 1,2 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 2 },{ 3 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 3 },{ 4,5,6,7 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 4, { { 3 },{ 8 },{} });
+
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 5, { { 0 },{ 9,12,15 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 6, { { 9 },{ 10 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 7, { { 9 },{ 13 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 8, { { 12 },{ 14 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 9, { { 12 },{ 13 },{} });
+
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 10, { { 0 },{ 16 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 11, { { 16 },{ 17,18 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 12, { { 18 },{ 19,20 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 13, { { 20 },{ 21,22 },{} });
+
+			pkb.insertToTable(PROC_INFO_TABLE, 1, { { 1 },{},{} });
+			pkb.insertToTable(PROC_INFO_TABLE, 2, { { 5 },{},{} });
+			pkb.insertToTable(PROC_INFO_TABLE, 3, { { 10 },{},{} });
+
+			pkb.insertToNameTable(PROC_TABLE, { "a" });
+			pkb.insertToNameTable(PROC_TABLE, { "b" });
+			pkb.insertToNameTable(PROC_TABLE, { "c" });
+
+			data = { { 8 },{ 7 },{ 5 },{4}, { 1 } };
+			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(8) == data));
+
+			data = { { 14 },{ 11 },{ 10 },{ 13 } };
+			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(15) == data));
+
+			data = { { 11 },{ 10 } };
+			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(13) == data));
+
+			data = { { 11 },{ 10 } };
+			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(14) == data));
+
+			data = { { 22 },{ 21 },{ 19 } };
+			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(19) == data));
+
+			data = { { 22 },{ 21 } ,{ 19 } };
+			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(21) == data));
+		}
+
 		TEST_METHOD(PKBGetAffectsAfterStar)
 		{
 			PKB pkb;
@@ -2479,6 +2601,145 @@ namespace UnitTesting
 			Assert::AreEqual(true, pkb.checkAffects(22, 17));
 		}
 
+
+
+		TEST_METHOD(PKBCheckAffectsStar)
+		{
+			PKB pkb;
+
+			Assert::AreEqual(false, pkb.checkAffectsStar(1, 2));
+
+			pkb.insertToTable(STATEMENT_TABLE, 1, { { 1 },{},{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1 },{ 1,2,3,4 },{ 1,2 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 2 },{ 1,2,3,4 },{ 1,2 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 4, { { 3 },{ 1 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 5, { { 3 },{ 3,4,2,1 },{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 6, { { 3 },{},{ 2 },{ 4 } });
+			pkb.insertToTable(STATEMENT_TABLE, 7, { { 3 },{ 1,2 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 8, { { 4 },{ 1,2 },{ 1 },{ 1 } });
+
+			pkb.insertToTable(STATEMENT_TABLE, 9, { { 5 },{},{ 1,2 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 10, { { 6 },{},{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 11, { { 7 },{},{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 12, { { 5 },{ 1,2 },{ 3,4 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 13, { { 8 },{ 1,2 },{ 3 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 14, { { 9 },{ 1,2 },{ 4 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 15, { { 5 },{ 1,2,3,4 },{ 1 },{ 1 } });
+
+			pkb.insertToTable(STATEMENT_TABLE, 16, { { 10 },{ 1,2,3,4 },{ 1,2 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 17, { { 11 },{ 2 },{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 18, { { 11 },{ 1,3,4 },{ 2 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 19, { { 12 },{ 3,2 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 20, { { 12 },{ 1,4 },{ 3 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 21, { { 13 },{ 4,2 },{ 3 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 22, { { 13 },{ 4,3 },{ 2 },{ 1 } });
+
+			pkb.insertToTable(NEXT_TABLE, 1, { { 2 } });
+			pkb.insertToTable(NEXT_TABLE, 2, { { 3 } });
+			pkb.insertToTable(NEXT_TABLE, 3, { { 4,8 } });
+			pkb.insertToTable(NEXT_TABLE, 4, { { 5 } });
+			pkb.insertToTable(NEXT_TABLE, 5, { { 6 } });
+			pkb.insertToTable(NEXT_TABLE, 6, { { 7 } });
+			pkb.insertToTable(NEXT_TABLE, 7, { { 2 } });
+			pkb.insertToTable(NEXT_TABLE, 8, { { 2 } });
+
+			pkb.insertToTable(NEXT_TABLE, 9, { { 10,11 } });
+			pkb.insertToTable(NEXT_TABLE, 10, { { 12 } });
+			pkb.insertToTable(NEXT_TABLE, 11, { { 12 } });
+			pkb.insertToTable(NEXT_TABLE, 12, { { 13,14 } });
+			pkb.insertToTable(NEXT_TABLE, 13, { { 15 } });
+			pkb.insertToTable(NEXT_TABLE, 14, { { 15 } });
+
+			pkb.insertToTable(NEXT_TABLE, 16, { { 17 } });
+			pkb.insertToTable(NEXT_TABLE, 17, { { 18 } });
+			pkb.insertToTable(NEXT_TABLE, 18, { { 19,16 } });
+			pkb.insertToTable(NEXT_TABLE, 19, { { 20 } });
+			pkb.insertToTable(NEXT_TABLE, 20, { { 21,18 } });
+			pkb.insertToTable(NEXT_TABLE, 21, { { 22 } });
+			pkb.insertToTable(NEXT_TABLE, 22, { { 20 } });
+
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 2, { { 1,7,8 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 3, { { 2 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 4, { { 3 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 5, { { 4 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 6, { { 5 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 7, { { 6 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 8, { { 3 } });
+
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 10, { { 9 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 11, { { 9 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 12, { { 10,11 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 13, { { 12 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 14, { { 12 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 15, { { 13,14 } });
+
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 16, { { 18 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 17, { { 16 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 18, { { 17,20 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 19, { { 18 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 20, { { 19,22 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 21, { { 20 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 22, { { 21 } });
+
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { { 0 },{ 1,2 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 2 },{ 3 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 3 },{ 4,5,6,7 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 4, { { 3 },{ 8 },{} });
+
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 5, { { 0 },{ 9,12,15 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 6, { { 9 },{ 10 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 7, { { 9 },{ 13 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 8, { { 12 },{ 14 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 9, { { 12 },{ 13 },{} });
+
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 10, { { 0 },{ 16 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 11, { { 16 },{ 17,18 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 12, { { 18 },{ 19,20 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 13, { { 20 },{ 21,22 },{} });
+
+			pkb.insertToTable(PROC_INFO_TABLE, 1, { { 1 },{},{} });
+			pkb.insertToTable(PROC_INFO_TABLE, 2, { { 5 },{},{} });
+			pkb.insertToTable(PROC_INFO_TABLE, 3, { { 10 },{},{} });
+
+			pkb.insertToNameTable(PROC_TABLE, { "a" });
+			pkb.insertToNameTable(PROC_TABLE, { "b" });
+			pkb.insertToNameTable(PROC_TABLE, { "c" });
+
+			Assert::AreEqual(true, pkb.checkAffectsStar(1, 4));
+			Assert::AreEqual(true, pkb.checkAffectsStar(1, 5));
+			Assert::AreEqual(false, pkb.checkAffectsStar(1, 6));
+			Assert::AreEqual(true, pkb.checkAffectsStar(4, 5));
+			Assert::AreEqual(true, pkb.checkAffectsStar(4, 7));
+			Assert::AreEqual(true, pkb.checkAffectsStar(1, 8));
+			Assert::AreEqual(true, pkb.checkAffectsStar(4, 8));
+			Assert::AreEqual(true, pkb.checkAffectsStar(5, 8));
+			Assert::AreEqual(true, pkb.checkAffectsStar(7, 8));
+			Assert::AreEqual(true, pkb.checkAffectsStar(8, 8));
+
+			Assert::AreEqual(false, pkb.checkAffectsStar(10, 11));
+			Assert::AreEqual(false, pkb.checkAffectsStar(10, 12));
+			Assert::AreEqual(true, pkb.checkAffectsStar(10, 13));
+			Assert::AreEqual(true, pkb.checkAffectsStar(10, 14));
+			Assert::AreEqual(true, pkb.checkAffectsStar(10, 15));
+			Assert::AreEqual(false, pkb.checkAffectsStar(11, 10));
+			Assert::AreEqual(false, pkb.checkAffectsStar(11, 12));
+			Assert::AreEqual(true, pkb.checkAffectsStar(11, 13));
+			Assert::AreEqual(true, pkb.checkAffectsStar(11, 14));
+			Assert::AreEqual(true, pkb.checkAffectsStar(11, 15));
+			Assert::AreEqual(false, pkb.checkAffectsStar(12, 15));
+			Assert::AreEqual(true, pkb.checkAffectsStar(13, 15));
+			Assert::AreEqual(true, pkb.checkAffectsStar(14, 15));
+
+			Assert::AreEqual(true, pkb.checkAffectsStar(22, 21));
+			Assert::AreEqual(true, pkb.checkAffectsStar(21, 21));
+			Assert::AreEqual(true, pkb.checkAffectsStar(19, 21));
+			Assert::AreEqual(false, pkb.checkAffectsStar(17, 19));
+			Assert::AreEqual(true, pkb.checkAffectsStar(19, 17));
+			Assert::AreEqual(true, pkb.checkAffectsStar(21, 19));
+			Assert::AreEqual(true, pkb.checkAffectsStar(22, 19));
+			Assert::AreEqual(true, pkb.checkAffectsStar(22, 17));
+		}
+
 		TEST_METHOD(PKBGetAllAffects)
 		{
 			PKB pkb;
@@ -2584,6 +2845,113 @@ namespace UnitTesting
 
 			data = { {1,4}, {1,5}, {1,8}, {4,5}, {4,7},{ 5,4 },{ 5,5 },{ 5,7 },{ 5,8 },{7,8}, {8, 4}, {8,5}, {8,8}, {10, 13}, {10,14}, {10,15}, {11,13}, {11,14}, {11,15},{13,15}, {14,15}, {19,17}, {19,19},{ 19,21 },{21, 19},{ 21, 22 },{22, 17},{ 22, 19 },{ 22, 21 } };
 			Assert::AreEqual(true, (pkb.getAllAffects() == data));
+		}
+
+		TEST_METHOD(PKBGetAllAffectsStar)
+		{
+			PKB pkb;
+			std::vector<std::vector<int>> data;
+
+			Assert::AreEqual(true, (pkb.getAllAffects() == data));
+
+			pkb.insertToTable(STATEMENT_TABLE, 1, { { 1 },{},{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1 },{ 1,2,3,4 },{ 1,2 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 2 },{ 1,2,3,4 },{ 1,2 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 4, { { 3 },{ 1 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 5, { { 3 },{ 3,4,2,1 },{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 6, { { 3 },{},{ 2 },{ 4 } });
+			pkb.insertToTable(STATEMENT_TABLE, 7, { { 3 },{ 1,2 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 8, { { 4 },{ 1,2 },{ 1 },{ 1 } });
+
+			pkb.insertToTable(STATEMENT_TABLE, 9, { { 5 },{},{ 1,2 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 10, { { 6 },{},{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 11, { { 7 },{},{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 12, { { 5 },{ 1,2 },{ 3,4 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 13, { { 8 },{ 1,2 },{ 3 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 14, { { 9 },{ 1,2 },{ 4 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 15, { { 5 },{ 1,2,3,4 },{ 1 },{ 1 } });
+
+			pkb.insertToTable(STATEMENT_TABLE, 16, { { 10 },{ 1,2,3,4 },{ 1,2 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 17, { { 11 },{ 2 },{ 1 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 18, { { 11 },{ 1,3,4 },{ 2 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 19, { { 12 },{ 3,2 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 20, { { 12 },{ 1,4 },{ 3 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 21, { { 13 },{ 4,2 },{ 3 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 22, { { 13 },{ 4,3 },{ 2 },{ 1 } });
+
+			pkb.insertToTable(NEXT_TABLE, 1, { { 2 } });
+			pkb.insertToTable(NEXT_TABLE, 2, { { 3 } });
+			pkb.insertToTable(NEXT_TABLE, 3, { { 4,8 } });
+			pkb.insertToTable(NEXT_TABLE, 4, { { 5 } });
+			pkb.insertToTable(NEXT_TABLE, 5, { { 6 } });
+			pkb.insertToTable(NEXT_TABLE, 6, { { 7 } });
+			pkb.insertToTable(NEXT_TABLE, 7, { { 2 } });
+			pkb.insertToTable(NEXT_TABLE, 8, { { 2 } });
+
+			pkb.insertToTable(NEXT_TABLE, 9, { { 10,11 } });
+			pkb.insertToTable(NEXT_TABLE, 10, { { 12 } });
+			pkb.insertToTable(NEXT_TABLE, 11, { { 12 } });
+			pkb.insertToTable(NEXT_TABLE, 12, { { 13,14 } });
+			pkb.insertToTable(NEXT_TABLE, 13, { { 15 } });
+			pkb.insertToTable(NEXT_TABLE, 14, { { 15 } });
+
+			pkb.insertToTable(NEXT_TABLE, 16, { { 17 } });
+			pkb.insertToTable(NEXT_TABLE, 17, { { 18 } });
+			pkb.insertToTable(NEXT_TABLE, 18, { { 19,16 } });
+			pkb.insertToTable(NEXT_TABLE, 19, { { 20 } });
+			pkb.insertToTable(NEXT_TABLE, 20, { { 21,18 } });
+			pkb.insertToTable(NEXT_TABLE, 21, { { 22 } });
+			pkb.insertToTable(NEXT_TABLE, 22, { { 20 } });
+
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 2, { { 1,7,8 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 3, { { 2 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 4, { { 3 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 5, { { 4 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 6, { { 5 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 7, { { 6 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 8, { { 3 } });
+
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 10, { { 9 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 11, { { 9 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 12, { { 10,11 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 13, { { 12 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 14, { { 12 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 15, { { 13,14 } });
+
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 16, { { 18 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 17, { { 16 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 18, { { 17,20 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 19, { { 18 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 20, { { 19,22 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 21, { { 20 } });
+			pkb.insertToTable(NEXT_INVERSE_TABLE, 22, { { 21 } });
+
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { { 0 },{ 1,2 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 2 },{ 3 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 3 },{ 4,5,6,7 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 4, { { 3 },{ 8 },{} });
+
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 5, { { 0 },{ 9,12,15 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 6, { { 9 },{ 10 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 7, { { 9 },{ 13 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 8, { { 12 },{ 14 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 9, { { 12 },{ 13 },{} });
+
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 10, { { 0 },{ 16 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 11, { { 16 },{ 17,18 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 12, { { 18 },{ 19,20 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 13, { { 20 },{ 21,22 },{} });
+
+			pkb.insertToTable(PROC_INFO_TABLE, 1, { { 1 },{},{} });
+			pkb.insertToTable(PROC_INFO_TABLE, 2, { { 5 },{},{} });
+			pkb.insertToTable(PROC_INFO_TABLE, 3, { { 10 },{},{} });
+
+			pkb.insertToNameTable(PROC_TABLE, { "a" });
+			pkb.insertToNameTable(PROC_TABLE, { "b" });
+			pkb.insertToNameTable(PROC_TABLE, { "c" });
+
+			data = { { 1,4 },{ 1,5 },{1,7}, { 1,8 },{ 4,4 },{ 4,5 },{ 4,7 },{ 4,8 },{ 5,4 },{ 5,5 },{ 5,7 },{ 5,8 },{ 7,8 },{ 8, 4 },{ 8,5 },{ 8,7 },{ 8,8 },{ 10, 13 },{ 10,14 },{ 10,15 },{ 11,13 },{ 11,14 },{ 11,15 },{ 13,15 },{ 14,15 },{ 19,17 },{ 19,19 },{ 19,21 },{ 19,22 },{ 21, 17 },{ 21, 19 },{ 21, 21 },{ 21, 22 },{ 22, 17 },{ 22, 19 },{ 22, 21 },{ 22, 22 } };
+			Assert::AreEqual(true, (pkb.getAllAffectsStar() == data));
 		}
 		
 		TEST_METHOD(PKBGetStatementsWithConstant)
