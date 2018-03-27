@@ -1479,6 +1479,96 @@ std::vector<std::vector<int>> PKB::getAffectsAfter(int stmt) {
 
 }
 
+std::vector<std::vector<int>> PKB::getAffectsBeforeStar(int stmt) {
+
+	std::vector<std::vector<int>> data;
+
+	if (PKB::checkStatementHasType(stmt, 1)) {
+
+		std::vector<std::vector<int>> next = PKB::getNextBeforeStar(stmt);
+		std::vector<std::vector<int>> variablesUsed = PKB::getUsesVariablesFromStatement(stmt);
+		set<int> checkedStmts;
+		unordered_map<int, std::vector<int>> maxModifiableVariables;
+
+		while (next.size() > 0) {
+			int stmtNo = next.back()[0];
+			next.pop_back();
+			maxModifiableVariables.insert({ stmtNo,{} });
+		}
+
+		std::vector<int> oriUsed;
+		for (int i = 0; i < variablesUsed.size(); i++) {
+			oriUsed.push_back(variablesUsed[i][0]);
+		}
+
+		next = PKB::getNextBefore(stmt);
+		for (int i = 0; i < next.size(); i++) {
+			maxModifiableVariables.erase(next[i][0]);
+			maxModifiableVariables.insert({ next[i][0], oriUsed });
+			checkedStmts.insert(next[i][0]);
+		}
+
+		while (next.size() > 0) {
+			int nextStmt = next.back()[0];
+			next.pop_back();
+
+			std::vector<int> modifiableVariables = maxModifiableVariables[nextStmt];
+			std::vector<std::vector<int>> thisStmtModifies = PKB::getModifiesVariablesFromStatement(nextStmt);
+			std::vector<int> newModifiableVariables;
+			if (modifiableVariables.size() > 0) {
+				if (thisStmtModifies.size() > 0) {
+					for (int i = 0; i < modifiableVariables.size(); i++) {
+						if (thisStmtModifies[0][0] == modifiableVariables[i] && (!PKB::checkStatementHasType(nextStmt, 2)) && (!PKB::checkStatementHasType(nextStmt, 3))) {
+							if (PKB::checkStatementHasType(nextStmt, 1)) {
+								data.push_back({ nextStmt });
+								std::vector<std::vector<int>> thisStmtUses = PKB::getUsesVariablesFromStatement(nextStmt);
+								for (int j = 0; j < thisStmtUses.size(); j++) {
+									newModifiableVariables.push_back(thisStmtUses[j][0]);
+								}
+								std::sort(newModifiableVariables.begin(), newModifiableVariables.end());
+								newModifiableVariables.erase(unique(newModifiableVariables.begin(), newModifiableVariables.end()), newModifiableVariables.end());
+							}
+						}
+						else {
+							newModifiableVariables.push_back(modifiableVariables[i]);
+						}
+					}
+				}
+				std::vector<std::vector<int>> thisNext = PKB::getNextBefore(nextStmt);
+				for (int i = 0; i < thisNext.size(); i++) {
+
+					unordered_map<int, std::vector<int>>::const_iterator got = maxModifiableVariables.find(thisNext[i][0]);
+					std::vector<int> tableValues = got->second;
+					if (newModifiableVariables.size() > 0) {
+
+						std::vector<int> data = newModifiableVariables;
+
+						for (unsigned int j = 0; j < data.size(); j++) {
+							tableValues.push_back(data[j]);
+						}
+						std::sort(tableValues.begin(), tableValues.end());
+						tableValues.erase(unique(tableValues.begin(), tableValues.end()), tableValues.end());
+
+						maxModifiableVariables.erase(thisNext[i][0]);
+						maxModifiableVariables.insert({ thisNext[i][0], tableValues });
+
+					}
+					if (tableValues.size() > 0) {
+						int initSize = checkedStmts.size();
+						checkedStmts.insert(thisNext[i][0]);
+						if (checkedStmts.size() > initSize) {
+							next.push_back({ thisNext[i][0] });
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return data;
+
+}
+
 std::vector<std::vector<int>> PKB::getAffectsAfterStar(int stmt) {
 
 	std::vector<std::vector<int>> output;
@@ -1685,6 +1775,92 @@ bool PKB::checkAffects(int stmt1, int stmt2) {
 	return false;
 
 }
+
+bool PKB::checkAffectsStar(int stmt1, int stmt2) {
+
+	std::vector<std::vector<int>> data;
+
+	unordered_map<int, std::vector<std::vector<int>>> allStmts;
+	std::vector<std::vector<int>> allStmtsId = PKB::getNextAfterStar(stmt1);
+	allStmtsId.push_back({ stmt1 });
+	std::vector<std::vector<int>> variableAffect;
+	for (int i = 0; i < allStmtsId.size(); i++) {
+		allStmts.insert({ allStmtsId[i][0], variableAffect });
+	}
+
+	if (PKB::checkStatementHasType(stmt1, 1) && PKB::checkStatementHasType(stmt2, 1)) {
+
+		std::vector<std::vector<int>> next = PKB::getNextAfter(stmt1);
+		std::vector<std::vector<int>> variablesModified = PKB::getModifiesVariablesFromStatement(stmt1);
+		
+		allStmts.erase(stmt1);
+		allStmts.insert({ stmt1, variablesModified });
+
+		for (int i = 0; i < next.size(); i++) {
+			allStmts.erase(next[i][0]);
+			allStmts.insert({ next[i][0], variablesModified });
+		}
+
+		int variableModified = 0;
+		if (variablesModified.size() > 0) {
+			set<int> checkedStmts;
+
+			while (next.size() > 0) {
+				int nextStmt = next.back()[0];
+				next.pop_back();
+				variablesModified = allStmts[nextStmt];
+
+				if (PKB::checkStatementHasType(nextStmt, 1)) {
+					std::vector<std::vector<int>> variableUses = PKB::getUsesVariablesFromStatement(nextStmt);
+					for (int i = 0; i < variableUses.size(); i++) {
+						for (int j = 0; j < variablesModified.size(); j++) {
+							variableModified = variablesModified[j][0];
+							if (variableUses[i][0] == variableModified && nextStmt == stmt2) {
+								return true;
+							}
+							else if (variableUses[i][0] == variableModified) {
+								variablesModified.push_back({PKB::getModifiesVariablesFromStatement(nextStmt)[0][0]});
+								break;
+							}
+						}
+					}
+				}
+
+				allStmts.erase(nextStmt);
+				allStmts.insert({ nextStmt, variablesModified });
+
+				std::vector<std::vector<int>> newNext;
+				if (variablesModified.size() == 0) {
+					newNext.clear();
+				}
+				else {
+					newNext = PKB::getNextAfter(nextStmt);
+				}
+				for (int j = 0; j < newNext.size(); j++) {
+					int initSize = checkedStmts.size();
+					checkedStmts.insert(newNext[j][0]);
+					if (checkedStmts.size() > initSize) {
+						next.push_back({ newNext[j][0] });
+
+						std::vector<std::vector<int>> presentVariablesModified = allStmts[newNext[j][0]];
+						for (int k = 0; k < presentVariablesModified.size(); k++) {
+							variablesModified.push_back({presentVariablesModified[k][0]});
+						}
+						std::sort(variablesModified.begin(), variablesModified.end());
+						variablesModified.erase(unique(variablesModified.begin(), variablesModified.end()), variablesModified.end());
+
+						allStmts.erase(newNext[j][0]);
+						allStmts.insert({ newNext[j][0], variablesModified });
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+
+}
+
 std::vector<std::vector<int>> PKB::getAllAffects() {
 
 	std::vector<std::vector<int>> output;
@@ -1744,7 +1920,7 @@ std::vector<std::vector<int>> PKB::getAllAffects() {
 						lastModified.insert({ variableModifies[i][0], {currStmt} });
 					}
 					else {
-						stmts = { {currStmt} };
+						stmts = { currStmt };
 						lastModified.erase({ variableModifies[i][0] });
 						lastModified.insert({ variableModifies[i][0], stmts });
 					}
@@ -1834,6 +2010,185 @@ std::vector<std::vector<int>> PKB::getAllAffects() {
 
 
 		
+	}
+
+	return output;
+
+}
+
+std::vector<std::vector<int>> PKB::getAllAffectsStar() {
+
+	std::vector<std::vector<int>> output;
+	std::vector<std::vector<int>> allStmtsId;
+	unordered_map<int, unordered_map<int, std::vector<int>>> allStmts;
+	std::vector<int> stmts;
+	set<int> checkedStmts;
+	stack<int> whileStack;
+	set<int> completedWhiles;
+
+	int currStmt;
+	int firstStmt;
+	std::vector<std::vector<int>> procs = PKB::getAllProcedures();
+
+
+
+
+	for (int i = 0; i < static_cast<int>(procs.size()); i++) {
+		firstStmt = PKB::getFromTable(STATEMENT_LIST_TABLE, PKB::getFromTable(PROC_INFO_TABLE, procs[i][0])[0][0])[1][0];
+		unordered_map<int, std::vector<int>> lastModified;
+		lastModified.clear();
+		allStmtsId = PKB::getNextAfterStar(firstStmt);
+		allStmtsId.push_back({ firstStmt });
+		for (int i = 0; i < allStmtsId.size(); i++) {
+			allStmts.insert({ allStmtsId[i][0], lastModified });
+		}
+
+		queue<int> next;
+		next.push(firstStmt);
+		while (next.size() > 0) {
+			currStmt = next.front();
+			next.pop();
+
+			lastModified = allStmts[currStmt];
+
+			if (PKB::checkStatementHasType(currStmt, 1)) {
+				/* What statements this statement uses */
+
+				unordered_map<int, std::vector<int>> toAdd;
+				std::vector<std::vector<int>> variableUses = PKB::getUsesVariablesFromStatement(currStmt);
+				for (int i = 0; i < variableUses.size(); i++) {
+					unordered_map<int, std::vector<int>>::const_iterator got = lastModified.find(variableUses[i][0]);
+					if (got != lastModified.end()) {
+						std::vector<int> stmtsAffects = got->second;
+						for (int j = 0; j < stmtsAffects.size(); j++) {
+							output.push_back({ stmtsAffects[j], currStmt });
+							std::sort(output.begin(), output.end());
+							output.erase(unique(output.begin(), output.end()), output.end());
+							
+							int variableInQn = PKB::getModifiesVariablesFromStatement(currStmt)[0][0];
+							unordered_map<int, std::vector<int>>::const_iterator findToAdd = toAdd.find(variableInQn);
+							if (findToAdd != toAdd.end()) {
+								stmts = toAdd[variableInQn];
+								stmts.push_back({ stmtsAffects[j] });
+								std::sort(stmts.begin(), stmts.end());
+								stmts.erase(unique(stmts.begin(), stmts.end()), stmts.end());
+
+								toAdd.erase({ variableInQn });
+								toAdd.insert({ variableInQn, stmts });
+							}
+							else {
+								toAdd.insert({ variableInQn, { stmtsAffects[j] } });
+							}
+						}
+					}
+				}
+
+				/* What statements this statement affects */
+				std::vector<std::vector<int>> variableModifies = PKB::getModifiesVariablesFromStatement(currStmt);
+				for (int i = 0; i < variableModifies.size(); i++) {
+					unordered_map<int, std::vector<int>>::const_iterator got = lastModified.find(variableModifies[i][0]);
+					
+					stmts = { currStmt };
+					unordered_map<int, std::vector<int>>::const_iterator findToAdd = toAdd.find(variableModifies[i][0]);
+					if (findToAdd != toAdd.end()) {
+						stmts = findToAdd->second;
+						stmts.push_back(currStmt);
+					}
+					
+					if (got == lastModified.end()) {
+						lastModified.insert({ variableModifies[i][0], stmts });
+					}
+					else {
+						lastModified.erase({ variableModifies[i][0] });
+						lastModified.insert({ variableModifies[i][0], stmts });
+					}
+
+				}
+
+			}
+			else if (PKB::checkStatementHasType(currStmt, 2)) {
+				set<int>::iterator it = completedWhiles.find(currStmt);
+				if (it == completedWhiles.end()) {
+					whileStack.push(currStmt);
+				}
+			}
+
+			/* Push to next */
+			std::vector<std::vector<int>> newNext;
+
+			newNext = PKB::getNextAfter(currStmt);
+			for (int j = 0; j < newNext.size(); j++) {
+				if (!(PKB::checkStatementHasType(currStmt, 2) && PKB::checkStatementHasType(newNext[j][0], 2))) {
+					int initSize = checkedStmts.size();
+					checkedStmts.insert(newNext[j][0]);
+
+					auto result = lastModified;
+					unordered_map<int, std::vector<int>> nextLastModified = allStmts[newNext[j][0]];
+					result.insert(nextLastModified.begin(), nextLastModified.end());
+					bool edited = false;
+					for (auto it = nextLastModified.begin(); it != nextLastModified.end(); ++it) {
+						std::vector<int> alreadyInserted = result[it->first];
+						std::vector<int> toInsert = it->second;
+						for (int k = 0; k < toInsert.size(); k++) {
+							alreadyInserted.push_back(toInsert[k]);
+						}
+						std::sort(alreadyInserted.begin(), alreadyInserted.end());
+						alreadyInserted.erase(unique(alreadyInserted.begin(), alreadyInserted.end()), alreadyInserted.end());
+						result.erase(it->first);
+						result.insert({ it->first, alreadyInserted });
+					}
+
+					allStmts.erase(newNext[j][0]);
+					allStmts.insert({ newNext[j][0], result });
+
+					if (checkedStmts.size() > initSize) {
+						next.push({ newNext[j][0] });
+					}
+				}
+			}
+
+			while (next.size() == 0 && whileStack.size() > 0) {
+				int returnWhile = whileStack.top();
+				whileStack.pop();
+				int initialSize = completedWhiles.size();
+				completedWhiles.insert(returnWhile);
+				if (completedWhiles.size() > initialSize) {
+
+					if (whileStack.size() > 0) {
+						auto result = allStmts[returnWhile];
+						unordered_map<int, std::vector<int>> nextLastModified = allStmts[whileStack.top()];
+						result.insert(nextLastModified.begin(), nextLastModified.end());
+						bool edited = false;
+						for (auto it = nextLastModified.begin(); it != nextLastModified.end(); ++it) {
+							std::vector<int> alreadyInserted = result[it->first];
+							std::vector<int> toInsert = it->second;
+							for (int k = 0; k < toInsert.size(); k++) {
+								alreadyInserted.push_back(toInsert[k]);
+							}
+							std::sort(alreadyInserted.begin(), alreadyInserted.end());
+							alreadyInserted.erase(unique(alreadyInserted.begin(), alreadyInserted.end()), alreadyInserted.end());
+							result.erase(it->first);
+							result.insert({ it->first, alreadyInserted });
+						}
+
+						allStmts.erase(whileStack.top());
+						allStmts.insert({ whileStack.top(), result });
+					}
+
+					std::vector<std::vector<int>> children = PKB::getChildrenStar(returnWhile);
+					for (int i = 0; i < children.size(); i++) {
+						checkedStmts.erase(children[i][0]);
+					}
+					checkedStmts.erase(returnWhile);
+					next.push(returnWhile);
+				}
+			}
+
+		}
+
+
+
+
 	}
 
 	return output;
