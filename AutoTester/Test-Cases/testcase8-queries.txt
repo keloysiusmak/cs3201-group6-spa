@@ -1,0 +1,1880 @@
+1 -
+
+Select BOOLEAN such that Follows(1,2);
+
+5000
+2 -
+
+Select BOOLEAN such that Follows(1,5);
+
+5000
+3 -
+
+Select BOOLEAN such that Follows(1,51);
+
+5000
+4 -
+assign a1;
+Select a1 such that Follows(1,a1);
+
+5000
+5 -
+stmt s1;
+Select s1 such that Follows(1,s1);
+
+5000
+6 -
+while w1;
+Select w1 such that Follows(1,w1);
+
+5000
+7 -
+
+Select BOOLEAN such that Follows(4,2);
+
+5000
+8 -
+
+Select BOOLEAN such that Follows(4,5);
+
+5000
+9 -
+
+Select BOOLEAN such that Follows(4,51);
+
+5000
+10 -
+assign a1;
+Select a1 such that Follows(4,a1);
+
+5000
+11 -
+stmt s1;
+Select s1 such that Follows(4,s1);
+
+5000
+12 -
+while w1;
+Select w1 such that Follows(4,w1);
+
+5000
+13 -
+
+Select BOOLEAN such that Follows(41,2);
+
+5000
+14 -
+
+Select BOOLEAN such that Follows(41,5);
+
+5000
+15 -
+
+Select BOOLEAN such that Follows(41,51);
+
+5000
+16 -
+assign a1;
+Select a1 such that Follows(41,a1);
+
+5000
+17 -
+stmt s1;
+Select s1 such that Follows(41,s1);
+
+5000
+18 -
+while w1;
+Select w1 such that Follows(41,w1);
+
+5000
+19 -
+assign a1;
+Select a1 such that Follows(a1,2);
+
+5000
+20 -
+assign a1;
+Select a1 such that Follows(a1,5);
+
+5000
+21 -
+assign a1;
+Select a1 such that Follows(a1,51);
+
+5000
+22 -
+assign a1,a2;
+Select <a1,a2> such that Follows(a1,a2);
+
+5000
+23 -
+assign a1; stmt s1;
+Select <s1,a1> such that Follows(a1,s1);
+
+5000
+24 -
+assign a1; while w1;
+Select <w1,a1> such that Follows(a1,w1);
+
+5000
+25 -
+call c1;
+Select c1 such that Follows(c1,2);
+
+5000
+26 -
+call c1;
+Select c1 such that Follows(c1,5);
+
+5000
+27 -
+call c1;
+Select c1 such that Follows(c1,51);
+
+5000
+28 -
+assign a1; call c1;
+Select <c1,a1> such that Follows(c1,a1);
+
+5000
+29 -
+stmt s1; call c1;
+Select <c1,s1> such that Follows(c1,s1);
+
+5000
+30 -
+while w1; call c1;
+Select <c1,w1> such that Follows(c1,w1);
+
+5000
+31 -
+stmt s1;
+Select s1 such that Follows(s1,2);
+
+5000
+32 -
+stmt s1;
+Select s1 such that Follows(s1,5);
+
+5000
+33 -
+stmt s1;
+Select s1 such that Follows(s1,51);
+
+5000
+34 -
+assign a1; stmt s1;
+Select <s1,a1> such that Follows(s1,a1);
+
+5000
+35 -
+stmt s1,s2;
+Select <s1,s2> such that Follows(s1,s2);
+
+5000
+36 -
+stmt s1; while w1;
+Select <w1,s1> such that Follows(s1,w1);
+
+5000
+37 -
+
+Select BOOLEAN such that Follows*(1,2);
+
+5000
+38 -
+
+Select BOOLEAN such that Follows*(1,5);
+
+5000
+39 -
+
+Select BOOLEAN such that Follows*(1,51);
+
+5000
+40 -
+assign a1;
+Select a1 such that Follows*(1,a1);
+
+5000
+41 -
+stmt s1;
+Select s1 such that Follows*(1,s1);
+
+5000
+42 -
+while w1;
+Select w1 such that Follows*(1,w1);
+
+5000
+43 -
+
+Select BOOLEAN such that Follows*(4,2);
+
+5000
+44 -
+
+Select BOOLEAN such that Follows*(4,5);
+
+5000
+45 -
+
+Select BOOLEAN such that Follows*(4,51);
+
+5000
+46 -
+assign a1;
+Select a1 such that Follows*(4,a1);
+
+5000
+47 -
+stmt s1;
+Select s1 such that Follows*(4,s1);
+
+5000
+48 -
+while w1;
+Select w1 such that Follows*(4,w1);
+
+5000
+49 -
+
+Select BOOLEAN such that Follows*(41,2);
+
+5000
+50 -
+
+Select BOOLEAN such that Follows*(41,5);
+
+5000
+51 -
+
+Select BOOLEAN such that Follows*(41,51);
+
+5000
+52 -
+assign a1;
+Select a1 such that Follows*(41,a1);
+
+5000
+53 -
+stmt s1;
+Select s1 such that Follows*(41,s1);
+
+5000
+54 -
+while w1;
+Select w1 such that Follows*(41,w1);
+
+5000
+55 -
+assign a1;
+Select a1 such that Follows*(a1,2);
+
+5000
+56 -
+assign a1;
+Select a1 such that Follows*(a1,5);
+
+5000
+57 -
+assign a1;
+Select a1 such that Follows*(a1,51);
+
+5000
+58 -
+assign a1,a2;
+Select <a1,a2> such that Follows*(a1,a2);
+
+5000
+59 -
+assign a1; stmt s1;
+Select <s1,a1> such that Follows*(a1,s1);
+
+5000
+60 -
+assign a1; while w1;
+Select <w1,a1> such that Follows*(a1,w1);
+
+5000
+61 -
+call c1;
+Select c1 such that Follows*(c1,2);
+
+5000
+62 -
+call c1;
+Select c1 such that Follows*(c1,5);
+
+5000
+63 -
+call c1;
+Select c1 such that Follows*(c1,51);
+
+5000
+64 -
+assign a1; call c1;
+Select <c1,a1> such that Follows*(c1,a1);
+
+5000
+65 -
+stmt s1; call c1;
+Select <c1,s1> such that Follows*(c1,s1);
+
+5000
+66 -
+while w1; call c1;
+Select <c1,w1> such that Follows*(c1,w1);
+
+5000
+67 -
+stmt s1;
+Select s1 such that Follows*(s1,2);
+
+5000
+68 -
+stmt s1;
+Select s1 such that Follows*(s1,5);
+
+5000
+69 -
+stmt s1;
+Select s1 such that Follows*(s1,51);
+
+5000
+70 -
+assign a1; stmt s1;
+Select <s1,a1> such that Follows*(s1,a1);
+
+5000
+71 -
+stmt s1,s2;
+Select <s1,s2> such that Follows*(s1,s2);
+
+5000
+72 -
+stmt s1; while w1;
+Select <w1,s1> such that Follows*(s1,w1);
+
+5000
+73 -
+
+Select BOOLEAN such that Parent(8,14);
+
+5000
+74 -
+
+Select BOOLEAN such that Parent(8,17);
+
+5000
+75 -
+
+Select BOOLEAN such that Parent(8,35);
+
+5000
+76 -
+
+Select BOOLEAN such that Parent(8,52);
+
+5000
+77 -
+stmt s1;
+Select s1 such that Parent(8,s1);
+
+5000
+78 -
+assign a1;
+Select a1 such that Parent(8,a1);
+
+5000
+79 -
+
+Select BOOLEAN such that Parent(31,14);
+
+5000
+80 -
+
+Select BOOLEAN such that Parent(31,17);
+
+5000
+81 -
+
+Select BOOLEAN such that Parent(31,35);
+
+5000
+82 -
+
+Select BOOLEAN such that Parent(31,52);
+
+5000
+83 -
+stmt s1;
+Select s1 such that Parent(31,s1);
+
+5000
+84 -
+assign a1;
+Select a1 such that Parent(31,a1);
+
+5000
+85 -
+while w1;
+Select w1 such that Parent(w1,14);
+
+5000
+86 -
+while w1;
+Select w1 such that Parent(w1,17);
+
+5000
+87 -
+while w1;
+Select w1 such that Parent(w1,35);
+
+5000
+88 -
+while w1;
+Select w1 such that Parent(w1,52);
+
+5000
+89 -
+stmt s1; while w1;
+Select <w1,s1> such that Parent(w1,s1);
+
+5000
+90 -
+assign a1; while w1;
+Select <w1,a1> such that Parent(w1,a1);
+
+5000
+91 -
+
+Select BOOLEAN such that Parent(if,14);
+
+5000
+92 -
+
+Select BOOLEAN such that Parent(if,17);
+
+5000
+93 -
+
+Select BOOLEAN such that Parent(if,35);
+
+5000
+94 -
+
+Select BOOLEAN such that Parent(if,52);
+
+5000
+95 -
+stmt s1;
+Select s1 such that Parent(if,s1);
+
+5000
+96 -
+assign a1;
+Select a1 such that Parent(if,a1);
+
+5000
+97 -
+
+Select BOOLEAN such that Parent*(8,14);
+
+5000
+98 -
+
+Select BOOLEAN such that Parent*(8,17);
+
+5000
+99 -
+
+Select BOOLEAN such that Parent*(8,35);
+
+5000
+100 -
+
+Select BOOLEAN such that Parent*(8,52);
+
+5000
+101 -
+stmt s1;
+Select s1 such that Parent*(8,s1);
+
+5000
+102 -
+assign a1;
+Select a1 such that Parent*(8,a1);
+
+5000
+103 -
+
+Select BOOLEAN such that Parent*(31,14);
+
+5000
+104 -
+
+Select BOOLEAN such that Parent*(31,17);
+
+5000
+105 -
+
+Select BOOLEAN such that Parent*(31,35);
+
+5000
+106 -
+
+Select BOOLEAN such that Parent*(31,52);
+
+5000
+107 -
+stmt s1;
+Select s1 such that Parent*(31,s1);
+
+5000
+108 -
+assign a1;
+Select a1 such that Parent*(31,a1);
+
+5000
+109 -
+while w1;
+Select w1 such that Parent*(w1,14);
+
+5000
+110 -
+while w1;
+Select w1 such that Parent*(w1,17);
+
+5000
+111 -
+while w1;
+Select w1 such that Parent*(w1,35);
+
+5000
+112 -
+while w1;
+Select w1 such that Parent*(w1,52);
+
+5000
+113 -
+stmt s1; while w1;
+Select <w1,s1> such that Parent*(w1,s1);
+
+5000
+114 -
+assign a1; while w1;
+Select <w1,a1> such that Parent*(w1,a1);
+
+5000
+115 -
+
+Select BOOLEAN such that Parent*(if,14);
+
+5000
+116 -
+
+Select BOOLEAN such that Parent*(if,17);
+
+5000
+117 -
+
+Select BOOLEAN such that Parent*(if,35);
+
+5000
+118 -
+
+Select BOOLEAN such that Parent*(if,52);
+
+5000
+119 -
+stmt s1;
+Select s1 such that Parent*(if,s1);
+
+5000
+120 -
+assign a1;
+Select a1 such that Parent*(if,a1);
+
+5000
+121 -
+variable v1;
+Select v1 such that Uses("A",v1);
+
+5000
+122 -
+
+Select BOOLEAN such that Uses("A",a1);
+
+5000
+123 -
+
+Select BOOLEAN such that Uses("A",e1);
+
+5000
+124 -
+
+Select BOOLEAN such that Uses("A",z);
+
+5000
+125 -
+variable v1;
+Select v1 such that Uses("B",v1);
+
+5000
+126 -
+
+Select BOOLEAN such that Uses("B",a1);
+
+5000
+127 -
+
+Select BOOLEAN such that Uses("B",e1);
+
+5000
+128 -
+
+Select BOOLEAN such that Uses("B",z);
+
+5000
+129 -
+stmt s1; variable v1;
+Select <v1,s1> such that Uses(s1,v1);
+
+5000
+130 -
+stmt s1;
+Select s1 such that Uses(s1,a1);
+
+5000
+131 -
+stmt s1;
+Select s1 such that Uses(s1,e1);
+
+5000
+132 -
+stmt s1;
+Select s1 such that Uses(s1,z);
+
+5000
+133 -
+variable v1; call c1;
+Select <c1,v1> such that Uses(c1,v1);
+
+5000
+134 -
+call c1;
+Select c1 such that Uses(c1,a1);
+
+5000
+135 -
+call c1;
+Select c1 such that Uses(c1,e1);
+
+5000
+136 -
+call c1;
+Select c1 such that Uses(c1,z);
+
+5000
+137 -
+variable v1;
+Select v1 such that Uses(8,v1);
+
+5000
+138 -
+
+Select BOOLEAN such that Uses(8,a1);
+
+5000
+139 -
+
+Select BOOLEAN such that Uses(8,e1);
+
+5000
+140 -
+
+Select BOOLEAN such that Uses(8,z);
+
+5000
+141 -
+variable v1;
+Select v1 such that Uses(31,v1);
+
+5000
+142 -
+
+Select BOOLEAN such that Uses(31,a1);
+
+5000
+143 -
+
+Select BOOLEAN such that Uses(31,e1);
+
+5000
+144 -
+
+Select BOOLEAN such that Uses(31,z);
+
+5000
+145 -
+variable v1;
+Select v1 such that Modifies("A",v1);
+
+5000
+146 -
+
+Select BOOLEAN such that Modifies("A",b1);
+
+5000
+147 -
+
+Select BOOLEAN such that Modifies("A",c1);
+
+5000
+148 -
+
+Select BOOLEAN such that Modifies("A",z);
+
+5000
+149 -
+variable v1;
+Select v1 such that Modifies("B",v1);
+
+5000
+150 -
+
+Select BOOLEAN such that Modifies("B",b1);
+
+5000
+151 -
+
+Select BOOLEAN such that Modifies("B",c1);
+
+5000
+152 -
+
+Select BOOLEAN such that Modifies("B",z);
+
+5000
+153 -
+stmt s1; variable v1;
+Select <v1,s1> such that Modifies(s1,v1);
+
+5000
+154 -
+stmt s1;
+Select s1 such that Modifies(s1,b1);
+
+5000
+155 -
+stmt s1;
+Select s1 such that Modifies(s1,c1);
+
+5000
+156 -
+stmt s1;
+Select s1 such that Modifies(s1,z);
+
+5000
+157 -
+variable v1; call c1;
+Select <c1,v1> such that Modifies(c1,v1);
+
+5000
+158 -
+call c1;
+Select c1 such that Modifies(c1,b1);
+
+5000
+159 -
+call c1;
+Select c1 such that Modifies(c1,c1);
+
+5000
+160 -
+call c1;
+Select c1 such that Modifies(c1,z);
+
+5000
+161 -
+variable v1;
+Select v1 such that Modifies(8,v1);
+
+5000
+162 -
+
+Select BOOLEAN such that Modifies(8,b1);
+
+5000
+163 -
+
+Select BOOLEAN such that Modifies(8,c1);
+
+5000
+164 -
+
+Select BOOLEAN such that Modifies(8,z);
+
+5000
+165 -
+variable v1;
+Select v1 such that Modifies(31,v1);
+
+5000
+166 -
+
+Select BOOLEAN such that Modifies(31,b1);
+
+5000
+167 -
+
+Select BOOLEAN such that Modifies(31,c1);
+
+5000
+168 -
+
+Select BOOLEAN such that Modifies(31,z);
+
+5000
+169 -
+
+Select BOOLEAN such that Calls(A,A);
+
+5000
+170 -
+
+Select BOOLEAN such that Calls(A,B);
+
+5000
+171 -
+
+Select BOOLEAN such that Calls(B,A);
+
+5000
+172 -
+
+Select BOOLEAN such that Calls(B,B);
+
+5000
+173 -
+
+Select BOOLEAN such that Calls*(A,A);
+
+5000
+174 -
+
+Select BOOLEAN such that Calls*(A,B);
+
+5000
+175 -
+
+Select BOOLEAN such that Calls*(B,A);
+
+5000
+176 -
+
+Select BOOLEAN such that Calls*(B,B);
+
+5000
+177 -
+
+Select BOOLEAN such that Next(1,1);
+
+5000
+178 -
+
+Select BOOLEAN such that Next(1,8);
+
+5000
+179 -
+
+Select BOOLEAN such that Next(1,14);
+
+5000
+180 -
+
+Select BOOLEAN such that Next(1,22);
+
+5000
+181 -
+
+Select BOOLEAN such that Next(1,31);
+
+5000
+182 -
+
+Select BOOLEAN such that Next(1,37);
+
+5000
+183 -
+stmt s1;
+Select s1 such that Next(1,s1);
+
+5000
+184 -
+
+Select BOOLEAN such that Next(8,1);
+
+5000
+185 -
+
+Select BOOLEAN such that Next(8,8);
+
+5000
+186 -
+
+Select BOOLEAN such that Next(8,14);
+
+5000
+187 -
+
+Select BOOLEAN such that Next(8,22);
+
+5000
+188 -
+
+Select BOOLEAN such that Next(8,31);
+
+5000
+189 -
+
+Select BOOLEAN such that Next(8,37);
+
+5000
+190 -
+stmt s1;
+Select s1 such that Next(8,s1);
+
+5000
+191 -
+
+Select BOOLEAN such that Next(14,1);
+
+5000
+192 -
+
+Select BOOLEAN such that Next(14,8);
+
+5000
+193 -
+
+Select BOOLEAN such that Next(14,14);
+
+5000
+194 -
+
+Select BOOLEAN such that Next(14,22);
+
+5000
+195 -
+
+Select BOOLEAN such that Next(14,31);
+
+5000
+196 -
+
+Select BOOLEAN such that Next(14,37);
+
+5000
+197 -
+stmt s1;
+Select s1 such that Next(14,s1);
+
+5000
+198 -
+
+Select BOOLEAN such that Next(22,1);
+
+5000
+199 -
+
+Select BOOLEAN such that Next(22,8);
+
+5000
+200 -
+
+Select BOOLEAN such that Next(22,14);
+
+5000
+201 -
+
+Select BOOLEAN such that Next(22,22);
+
+5000
+202 -
+
+Select BOOLEAN such that Next(22,31);
+
+5000
+203 -
+
+Select BOOLEAN such that Next(22,37);
+
+5000
+204 -
+stmt s1;
+Select s1 such that Next(22,s1);
+
+5000
+205 -
+
+Select BOOLEAN such that Next(31,1);
+
+5000
+206 -
+
+Select BOOLEAN such that Next(31,8);
+
+5000
+207 -
+
+Select BOOLEAN such that Next(31,14);
+
+5000
+208 -
+
+Select BOOLEAN such that Next(31,22);
+
+5000
+209 -
+
+Select BOOLEAN such that Next(31,31);
+
+5000
+210 -
+
+Select BOOLEAN such that Next(31,37);
+
+5000
+211 -
+stmt s1;
+Select s1 such that Next(31,s1);
+
+5000
+212 -
+
+Select BOOLEAN such that Next(37,1);
+
+5000
+213 -
+
+Select BOOLEAN such that Next(37,8);
+
+5000
+214 -
+
+Select BOOLEAN such that Next(37,14);
+
+5000
+215 -
+
+Select BOOLEAN such that Next(37,22);
+
+5000
+216 -
+
+Select BOOLEAN such that Next(37,31);
+
+5000
+217 -
+
+Select BOOLEAN such that Next(37,37);
+
+5000
+218 -
+stmt s1;
+Select s1 such that Next(37,s1);
+
+5000
+219 -
+stmt s1;
+Select s1 such that Next(s1,1);
+
+5000
+220 -
+stmt s1;
+Select s1 such that Next(s1,8);
+
+5000
+221 -
+stmt s1;
+Select s1 such that Next(s1,14);
+
+5000
+222 -
+stmt s1;
+Select s1 such that Next(s1,22);
+
+5000
+223 -
+stmt s1;
+Select s1 such that Next(s1,31);
+
+5000
+224 -
+stmt s1;
+Select s1 such that Next(s1,37);
+
+5000
+225 -
+stmt s1,s2;
+Select <s1,s2> such that Next(s1,s2);
+
+5000
+226 -
+
+Select BOOLEAN such that Next*(1,1);
+
+5000
+227 -
+
+Select BOOLEAN such that Next*(1,8);
+
+5000
+228 -
+
+Select BOOLEAN such that Next*(1,14);
+
+5000
+229 -
+
+Select BOOLEAN such that Next*(1,22);
+
+5000
+230 -
+
+Select BOOLEAN such that Next*(1,31);
+
+5000
+231 -
+
+Select BOOLEAN such that Next*(1,37);
+
+5000
+232 -
+stmt s1;
+Select s1 such that Next*(1,s1);
+
+5000
+233 -
+
+Select BOOLEAN such that Next*(8,1);
+
+5000
+234 -
+
+Select BOOLEAN such that Next*(8,8);
+
+5000
+235 -
+
+Select BOOLEAN such that Next*(8,14);
+
+5000
+236 -
+
+Select BOOLEAN such that Next*(8,22);
+
+5000
+237 -
+
+Select BOOLEAN such that Next*(8,31);
+
+5000
+238 -
+
+Select BOOLEAN such that Next*(8,37);
+
+5000
+239 -
+stmt s1;
+Select s1 such that Next*(8,s1);
+
+5000
+240 -
+
+Select BOOLEAN such that Next*(14,1);
+
+5000
+241 -
+
+Select BOOLEAN such that Next*(14,8);
+
+5000
+242 -
+
+Select BOOLEAN such that Next*(14,14);
+
+5000
+243 -
+
+Select BOOLEAN such that Next*(14,22);
+
+5000
+244 -
+
+Select BOOLEAN such that Next*(14,31);
+
+5000
+245 -
+
+Select BOOLEAN such that Next*(14,37);
+
+5000
+246 -
+stmt s1;
+Select s1 such that Next*(14,s1);
+
+5000
+247 -
+
+Select BOOLEAN such that Next*(22,1);
+
+5000
+248 -
+
+Select BOOLEAN such that Next*(22,8);
+
+5000
+249 -
+
+Select BOOLEAN such that Next*(22,14);
+
+5000
+250 -
+
+Select BOOLEAN such that Next*(22,22);
+
+5000
+251 -
+
+Select BOOLEAN such that Next*(22,31);
+
+5000
+252 -
+
+Select BOOLEAN such that Next*(22,37);
+
+5000
+253 -
+stmt s1;
+Select s1 such that Next*(22,s1);
+
+5000
+254 -
+
+Select BOOLEAN such that Next*(31,1);
+
+5000
+255 -
+
+Select BOOLEAN such that Next*(31,8);
+
+5000
+256 -
+
+Select BOOLEAN such that Next*(31,14);
+
+5000
+257 -
+
+Select BOOLEAN such that Next*(31,22);
+
+5000
+258 -
+
+Select BOOLEAN such that Next*(31,31);
+
+5000
+259 -
+
+Select BOOLEAN such that Next*(31,37);
+
+5000
+260 -
+stmt s1;
+Select s1 such that Next*(31,s1);
+
+5000
+261 -
+
+Select BOOLEAN such that Next*(37,1);
+
+5000
+262 -
+
+Select BOOLEAN such that Next*(37,8);
+
+5000
+263 -
+
+Select BOOLEAN such that Next*(37,14);
+
+5000
+264 -
+
+Select BOOLEAN such that Next*(37,22);
+
+5000
+265 -
+
+Select BOOLEAN such that Next*(37,31);
+
+5000
+266 -
+
+Select BOOLEAN such that Next*(37,37);
+
+5000
+267 -
+stmt s1;
+Select s1 such that Next*(37,s1);
+
+5000
+268 -
+stmt s1;
+Select s1 such that Next*(s1,1);
+
+5000
+269 -
+stmt s1;
+Select s1 such that Next*(s1,8);
+
+5000
+270 -
+stmt s1;
+Select s1 such that Next*(s1,14);
+
+5000
+271 -
+stmt s1;
+Select s1 such that Next*(s1,22);
+
+5000
+272 -
+stmt s1;
+Select s1 such that Next*(s1,31);
+
+5000
+273 -
+stmt s1;
+Select s1 such that Next*(s1,37);
+
+5000
+274 -
+stmt s1,s2;
+Select <s1,s2> such that Next*(s1,s2);
+
+5000
+275 -
+
+Select BOOLEAN such that Affects(1,1);
+
+5000
+276 -
+
+Select BOOLEAN such that Affects(1,9);
+
+5000
+277 -
+
+Select BOOLEAN such that Affects(1,17);
+
+5000
+278 -
+
+Select BOOLEAN such that Affects(1,25);
+
+5000
+279 -
+
+Select BOOLEAN such that Affects(1,32);
+
+5000
+280 -
+assign a1;
+Select a1 such that Affects(1,a1);
+
+5000
+281 -
+
+Select BOOLEAN such that Affects(9,1);
+
+5000
+282 -
+
+Select BOOLEAN such that Affects(9,9);
+
+5000
+283 -
+
+Select BOOLEAN such that Affects(9,17);
+
+5000
+284 -
+
+Select BOOLEAN such that Affects(9,25);
+
+5000
+285 -
+
+Select BOOLEAN such that Affects(9,32);
+
+5000
+286 -
+assign a1;
+Select a1 such that Affects(9,a1);
+
+5000
+287 -
+
+Select BOOLEAN such that Affects(17,1);
+
+5000
+288 -
+
+Select BOOLEAN such that Affects(17,9);
+
+5000
+289 -
+
+Select BOOLEAN such that Affects(17,17);
+
+5000
+290 -
+
+Select BOOLEAN such that Affects(17,25);
+
+5000
+291 -
+
+Select BOOLEAN such that Affects(17,32);
+
+5000
+292 -
+assign a1;
+Select a1 such that Affects(17,a1);
+
+5000
+293 -
+
+Select BOOLEAN such that Affects(25,1);
+
+5000
+294 -
+
+Select BOOLEAN such that Affects(25,9);
+
+5000
+295 -
+
+Select BOOLEAN such that Affects(25,17);
+
+5000
+296 -
+
+Select BOOLEAN such that Affects(25,25);
+
+5000
+297 -
+
+Select BOOLEAN such that Affects(25,32);
+
+5000
+298 -
+assign a1;
+Select a1 such that Affects(25,a1);
+
+5000
+299 -
+
+Select BOOLEAN such that Affects(32,1);
+
+5000
+300 -
+
+Select BOOLEAN such that Affects(32,9);
+
+5000
+301 -
+
+Select BOOLEAN such that Affects(32,17);
+
+5000
+302 -
+
+Select BOOLEAN such that Affects(32,25);
+
+5000
+303 -
+
+Select BOOLEAN such that Affects(32,32);
+
+5000
+304 -
+assign a1;
+Select a1 such that Affects(32,a1);
+
+5000
+305 -
+assign a1;
+Select a1 such that Affects(a1,1);
+
+5000
+306 -
+assign a1;
+Select a1 such that Affects(a1,9);
+
+5000
+307 -
+assign a1;
+Select a1 such that Affects(a1,17);
+
+5000
+308 -
+assign a1;
+Select a1 such that Affects(a1,25);
+
+5000
+309 -
+assign a1;
+Select a1 such that Affects(a1,32);
+
+5000
+310 -
+assign a1,a2;
+Select <a1,a2> such that Affects(a1,a2);
+
+5000
+311 -
+
+Select BOOLEAN such that Affects*(1,1);
+
+5000
+312 -
+
+Select BOOLEAN such that Affects*(1,9);
+
+5000
+313 -
+
+Select BOOLEAN such that Affects*(1,17);
+
+5000
+314 -
+
+Select BOOLEAN such that Affects*(1,25);
+
+5000
+315 -
+
+Select BOOLEAN such that Affects*(1,32);
+
+5000
+316 -
+assign a1;
+Select a1 such that Affects*(1,a1);
+
+5000
+317 -
+
+Select BOOLEAN such that Affects*(9,1);
+
+5000
+318 -
+
+Select BOOLEAN such that Affects*(9,9);
+
+5000
+319 -
+
+Select BOOLEAN such that Affects*(9,17);
+
+5000
+320 -
+
+Select BOOLEAN such that Affects*(9,25);
+
+5000
+321 -
+
+Select BOOLEAN such that Affects*(9,32);
+
+5000
+322 -
+assign a1;
+Select a1 such that Affects*(9,a1);
+
+5000
+323 -
+
+Select BOOLEAN such that Affects*(17,1);
+
+5000
+324 -
+
+Select BOOLEAN such that Affects*(17,9);
+
+5000
+325 -
+
+Select BOOLEAN such that Affects*(17,17);
+
+5000
+326 -
+
+Select BOOLEAN such that Affects*(17,25);
+
+5000
+327 -
+
+Select BOOLEAN such that Affects*(17,32);
+
+5000
+328 -
+assign a1;
+Select a1 such that Affects*(17,a1);
+
+5000
+329 -
+
+Select BOOLEAN such that Affects*(25,1);
+
+5000
+330 -
+
+Select BOOLEAN such that Affects*(25,9);
+
+5000
+331 -
+
+Select BOOLEAN such that Affects*(25,17);
+
+5000
+332 -
+
+Select BOOLEAN such that Affects*(25,25);
+
+5000
+333 -
+
+Select BOOLEAN such that Affects*(25,32);
+
+5000
+334 -
+assign a1;
+Select a1 such that Affects*(25,a1);
+
+5000
+335 -
+
+Select BOOLEAN such that Affects*(32,1);
+
+5000
+336 -
+
+Select BOOLEAN such that Affects*(32,9);
+
+5000
+337 -
+
+Select BOOLEAN such that Affects*(32,17);
+
+5000
+338 -
+
+Select BOOLEAN such that Affects*(32,25);
+
+5000
+339 -
+
+Select BOOLEAN such that Affects*(32,32);
+
+5000
+340 -
+assign a1;
+Select a1 such that Affects*(32,a1);
+
+5000
+341 -
+assign a1;
+Select a1 such that Affects*(a1,1);
+
+5000
+342 -
+assign a1;
+Select a1 such that Affects*(a1,9);
+
+5000
+343 -
+assign a1;
+Select a1 such that Affects*(a1,17);
+
+5000
+344 -
+assign a1;
+Select a1 such that Affects*(a1,25);
+
+5000
+345 -
+assign a1;
+Select a1 such that Affects*(a1,32);
+
+5000
+346 -
+assign a1,a2;
+Select <a1,a2> such that Affects*(a1,a2);
+
+5000
+347 -
+assign a1; variable v1;
+Select <v1,a1> pattern a1(v1, _);
+
+5000
+348 -
+variable v1; if ifs1;
+Select <ifs1,v1> pattern ifs1(v1, _, _);
+
+5000
+349 -
+while w1; variable v1;
+Select <v1,w1> pattern w1(v1, _);
+
+5000
+350 -
+call c1,c2;
+Select <c1,c2> with c1.procName = c2.procName;
+
+5000
+351 -
+call c1; proc p1;
+Select <p1,c1> with c1.procName = p1.procName;
+
+5000
+352 -
+variable v1; call c1;
+Select <c1,v1> with c1.procName = v1.varName;
+
+5000
+353 -
+call c1; proc p1;
+Select <p1,c1> with p1.procName = c1.procName;
+
+5000
+354 -
+proc p1,p2;
+Select <p1,p2> with p1.procName = p2.procName;
+
+5000
+355 -
+variable v1; proc p1;
+Select <p1,v1> with p1.procName = v1.varName;
+
+5000
+356 -
+variable v1; call c1;
+Select <c1,v1> with v1.varName = c1.procName;
+
+5000
+357 -
+variable v1; proc p1;
+Select <p1,v1> with v1.varName = p1.procName;
+
+5000
+358 -
+variable v1,v2;
+Select <v1,v2> with v1.varName = v2.varName;
+
+5000
+359 -
+assign a1; constant ct1;
+Select <ct1,a1> with a1.stmt# = ct1.value;
+
+5000
+360 -
+assign a1;
+Select a1 with a1.stmt# = 7;
+
+5000
+361 -
+assign a1;
+Select a1 with a1.stmt# = 14;
+
+5000
+362 -
+constant ct1;
+Select ct1 with if.stmt# = ct1.value;
+
+5000
+363 -
+
+Select BOOLEAN with if.stmt# = 7;
+
+5000
+364 -
+
+Select BOOLEAN with if.stmt# = 14;
+
+5000
+365 -
+while w1; constant ct1;
+Select <ct1,w1> with w1.stmt# = ct1.value;
+
+5000
+366 -
+while w1;
+Select w1 with w1.stmt# = 7;
+
+5000
+367 -
+while w1;
+Select w1 with w1.stmt# = 14;
+
+5000
+368 -
+prog_line n1; constant ct1;
+Select <ct1,n1> with n1.stmt# = ct1.value;
+
+5000
+369 -
+prog_line n1;
+Select n1 with n1.stmt# = 7;
+
+5000
+370 -
+prog_line n1;
+Select n1 with n1.stmt# = 14;
+
+5000
+371 -
+stmt s1; constant ct1;
+Select <ct1,s1> with s1.stmt# = ct1.value;
+
+5000
+372 -
+stmt s1;
+Select s1 with s1.stmt# = 7;
+
+5000
+373 -
+stmt s1;
+Select s1 with s1.stmt# = 14;
+
+5000
+374 -
+call c1; constant ct1;
+Select <ct1,c1> with c1.stmt# = ct1.value;
+
+5000
+375 -
+call c1;
+Select c1 with c1.stmt# = 7;
+
+5000
+376 -
+call c1;
+Select c1 with c1.stmt# = 14;
+
+5000

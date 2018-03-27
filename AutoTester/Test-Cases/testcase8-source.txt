@@ -1,4 +1,4 @@
-procedure a {
+procedure A {
   a1 = b1;
   a2 = b2;
   a3 = b3;
@@ -21,7 +21,7 @@ procedure a {
     d5 = a5;
     d6 = a6;
   }
-  call b;
+  call B;
   e1 = f1;
   e2 = f2;
   e3 = f3;
@@ -37,7 +37,7 @@ procedure a {
     g6 = e6 + a6;
   }
 }
-procedure b {
+procedure B {
   a1 = b1;
   a2 = b2;
   a3 = b3;
