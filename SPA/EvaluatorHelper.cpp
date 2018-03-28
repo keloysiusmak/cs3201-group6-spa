@@ -43,9 +43,9 @@ Possible optimization: Hash results / Sort merge tables
 */
 void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, IntermediateTable &iTable) {
 
-	int firstParamInt = getParamInt(clauseResults.tableParams[0], iTable);
+	int firstParamInt = iTable.getParamIndex(clauseResults.tableParams[0]);
 	if (clauseResults.numParamsInResult() == 2) {
-		int secondParamInt = getParamInt(clauseResults.tableParams[1], iTable);
+		int secondParamInt = iTable.getParamIndex(clauseResults.tableParams[1]);
 		vector<vector<int>> newTable;
 			
 		for (vector<int> tableRow : iTable.resultsTable) {
@@ -94,10 +94,10 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 
 /* Returns true if param in clause result is in table */
 bool EvaluatorHelper::clauseParamsInTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
-	for (Param p : iTable.tableParams) {
-		if (Utils::isSameParam(p, clauseResults.entRef)) return true;
-		if (Utils::isSameParam(p, clauseResults.lhs)) return true;
-		if (Utils::isSameParam(p, clauseResults.rhs)) return true;
+	for (pair<Param, int> paramIndex : iTable.tableParams) {
+		if (Utils::isSameParam(paramIndex.first, clauseResults.entRef)) return true;
+		if (Utils::isSameParam(paramIndex.first, clauseResults.lhs)) return true;
+		if (Utils::isSameParam(paramIndex.first, clauseResults.rhs)) return true;
 	}
 	return false;
 };
@@ -105,18 +105,10 @@ bool EvaluatorHelper::clauseParamsInTable(ClauseResults &clauseResults, Intermed
 /* Adds clauseResults params into table */
 void EvaluatorHelper::addClauseParamToTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
 	for (Param p : clauseResults.tableParams) {
-		if (getParamInt(p, iTable) == -1) { // Param does not exist in param table
+		if (iTable.getParamIndex(p) == -1) { // Param does not exist in param table
 			iTable.addTableParams(p);
 		}
 	}
-};
-
-/* Returns index of param for intermediate table, if param does not exist, return -1 */
-int EvaluatorHelper::getParamInt(Param p, IntermediateTable &iTable) {
-	for (int i = 0; i < iTable.tableParams.size(); i++) {
-		if (Utils::isSameParam(p, iTable.tableParams[i])) return i;
-	}
-	return -1;
 };
 
 /* Returns number of params of With Clause in table */
@@ -124,8 +116,8 @@ int EvaluatorHelper::withClauseNumSyns(Clause &clause, IntermediateTable &iTable
 	int numSyns = 0;
 	Param lhs = clause.getFirstParam();
 	Param rhs = clause.getSecondParam();
-	if (getParamInt(lhs, iTable) > -1) numSyns++; // Assume syn param in table
-	if (getParamInt(rhs, iTable) > -1) numSyns++; // Assume syn param in table
+	if (iTable.getParamIndex(lhs) > -1) numSyns++; // Assume syn param in table
+	if (iTable.getParamIndex(rhs) > -1) numSyns++; // Assume syn param in table
 	return numSyns;
 }
 

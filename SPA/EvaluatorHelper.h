@@ -11,7 +11,6 @@ class EvaluatorHelper {
   static void mergeWithoutOverlap(ClauseResults &clauseResults, IntermediateTable &iTable);
   static void mergeWithOverlap(ClauseResults &clauseResults, IntermediateTable &iTable);
 
-  static int getParamInt(Param p, IntermediateTable &iTable);
   static bool clauseParamsInTable(ClauseResults &clauseResults, IntermediateTable &iTable);
   static void addClauseParamToTable(ClauseResults &clauseResults, IntermediateTable &iTable);
 

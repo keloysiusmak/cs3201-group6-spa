@@ -5,12 +5,13 @@
 
 struct IntermediateTable {
 	bool hasResults;
-	vector<Param> tableParams;
+	map<Param, int> tableParams;
 	vector<vector<int>> resultsTable;
 	vector<Param> withTableParams;
 
 	void instantiateTable();
 	void setTableParams(vector<Param> params);
+	void setTableParams(map<Param, int> params);
 	void addTableParams(Param p);
 	void setResultsTable(vector<vector<int>> &table);
 
