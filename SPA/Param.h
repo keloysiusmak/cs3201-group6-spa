@@ -27,4 +27,10 @@ struct Param {
 	ParamType type;
 	string value;
 	AttrType attribute;
+
+	// For usage of Param as key of map
+	bool operator<(const Param &other) const {
+		return value < other.value;
+	}
 };
+

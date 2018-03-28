@@ -647,7 +647,7 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 	}
 
 	int paramIndex;
-	paramIndex = EvaluatorHelper::getParamInt(paramInTable, iTable);
+	paramIndex = iTable.getParamIndex(paramInTable);
 
 	int valueOfParam;
 	if (paramInTable.attribute == PROCNAME) { // Constant is procedure name
@@ -672,8 +672,8 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable &iTable) {
 	Param lhs = clause.getFirstParam();
 	Param rhs = clause.getSecondParam();
-	int firstParamTableIndex = EvaluatorHelper::getParamInt(lhs, iTable);
-	int secondParamTableIndex = EvaluatorHelper::getParamInt(rhs, iTable);
+	int firstParamTableIndex = iTable.getParamIndex(lhs);
+	int secondParamTableIndex = iTable.getParamIndex(rhs);
 
 	vector<vector<int>> updatedTable;
 	for (vector<int> tableRow : iTable.resultsTable) {
@@ -818,7 +818,7 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 		vector<int> paramIndexes;
 
 		for (Param p : selectedParams) {
-			paramIndexes.push_back(EvaluatorHelper::getParamInt(p, iTable));
+			paramIndexes.push_back(iTable.getParamIndex(p));
 		}
 
 		stringstream tupleRowString;
@@ -852,7 +852,7 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 };
 
 list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTable) {
-	int paramInt = EvaluatorHelper::getParamInt(p, iTable);
+	int paramInt = iTable.getParamIndex(p);
 	set<string> paramValueSet;
 	list<string> paramValues;
 

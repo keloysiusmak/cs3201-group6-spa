@@ -77,11 +77,11 @@ namespace EvaluatorHelperTest {
 
 			/* second row index => 1 */
 			Param validParamToBeSelected = createParam(ASSIGN, "a2");
-			Assert::AreEqual(true, EvaluatorHelper::getParamInt(validParamToBeSelected, table) == 1);
+			Assert::AreEqual(true, table.getParamIndex(validParamToBeSelected) == 1);
 
 			/* Param not in table returns -1 */
 			Param invalidParamToBeSelected = createParam(WHILE, "w");
-			Assert::AreEqual(true, EvaluatorHelper::getParamInt(invalidParamToBeSelected, table) == -1);
+			Assert::AreEqual(true, table.getParamIndex(invalidParamToBeSelected) == -1);
 		}
 
 		TEST_METHOD(EvaluatorHelperMergeWithoutOverlapOneParamTest) {
@@ -91,18 +91,11 @@ namespace EvaluatorHelperTest {
 			/* Generate params and initial table values */
 			vector<Param> params;
 			Param p1, p2, p3, p4;
-			p1 = createParam(ASSIGN, "a1");
-			p2 = createParam(ASSIGN, "a2");
-			p3 = createParam(VARIABLE, "v");
-			p4 = createParam(STMT, "s");
+			p1 = createParam(ASSIGN, "a1"); p2 = createParam(ASSIGN, "a2");
+			p3 = createParam(VARIABLE, "v"); p4 = createParam(STMT, "s");
 			params.push_back(p1); params.push_back(p2); params.push_back(p3); params.push_back(p4);
 
-			vector<vector<int>> resultsBeforeMerge = {
-				{1, 2, 3, 4},
-				{2, 3, 4, 5},
-				{3, 4, 5, 6},
-				{4, 5, 6, 7}
-			};
+			vector<vector<int>> resultsBeforeMerge = { {1, 2, 3, 4}, {2, 3, 4, 5}, {3, 4, 5, 6}, {4, 5, 6, 7} };
 
 			table.setTableParams(params);
 			table.setResultsTable(resultsBeforeMerge);
@@ -113,20 +106,13 @@ namespace EvaluatorHelperTest {
 			clauseResults.setResults(clauseResultsTable);
 
 			/* Final params and results table after merge */
-			vector<vector<int>> resultsAfterMerge = {
-				{1, 2, 3, 4, 1},
-				{1, 2, 3, 4, 2},
-				{2, 3, 4, 5, 1},
-				{2, 3, 4, 5, 2},
-				{3, 4, 5, 6, 1},
-				{3, 4, 5, 6, 2},
-				{4, 5, 6, 7, 1},
-				{4, 5, 6, 7, 2},
-			};
+			vector<vector<int>> resultsAfterMerge = { {1, 2, 3, 4, 1}, {1, 2, 3, 4, 2}, {2, 3, 4, 5, 1},
+				{2, 3, 4, 5, 2}, {3, 4, 5, 6, 1}, {3, 4, 5, 6, 2}, {4, 5, 6, 7, 1}, {4, 5, 6, 7, 2}, };
+
 			Param p5 = createParam(STMT, "s2");
-			vector<Param> updatedParams;
-			updatedParams.push_back(p1); updatedParams.push_back(p2); updatedParams.push_back(p3);
-			updatedParams.push_back(p4); updatedParams.push_back(p5);
+			map<Param, int> updatedParams;
+			updatedParams[p1] = 0; updatedParams[p2] = 1; updatedParams[p3] = 2;
+			updatedParams[p4] = 3; updatedParams[p5] = 4;
 
 			/* Merge and test */
 			EvaluatorHelper::mergeWithoutOverlap(clauseResults, table);
@@ -137,8 +123,8 @@ namespace EvaluatorHelperTest {
 				}
 			}
 			
-			for (size_t k = 0; k < updatedParams.size(); k++) {
-				Assert::AreEqual(true, Utils::isSameParam(table.tableParams[k], updatedParams[k]));
+			for (pair<Param, int> paramIndex : updatedParams) {
+				Assert::AreEqual(true, table.tableParams[paramIndex.first] == updatedParams[paramIndex.first]);
 			}
 		}
 
@@ -149,18 +135,11 @@ namespace EvaluatorHelperTest {
 			/* Generate params and initial table values */
 			vector<Param> params;
 			Param p1, p2, p3, p4;
-			p1 = createParam(ASSIGN, "a1");
-			p2 = createParam(ASSIGN, "a2");
-			p3 = createParam(VARIABLE, "v");
-			p4 = createParam(STMT, "s");
+			p1 = createParam(ASSIGN, "a1"); p2 = createParam(ASSIGN, "a2");
+			p3 = createParam(VARIABLE, "v"); p4 = createParam(STMT, "s");
 			params.push_back(p1); params.push_back(p2); params.push_back(p3); params.push_back(p4);
 
-			vector<vector<int>> resultsBeforeMerge = {
-				{1, 2, 3, 4},
-				{2, 3, 4, 5},
-				{3, 4, 5, 6},
-				{4, 5, 6, 7}
-			};
+			vector<vector<int>> resultsBeforeMerge = { {1, 2, 3, 4}, {2, 3, 4, 5}, {3, 4, 5, 6}, {4, 5, 6, 7} };
 
 			table.setTableParams(params);
 			table.setResultsTable(resultsBeforeMerge);
@@ -171,21 +150,15 @@ namespace EvaluatorHelperTest {
 			clauseResults.setResults(clauseResultsTable);
 
 			/* Final params and results table after merge */
-			vector<vector<int>> resultsAfterMerge = {
-				{1, 2, 3, 4, 1, 3},
-				{1, 2, 3, 4, 2, 4},
-				{2, 3, 4, 5, 1, 3},
-				{2, 3, 4, 5, 2, 4},
-				{3, 4, 5, 6, 1, 3},
-				{3, 4, 5, 6, 2, 4},
-				{4, 5, 6, 7, 1, 3},
-				{4, 5, 6, 7, 2, 4},
-			};
+			vector<vector<int>> resultsAfterMerge = { {1, 2, 3, 4, 1, 3}, {1, 2, 3, 4, 2, 4},
+				{2, 3, 4, 5, 1, 3}, {2, 3, 4, 5, 2, 4}, {3, 4, 5, 6, 1, 3}, {3, 4, 5, 6, 2, 4},
+				{4, 5, 6, 7, 1, 3}, {4, 5, 6, 7, 2, 4}, };
+
 			Param p5 = createParam(STMT, "s2");
 			Param p6 = createParam(STMT, "s3");
-			vector<Param> updatedParams;
-			updatedParams.push_back(p1); updatedParams.push_back(p2); updatedParams.push_back(p3);
-			updatedParams.push_back(p4); updatedParams.push_back(p5); updatedParams.push_back(p6);
+			map<Param, int> updatedParams;
+			updatedParams[p1] = 0; updatedParams[p2] = 1; updatedParams[p3] = 2;
+			updatedParams[p4] = 3; updatedParams[p5] = 4; updatedParams[p6] = 5;
 
 			/* Merge */
 			EvaluatorHelper::mergeWithoutOverlap(clauseResults, table);
@@ -196,9 +169,10 @@ namespace EvaluatorHelperTest {
 				}
 			}
 
-			for (size_t k = 0; k < updatedParams.size(); k++) {
-				Assert::AreEqual(true, Utils::isSameParam(table.tableParams[k], updatedParams[k]));
+			for (pair<Param, int> paramIndex : updatedParams) {
+				Assert::AreEqual(true, table.tableParams[paramIndex.first] == updatedParams[paramIndex.first]);
 			}
+
 		}
 
 		TEST_METHOD(EvaluatorHelperMergeWithOverlapOneParamTest) {
@@ -208,18 +182,11 @@ namespace EvaluatorHelperTest {
 			/* Generate params and initial table values */
 			vector<Param> params;
 			Param p1, p2, p3, p4;
-			p1 = createParam(ASSIGN, "a1");
-			p2 = createParam(ASSIGN, "a2");
-			p3 = createParam(VARIABLE, "v");
-			p4 = createParam(STMT, "s");
+			p1 = createParam(ASSIGN, "a1"); p2 = createParam(ASSIGN, "a2");
+			p3 = createParam(VARIABLE, "v"); p4 = createParam(STMT, "s");
 			params.push_back(p1); params.push_back(p2); params.push_back(p3); params.push_back(p4);
 
-			vector<vector<int>> resultsBeforeMerge = {
-				{1, 2, 3, 4},
-				{2, 3, 4, 5},
-				{3, 4, 5, 6},
-				{4, 5, 6, 7}
-			};
+			vector<vector<int>> resultsBeforeMerge = { {1, 2, 3, 4}, {2, 3, 4, 5}, {3, 4, 5, 6}, {4, 5, 6, 7} };
 
 			table.setTableParams(params);
 			table.setResultsTable(resultsBeforeMerge);
@@ -235,9 +202,9 @@ namespace EvaluatorHelperTest {
 				{2, 3, 4, 5, 4},
 			};
 			Param p5 = createParam(STMT, "s3");
-			vector<Param> updatedParams;
-			updatedParams.push_back(p1); updatedParams.push_back(p2); updatedParams.push_back(p3);
-			updatedParams.push_back(p4); updatedParams.push_back(p5);
+			map<Param, int> updatedParams;
+			updatedParams[p1] = 0; updatedParams[p2] = 1; updatedParams[p3] = 2;
+			updatedParams[p4] = 3; updatedParams[p5] = 4; 
 
 			/* Merge */
 			EvaluatorHelper::mergeWithOverlap(clauseResults, table);
@@ -248,8 +215,8 @@ namespace EvaluatorHelperTest {
 				}
 			}
 
-			for (size_t k = 0; k < updatedParams.size(); k++) {
-				Assert::AreEqual(true, Utils::isSameParam(table.tableParams[k], updatedParams[k]));
+			for (pair<Param, int> paramIndex : updatedParams) {
+				Assert::AreEqual(true, table.tableParams[paramIndex.first] == updatedParams[paramIndex.first]);
 			}
 		}
 
@@ -266,12 +233,7 @@ namespace EvaluatorHelperTest {
 			p4 = createParam(STMT, "s");
 			params.push_back(p1); params.push_back(p2); params.push_back(p3); params.push_back(p4);
 
-			vector<vector<int>> resultsBeforeMerge = {
-				{1, 2, 3, 4},
-				{2, 3, 4, 5},
-				{3, 4, 5, 6},
-				{4, 5, 6, 7}
-			};
+			vector<vector<int>> resultsBeforeMerge = { {1, 2, 3, 4}, {2, 3, 4, 5}, {3, 4, 5, 6}, {4, 5, 6, 7} };
 
 			table.setTableParams(params);
 			table.setResultsTable(resultsBeforeMerge);
@@ -282,13 +244,10 @@ namespace EvaluatorHelperTest {
 			clauseResults.setResults(clauseResultsTable);
 
 			/* Final params and results table after merge */
-			vector<vector<int>> resultsAfterMerge = {
-				{1, 2, 3, 4},
-				{2, 3, 4, 5},
-			};
-			vector<Param> updatedParams;
-			updatedParams.push_back(p1); updatedParams.push_back(p2);
-			updatedParams.push_back(p3); updatedParams.push_back(p4);
+			vector<vector<int>> resultsAfterMerge = { {1, 2, 3, 4}, {2, 3, 4, 5}};
+
+			map<Param, int> updatedParams;
+			updatedParams[p1] = 0; updatedParams[p2] = 1; updatedParams[p3] = 2; updatedParams[p4] = 3;
 
 			/* Merge */
 			EvaluatorHelper::mergeWithOverlap(clauseResults, table);
@@ -299,8 +258,8 @@ namespace EvaluatorHelperTest {
 				}
 			}
 
-			for (size_t k = 0; k < updatedParams.size(); k++) {
-				Assert::AreEqual(true, Utils::isSameParam(table.tableParams[k], updatedParams[k]));
+			for (pair<Param, int> paramIndex : updatedParams) {
+				Assert::AreEqual(true, table.tableParams[paramIndex.first] == updatedParams[paramIndex.first]);
 			}
 		}
 
