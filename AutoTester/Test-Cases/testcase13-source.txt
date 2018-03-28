@@ -1,0 +1,82 @@
+procedure Main {
+	x = 5;
+	left = x;
+	right = left + 2;
+	temp = 1;
+	radius = x + left;
+	temp = temp + 2;
+	radius1 = x + left;
+	while x {
+		quota = left + right;
+		temp = temp + 3;
+		right = right - x;
+		iter = right + 1; 
+		left = right + x; 
+		temp = temp * 4; 
+		temp = temp + 5;
+		iter = iter - 1 * 6; 
+		temp = temp - 6; 
+    	}
+	x = left + x + right + radius +5; 
+	while iter {
+		x = right+3 + 2+left;
+		temp = temp + 7;
+		if iter then{
+			iter = iter + 1; 
+			length = radius*10;
+			breadth = radius + 10;
+    	} 
+		else {
+			right = x + 1; 
+			while left {
+				while right {
+					left = right + x;
+					if iter then {
+						x = x + left + right - quota + radius;
+						left = right + 5; 
+						if radius then {
+							radii = radius + 1;
+							area = pi * radius * radius;
+							circum = 2 * pi * radius;
+						}
+						else{
+							area = length * breadth;
+							perimeter = 2 * length + breadth;
+						}
+                	} 
+					else{
+						right = x + 3;     
+					}
+            	}
+				while left{
+					breadth = radius - 100;
+					length = left + right;
+				}
+				radius1 = circum * 3;
+        	}
+			x = x + left + right; 
+     	}
+	 	x = x + left + right + quota * radius; 
+		while iter {
+	 		iter = iter + 1; 
+    		}
+    	}
+	x = x + center ;
+}
+
+procedure Second {
+	pi = 2;
+	radii = area - pi;
+	while x {
+		call Main;
+	}
+}
+
+procedure Third {
+	if quota then {
+		perimeter = center;
+	} else {
+		quota = right;
+	}
+	call Second;
+}
