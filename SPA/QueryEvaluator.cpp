@@ -377,15 +377,15 @@ void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults
 			clauseResults.setResults(results);
 		}
 		else { // (concrete, concrete)
-		  //bool result;
+		  bool result;
 			if (rightParam.type == IDENT) {
 				int varId = pkb.getVariableId(rightParam.value);
-				// result = pkb.checkNext(stoi(leftParam.value), varId);
+				result = pkb.checkNext(stoi(leftParam.value), varId);
 			}
 			else {
-				// result = pkb.checkNext(stoi(leftParam.value), stoi(rightParam.value));
+				result = pkb.checkNext(stoi(leftParam.value), stoi(rightParam.value));
 			}
-			// clauseResults.setValid(result);
+			clauseResults.setValid(result);
 		}
 	}
 }
@@ -442,7 +442,11 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 
 		}
 		else { // (concrete, conrete)
+<<<<<<< HEAD
 			bool result = pkb.checkCalls(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
+=======
+			bool result = pkb.checkCalls(stoi(leftParam.value), stoi(rightParam.value));
+>>>>>>> 3c80742b4e5dc43a3535abf14e2afd373afd238d
 			clauseResults.setValid(result);
 		}
 	}
