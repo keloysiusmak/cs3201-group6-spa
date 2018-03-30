@@ -5,7 +5,6 @@
 using namespace std;
 
 Pattern::Pattern() {
-
 }
 
 Pattern::Pattern(Param entity, Param leftParam, Param rightParam) {
