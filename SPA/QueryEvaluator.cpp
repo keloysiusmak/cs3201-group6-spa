@@ -45,6 +45,10 @@ void QueryEvaluator::setInvalidQuery(string message) {
 list<string> QueryEvaluator::evaluateQuery() {
 	if (isValidQuery()) {
 
+		/* Push clauses into one vector for sorting */
+		vector<Clause> consolidatedClauses;
+		EvaluatorHelper::consolidateClauses(queryObject.getClauses(), consolidatedClauses);
+
 		vector<Param> selectParams = queryObject.getSelectStatements();
 		IntermediateTable iTable; iTable.instantiateTable();
 
@@ -140,8 +144,8 @@ void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResul
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
@@ -168,8 +172,8 @@ void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResu
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
@@ -196,8 +200,8 @@ void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseR
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
 	if (Utils::isSynonym(leftParam)) { // (syn, syn)
 		if (Utils::isSynonym(rightParam)) {
@@ -225,8 +229,8 @@ void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResul
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateParentStar(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
@@ -251,8 +255,8 @@ void QueryEvaluator::evaluateParentStar(Clause & clause, ClauseResults & clauseR
 }
 
 void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
@@ -307,8 +311,8 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 /* Right param: IDENT or stmt syn or proc syn */
 /* Left param: var syn or IDENT or _ */
 void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
@@ -357,8 +361,8 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
@@ -393,8 +397,8 @@ void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
@@ -422,8 +426,8 @@ void QueryEvaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseRes
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResults)
 {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
 	if (Utils::isSynonym(leftParam)) { // (syn, syn)
 		if (Utils::isSynonym(rightParam)) {
@@ -452,8 +456,8 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseResults)
 {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
@@ -481,8 +485,8 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 /* Left param: assignment syn or assignment no or _ */
 void QueryEvaluator::evaluateAffects(Clause & clause, ClauseResults & clauseResults)
 {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
 	if (Utils::isSynonym(leftParam)) { // (syn, syn)
 		if (Utils::isSynonym(rightParam)) {
@@ -637,13 +641,13 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 
 	Param paramInTable;
 	Param paramWithValue;
-	if (Utils::isSynonym(clause.getFirstParam())) {
-		paramInTable = clause.getFirstParam();
-		paramWithValue = clause.getSecondParam();
+	if (Utils::isSynonym(clause.getLeftParam())) {
+		paramInTable = clause.getLeftParam();
+		paramWithValue = clause.getRightParam();
 	}
-	if (Utils::isSynonym(clause.getSecondParam())) {
-		paramInTable = clause.getSecondParam();
-		paramWithValue = clause.getFirstParam();
+	if (Utils::isSynonym(clause.getRightParam())) {
+		paramInTable = clause.getRightParam();
+		paramWithValue = clause.getLeftParam();
 	}
 
 	int paramIndex;
@@ -670,8 +674,8 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 
 /* Filters table for with equating two variables */
 void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable &iTable) {
-	Param lhs = clause.getFirstParam();
-	Param rhs = clause.getSecondParam();
+	Param lhs = clause.getLeftParam();
+	Param rhs = clause.getRightParam();
 	int firstParamTableIndex = iTable.getParamIndex(lhs);
 	int secondParamTableIndex = iTable.getParamIndex(rhs);
 
@@ -697,8 +701,8 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 
 /* Handles with evaluation when not found in table */
 bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable &iTable) {
-	Param lhs = withClause.getFirstParam();
-	Param rhs = withClause.getSecondParam();
+	Param lhs = withClause.getLeftParam();
+	Param rhs = withClause.getRightParam();
 	ClauseResults withClauseResults;
 	vector<vector<int>> withResults;
 

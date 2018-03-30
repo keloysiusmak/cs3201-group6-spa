@@ -3,8 +3,8 @@ using namespace std;
 
 void ClauseResults::instantiateClause(Clause clause) {
 	valid = false;
-	lhs = clause.getFirstParam();
-	rhs = clause.getSecondParam();
+	lhs = clause.getLeftParam();
+	rhs = clause.getRightParam();
 	if (Utils::isSynonym(lhs)) tableParams.push_back(lhs);
 	if (Utils::isSynonym(rhs)) tableParams.push_back(rhs);
 };
