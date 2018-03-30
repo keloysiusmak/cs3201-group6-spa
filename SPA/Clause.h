@@ -10,8 +10,9 @@ enum RelRef { Modifies, Uses, Parent, ParentT, Follows, FollowsT,
 
 
 class Clause {
-protected:
+private:
 	RelRef _relRef;
+protected:
 	Param _leftParam;
 	Param _rightParam;
 
