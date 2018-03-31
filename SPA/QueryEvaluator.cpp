@@ -51,6 +51,8 @@ list<string> QueryEvaluator::evaluateQuery() {
 		EvaluatorHelper::consolidateClauses(queryObject.getPatterns(), consolidatedClauses);
 		EvaluatorHelper::consolidateClauses(queryObject.getWithClauses(), consolidatedClauses);
 
+		vector<vector<Clause>> sortedClauses = EvaluatorHelper::sortIntoGroups(consolidatedClauses);
+
 		vector<Param> selectParams = queryObject.getSelectStatements();
 		IntermediateTable iTable; iTable.instantiateTable();
 

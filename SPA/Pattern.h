@@ -7,7 +7,7 @@
 using namespace std;
 
 class Pattern : public Clause {
-private:
+protected:
 	Param _entity;
 
 public:

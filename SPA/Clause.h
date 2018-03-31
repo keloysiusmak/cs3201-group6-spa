@@ -6,13 +6,12 @@
 using namespace std;
 
 enum RelRef { Modifies, Uses, Parent, ParentT, Follows, FollowsT,
-				Next, NextT, Calls, CallsT, Affects, AffectsT, With };
+				Next, NextT, Calls, CallsT, Affects, AffectsT, With, None };
 
 
 class Clause {
-private:
-	RelRef _relRef;
 protected:
+	RelRef _relRef;
 	Param _leftParam;
 	Param _rightParam;
 
