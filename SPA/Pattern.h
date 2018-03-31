@@ -7,9 +7,6 @@
 using namespace std;
 
 class Pattern : public Clause {
-protected:
-	Param _entity;
-
 public:
 	//Constructors
 	Pattern();

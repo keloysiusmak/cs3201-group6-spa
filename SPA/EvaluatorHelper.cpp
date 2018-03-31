@@ -24,7 +24,7 @@ map<Param, int> EvaluatorHelper::ufdsParams(vector<Clause> &clauses) {
 		}
 		if (Utils::isSynonym(rhs) && lhs.type != ALL) {
 			Node newNode = Node(rhs);
-			paramsHash[lhs] = newNode;
+			paramsHash[rhs] = newNode;
 		}
 		if (clause.getRelRef() == None) { // Check for pattern
 			Pattern* p = reinterpret_cast<Pattern*>(&clause);

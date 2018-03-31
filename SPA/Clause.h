@@ -12,6 +12,7 @@ enum RelRef { Modifies, Uses, Parent, ParentT, Follows, FollowsT,
 class Clause {
 protected:
 	RelRef _relRef;
+	Param _entity;
 	Param _leftParam;
 	Param _rightParam;
 
