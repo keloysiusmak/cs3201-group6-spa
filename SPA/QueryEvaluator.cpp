@@ -45,53 +45,52 @@ void QueryEvaluator::setInvalidQuery(string message) {
 list<string> QueryEvaluator::evaluateQuery() {
 	if (isValidQuery()) {
 
+		/* Push clauses into one vector for sorting */
+		vector<Clause> consolidatedClauses;
+		QueryOptimization::consolidateClauses(queryObject.getClauses(), consolidatedClauses);
+		QueryOptimization::consolidateClauses(queryObject.getPatterns(), consolidatedClauses);
+		QueryOptimization::consolidateClauses(queryObject.getWithClauses(), consolidatedClauses);
+
+		map<int, vector<Clause>> sortedClauses = QueryOptimization::sortIntoGroups(consolidatedClauses);
+
 		vector<Param> selectParams = queryObject.getSelectStatements();
-		IntermediateTable iTable; iTable.instantiateTable();
 
-		/* Evaluation of clauses */
-		for (Clause clause : queryObject.getClauses()) {
-			ClauseResults clauseResults;
-			evaluateClause(clause, clauseResults);
-			if (!clauseResults.hasResults()) {
-				if (selectParams[0].type == BOOLEAN) return{ "false" };
-				else return{};
+		vector<IntermediateTable> tables;
+		for (pair<int, vector<Clause>> groupedClauses : sortedClauses) {
+			IntermediateTable iTable; iTable.instantiateTable();
+			for (Clause clause : groupedClauses.second) {
+				ClauseResults clauseResults;
+				evaluateClauseGeneral(clause, clauseResults, iTable);
 			}
-			clauseResults.removeALLSyns(); // Sanitization
-			filterStmts(clauseResults);
-
-			if (clauseResults.numParamsInResult() != 0) {
-				EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
-			}
+			tables.push_back(iTable);
 		}
 
-		/* Evaluation of patterns */
-		for (Pattern clause : queryObject.getPatterns()) {
-			ClauseResults patternResults;
-			evaluatePattern(clause, patternResults);
-			if (!patternResults.hasResults()) {
-				if (selectParams[0].type == BOOLEAN) return{ "false" };
-				else return{};
-			}
-			patternResults.removeALLSyns(); // Sanitization
-			filterStmts(patternResults);
-
-			if (patternResults.numParamsInResult() != 0) {
-				EvaluatorHelper::mergeClauseTable(patternResults, iTable);
-			}
-		}
-
-		/* Evaluation of with clauses */
-		for (Clause withClause : queryObject.getWithClauses()) {
-			handleWithClause(withClause, iTable);
-		}
-
-		return extractParams(selectParams, iTable);
+		// To be refactored...
+		return extractParams(selectParams, tables);
 
 	}
 	else { // Return no value
 		return invalidQueryMessage;
 	}
 }
+
+// General evaluation method for base Clause type
+void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clauseResults, IntermediateTable &iTable) {
+	if (clause.getRelRef() == With) { // With
+		handleWithClause(clause, iTable);
+	} else {
+		if (clause.getRelRef() == None) { // Pattern
+			Pattern* pattern = static_cast<Pattern*>(&clause);
+			evaluatePattern(*pattern, clauseResults);
+		}
+		else { // Such That
+			evaluateClause(clause, clauseResults);
+		}
+		clauseResults.removeALLSyns(); // Sanitization
+		filterStmts(clauseResults);
+		EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
+	}
+};
 
 /* Main evaluation method */
 void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResults)
@@ -140,11 +139,11 @@ void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResul
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) {
-		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+	if (Utils::isSynonym(leftParam)) {
+		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results = pkb.getAllFollows();
 			clauseResults.setResults(results);
 		}
@@ -154,7 +153,7 @@ void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResu
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getFollowsAfter(stoi(leftParam.value));
 			clauseResults.setResults(results);
 		}
@@ -168,11 +167,11 @@ void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResu
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) {
-		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+	if (Utils::isSynonym(leftParam)) {
+		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results = pkb.getAllFollowsStar();
 			clauseResults.setResults(results);
 		}
@@ -182,7 +181,7 @@ void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseR
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getFollowsAfterStar(stoi(leftParam.value));
 			clauseResults.setResults(results);
 		}
@@ -196,11 +195,11 @@ void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseR
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) { // (syn, syn)
-		if (Utils::isSynonym(rightParam.type)) {
+	if (Utils::isSynonym(leftParam)) { // (syn, syn)
+		if (Utils::isSynonym(rightParam)) {
 			vector<vector<int>> results = pkb.getAllParent();
 			clauseResults.setResults(results);
 		}
@@ -210,7 +209,7 @@ void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResul
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getChildren(stoi(leftParam.value));
 			clauseResults.setResults(results);
 
@@ -225,11 +224,11 @@ void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResul
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateParentStar(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) {
-		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+	if (Utils::isSynonym(leftParam)) {
+		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results = pkb.getAllParentStar();
 			clauseResults.setResults(results);
 		}
@@ -239,7 +238,7 @@ void QueryEvaluator::evaluateParentStar(Clause & clause, ClauseResults & clauseR
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getChildrenStar(stoi(leftParam.value));
 			clauseResults.setResults(results);
 		}
@@ -251,11 +250,11 @@ void QueryEvaluator::evaluateParentStar(Clause & clause, ClauseResults & clauseR
 }
 
 void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) {
-		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+	if (Utils::isSynonym(leftParam)) {
+		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results;
 			if (leftParam.type == PROCEDURE) { results = pkb.getAllProcedureUsesVariables();
 			} else { results = pkb.getAllStatementUsesVariables(); }
@@ -274,7 +273,7 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results;
 			int lineId;
 			try { 
@@ -307,11 +306,11 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 /* Right param: IDENT or stmt syn or proc syn */
 /* Left param: var syn or IDENT or _ */
 void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) {
-		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+	if (Utils::isSynonym(leftParam)) {
+		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results;
 			if (leftParam.type == PROCEDURE) { results = pkb.getAllProcedureModifiesVariables();
 			} else { results = pkb.getAllStatementModifiesVariables(); }
@@ -324,7 +323,7 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results;
 			int lineId;
 			try { 
@@ -357,11 +356,11 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) {
-		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+	if (Utils::isSynonym(leftParam)) {
+		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results = pkb.getAllNext(); //check PKB API
 			clauseResults.setResults(results);
 		}
@@ -372,7 +371,7 @@ void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getNextAfter(stoi(leftParam.value));
 			clauseResults.setResults(results);
 		}
@@ -393,11 +392,11 @@ void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseResults) {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) {
-		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+	if (Utils::isSynonym(leftParam)) {
+		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results = pkb.getAllNextStar();
 			clauseResults.setResults(results);
 		}
@@ -407,7 +406,7 @@ void QueryEvaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseRes
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getNextAfterStar(stoi(leftParam.value));
 			clauseResults.setResults(results);
 		}
@@ -422,11 +421,11 @@ void QueryEvaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseRes
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResults)
 {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) { // (syn, syn)
-		if (Utils::isSynonym(rightParam.type)) {
+	if (Utils::isSynonym(leftParam)) { // (syn, syn)
+		if (Utils::isSynonym(rightParam)) {
 			vector<vector<int>> results = pkb.getAllCalls();
 			clauseResults.setResults(results);
 		}
@@ -436,7 +435,7 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getCallsAfter(pkb.getProcedureId(leftParam.value));
 			clauseResults.setResults(results);
 
@@ -456,11 +455,11 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseResults)
 {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) {
-		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+	if (Utils::isSynonym(leftParam)) {
+		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results = pkb.getAllCallsStar();
 			clauseResults.setResults(results);
 		}
@@ -470,7 +469,7 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getCallsAfterStar(pkb.getProcedureId(leftParam.value));
 			clauseResults.setResults(results);
 		}
@@ -485,11 +484,11 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 /* Left param: assignment syn or assignment no or _ */
 void QueryEvaluator::evaluateAffects(Clause & clause, ClauseResults & clauseResults)
 {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) { // (syn, syn)
-		if (Utils::isSynonym(rightParam.type)) {
+	if (Utils::isSynonym(leftParam)) { // (syn, syn)
+		if (Utils::isSynonym(rightParam)) {
 			vector<vector<int>> results = pkb.getAllAffects();
 			clauseResults.setResults(results);
 		}
@@ -499,7 +498,7 @@ void QueryEvaluator::evaluateAffects(Clause & clause, ClauseResults & clauseResu
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getAffectsAfter(pkb.getProcedureId(leftParam.value));
 			clauseResults.setResults(results);
 
@@ -641,17 +640,17 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 
 	Param paramInTable;
 	Param paramWithValue;
-	if (Utils::isSynonym(clause.getFirstParam().type)) {
-		paramInTable = clause.getFirstParam();
-		paramWithValue = clause.getSecondParam();
+	if (Utils::isSynonym(clause.getLeftParam())) {
+		paramInTable = clause.getLeftParam();
+		paramWithValue = clause.getRightParam();
 	}
-	if (Utils::isSynonym(clause.getSecondParam().type)) {
-		paramInTable = clause.getSecondParam();
-		paramWithValue = clause.getFirstParam();
+	if (Utils::isSynonym(clause.getRightParam())) {
+		paramInTable = clause.getRightParam();
+		paramWithValue = clause.getLeftParam();
 	}
 
 	int paramIndex;
-	paramIndex = EvaluatorHelper::getParamInt(paramInTable, iTable);
+	paramIndex = iTable.getParamIndex(paramInTable);
 
 	int valueOfParam;
 	if (paramInTable.attribute == PROCNAME) { // Constant is procedure name
@@ -674,10 +673,10 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 
 /* Filters table for with equating two variables */
 void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable &iTable) {
-	Param lhs = clause.getFirstParam();
-	Param rhs = clause.getSecondParam();
-	int firstParamTableIndex = EvaluatorHelper::getParamInt(lhs, iTable);
-	int secondParamTableIndex = EvaluatorHelper::getParamInt(rhs, iTable);
+	Param lhs = clause.getLeftParam();
+	Param rhs = clause.getRightParam();
+	int firstParamTableIndex = iTable.getParamIndex(lhs);
+	int secondParamTableIndex = iTable.getParamIndex(rhs);
 
 	vector<vector<int>> updatedTable;
 	for (vector<int> tableRow : iTable.resultsTable) {
@@ -701,13 +700,13 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 
 /* Handles with evaluation when not found in table */
 bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable &iTable) {
-	Param lhs = withClause.getFirstParam();
-	Param rhs = withClause.getSecondParam();
+	Param lhs = withClause.getLeftParam();
+	Param rhs = withClause.getRightParam();
 	ClauseResults withClauseResults;
 	vector<vector<int>> withResults;
 
 	withClauseResults.instantiateClause(withClause);
-	if (Utils::isSynonym(lhs.type) && Utils::isSynonym(rhs.type)) { // Both are synonyms
+	if (Utils::isSynonym(lhs) && Utils::isSynonym(rhs)) { // Both are synonyms
 		set<int> lhsParamSet = getParamSet(lhs);
 		set<int> rhsParamSet = getParamSet(rhs);
 
@@ -724,7 +723,7 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 			return true;
 		}
 
-	} else if (Utils::isSynonym(lhs.type)) { // LHS syn
+	} else if (Utils::isSynonym(lhs)) { // LHS syn
 		set<int> lhsParamSet = getParamSet(lhs);
 
 		for (int value : lhsParamSet) {
@@ -742,7 +741,7 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 			return true;
 		}
 
-	} else if (Utils::isSynonym(rhs.type)) { // RHS syn
+	} else if (Utils::isSynonym(rhs)) { // RHS syn
 		set<int> rhsParamSet = getParamSet(rhs);
 
 		for (int value : rhsParamSet) {
@@ -798,36 +797,37 @@ string QueryEvaluator::getProcOrVarName(AttrType type, int id) {
 };
 
 /* Returns the selected params from the intermediate table */
-list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, IntermediateTable &iTable) {
-	if (!iTable.hasResults) {
-		return{};
-	} else if (selectedParams.size() == 1) {
+list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<IntermediateTable> &iTables) {
+	if (selectedParams.size() == 1) {
 		Param selected = selectedParams[0];
-		if (selected.type == BOOLEAN) { // Boolean
-			if (iTable.resultsTable.size() > 0 || // Table not empty
-				iTable.tableParams.size() == 0) { // No statement to evaluate
+		IntermediateTable tableWithParam = *(EvaluatorHelper::findTableWithParam(selected, iTables));
+		if (selected.type == BOOLEAN) { // Select Boolean
+			if (tableWithParam.resultsTable.size() > 0 || // Table not empty
+				tableWithParam.tableParams.size() == 0) { // No statement to evaluate
 				return{ "true" };
-			}
-			else {
+			} else {
 				return{ "false" };
 			}
 		}
-		else { // Synonym
-			return paramToStringList(selected, iTable);
+		else { // Select Synonym
+			return paramToStringList(selected, tableWithParam);
 		}
-	}
-	else { // Tuple
+	} else { // Select Tuple
 		set<string> tupleResultSet;
 		list<string> tupleResult;
 		vector<int> paramIndexes;
 
+		IntermediateTable mergedTable;
+
 		for (Param p : selectedParams) {
-			paramIndexes.push_back(EvaluatorHelper::getParamInt(p, iTable));
+			IntermediateTable* tableWithParam = EvaluatorHelper::findTableWithParam(p, iTables);
+			mergedTable = EvaluatorHelper::mergeIntermediateTables(mergedTable, *tableWithParam);
+			paramIndexes.push_back(mergedTable.getParamIndex(p));
 		}
 
 		stringstream tupleRowString;
-		for (size_t i = 0; i < iTable.resultsTable.size(); i++) {
-			vector<int> tableRow = iTable.resultsTable[i];
+		for (size_t i = 0; i < mergedTable.resultsTable.size(); i++) {
+			vector<int> tableRow = mergedTable.resultsTable[i];
 			tupleRowString.str("");
 
 			for (size_t j = 0; j < paramIndexes.size(); j++) {
@@ -856,7 +856,7 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, Interme
 };
 
 list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTable) {
-	int paramInt = EvaluatorHelper::getParamInt(p, iTable);
+	int paramInt = iTable.getParamIndex(p);
 	set<string> paramValueSet;
 	list<string> paramValues;
 

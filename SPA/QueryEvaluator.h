@@ -9,6 +9,8 @@
 #include "Utils.h"
 #include "ClauseResults.h"
 #include "EvaluatorHelper.h";
+#include "QueryOptimization.h"
+#include "IntermediateTable.h"
 
 class QueryEvaluator {
 public:
@@ -25,6 +27,8 @@ public:
 	void setPKB(PKB);
 
 	// Main Evaluation methods
+	void evaluateClauseGeneral(Clause &clause, ClauseResults &clauseResults, IntermediateTable &iTable);
+
 	void evaluateClause(Clause &clause, ClauseResults &clauseResults);
 	void evaluateFollows(Clause &clause, ClauseResults &clauseResults);
 	void evaluateFollowStar(Clause &clause, ClauseResults &clauseResults);
@@ -45,7 +49,7 @@ public:
 	set<int> getParamSet(Param p);
 
 	// Printing Helpers
-	list<string> extractParams(vector<Param> selectedParams, IntermediateTable &iTable);
+	list<string> extractParams(vector<Param> selectedParams, vector<IntermediateTable> &iTables);
 	list<string> paramToStringList(Param p, IntermediateTable &iTable);
 	list<string> getAllParamsOfType(Param p);
 	int getId(Param p, ParamType type, AttrType attribute);

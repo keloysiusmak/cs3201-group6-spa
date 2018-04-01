@@ -2,15 +2,11 @@
 
 #include <string>
 #include "Param.h"
+#include "Clause.h"
 
 using namespace std;
 
-class Pattern {
-private:
-	Param _entity;
-	Param _leftParam;
-	Param _rightParam;
-
+class Pattern : public Clause {
 public:
 	//Constructors
 	Pattern();

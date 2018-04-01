@@ -3,10 +3,10 @@ using namespace std;
 
 void ClauseResults::instantiateClause(Clause clause) {
 	valid = false;
-	lhs = clause.getFirstParam();
-	rhs = clause.getSecondParam();
-	if (Utils::isSynonym(lhs.type)) tableParams.push_back(lhs);
-	if (Utils::isSynonym(rhs.type)) tableParams.push_back(rhs);
+	lhs = clause.getLeftParam();
+	rhs = clause.getRightParam();
+	if (Utils::isSynonym(lhs)) tableParams.push_back(lhs);
+	if (Utils::isSynonym(rhs)) tableParams.push_back(rhs);
 };
 
 void ClauseResults::instantiatePattern(Pattern pattern) {
@@ -15,7 +15,7 @@ void ClauseResults::instantiatePattern(Pattern pattern) {
 	lhs = pattern.getLeftParam();
 	rhs = pattern.getRightParam();
 	tableParams.push_back(entRef);
-	if (Utils::isSynonym(lhs.type) && lhs.type != ALL) {
+	if (Utils::isSynonym(lhs) && lhs.type != ALL) {
 		tableParams.push_back(lhs);
 	}
 };
