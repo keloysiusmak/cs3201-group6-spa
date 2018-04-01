@@ -49,7 +49,7 @@ public:
 	set<int> getParamSet(Param p);
 
 	// Printing Helpers
-	list<string> extractParams(vector<Param> selectedParams, IntermediateTable &iTable);
+	list<string> extractParams(vector<Param> selectedParams, vector<IntermediateTable> &iTables);
 	list<string> paramToStringList(Param p, IntermediateTable &iTable);
 	list<string> getAllParamsOfType(Param p);
 	int getId(Param p, ParamType type, AttrType attribute);

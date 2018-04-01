@@ -66,9 +66,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 		}
 
 		// To be refactored...
-		for (IntermediateTable table : tables) {
-			return extractParams(selectParams, table);
-		}
+		return extractParams(selectParams, tables);
 
 	}
 	else { // Return no value
@@ -795,36 +793,37 @@ string QueryEvaluator::getProcOrVarName(AttrType type, int id) {
 };
 
 /* Returns the selected params from the intermediate table */
-list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, IntermediateTable &iTable) {
-	if (!iTable.hasResults) {
-		return{};
-	} else if (selectedParams.size() == 1) {
+list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<IntermediateTable> &iTables) {
+	if (selectedParams.size() == 1) {
 		Param selected = selectedParams[0];
-		if (selected.type == BOOLEAN) { // Boolean
-			if (iTable.resultsTable.size() > 0 || // Table not empty
-				iTable.tableParams.size() == 0) { // No statement to evaluate
+		IntermediateTable tableWithParam = *(EvaluatorHelper::findTableWithParam(selected, iTables));
+		if (selected.type == BOOLEAN) { // Select Boolean
+			if (tableWithParam.resultsTable.size() > 0 || // Table not empty
+				tableWithParam.tableParams.size() == 0) { // No statement to evaluate
 				return{ "true" };
-			}
-			else {
+			} else {
 				return{ "false" };
 			}
 		}
-		else { // Synonym
-			return paramToStringList(selected, iTable);
+		else { // Select Synonym
+			return paramToStringList(selected, tableWithParam);
 		}
-	}
-	else { // Tuple
+	} else { // Select Tuple
 		set<string> tupleResultSet;
 		list<string> tupleResult;
 		vector<int> paramIndexes;
 
+		IntermediateTable mergedTable;
+
 		for (Param p : selectedParams) {
-			paramIndexes.push_back(iTable.getParamIndex(p));
+			IntermediateTable* tableWithParam = EvaluatorHelper::findTableWithParam(p, iTables);
+			mergedTable = EvaluatorHelper::mergeIntermediateTables(mergedTable, *tableWithParam);
+			paramIndexes.push_back(mergedTable.getParamIndex(p));
 		}
 
 		stringstream tupleRowString;
-		for (size_t i = 0; i < iTable.resultsTable.size(); i++) {
-			vector<int> tableRow = iTable.resultsTable[i];
+		for (size_t i = 0; i < mergedTable.resultsTable.size(); i++) {
+			vector<int> tableRow = mergedTable.resultsTable[i];
 			tupleRowString.str("");
 
 			for (size_t j = 0; j < paramIndexes.size(); j++) {
