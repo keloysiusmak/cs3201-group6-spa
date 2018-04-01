@@ -12,6 +12,43 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 	return groupedClauses;
 };
 
+/* map<int, vector<Clause>> QueryOptimization::sortbyNumConstants(map<int, vector<Clause>> groupedClauses) {
+	map<int, vector<Clause>> finalGroupedClauses = finalGroupClauses(groupedClauses);
+	return finalGroupedClauses;
+} */
+
+/* map<int, vector <Clause>> QueryOptimization::finalGroupClauses(map<int, vector<Clause>> groupedClauses) {
+	for (pair<int, vector<Clause>> clause : groupedClauses) {
+		Param leftParam = clause.getLeftParam();
+		Param rightParam = clause.getRightParam();
+	}
+	
+	for (pair<int, vector<Clause>> clause : groupedClauses) {
+		if (Utils::isInteger(leftParam)) { // Group all clauses which do not need merging together
+			if (Utils::isInteger(rightParam)) {
+				finalGroupedClauses[0].push_back(clause);
+				continue;
+			}
+		}
+		else if (Utils::isInteger(leftParam)) {
+			if (Utils::isSynonym(rightParam)) {
+				finalGroupedClauses[1].push_back(clause);
+				continue;
+			}
+		}
+		else if (Utils::isSynonym(leftParam)) {
+			if (Utils::isInteger(rightParam)) {
+				finalGroupedClauses[1].push_back(clause);
+				continue;
+			}
+			else if (Utils::isSynonym(rightParam)) {
+				finalGroupedClauses[2].push_back(clause);
+			}
+		}
+
+		return finalGroupedClauses;
+} */ 
+
 // Sort clauses into groups according to grouped syns
 map<int, vector<Clause>> QueryOptimization::groupClauses(vector<Clause> &clauses, map<Param, Node> &paramsHash) {
 
