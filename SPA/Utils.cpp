@@ -126,6 +126,8 @@ bool Utils::isSynonym(Param p) {
 		return false;
 	case EXPR:
 		return false;
+	case EXPR_EXACT:
+		return false;
 	case VAR_IDENT:
 		return false;
 	case PROC_IDENT:

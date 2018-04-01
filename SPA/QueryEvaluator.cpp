@@ -47,11 +47,11 @@ list<string> QueryEvaluator::evaluateQuery() {
 
 		/* Push clauses into one vector for sorting */
 		vector<Clause> consolidatedClauses;
-		EvaluatorHelper::consolidateClauses(queryObject.getClauses(), consolidatedClauses);
-		EvaluatorHelper::consolidateClauses(queryObject.getPatterns(), consolidatedClauses);
-		EvaluatorHelper::consolidateClauses(queryObject.getWithClauses(), consolidatedClauses);
+		QueryOptimization::consolidateClauses(queryObject.getClauses(), consolidatedClauses);
+		QueryOptimization::consolidateClauses(queryObject.getPatterns(), consolidatedClauses);
+		QueryOptimization::consolidateClauses(queryObject.getWithClauses(), consolidatedClauses);
 
-		vector<vector<Clause>> sortedClauses = EvaluatorHelper::sortIntoGroups(consolidatedClauses);
+		vector<vector<Clause>> sortedClauses = QueryOptimization::sortIntoGroups(consolidatedClauses);
 
 		vector<Param> selectParams = queryObject.getSelectStatements();
 		IntermediateTable iTable; iTable.instantiateTable();
