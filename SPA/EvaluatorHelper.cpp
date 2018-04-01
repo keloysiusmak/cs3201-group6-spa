@@ -111,6 +111,15 @@ void EvaluatorHelper::addClauseParamToTable(ClauseResults &clauseResults, Interm
 	}
 };
 
+/* Returns the pointer to the table containing the param */
+IntermediateTable* EvaluatorHelper::findTableWithParam(Param p, vector<IntermediateTable> &iTables) {
+	for (IntermediateTable iTable : iTables) {
+		if (iTable.getParamIndex(p) != -1) {
+			return &iTable;
+		}
+	}
+}
+
 /* Returns number of params of With Clause in table */
 int EvaluatorHelper::withClauseNumSyns(Clause &clause, IntermediateTable &iTable) {
 	int numSyns = 0;

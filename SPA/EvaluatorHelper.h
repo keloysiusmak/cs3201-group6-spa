@@ -15,5 +15,7 @@ public:
 	static bool clauseParamsInTable(ClauseResults &clauseResults, IntermediateTable &iTable);
 	static void addClauseParamToTable(ClauseResults &clauseResults, IntermediateTable &iTable);
 
+	static IntermediateTable* findTableWithParam(Param p, vector<IntermediateTable> &iTables);
+
 	static int withClauseNumSyns(Clause &clause, IntermediateTable &iTable);
 };
