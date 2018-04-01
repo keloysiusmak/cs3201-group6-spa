@@ -92,6 +92,36 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 	addClauseParamToTable(clauseResults, iTable);
 };
 
+/* Merge Intermediate Tables 1 and 2 */
+IntermediateTable EvaluatorHelper::mergeIntermediateTables(IntermediateTable &iTable1, IntermediateTable &iTable2) {
+
+	for (pair<Param, int> paramInt : iTable2.tableParams) { // Check if table 2 is already merged
+		if (iTable1.tableParams[paramInt.first] != -1) return iTable1;
+	}
+
+	int table1NumParams = iTable1.tableParams.size();
+	// Add table2 params
+	for (pair<Param, int> paramInt : iTable2.tableParams) {
+		iTable1.tableParams[paramInt.first] = table1NumParams + paramInt.second;
+	}
+
+	// Cross product of two results tables
+	vector<vector<int>> mergedResultsTable;
+	for (vector<int> table1Row : iTable1.resultsTable) {
+		for (vector<int> table2Row : iTable2.resultsTable) {
+			vector<int> mergedRow = table1Row;
+			mergedRow.insert(mergedRow.end(), table2Row.begin(), table2Row.end());
+			mergedResultsTable.push_back(mergedRow);
+		}
+	}
+
+	IntermediateTable mergedTable; mergedTable.instantiateTable();
+	mergedTable.setTableParams(iTable1.tableParams);
+	mergedTable.setResultsTable(mergedResultsTable);
+	
+	return mergedTable;
+};
+
 /* Returns true if param in clause result is in table */
 bool EvaluatorHelper::clauseParamsInTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
 	for (pair<Param, int> paramIndex : iTable.tableParams) {
@@ -118,6 +148,9 @@ IntermediateTable* EvaluatorHelper::findTableWithParam(Param p, vector<Intermedi
 			return &iTable;
 		}
 	}
+	IntermediateTable emptyTable; map<Param, int> emptyTableParams; vector<vector<int>> emptyTableResults;
+	emptyTable.setTableParams(emptyTableParams); emptyTable.setResultsTable(emptyTableResults);
+	return &emptyTable;
 }
 
 /* Returns number of params of With Clause in table */
