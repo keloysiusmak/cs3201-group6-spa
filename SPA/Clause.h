@@ -2,18 +2,20 @@
 
 #include <string>
 #include "Param.h"
+#include "Utils.h"
 
 using namespace std;
 
 enum RelRef { Modifies, Uses, Parent, ParentT, Follows, FollowsT,
-				Next, NextT, Calls, CallsT, Affects, AffectsT, With };
+				Next, NextT, Calls, CallsT, Affects, AffectsT, With, None };
 
 
 class Clause {
-private:
+protected:
 	RelRef _relRef;
-	Param _firstParam;
-	Param _secondParam;
+	Param _entity;
+	Param _leftParam;
+	Param _rightParam;
 
 public:
 	//Constructors
@@ -24,6 +26,8 @@ public:
 	void setClause(RelRef, Param, Param);
 
 	RelRef getRelRef();
-	Param getFirstParam();
-	Param getSecondParam();
+	Param getLeftParam();
+	Param getRightParam();
+
+	bool hasSynonymsNotALL();
 };

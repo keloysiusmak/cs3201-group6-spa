@@ -117,13 +117,16 @@ bool Utils::isInteger(const string& s)
 		s.end(), [](char c) { return !isdigit(c); }) == s.end();
 }
 
-bool Utils::isSynonym(ParamType type) {
+bool Utils::isSynonym(Param p) {
+	ParamType type = p.type;
 	switch (type) {
 	case INTEGER:
 		return false;
 	case CONSTANT:
 		return false;
 	case EXPR:
+		return false;
+	case EXPR_EXACT:
 		return false;
 	case VAR_IDENT:
 		return false;

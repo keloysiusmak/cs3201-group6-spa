@@ -125,12 +125,12 @@ namespace PreprocessorEvaluatorIntegrationTesting
 						Clause c2 = qo2.getClauses().at(i);
 
 						if (c1.getRelRef() != c2.getRelRef() ||
-							c1.getFirstParam().type != c2.getFirstParam().type ||
-							c1.getFirstParam().value.compare(c2.getFirstParam().value) != 0 ||
-							c1.getFirstParam().attribute != c2.getFirstParam().attribute ||
-							c1.getSecondParam().type != c2.getSecondParam().type ||
-							c1.getSecondParam().value.compare(c2.getSecondParam().value) != 0 ||
-							c1.getSecondParam().attribute != c2.getSecondParam().attribute) {
+							c1.getLeftParam().type != c2.getLeftParam().type ||
+							c1.getLeftParam().value.compare(c2.getLeftParam().value) != 0 ||
+							c1.getLeftParam().attribute != c2.getLeftParam().attribute ||
+							c1.getRightParam().type != c2.getRightParam().type ||
+							c1.getRightParam().value.compare(c2.getRightParam().value) != 0 ||
+							c1.getRightParam().attribute != c2.getRightParam().attribute) {
 							isSameClauses = false;
 							break;
 						}
@@ -166,12 +166,12 @@ namespace PreprocessorEvaluatorIntegrationTesting
 						Clause w2 = qo2.getWithClauses().at(i);
 
 						if (w1.getRelRef() != w2.getRelRef() ||
-							w1.getFirstParam().type != w2.getFirstParam().type ||
-							w1.getFirstParam().value.compare(w2.getFirstParam().value) != 0 ||
-							w1.getFirstParam().attribute != w2.getFirstParam().attribute ||
-							w1.getSecondParam().type != w2.getSecondParam().type ||
-							w1.getSecondParam().value.compare(w2.getSecondParam().value) != 0 ||
-							w1.getSecondParam().attribute != w2.getSecondParam().attribute) {
+							w1.getLeftParam().type != w2.getLeftParam().type ||
+							w1.getLeftParam().value.compare(w2.getLeftParam().value) != 0 ||
+							w1.getLeftParam().attribute != w2.getLeftParam().attribute ||
+							w1.getRightParam().type != w2.getRightParam().type ||
+							w1.getRightParam().value.compare(w2.getRightParam().value) != 0 ||
+							w1.getRightParam().attribute != w2.getRightParam().attribute) {
 							isSameWithClauses = false;
 							break;
 						}

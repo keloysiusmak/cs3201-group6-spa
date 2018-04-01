@@ -304,10 +304,10 @@ public:
 		//Valid
 		Assert::AreEqual(true, preprocessor.parseClauseArg(qo, relType, arg1, arg2));
 		Assert::AreEqual(static_cast<int>(Modifies), static_cast<int>(qo.getClauses().at(0).getRelRef()));
-		Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qo.getClauses().at(0).getFirstParam().type));
-		Assert::AreEqual(firstParamValue, qo.getClauses().at(0).getFirstParam().value);
-		Assert::AreEqual(static_cast<int>(VAR_IDENT), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
-		Assert::AreEqual(secondParamValue, qo.getClauses().at(0).getSecondParam().value);
+		Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qo.getClauses().at(0).getLeftParam().type));
+		Assert::AreEqual(firstParamValue, qo.getClauses().at(0).getLeftParam().value);
+		Assert::AreEqual(static_cast<int>(VAR_IDENT), static_cast<int>(qo.getClauses().at(0).getRightParam().type));
+		Assert::AreEqual(secondParamValue, qo.getClauses().at(0).getRightParam().value);
 
 		//Invalid
 		string invalidArg1Empty = "";
@@ -358,10 +358,10 @@ public:
 		//Valid
 		Assert::AreEqual(true, preprocessor.parseClauseArg(qo, relType, arg1, arg2));
 		Assert::AreEqual(static_cast<int>(ParentT), static_cast<int>(qo.getClauses().at(0).getRelRef()));
-		Assert::AreEqual(static_cast<int>(INTEGER), static_cast<int>(qo.getClauses().at(0).getFirstParam().type));
-		Assert::AreEqual(firstParamValue, qo.getClauses().at(0).getFirstParam().value);
-		Assert::AreEqual(static_cast<int>(STMT), static_cast<int>(qo.getClauses().at(0).getSecondParam().type));
-		Assert::AreEqual(secondParamValue, qo.getClauses().at(0).getSecondParam().value);
+		Assert::AreEqual(static_cast<int>(INTEGER), static_cast<int>(qo.getClauses().at(0).getLeftParam().type));
+		Assert::AreEqual(firstParamValue, qo.getClauses().at(0).getLeftParam().value);
+		Assert::AreEqual(static_cast<int>(STMT), static_cast<int>(qo.getClauses().at(0).getRightParam().type));
+		Assert::AreEqual(secondParamValue, qo.getClauses().at(0).getRightParam().value);
 
 		//Invalid
 		string invalidArg1Empty = "";
@@ -515,12 +515,12 @@ public:
 		//Valid
 		Assert::AreEqual(true, preprocessor.parseWithClause(qo, arg1, arg2));
 		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qo.getWithClauses().at(0).getRelRef()));
-		Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qo.getWithClauses().at(0).getFirstParam().type));
-		Assert::AreEqual(static_cast<int>(STMT_NO), static_cast<int>(qo.getWithClauses().at(0).getFirstParam().attribute));
-		Assert::AreEqual(firstParamValue, qo.getWithClauses().at(0).getFirstParam().value);
-		Assert::AreEqual(static_cast<int>(INTEGER), static_cast<int>(qo.getWithClauses().at(0).getSecondParam().type));
-		Assert::AreEqual(static_cast<int>(NONE), static_cast<int>(qo.getWithClauses().at(0).getSecondParam().attribute));
-		Assert::AreEqual(secondParamValue, qo.getWithClauses().at(0).getSecondParam().value);
+		Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qo.getWithClauses().at(0).getLeftParam().type));
+		Assert::AreEqual(static_cast<int>(STMT_NO), static_cast<int>(qo.getWithClauses().at(0).getLeftParam().attribute));
+		Assert::AreEqual(firstParamValue, qo.getWithClauses().at(0).getLeftParam().value);
+		Assert::AreEqual(static_cast<int>(INTEGER), static_cast<int>(qo.getWithClauses().at(0).getRightParam().type));
+		Assert::AreEqual(static_cast<int>(NONE), static_cast<int>(qo.getWithClauses().at(0).getRightParam().attribute));
+		Assert::AreEqual(secondParamValue, qo.getWithClauses().at(0).getRightParam().value);
 
 		arg1 = "n";
 		arg2 = "c.stmt#";
@@ -531,12 +531,12 @@ public:
 		//Valid
 		Assert::AreEqual(true, preprocessor.parseWithClause(qo, arg1, arg2));
 		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qo.getWithClauses().at(1).getRelRef()));
-		Assert::AreEqual(static_cast<int>(PROG_LINE), static_cast<int>(qo.getWithClauses().at(1).getFirstParam().type));
-		Assert::AreEqual(static_cast<int>(NONE), static_cast<int>(qo.getWithClauses().at(1).getFirstParam().attribute));
-		Assert::AreEqual(firstParamValue, qo.getWithClauses().at(1).getFirstParam().value);
-		Assert::AreEqual(static_cast<int>(CALL), static_cast<int>(qo.getWithClauses().at(1).getSecondParam().type));
-		Assert::AreEqual(static_cast<int>(STMT_NO), static_cast<int>(qo.getWithClauses().at(1).getSecondParam().attribute));
-		Assert::AreEqual(secondParamValue, qo.getWithClauses().at(1).getSecondParam().value);
+		Assert::AreEqual(static_cast<int>(PROG_LINE), static_cast<int>(qo.getWithClauses().at(1).getLeftParam().type));
+		Assert::AreEqual(static_cast<int>(NONE), static_cast<int>(qo.getWithClauses().at(1).getLeftParam().attribute));
+		Assert::AreEqual(firstParamValue, qo.getWithClauses().at(1).getLeftParam().value);
+		Assert::AreEqual(static_cast<int>(CALL), static_cast<int>(qo.getWithClauses().at(1).getRightParam().type));
+		Assert::AreEqual(static_cast<int>(STMT_NO), static_cast<int>(qo.getWithClauses().at(1).getRightParam().attribute));
+		Assert::AreEqual(secondParamValue, qo.getWithClauses().at(1).getRightParam().value);
 
 		arg1 = "p.procName";
 		arg2 = "\"first\"";
@@ -547,12 +547,12 @@ public:
 		//Valid
 		Assert::AreEqual(true, preprocessor.parseWithClause(qo, arg1, arg2));
 		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qo.getWithClauses().at(2).getRelRef()));
-		Assert::AreEqual(static_cast<int>(PROCEDURE), static_cast<int>(qo.getWithClauses().at(2).getFirstParam().type));
-		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qo.getWithClauses().at(2).getFirstParam().attribute));
-		Assert::AreEqual(firstParamValue, qo.getWithClauses().at(2).getFirstParam().value);
-		Assert::AreEqual(static_cast<int>(PROC_IDENT), static_cast<int>(qo.getWithClauses().at(2).getSecondParam().type));
-		Assert::AreEqual(static_cast<int>(NONE), static_cast<int>(qo.getWithClauses().at(2).getSecondParam().attribute));
-		Assert::AreEqual(secondParamValue, qo.getWithClauses().at(2).getSecondParam().value);
+		Assert::AreEqual(static_cast<int>(PROCEDURE), static_cast<int>(qo.getWithClauses().at(2).getLeftParam().type));
+		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qo.getWithClauses().at(2).getLeftParam().attribute));
+		Assert::AreEqual(firstParamValue, qo.getWithClauses().at(2).getLeftParam().value);
+		Assert::AreEqual(static_cast<int>(PROC_IDENT), static_cast<int>(qo.getWithClauses().at(2).getRightParam().type));
+		Assert::AreEqual(static_cast<int>(NONE), static_cast<int>(qo.getWithClauses().at(2).getRightParam().attribute));
+		Assert::AreEqual(secondParamValue, qo.getWithClauses().at(2).getRightParam().value);
 
 		arg1 = "p.procName";
 		arg2 = "c.procName";
@@ -563,12 +563,12 @@ public:
 		//Valid
 		Assert::AreEqual(true, preprocessor.parseWithClause(qo, arg1, arg2));
 		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qo.getWithClauses().at(3).getRelRef()));
-		Assert::AreEqual(static_cast<int>(PROCEDURE), static_cast<int>(qo.getWithClauses().at(3).getFirstParam().type));
-		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qo.getWithClauses().at(3).getFirstParam().attribute));
-		Assert::AreEqual(firstParamValue, qo.getWithClauses().at(3).getFirstParam().value);
-		Assert::AreEqual(static_cast<int>(CALL), static_cast<int>(qo.getWithClauses().at(3).getSecondParam().type));
-		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qo.getWithClauses().at(3).getSecondParam().attribute));
-		Assert::AreEqual(secondParamValue, qo.getWithClauses().at(3).getSecondParam().value);
+		Assert::AreEqual(static_cast<int>(PROCEDURE), static_cast<int>(qo.getWithClauses().at(3).getLeftParam().type));
+		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qo.getWithClauses().at(3).getLeftParam().attribute));
+		Assert::AreEqual(firstParamValue, qo.getWithClauses().at(3).getLeftParam().value);
+		Assert::AreEqual(static_cast<int>(CALL), static_cast<int>(qo.getWithClauses().at(3).getRightParam().type));
+		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qo.getWithClauses().at(3).getRightParam().attribute));
+		Assert::AreEqual(secondParamValue, qo.getWithClauses().at(3).getRightParam().value);
 
 		arg1 = "5";
 		arg2 = "5";

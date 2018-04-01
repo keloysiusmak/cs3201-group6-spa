@@ -40,12 +40,12 @@ namespace QueryObjectTest {
 
 			Assert::AreEqual(static_cast<int>(testClause.getRelRef()), 
 				static_cast<int>(fromQueryObject.getRelRef()));
-			Assert::AreEqual(static_cast<int>(testClause.getFirstParam().type), 
-						static_cast<int>(fromQueryObject.getFirstParam().type));
-			Assert::AreEqual(testClause.getFirstParam().value, fromQueryObject.getFirstParam().value);
-			Assert::AreEqual(static_cast<int>(testClause.getSecondParam().type),
-				static_cast<int>(fromQueryObject.getSecondParam().type));
-			Assert::AreEqual(testClause.getSecondParam().value, fromQueryObject.getSecondParam().value);
+			Assert::AreEqual(static_cast<int>(testClause.getLeftParam().type), 
+						static_cast<int>(fromQueryObject.getLeftParam().type));
+			Assert::AreEqual(testClause.getLeftParam().value, fromQueryObject.getLeftParam().value);
+			Assert::AreEqual(static_cast<int>(testClause.getRightParam().type),
+				static_cast<int>(fromQueryObject.getRightParam().type));
+			Assert::AreEqual(testClause.getRightParam().value, fromQueryObject.getRightParam().value);
 
 		}
 

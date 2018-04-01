@@ -114,10 +114,10 @@ void EvaluatorHelper::addClauseParamToTable(ClauseResults &clauseResults, Interm
 /* Returns number of params of With Clause in table */
 int EvaluatorHelper::withClauseNumSyns(Clause &clause, IntermediateTable &iTable) {
 	int numSyns = 0;
-	Param lhs = clause.getFirstParam();
-	Param rhs = clause.getSecondParam();
+	Param lhs = clause.getLeftParam();
+	Param rhs = clause.getRightParam();
 	if (iTable.getParamIndex(lhs) > -1) numSyns++; // Assume syn param in table
 	if (iTable.getParamIndex(rhs) > -1) numSyns++; // Assume syn param in table
 	return numSyns;
-}
+};
 

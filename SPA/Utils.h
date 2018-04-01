@@ -19,7 +19,7 @@ public:
 	static void find_and_replace(string& source, string const& find, string const& replace);
 	static string getWordAndPop(queue<string>&);
 	static bool isInteger(const string& s);
-	static bool isSynonym(ParamType type);
+	static bool isSynonym(Param p);
 	static bool isSameParam(Param a, Param b);
 	static bool isValidFactor(string);
 	static bool isValidOperator(string);
