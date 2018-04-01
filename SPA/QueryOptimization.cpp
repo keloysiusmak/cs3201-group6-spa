@@ -6,9 +6,10 @@ void QueryOptimization::consolidateClauses(vector<Pattern> const &clauses, vecto
 	for (Clause clause : clauses) { consolidated.push_back(clause); } }
 
 // Preliminary sorting by synonyms 
-vector<vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &clauses) {
+map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &clauses) {
 	map<Param, Node> paramsHash = ufdsParams(clauses);
 	map<int, vector<Clause>> groupedClauses = groupClauses(clauses, paramsHash);
+	return groupedClauses;
 };
 
 // Sort clauses into groups according to grouped syns
@@ -52,7 +53,7 @@ map<int, vector<Clause>> QueryOptimization::groupClauses(vector<Clause> &clauses
 		}
 
 		if (clause.getRelRef() == None) { // Pattern
-			Pattern* p = reinterpret_cast<Pattern*>(&clause);
+			Pattern* p = static_cast<Pattern*>(&clause);
 			Node* entNodeSet = findSet(paramsHash[p->getEntity()], paramsHash);
 			int groupNum = nodeInt[*entNodeSet];
 			groupedClauses[groupNum].push_back(clause);
@@ -78,7 +79,7 @@ map<Param, Node> QueryOptimization::ufdsParams(vector<Clause> &clauses) {
 			paramsHash[rhs] = newNode;
 		}
 		if (clause.getRelRef() == None) { // Check for pattern
-			Pattern* p = reinterpret_cast<Pattern*>(&clause);
+			Pattern* p = static_cast<Pattern*>(&clause);
 			Param patternEnt = p->getEntity();
 			Node newNode = Node(patternEnt);
 			paramsHash[patternEnt] = newNode;
@@ -91,7 +92,7 @@ map<Param, Node> QueryOptimization::ufdsParams(vector<Clause> &clauses) {
 		Param rhs = clause.getRightParam();
 
 		if (clause.getRelRef() == None) { // Pattern
-			Pattern* p = reinterpret_cast<Pattern*>(&clause);
+			Pattern* p = static_cast<Pattern*>(&clause);
 			Param patternEnt = p->getEntity();
 			if (Utils::isSynonym(lhs) && lhs.type != ALL) {
 				unionParams(lhs, patternEnt, paramsHash);

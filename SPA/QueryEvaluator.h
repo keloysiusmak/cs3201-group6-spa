@@ -27,6 +27,8 @@ public:
 	void setPKB(PKB);
 
 	// Main Evaluation methods
+	void evaluateClauseGeneral(Clause &clause, ClauseResults &clauseResults, IntermediateTable &iTable);
+
 	void evaluateClause(Clause &clause, ClauseResults &clauseResults);
 	void evaluateFollows(Clause &clause, ClauseResults &clauseResults);
 	void evaluateFollowStar(Clause &clause, ClauseResults &clauseResults);

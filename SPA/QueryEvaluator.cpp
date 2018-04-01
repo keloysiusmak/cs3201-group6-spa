@@ -51,55 +51,48 @@ list<string> QueryEvaluator::evaluateQuery() {
 		QueryOptimization::consolidateClauses(queryObject.getPatterns(), consolidatedClauses);
 		QueryOptimization::consolidateClauses(queryObject.getWithClauses(), consolidatedClauses);
 
-		vector<vector<Clause>> sortedClauses = QueryOptimization::sortIntoGroups(consolidatedClauses);
+		map<int, vector<Clause>> sortedClauses = QueryOptimization::sortIntoGroups(consolidatedClauses);
 
 		vector<Param> selectParams = queryObject.getSelectStatements();
-		IntermediateTable iTable; iTable.instantiateTable();
 
-		/* Evaluation of clauses */
-		for (Clause clause : queryObject.getClauses()) {
-			ClauseResults clauseResults;
-			evaluateClause(clause, clauseResults);
-			if (!clauseResults.hasResults()) {
-				if (selectParams[0].type == BOOLEAN) return{ "false" };
-				else return{};
+		vector<IntermediateTable> tables;
+		for (pair<int, vector<Clause>> groupedClauses : sortedClauses) {
+			IntermediateTable iTable; iTable.instantiateTable();
+			for (Clause clause : groupedClauses.second) {
+				ClauseResults clauseResults;
+				evaluateClauseGeneral(clause, clauseResults, iTable);
 			}
-			clauseResults.removeALLSyns(); // Sanitization
-			filterStmts(clauseResults);
-
-			if (clauseResults.numParamsInResult() != 0) {
-				EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
-			}
+			tables.push_back(iTable);
 		}
 
-		/* Evaluation of patterns */
-		for (Pattern clause : queryObject.getPatterns()) {
-			ClauseResults patternResults;
-			evaluatePattern(clause, patternResults);
-			if (!patternResults.hasResults()) {
-				if (selectParams[0].type == BOOLEAN) return{ "false" };
-				else return{};
-			}
-			patternResults.removeALLSyns(); // Sanitization
-			filterStmts(patternResults);
-
-			if (patternResults.numParamsInResult() != 0) {
-				EvaluatorHelper::mergeClauseTable(patternResults, iTable);
-			}
+		// To be refactored...
+		for (IntermediateTable table : tables) {
+			return extractParams(selectParams, table);
 		}
-
-		/* Evaluation of with clauses */
-		for (Clause withClause : queryObject.getWithClauses()) {
-			handleWithClause(withClause, iTable);
-		}
-
-		return extractParams(selectParams, iTable);
 
 	}
 	else { // Return no value
 		return invalidQueryMessage;
 	}
 }
+
+// General evaluation method for base Clause type
+void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clauseResults, IntermediateTable &iTable) {
+	if (clause.getRelRef() == With) { // With
+		handleWithClause(clause, iTable);
+	} else {
+		if (clause.getRelRef() == None) { // Pattern
+			Pattern* pattern = static_cast<Pattern*>(&clause);
+			evaluatePattern(*pattern, clauseResults);
+		}
+		else { // Such That
+			evaluateClause(clause, clauseResults);
+		}
+		clauseResults.removeALLSyns(); // Sanitization
+		filterStmts(clauseResults);
+		EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
+	}
+};
 
 /* Main evaluation method */
 void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResults)

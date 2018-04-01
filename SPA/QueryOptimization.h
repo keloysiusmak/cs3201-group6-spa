@@ -30,7 +30,7 @@ public:
 	static void consolidateClauses(vector<Clause> const &clauses, vector<Clause> &consolidated);
 	static void consolidateClauses(vector<Pattern> const &clauses, vector<Clause> &consolidated);
 
-	static vector<vector<Clause>> sortIntoGroups(vector<Clause> &clauses);
+	static map<int, vector<Clause>> sortIntoGroups(vector<Clause> &clauses);
 	static map<int, vector<Clause>> groupClauses(vector<Clause> &clauses, map<Param, Node> &paramsHash);
 
 	static map<Param, Node> ufdsParams(vector<Clause> &clauses);
