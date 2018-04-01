@@ -31,8 +31,12 @@ Param Clause::getRightParam() {
 }
 
 bool Clause::hasSynonymsNotALL() {
-	if (Utils::isSynonym(_entity) && _entity.type != ALL) return true;
 	if (Utils::isSynonym(_leftParam) && _leftParam.type != ALL) return true;
 	if (Utils::isSynonym(_rightParam) && _rightParam.type != ALL) return true;
+
+	if (_relRef == NONE) { // Pattern
+		if (Utils::isSynonym(_entity) && _entity.type != ALL) return true;
+	}
+
 	return false;
 }
