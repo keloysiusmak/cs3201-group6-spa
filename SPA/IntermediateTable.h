@@ -7,7 +7,6 @@ struct IntermediateTable {
 	bool hasResults;
 	map<Param, int> tableParams;
 	vector<vector<int>> resultsTable;
-	vector<Param> withTableParams;
 
 	void instantiateTable();
 	void setTableParams(vector<Param> params);
