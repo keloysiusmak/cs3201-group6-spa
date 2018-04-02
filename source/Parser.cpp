@@ -485,13 +485,7 @@ PKB Parser::Parse(string fileName, PKB passedPKB, bool isStringInput, string str
 		cout << e.what() << endl;
 		exit(1);
 	} 
-/*
-	catch (InvalidExpressionException& e) {
-		cout << "InvalidExpressionException caught" << endl;
-		cout << e.what() << endl;
-		exit(2);
-	}
-*/
+
 	cout << "success!";
 
 	return pkb;
