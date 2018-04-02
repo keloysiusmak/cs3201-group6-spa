@@ -12,6 +12,35 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 	return groupedClauses;
 };
 
+/* map<int, vector<Clause>> QueryOptimization::numConstantsGroupClauses(vector<Clause> groupedClauses) {
+
+	map<int, vector<Clause>> finalGroupedClauses; 
+
+	for (Clause clause : groupedClauses) {
+		Param leftParam = clause.getLeftParam();
+		Param rightParam = clause.getRightParam();
+
+		if (Utils::isSynonym(leftParam)) { 
+			if (Utils::isSynonym(rightParam)) { //2 synonyms
+				finalGroupedClauses[1].push_back(clause);
+				continue;
+			}
+			else { //only leftParam is synonym
+				finalGroupedClauses[0].push_back(clause);
+			}
+		}
+		else if (Utils::isSynonym(rightParam)) {
+			if (Utils::isSynonym(leftParam)) { //2 synonyms
+				finalGroupedClauses[1].push_back(clause);
+				continue;
+			}
+			else { //only rightParam is synonym
+				finalGroupedClauses[0].push_back(clause);
+			}
+		}
+		return finalGroupedClauses;
+} */
+
 // Sort clauses into groups according to grouped syns
 map<int, vector<Clause>> QueryOptimization::groupClauses(vector<Clause> &clauses, map<Param, Node> &paramsHash) {
 
@@ -62,7 +91,7 @@ map<int, vector<Clause>> QueryOptimization::groupClauses(vector<Clause> &clauses
 	}
 
 	return groupedClauses;
-};
+}
 
 map<Param, Node> QueryOptimization::ufdsParams(vector<Clause> &clauses) {
 	// Hash all params
