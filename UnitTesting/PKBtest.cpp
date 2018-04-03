@@ -234,6 +234,27 @@ namespace UnitTesting
 			}
 		}
 
+		TEST_METHOD(PKBInsertToResultTable)
+		{
+			PKB pkb;
+
+			string data = "x";
+			std::vector<string> null;
+
+			for (int i = 1; i < RELATIONS_SIZE; i++) {
+				/* Null Test */
+				null.clear();
+				Assert::AreEqual(0, pkb.getFromResultTable(static_cast<Relations>(i), 0, 7));
+				pkb.insertToResultTable(static_cast<Relations>(i), 0, 7, 17);
+				Assert::AreEqual(17, pkb.getFromResultTable(static_cast<Relations>(i), 0, 7));
+				pkb.insertToResultTable(static_cast<Relations>(i), 0, 8, 18);
+				Assert::AreEqual(18, pkb.getFromResultTable(static_cast<Relations>(i), 0, 8));
+				pkb.insertToResultTable(static_cast<Relations>(i), 1, 8, 19);
+				Assert::AreEqual(19, pkb.getFromResultTable(static_cast<Relations>(i), 1, 8));
+				
+			}
+		}
+
 		TEST_METHOD(PKBInsertToNameTableInvalid)
 		{
 			PKB pkb;

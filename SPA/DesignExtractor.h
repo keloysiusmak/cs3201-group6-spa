@@ -14,5 +14,17 @@ private:
 	void extractCallsStar(PKB &);
 	void extractCallStatements(PKB &);
 	void extractUsesModifies(PKB &);
+	void countFollows(PKB &);
+	void countFollowsStar(PKB &);
+	void countUses(PKB &);
+	void countModifies(PKB &);
+	void countParent(PKB &);
+	void countParentStar(PKB &);
+	void countCalls(PKB &);
+	void countCallsStar(PKB &);
+	void countAffects(PKB &);
+	void countAffectsStar(PKB &);
+	void countNext(PKB &);
+	void countNextStar(PKB &);
 };
 

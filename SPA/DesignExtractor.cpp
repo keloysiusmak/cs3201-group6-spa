@@ -14,6 +14,21 @@ bool DesignExtractor::extract(PKB &pkb) {
 	extractCallStatements(pkb);
 	extractCallsStar(pkb);
 	extractUsesModifies(pkb);
+	/*
+	countFollows(pkb);
+	countFollowsStar(pkb);
+	countUses(pkb);
+	countModifies(pkb);
+	countParent(pkb);
+	countParentStar(pkb);
+	*/
+	countCalls(pkb);
+	countCallsStar(pkb);
+	/*
+	countAffects(pkb);
+	countAffectsStar(pkb);
+	countNext(pkb);
+	countNextStar(pkb);*/
 	return true;
 }
 
@@ -281,5 +296,25 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 				}
 			}
 		}
+	}
+}
+
+void DesignExtractor::countCalls(PKB &pkb) {
+	int size = pkb.getAllCalls().size();
+	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
+	pkb.insertToResultTable(RelationCalls, 0, 0, size);
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationCalls, i, 0, pkb.getCallsAfter(i).size());
+		pkb.insertToResultTable(RelationCalls, 0, i, pkb.getCallsBefore(i).size());
+	}
+}
+
+void DesignExtractor::countCallsStar(PKB &pkb) {
+	int size = pkb.getAllCallsStar().size();
+	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
+	pkb.insertToResultTable(RelationCallsStar, 0, 0, size);
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationCallsStar, i, 0, pkb.getCallsAfterStar(i).size());
+		pkb.insertToResultTable(RelationCallsStar, 0, i, pkb.getCallsBeforeStar(i).size());
 	}
 }
