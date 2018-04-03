@@ -60,7 +60,7 @@ namespace EvaluatorHelperTest {
 			Assert::AreEqual(true, table.tableParams.size() == 5);
 		}
 
-		TEST_METHOD(GetParamIntTest) {
+		TEST_METHOD(EvaluatorHelperGetParamIntTest) {
 			IntermediateTable table;
 
 			/* Generate params */
@@ -263,6 +263,30 @@ namespace EvaluatorHelperTest {
 			}
 		}
 
+		TEST_METHOD(EvaluatorHelperSortTableTest) {
+			Param paramToSortBy;
+			vector<vector<int>> unsortedArr = {
+				{},
+				{},
+				{},
+				{},
+				{},
+				{},
+			};
+		};
+
+		TEST_METHOD(EvaluatorHelperMergeSortResultsTest) {
+			int indexToSortBy = 2;
+			vector<vector<int>> unsortedArr = {
+				{},
+				{},
+				{},
+				{},
+				{},
+				{},
+			};
+		};
+
 		TEST_METHOD(EvaluatorHelperWithClauseNumSynsTest) {
 			/* Instantiate table*/
 			IntermediateTable table;
@@ -310,7 +334,7 @@ namespace EvaluatorHelperTest {
 				table.push_back(row);
 			}
 			return table;
-		}
+		};
 
 		Param createParam(ParamType type, string value) {
 			Param param;
