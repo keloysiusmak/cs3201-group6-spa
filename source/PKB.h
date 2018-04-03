@@ -7,6 +7,7 @@
 #include <unordered_map>
 
 #include "../SPA/Pattern.h"
+#include "../SPA/Constants.h"
 
 using namespace std::tr1;
 
@@ -15,13 +16,16 @@ private:
 	/*  PKB Structure*/
 	unordered_map<int, std::vector<std::vector<int>>> tables[13];
 	unordered_map<int, std::vector<std::string>> nameTables[3];
+	unordered_map<int, unordered_map<int, unordered_map<int, int>>> resultTables;
 
 public:
 	/* Parser/DE Operations */
 	bool insertToTable(int, int, std::vector<std::vector<int>>);
 	int insertToNameTable(int, std::vector<std::string>);
+	bool insertToResultTable(Relations, int, int, int);
 	std::vector<std::vector<int>> getFromTable(int, int);
 	std::vector<std::string> getFromNameTable(int, int);
+	int getFromResultTable(Relations, int, int);
 	std::string getProcedureName(int);
 	std::string getVariableName(int);
 	int getProcedureId(std::string);

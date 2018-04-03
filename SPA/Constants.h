@@ -17,9 +17,24 @@ const int PATTERN_TABLE = 14;
 const int PROC_TABLE = 15;
 const int VAR_TABLE = 16;
 
-
 const int ASSIGNMENT_TYPE = 1;
 const int WHILE_TYPE = 2;
 const int IF_TYPE = 3;
 const int CALL_TYPE = 4;
 const int PROCEDURE_PARENT_ID = 0;
+
+enum Relations {
+	RelationFollows,
+	RelationFollowsStar,
+	RelationUses,
+	RelationModifies,
+	RelationParent,
+	RelationParentStar,
+	RelationCalls,
+	RelationCallsStar,
+	RelationAffects,
+	RelationAffectsStar,
+	RelationNext,
+	RelationNextStar,
+	RELATIONS_SIZE
+};

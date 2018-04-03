@@ -127,6 +127,33 @@ int PKB::insertToNameTable(int table_id, std::vector<string> value)
 	}
 }
 
+bool PKB::insertToResultTable(Relations r, int firstParam, int secondParam, int calcResult) {
+	unordered_map<int, unordered_map<int, unordered_map<int, int>>>::const_iterator got = resultTables.find(r);
+	if (got == resultTables.end()) {
+		unordered_map<int, int> second;
+		second.insert({secondParam, calcResult});
+		unordered_map<int, unordered_map<int, int>> first;
+		first.insert({ firstParam, second });
+		resultTables.insert({ r, first });
+		return true;
+	}
+	unordered_map<int, unordered_map<int, int>> result = got->second;
+	unordered_map<int, unordered_map<int, int>>::const_iterator got2 = result.find(firstParam);
+	if (got2 == result.end()) {
+		unordered_map<int, int> second;
+		second.insert({ secondParam, calcResult });
+		resultTables[r].insert({firstParam, second});
+		return true;
+	}
+	unordered_map<int, int> result2 = got2->second;
+	unordered_map<int, int>::const_iterator got3 = result2.find(secondParam);
+	if (got3 == result2.end()) {
+		resultTables[r][firstParam].insert({ secondParam, calcResult });
+		return true;
+	}
+	return false;
+}
+
 std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 {
 	if (table_id < 1 || table_id > NEXT_INVERSE_TABLE) {
@@ -150,6 +177,25 @@ std::vector<string> PKB::getFromNameTable(int table_id, int key_id)
 		return data;
 	}
 	return got->second;
+}
+
+int PKB::getFromResultTable(Relations r, int param1, int param2)
+{
+	unordered_map<int, unordered_map<int, unordered_map<int, int>>>::const_iterator got = resultTables.find(r);
+	if (got == resultTables.end()) {
+		return 0;
+	}
+	unordered_map<int, unordered_map<int, int>> result = got->second;
+	unordered_map<int, unordered_map<int, int>>::const_iterator got2 = result.find(param1);
+	if (got2 == result.end()) {
+		return 0;
+	}
+	unordered_map<int, int> result2 = got2->second;
+	unordered_map<int, int>::const_iterator got3 = result2.find(param2);
+	if (got3 == result2.end()) {
+		return 0;
+	}
+	return got3->second;
 }
 
 int PKB::getProcedureId(std::string proc_name) {

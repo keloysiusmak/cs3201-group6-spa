@@ -168,5 +168,27 @@ namespace DesignExtractorTest
 			newResult = { { 3,4,6,7,11 },{ 1,3 } };
 			Assert::AreEqual(true, (newResult == pkb.getFromTable(MODIFIES_TABLE, 6)));
 		}
+		TEST_METHOD(DesignExtractorCountCalls)
+		{
+			de.extract(pkb);
+			Assert::AreEqual(3, pkb.getFromResultTable(RelationCalls, 0, 0));
+			Assert::AreEqual(2, pkb.getFromResultTable(RelationCalls, 1, 0));
+			Assert::AreEqual(1, pkb.getFromResultTable(RelationCalls, 2, 0));
+			Assert::AreEqual(0, pkb.getFromResultTable(RelationCalls, 3, 0));
+			Assert::AreEqual(0, pkb.getFromResultTable(RelationCalls, 0, 1));
+			Assert::AreEqual(1, pkb.getFromResultTable(RelationCalls, 0, 2));
+			Assert::AreEqual(2, pkb.getFromResultTable(RelationCalls, 0, 3));
+		}
+		TEST_METHOD(DesignExtractorCountCallsStar)
+		{
+			de.extract(pkb);
+			Assert::AreEqual(3, pkb.getFromResultTable(RelationCallsStar, 0, 0));
+			Assert::AreEqual(2, pkb.getFromResultTable(RelationCallsStar, 1, 0));
+			Assert::AreEqual(1, pkb.getFromResultTable(RelationCallsStar, 2, 0));
+			Assert::AreEqual(0, pkb.getFromResultTable(RelationCallsStar, 3, 0));
+			Assert::AreEqual(0, pkb.getFromResultTable(RelationCallsStar, 0, 1));
+			Assert::AreEqual(1, pkb.getFromResultTable(RelationCallsStar, 0, 2));
+			Assert::AreEqual(2, pkb.getFromResultTable(RelationCallsStar, 0, 3));
+		}
 	};
 }
