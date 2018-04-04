@@ -38,49 +38,56 @@ namespace UnitTesting
 			for (int i = 1; i < PATTERN_TABLE; i++) {
 				switch (i) {
 
-				case 1:
+
+				case STATEMENT_TABLE:
 					tableValuesCount = 4;
 					break;
-				case 2:
+				case STATEMENT_LIST_TABLE:
 					tableValuesCount = 3;
 					break;
-				case 3:
+				case PROC_INFO_TABLE:
 					tableValuesCount = 3;
 					break;
-				case 4:
+				case USES_TABLE:
 					tableValuesCount = 2;
 					break;
-				case 5:
+				case MODIFIES_TABLE:
 					tableValuesCount = 2;
 					break;
-				case 6:
+				case CONST_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 7:
+				case CALLS_TABLE:
 					tableValuesCount = 2;
 					break;
-				case 8:
+				case CALLS_STAR_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 9:
+				case CALLS_INVERSE_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 10:
+				case CALLS_STAR_INVERSE_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 11:
+				case CALL_STATEMENT_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 12:
+				case NEXT_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 13:
+				case NEXT_INVERSE_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 14:
+				case PROC_NAME_VAR_NAME_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 15:
+				case PROC_NAME_CALL_NAME_TABLE:
+					tableValuesCount = 1;
+					break;
+				case VAR_NAME_CALL_NAME_TABLE:
+					tableValuesCount = 1;
+					break;
+				case STMT_NO_CONST_VALUE_TABLE:
 					tableValuesCount = 1;
 					break;
 				}
@@ -90,7 +97,12 @@ namespace UnitTesting
 				}
 				pkb.insertToTable(i, 1, data);
 				Assert::AreEqual(tableValuesCount, static_cast<int>(pkb.getFromTable(i, 1).size()));
-				Assert::AreEqual(true, (pkb.getFromTable(i, 1) == data));
+				if (i <= NEXT_INVERSE_TABLE) {
+					Assert::AreEqual(true, (pkb.getFromTable(i, 1) == data));
+				} else if (i <= NEXT_INVERSE_TABLE) {
+					data = { { 1, 1 } };
+					Assert::AreEqual(true, (pkb.getFromTable(i, 1) == data));
+				}
 			}
 		}
 
@@ -107,49 +119,56 @@ namespace UnitTesting
 
 			for (int i = 1; i < PROC_TABLE; i++) {
 				switch (i) {
-				case 1:
+
+				case STATEMENT_TABLE:
 					tableValuesCount = 4;
 					break;
-				case 2:
+				case STATEMENT_LIST_TABLE:
 					tableValuesCount = 3;
 					break;
-				case 3:
+				case PROC_INFO_TABLE:
 					tableValuesCount = 3;
 					break;
-				case 4:
+				case USES_TABLE:
 					tableValuesCount = 2;
 					break;
-				case 5:
+				case MODIFIES_TABLE:
 					tableValuesCount = 2;
 					break;
-				case 6:
+				case CONST_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 7:
+				case CALLS_TABLE:
 					tableValuesCount = 2;
 					break;
-				case 8:
+				case CALLS_STAR_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 9:
-					tableValuesCount = 2;
-					break;
-				case 10:
+				case CALLS_INVERSE_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 11:
+				case CALLS_STAR_INVERSE_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 12:
+				case CALL_STATEMENT_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 13:
+				case NEXT_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 14:
+				case NEXT_INVERSE_TABLE:
 					tableValuesCount = 1;
 					break;
-				case 15:
+				case PROC_NAME_VAR_NAME_TABLE:
+					tableValuesCount = 1;
+					break;
+				case PROC_NAME_CALL_NAME_TABLE:
+					tableValuesCount = 1;
+					break;
+				case VAR_NAME_CALL_NAME_TABLE:
+					tableValuesCount = 1;
+					break;
+				case STMT_NO_CONST_VALUE_TABLE:
 					tableValuesCount = 1;
 					break;
 				}
@@ -470,6 +489,102 @@ namespace UnitTesting
 			Assert::AreEqual(true, pkb.checkStatementHasType(4, 4));
 			Assert::AreEqual(false, pkb.checkStatementHasType(5, 1));
 			Assert::AreEqual(false, pkb.checkStatementHasType(2, 1));
+		}
+
+		TEST_METHOD(PKBGetWithProcNameVarName)
+		{
+			PKB pkb;
+
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (data == pkb.getWithProcNameVarName()));
+
+			pkb.insertToTable(PROC_NAME_VAR_NAME_TABLE, 1, { {2} });
+			pkb.insertToTable(PROC_NAME_VAR_NAME_TABLE, 2, { { 1 } });
+
+			data = { {1,2}, {2,1} };
+			Assert::AreEqual(true, (data == pkb.getWithProcNameVarName()));
+
+		}
+
+		TEST_METHOD(PKBGetWithProcNameCallProcName)
+		{
+			PKB pkb;
+
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (data == pkb.getWithProcNameCallProcName()));
+
+			pkb.insertToTable(PROC_NAME_CALL_NAME_TABLE, 1, { { 4 } });
+			pkb.insertToTable(PROC_NAME_CALL_NAME_TABLE, 5, { { 2 } });
+
+			data = { { 1,4 },{ 5,2 } };
+			Assert::AreEqual(true, (data == pkb.getWithProcNameCallProcName()));
+
+		}
+
+		TEST_METHOD(PKBGetWithVarNameCallProcName)
+		{
+			PKB pkb;
+
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (data == pkb.getWithVarNameCallProcName()));
+
+			pkb.insertToTable(VAR_NAME_CALL_NAME_TABLE, 1, { { 4 } });
+			pkb.insertToTable(VAR_NAME_CALL_NAME_TABLE, 5, { { 2 } });
+
+			data = { { 1,4 },{ 5,2 } };
+			Assert::AreEqual(true, (data == pkb.getWithVarNameCallProcName()));
+
+		}
+
+		TEST_METHOD(PKBGetWithStmtNoConstValue)
+		{
+			PKB pkb;
+
+			std::vector<std::vector<int>> data;
+			Assert::AreEqual(true, (data == pkb.getWithStmtNoConstValue(0)));
+			Assert::AreEqual(true, (data == pkb.getWithStmtNoConstValue(1)));
+			Assert::AreEqual(true, (data == pkb.getWithStmtNoConstValue(2)));
+			Assert::AreEqual(true, (data == pkb.getWithStmtNoConstValue(3)));
+			Assert::AreEqual(true, (data == pkb.getWithStmtNoConstValue(4)));
+
+			pkb.insertToTable(STATEMENT_TABLE, 1, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 1,2 },{},{},{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 4, { { 2,3,4 },{},{},{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 5, { { 3 },{},{},{ 4 } });
+			pkb.insertToTable(STATEMENT_TABLE, 6, { { 4,5 },{},{},{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 7, { { 5 },{},{},{ 4 } });
+			pkb.insertToTable(STATEMENT_TABLE, 8, { { 2 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 9, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 10, { { 6 },{ 1,2 },{ 3 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 11, { { 7 },{ 4,5 },{ 6 },{ 1 } });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 1, { { 1 } });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 2, { { 2 } });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 3, { { 3 } });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 4, { { 4 } });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 5, { { 5 } });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 6, { { 6 } });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 7, { { 7 } });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 8, { { 8 } });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 9, { { 9 } });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 10, { { 10 } });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 11, { { 11 } });
+
+			data = { { 1,1 },{ 2,2 },{ 3,3 },{ 4,4 },{ 5,5 },{ 6,6 },{ 7, 7 },{ 8,8 },{ 9,9 },{ 10,10 },{ 11, 11 } };
+			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(0) == data));
+
+			data = { { 1,1 },{ 2,2 },{ 8,8 },{ 9,9 },{ 10,10 },{ 11, 11 } };
+			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(1) == data));
+
+			data = { { 3,3 },{ 6,6 } };
+			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(2) == data));
+
+			data = { { 4,4 } };
+			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(3) == data));
+
+			data = { { 5,5 },{ 7,7 } };
+			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(4) == data));
+
 		}
 
 		TEST_METHOD(PKBFollows)

@@ -14,6 +14,7 @@ bool DesignExtractor::extract(PKB &pkb) {
 	extractCallStatements(pkb);
 	extractCallsStar(pkb);
 	extractUsesModifies(pkb);
+
 	countFollows(pkb);
 	countFollowsStar(pkb);
 	countUsesProcedure(pkb);
@@ -28,6 +29,11 @@ bool DesignExtractor::extract(PKB &pkb) {
 	countAffectsStar(pkb);
 	countNext(pkb);
 	countNextStar(pkb);
+
+	countWithProcNameVarName(pkb);
+	countWithProcNameCallProcName(pkb);
+	countWithVarNameCallProcName(pkb);
+	countWithStmtNoConstValue(pkb);
 	return true;
 }
 
@@ -481,4 +487,46 @@ void DesignExtractor::countAffectsStar(PKB &pkb) {
 		totalRowSize += assignCount * assignCount;
 	}
 	pkb.insertToResultTable(RelationAffectsStar, 0, 0, totalRowSize);
+}
+
+void DesignExtractor::countWithProcNameVarName(PKB &pkb) {
+	std::vector<std::vector<int>> procs = pkb.getAllProcedures();
+	for (int i = 0; i < procs.size(); i++) {
+		string procName = pkb.getProcedureName(procs[i][0]);
+		int varId = pkb.getVariableId(procName);
+		if (varId != 0) {
+			pkb.insertToTable(PROC_NAME_VAR_NAME_TABLE, procs[i][0], { { varId } });
+		}
+	}
+}
+
+void DesignExtractor::countWithProcNameCallProcName(PKB &pkb) {
+	std::vector<std::vector<int>> calls = pkb.getAllStatementsWithType(4);
+	for (int i = 0; i < calls.size(); i++) {
+		int procId = pkb.getProcedureCalledByCallStatement(calls[i][0])[0][0];
+		if (procId != 0) {
+			pkb.insertToTable(PROC_NAME_CALL_NAME_TABLE, procId, { { calls[i][0] } });
+		}
+	}
+}
+
+void DesignExtractor::countWithVarNameCallProcName(PKB &pkb) {
+	std::vector<std::vector<int>> calls = pkb.getAllStatementsWithType(4);
+	for (int i = 0; i < calls.size(); i++) {
+		int procId = pkb.getProcedureCalledByCallStatement(calls[i][0])[0][0];
+		int varId = pkb.getVariableId(pkb.getProcedureName(procId));
+		if (varId != 0) {
+			pkb.insertToTable(VAR_NAME_CALL_NAME_TABLE, varId, { { calls[i][0] } });
+		}
+	}
+}
+
+void DesignExtractor::countWithStmtNoConstValue(PKB &pkb) {
+	std::vector<std::vector<int>> consts = pkb.getAllConstants();
+	int stmtSize = pkb.getAllStatements().size();
+	for (int i = 0; i < consts.size(); i++) {
+		if (consts[i][0] <= stmtSize) {
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, consts[i][0], { { consts[i][0] } });
+		}
+	}
 }

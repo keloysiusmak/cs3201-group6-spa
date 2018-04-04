@@ -18,49 +18,55 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 
 	unsigned int tableValuesCount;
 	switch (table_id) {
-	case 1:
+	case STATEMENT_TABLE:
 		tableValuesCount = 4;
 		break;
-	case 2:
+	case STATEMENT_LIST_TABLE:
 		tableValuesCount = 3;
 		break;
-	case 3:
+	case PROC_INFO_TABLE:
 		tableValuesCount = 3;
 		break;
-	case 4:
+	case USES_TABLE:
 		tableValuesCount = 2;
 		break;
-	case 5:
+	case MODIFIES_TABLE:
 		tableValuesCount = 2;
 		break;
-	case 6:
+	case CONST_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 7:
+	case CALLS_TABLE:
 		tableValuesCount = 2;
 		break;
-	case 8:
+	case CALLS_STAR_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 9:
+	case CALLS_INVERSE_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 10:
+	case CALLS_STAR_INVERSE_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 11:
+	case CALL_STATEMENT_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 12:
+	case NEXT_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 13:
+	case NEXT_INVERSE_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 14:
+	case PROC_NAME_VAR_NAME_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 15:
+	case PROC_NAME_CALL_NAME_TABLE:
+		tableValuesCount = 1;
+		break;
+	case VAR_NAME_CALL_NAME_TABLE:
+		tableValuesCount = 1;
+		break;
+	case STMT_NO_CONST_VALUE_TABLE:
 		tableValuesCount = 1;
 		break;
 	default:
@@ -156,10 +162,19 @@ bool PKB::insertToResultTable(Relations r, int firstParam, int secondParam, int 
 
 std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 {
-	if (table_id < 1 || table_id > NEXT_INVERSE_TABLE) {
+	if (table_id < 1 || table_id >= PATTERN_TABLE) {
 		std::vector<std::vector<int>> data;
 		return data;
-	} else {
+	}
+	else if (table_id >= PROC_NAME_VAR_NAME_TABLE && table_id <= STMT_NO_CONST_VALUE_TABLE) {
+		unordered_map<int, std::vector<std::vector<int>>> table = tables[table_id - 1];
+		std::vector<std::vector<int>> data;
+		for (auto it = table.begin(); it != table.end(); ++it) {
+			data.push_back({it->first, it->second[0][0]});
+		}
+		return data;
+	}
+	else {
 		std::unordered_map<int, std::vector<std::vector<int>>>::const_iterator got = tables[table_id - 1].find(key_id);
 		if (got == tables[table_id - 1].end()) {
 			std::vector<std::vector<int>> data;
@@ -362,6 +377,34 @@ bool PKB::checkStatementHasType(int stmt, int stmt_type) {
 		return (table[3][0] == stmt_type);
 	}
 
+}
+
+/* Optimization Operations */
+std::vector<std::vector<int>> PKB::getWithProcNameVarName() {
+	std::vector<std::vector<int>> data = PKB::getFromTable(PROC_NAME_VAR_NAME_TABLE, 1);
+	return data;
+}
+std::vector<std::vector<int>> PKB::getWithProcNameCallProcName() {
+	std::vector<std::vector<int>> data = PKB::getFromTable(PROC_NAME_CALL_NAME_TABLE, 1);
+	return data;
+}
+std::vector<std::vector<int>> PKB::getWithVarNameCallProcName() {
+	std::vector<std::vector<int>> data = PKB::getFromTable(VAR_NAME_CALL_NAME_TABLE, 1);
+	return data;
+}
+std::vector<std::vector<int>> PKB::getWithStmtNoConstValue(int type) {
+	std::vector<std::vector<int>> data = PKB::getFromTable(STMT_NO_CONST_VALUE_TABLE, 1);
+	if (type > 0) {
+		std::vector<std::vector<int>> filtered;
+		for (int i = 0; i < data.size(); i++) {
+			if (PKB::checkStatementHasType(data[i][0], type)) {
+				filtered.push_back({data[i][0], data[i][1]});
+			}
+		}
+		data = filtered;
+	}
+	std::sort(data.begin(), data.end());
+	return data;
 }
 
 /* Follows Operations */

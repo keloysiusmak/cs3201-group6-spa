@@ -14,7 +14,7 @@ using namespace std::tr1;
 class PKB {
 private:
 	/*  PKB Structure*/
-	unordered_map<int, std::vector<std::vector<int>>> tables[13];
+	unordered_map<int, std::vector<std::vector<int>>> tables[17];
 	unordered_map<int, std::vector<std::string>> nameTables[3];
 	unordered_map<int, unordered_map<int, unordered_map<int, int>>> resultTables;
 
@@ -39,6 +39,12 @@ public:
 	std::vector<std::vector<int>> getAllStatementsFromProcedure(int);
 	std::vector<std::vector<int>> getProcedureFromStatement(int);
 	bool checkStatementHasType(int, int);
+
+	/* Optimization Operations */
+	std::vector<std::vector<int>> getWithProcNameVarName();
+	std::vector<std::vector<int>> getWithProcNameCallProcName();
+	std::vector<std::vector<int>> getWithVarNameCallProcName();
+	std::vector<std::vector<int>> getWithStmtNoConstValue(int);
 
 	/* Follows Operations */
 	std::vector<std::vector<int>> getFollowsBefore(int);
