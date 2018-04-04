@@ -18,49 +18,55 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 
 	unsigned int tableValuesCount;
 	switch (table_id) {
-	case 1:
+	case STATEMENT_TABLE:
 		tableValuesCount = 4;
 		break;
-	case 2:
+	case STATEMENT_LIST_TABLE:
 		tableValuesCount = 3;
 		break;
-	case 3:
+	case PROC_INFO_TABLE:
 		tableValuesCount = 3;
 		break;
-	case 4:
+	case USES_TABLE:
 		tableValuesCount = 2;
 		break;
-	case 5:
+	case MODIFIES_TABLE:
 		tableValuesCount = 2;
 		break;
-	case 6:
+	case CONST_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 7:
+	case CALLS_TABLE:
 		tableValuesCount = 2;
 		break;
-	case 8:
+	case CALLS_STAR_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 9:
+	case CALLS_INVERSE_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 10:
+	case CALLS_STAR_INVERSE_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 11:
+	case CALL_STATEMENT_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 12:
+	case NEXT_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 13:
+	case NEXT_INVERSE_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 14:
+	case PROC_NAME_VAR_NAME_COUNT_TABLE:
 		tableValuesCount = 1;
 		break;
-	case 15:
+	case PROC_NAME_CALL_NAME_COUNT_TABLE:
+		tableValuesCount = 1;
+		break;
+	case VAR_NAME_CALL_NAME_COUNT_TABLE:
+		tableValuesCount = 1;
+		break;
+	case STMT_NO_CONST_VALUE_COUNT_TABLE:
 		tableValuesCount = 1;
 		break;
 	default:
@@ -156,7 +162,7 @@ bool PKB::insertToResultTable(Relations r, int firstParam, int secondParam, int 
 
 std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 {
-	if (table_id < 1 || table_id > NEXT_INVERSE_TABLE) {
+	if (table_id < 1 || table_id >= PATTERN_TABLE) {
 		std::vector<std::vector<int>> data;
 		return data;
 	} else {
