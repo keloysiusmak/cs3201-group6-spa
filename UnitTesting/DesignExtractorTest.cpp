@@ -328,5 +328,20 @@ namespace DesignExtractorTest
 			Assert::AreEqual(4, pkb.getFromResultTable(RelationAffects, 0, 8));
 			Assert::AreEqual(1, pkb.getFromResultTable(RelationAffects, 0, 10));
 		}
+		TEST_METHOD(DesignExtractorCountAffectsStar)
+		{
+			de.extract(pkb);
+			Assert::AreEqual(18, pkb.getFromResultTable(RelationAffectsStar, 0, 0));
+			Assert::AreEqual(4, pkb.getFromResultTable(RelationAffectsStar, 1, 0));
+			Assert::AreEqual(4, pkb.getFromResultTable(RelationAffectsStar, 3, 0));
+			Assert::AreEqual(4, pkb.getFromResultTable(RelationAffectsStar, 4, 0));
+			Assert::AreEqual(4, pkb.getFromResultTable(RelationAffectsStar, 6, 0));
+			Assert::AreEqual(1, pkb.getFromResultTable(RelationAffectsStar, 10, 0));
+			Assert::AreEqual(4, pkb.getFromResultTable(RelationAffectsStar, 0, 1));
+			Assert::AreEqual(4, pkb.getFromResultTable(RelationAffectsStar, 0, 3));
+			Assert::AreEqual(4, pkb.getFromResultTable(RelationAffectsStar, 0, 4));
+			Assert::AreEqual(4, pkb.getFromResultTable(RelationAffectsStar, 0, 8));
+			Assert::AreEqual(1, pkb.getFromResultTable(RelationAffectsStar, 0, 10));
+		}
 	};
 }
