@@ -431,3 +431,27 @@ void DesignExtractor::countNext(PKB &pkb) {
 		pkb.insertToResultTable(RelationNext, 0, i, pkb.getNextBefore(i).size());
 	}
 }
+
+void DesignExtractor::countNextStar(PKB &pkb) {
+	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
+	pkb.insertToResultTable(RelationNextStar, 0, 0, fields.size() * fields.size());
+	for (int i = 1; i < fields.size() + 1; i++) {
+		std::vector<std::vector<int>> rows = pkb.getAllStatementsFromProcedure(i);
+		for (int j = 1; j < rows.size() + 1; j++) {
+			pkb.insertToResultTable(RelationNextStar, j, 0, rows.size());
+			pkb.insertToResultTable(RelationNextStar, 0, j, rows.size());
+		}
+	}
+}
+
+void DesignExtractor::countAffects(PKB &pkb) {
+	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
+	pkb.insertToResultTable(RelationAffects, 0, 0, fields.size() * fields.size());
+	for (int i = 1; i < fields.size() + 1; i++) {
+		std::vector<std::vector<int>> rows = pkb.getAllStatementsFromProcedure(i);
+		for (int j = 1; j < rows.size() + 1; j++) {
+			pkb.insertToResultTable(RelationAffects, j, 0, rows.size());
+			pkb.insertToResultTable(RelationAffects, 0, j, rows.size());
+		}
+	}
+}
