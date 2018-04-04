@@ -460,7 +460,7 @@ void DesignExtractor::countAffects(PKB &pkb) {
 		}
 		totalRowSize += assignCount * assignCount;
 	}
-	pkb.insertToResultTable(RelationNextStar, 0, 0, totalRowSize);
+	pkb.insertToResultTable(RelationAffects, 0, 0, totalRowSize);
 }
 
 void DesignExtractor::countAffectsStar(PKB &pkb) {
@@ -480,5 +480,5 @@ void DesignExtractor::countAffectsStar(PKB &pkb) {
 		}
 		totalRowSize += assignCount * assignCount;
 	}
-	pkb.insertToResultTable(RelationNextStar, 0, 0, totalRowSize);
+	pkb.insertToResultTable(RelationAffectsStar, 0, 0, totalRowSize);
 }
