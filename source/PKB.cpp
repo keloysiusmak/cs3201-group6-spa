@@ -293,6 +293,63 @@ std::vector<std::vector<int>> PKB::getAllProcedures() {
 
 }
 
+std::vector<std::vector<int>> PKB::getAllStatementsFromProcedure(int proc) {
+	std::vector<std::vector<int>> data;
+	std::vector<std::vector<int>> table = PKB::getFromTable(PROC_INFO_TABLE, proc);
+	if (table.size() > 0 && table[0].size() > 0) {
+		table = PKB::getFromTable(STATEMENT_LIST_TABLE, table[0][0]);
+		if (table.size() > 0) {
+			for (int i = 0; i < table[1].size(); i++) {
+				data.push_back({ table[1][i] });
+			}
+			if (static_cast<int>(data.size()) > 0) {
+				for (unsigned int i = 0; i < static_cast<int>(data.size()); i++) {
+					std::vector<std::vector<int>> recur_output = PKB::getChildren(data[i][0]);
+					for (unsigned int j = 0; j < static_cast<int>(recur_output.size()); j++) {
+						data.push_back({ recur_output[j][0] });
+					}
+				}
+			}
+		}
+	}
+
+	return data;
+}
+
+std::vector<std::vector<int>> PKB::getProcedureFromStatement(int stmt) {
+	std::vector<std::vector<int>> output;
+	std::vector<std::vector<int>> parent = PKB::getParent(stmt);
+
+	int tempParent = 0;
+	if (parent.size() > 0 && parent[0].size() > 0) {
+		while (parent[0][0] != 0) {
+			tempParent = parent[0][0];
+			parent = PKB::getParent(parent[0][0]);
+		}
+		parent = { {tempParent} };
+	}
+	int result = 0;
+	if (tempParent != 0 && parent.size() > 0 && parent[0].size() > 0) {
+		output = PKB::getFromTable(STATEMENT_TABLE, parent[0][0]);
+		if (output.size() > 0 && output[0].size() > 0) {
+			output = PKB::getFromTable(STATEMENT_LIST_TABLE, output[0][0]);
+			if (output.size() > 0 && output[0].size() > 0) {
+				result = output[2][0];
+			}
+		}
+	}
+	else if (tempParent == 0) {
+		output = PKB::getFromTable(STATEMENT_TABLE, stmt);
+		if (output.size() > 0 && output[0].size() > 0) {
+			output = PKB::getFromTable(STATEMENT_LIST_TABLE, output[0][0]);
+			if (output.size() > 0 && output[0].size() > 0) {
+				result = output[2][0];
+			}
+		}
+	}
+	return { {result} };
+}
+
 bool PKB::checkStatementHasType(int stmt, int stmt_type) {
 
 	std::vector<std::vector<int>> new_data;
@@ -533,7 +590,7 @@ std::vector<std::vector<int>> PKB::getChildrenStar(int stmt) {
 	}
 	if (static_cast<int>(data.size()) > 0) {
 		for (unsigned int i = 0; i < static_cast<int>(data.size()); i++) {
-			std::vector<std::vector<int>> recur_output = PKB::getChildrenStar(data[i][0]);
+			std::vector<std::vector<int>> recur_output = PKB::getChildren(data[i][0]);
 			for (unsigned int j = 0; j < static_cast<int>(recur_output.size()); j++) {
 				data.push_back({ recur_output[j][0] });
 			}

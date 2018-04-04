@@ -36,6 +36,8 @@ public:
 	std::vector<std::vector<int>> getAllStatements();
 	std::vector<std::vector<int>> getAllStatementsWithType(int);
 	std::vector<std::vector<int>> getAllProcedures();
+	std::vector<std::vector<int>> getAllStatementsFromProcedure(int);
+	std::vector<std::vector<int>> getProcedureFromStatement(int);
 	bool checkStatementHasType(int, int);
 
 	/* Follows Operations */

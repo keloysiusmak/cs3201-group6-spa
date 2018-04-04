@@ -14,21 +14,20 @@ bool DesignExtractor::extract(PKB &pkb) {
 	extractCallStatements(pkb);
 	extractCallsStar(pkb);
 	extractUsesModifies(pkb);
-	/*
 	countFollows(pkb);
 	countFollowsStar(pkb);
-	countUses(pkb);
-	countModifies(pkb);
+	countUsesProcedure(pkb);
+	countUsesStatement(pkb);
+	countModifiesProcedure(pkb);
+	countModifiesStatement(pkb);
 	countParent(pkb);
 	countParentStar(pkb);
-	*/
 	countCalls(pkb);
 	countCallsStar(pkb);
-	/*
 	countAffects(pkb);
 	countAffectsStar(pkb);
 	countNext(pkb);
-	countNextStar(pkb);*/
+	countNextStar(pkb);
 	return true;
 }
 
@@ -299,6 +298,107 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 	}
 }
 
+void DesignExtractor::countFollows(PKB &pkb) {
+	int size = pkb.getAllFollows().size();
+	std::vector<std::vector<int>> fields = pkb.getAllStatements();
+	pkb.insertToResultTable(RelationFollows, 0, 0, size);
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationFollows, i, 0, pkb.getFollowsAfter(i).size());
+		pkb.insertToResultTable(RelationFollows, 0, i, pkb.getFollowsBefore(i).size());
+	}
+}
+
+void DesignExtractor::countFollowsStar(PKB &pkb) {
+	int size = pkb.getAllFollowsStar().size();
+	std::vector<std::vector<int>> fields = pkb.getAllStatements();
+	pkb.insertToResultTable(RelationFollowsStar, 0, 0, size);
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationFollowsStar, i, 0, pkb.getFollowsAfterStar(i).size());
+		pkb.insertToResultTable(RelationFollowsStar, 0, i, pkb.getFollowsBeforeStar(i).size());
+	}
+}
+
+void DesignExtractor::countUsesProcedure(PKB &pkb) {
+	int size = pkb.getAllProcedureUsesVariables().size();
+	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
+	pkb.insertToResultTable(RelationUsesProcedure, 0, 0, size);
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationUsesProcedure, i, 0, pkb.getUsesVariablesFromProcedure(i).size());
+	}
+
+	fields = pkb.getAllVariables();
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationUsesProcedure, 0, i, pkb.getProceduresFromUsesVariable(i).size());
+	}
+}
+
+void DesignExtractor::countUsesStatement(PKB &pkb) {
+	int size = pkb.getAllStatementUsesVariables().size();
+	std::vector<std::vector<int>> fields = pkb.getAllStatements();
+	pkb.insertToResultTable(RelationUsesStatement, 0, 0, size);
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationUsesStatement, i, 0, pkb.getUsesVariablesFromStatement(i).size());
+	}
+
+	fields = pkb.getAllVariables();
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationUsesStatement, 0, i, pkb.getStatementsFromUsesVariable(i).size());
+	}
+}
+
+void DesignExtractor::countModifiesProcedure(PKB &pkb) {
+	int size = pkb.getAllProcedureModifiesVariables().size();
+	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
+	pkb.insertToResultTable(RelationModifiesProcedure, 0, 0, size);
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationModifiesProcedure, i, 0, pkb.getModifiesVariablesFromProcedure(i).size());
+	}
+
+	fields = pkb.getAllVariables();
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationModifiesProcedure, 0, i, pkb.getProceduresFromModifiesVariable(i).size());
+	}
+}
+
+void DesignExtractor::countModifiesStatement(PKB &pkb) {
+	int size = pkb.getAllStatementModifiesVariables().size();
+	std::vector<std::vector<int>> fields = pkb.getAllStatements();
+	pkb.insertToResultTable(RelationModifiesStatement, 0, 0, size);
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationModifiesStatement, i, 0, pkb.getModifiesVariablesFromStatement(i).size());
+	}
+
+	fields = pkb.getAllVariables();
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationModifiesStatement, 0, i, pkb.getStatementsFromModifiesVariable(i).size());
+	}
+}
+
+void DesignExtractor::countParent(PKB &pkb) {
+	int size = pkb.getAllParent().size();
+	std::vector<std::vector<int>> fields = pkb.getAllStatements();
+	pkb.insertToResultTable(RelationParent, 0, 0, size);
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationParent, i, 0, pkb.getChildren(i).size());
+		std::vector<std::vector<int>> parent = pkb.getParent(i);
+		int size = 1;
+		if (parent[0][0] == 0) {
+			size = 0;
+		}
+		pkb.insertToResultTable(RelationParent, 0, i, size);
+	}
+}
+
+void DesignExtractor::countParentStar(PKB &pkb) {
+	int size = pkb.getAllParentStar().size();
+	std::vector<std::vector<int>> fields = pkb.getAllStatements();
+	pkb.insertToResultTable(RelationParentStar, 0, 0, size);
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationParentStar, i, 0, pkb.getChildrenStar(i).size());
+		pkb.insertToResultTable(RelationParentStar, 0, i, pkb.getParentStar(i).size());
+	}
+}
+
 void DesignExtractor::countCalls(PKB &pkb) {
 	int size = pkb.getAllCalls().size();
 	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
@@ -317,4 +417,68 @@ void DesignExtractor::countCallsStar(PKB &pkb) {
 		pkb.insertToResultTable(RelationCallsStar, i, 0, pkb.getCallsAfterStar(i).size());
 		pkb.insertToResultTable(RelationCallsStar, 0, i, pkb.getCallsBeforeStar(i).size());
 	}
+}
+
+void DesignExtractor::countNext(PKB &pkb) {
+	int size = pkb.getAllNext().size();
+	std::vector<std::vector<int>> fields = pkb.getAllStatements();
+	pkb.insertToResultTable(RelationNext, 0, 0, size);
+	for (int i = 1; i < fields.size() + 1; i++) {
+		pkb.insertToResultTable(RelationNext, i, 0, pkb.getNextAfter(i).size());
+		pkb.insertToResultTable(RelationNext, 0, i, pkb.getNextBefore(i).size());
+	}
+}
+
+void DesignExtractor::countNextStar(PKB &pkb) {
+	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
+	int totalRowSize = 0;
+	for (int i = 1; i < fields.size() + 1; i++) {
+		std::vector<std::vector<int>> rows = pkb.getAllStatementsFromProcedure(i);
+		for (int j = 1; j < rows.size() + 1; j++) {
+			pkb.insertToResultTable(RelationNextStar, rows[j-1][0], 0, rows.size());
+			pkb.insertToResultTable(RelationNextStar, 0, rows[j-1][0], rows.size());
+		}
+		totalRowSize += rows.size() * rows.size();
+	}
+	pkb.insertToResultTable(RelationNextStar, 0, 0, totalRowSize);
+}
+
+void DesignExtractor::countAffects(PKB &pkb) {
+	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
+	int totalRowSize = 0;
+	for (int i = 1; i < fields.size() + 1; i++) {
+		std::vector<std::vector<int>> rows = pkb.getAllStatementsFromProcedure(i);
+		int assignCount = 0;
+		for (int j = 1; j < rows.size() + 1; j++) {
+			if (pkb.checkStatementHasType(rows[j-1][0], 1)) {
+				assignCount++;
+			}
+		}
+		for (int j = 1; j < rows.size() + 1; j++) {
+			pkb.insertToResultTable(RelationAffects, rows[j - 1][0], 0, assignCount);
+			pkb.insertToResultTable(RelationAffects, 0, rows[j - 1][0], assignCount);
+		}
+		totalRowSize += assignCount * assignCount;
+	}
+	pkb.insertToResultTable(RelationAffects, 0, 0, totalRowSize);
+}
+
+void DesignExtractor::countAffectsStar(PKB &pkb) {
+	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
+	int totalRowSize = 0;
+	for (int i = 1; i < fields.size() + 1; i++) {
+		std::vector<std::vector<int>> rows = pkb.getAllStatementsFromProcedure(i);
+		int assignCount = 0;
+		for (int j = 1; j < rows.size() + 1; j++) {
+			if (pkb.checkStatementHasType(rows[j - 1][0], 1)) {
+				assignCount++;
+			}
+		}
+		for (int j = 1; j < rows.size() + 1; j++) {
+			pkb.insertToResultTable(RelationAffectsStar, rows[j - 1][0], 0, assignCount);
+			pkb.insertToResultTable(RelationAffectsStar, 0, rows[j - 1][0], assignCount);
+		}
+		totalRowSize += assignCount * assignCount;
+	}
+	pkb.insertToResultTable(RelationAffectsStar, 0, 0, totalRowSize);
 }
