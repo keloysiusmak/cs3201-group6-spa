@@ -40,6 +40,12 @@ public:
 	std::vector<std::vector<int>> getProcedureFromStatement(int);
 	bool checkStatementHasType(int, int);
 
+	/* Optimization Operations */
+	std::vector<std::vector<int>> getWithProcNameVarName();
+	std::vector<std::vector<int>> getWithProcNameCallProcName();
+	std::vector<std::vector<int>> getWithVarNameCallProcName();
+	std::vector<std::vector<int>> getWithStmtNoConstValue(int);
+
 	/* Follows Operations */
 	std::vector<std::vector<int>> getFollowsBefore(int);
 	std::vector<std::vector<int>> getFollowsAfter(int);
