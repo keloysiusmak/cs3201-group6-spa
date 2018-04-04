@@ -445,36 +445,40 @@ void DesignExtractor::countNextStar(PKB &pkb) {
 
 void DesignExtractor::countAffects(PKB &pkb) {
 	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
-	pkb.insertToResultTable(RelationAffects, 0, 0, fields.size() * fields.size());
+	int totalRowSize = 0;
 	for (int i = 1; i < fields.size() + 1; i++) {
 		std::vector<std::vector<int>> rows = pkb.getAllStatementsFromProcedure(i);
 		int assignCount = 0;
 		for (int j = 1; j < rows.size() + 1; j++) {
-			if (pkb.checkStatementHasType(i, 1)) {
+			if (pkb.checkStatementHasType(rows[j-1][0], 1)) {
 				assignCount++;
 			}
 		}
 		for (int j = 1; j < rows.size() + 1; j++) {
-			pkb.insertToResultTable(RelationAffects, j, 0, assignCount);
-			pkb.insertToResultTable(RelationAffects, 0, j, assignCount);
+			pkb.insertToResultTable(RelationAffects, rows[j - 1][0], 0, assignCount);
+			pkb.insertToResultTable(RelationAffects, 0, rows[j - 1][0], assignCount);
 		}
+		totalRowSize += assignCount * assignCount;
 	}
+	pkb.insertToResultTable(RelationNextStar, 0, 0, totalRowSize);
 }
 
 void DesignExtractor::countAffectsStar(PKB &pkb) {
 	std::vector<std::vector<int>> fields = pkb.getAllProcedures();
-	pkb.insertToResultTable(RelationAffectsStar, 0, 0, fields.size() * fields.size());
+	int totalRowSize = 0;
 	for (int i = 1; i < fields.size() + 1; i++) {
 		std::vector<std::vector<int>> rows = pkb.getAllStatementsFromProcedure(i);
 		int assignCount = 0;
 		for (int j = 1; j < rows.size() + 1; j++) {
-			if (pkb.checkStatementHasType(i, 1)) {
+			if (pkb.checkStatementHasType(rows[j - 1][0], 1)) {
 				assignCount++;
 			}
 		}
 		for (int j = 1; j < rows.size() + 1; j++) {
-			pkb.insertToResultTable(RelationAffectsStar, j, 0, assignCount);
-			pkb.insertToResultTable(RelationAffectsStar, 0, j, assignCount);
+			pkb.insertToResultTable(RelationAffectsStar, rows[j - 1][0], 0, assignCount);
+			pkb.insertToResultTable(RelationAffectsStar, 0, rows[j - 1][0], assignCount);
 		}
+		totalRowSize += assignCount * assignCount;
 	}
+	pkb.insertToResultTable(RelationNextStar, 0, 0, totalRowSize);
 }
