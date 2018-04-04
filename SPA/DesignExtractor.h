@@ -16,8 +16,10 @@ private:
 	void extractUsesModifies(PKB &);
 	void countFollows(PKB &);
 	void countFollowsStar(PKB &);
-	void countUses(PKB &);
-	void countModifies(PKB &);
+	void countUsesProcedure(PKB &);
+	void countUsesStatement(PKB &);
+	void countModifiesProcedure(PKB &);
+	void countModifiesStatement(PKB &);
 	void countParent(PKB &);
 	void countParentStar(PKB &);
 	void countCalls(PKB &);

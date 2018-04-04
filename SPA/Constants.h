@@ -26,8 +26,10 @@ const int PROCEDURE_PARENT_ID = 0;
 enum Relations {
 	RelationFollows,
 	RelationFollowsStar,
-	RelationUses,
-	RelationModifies,
+	RelationUsesProcedure,
+	RelationUsesStatement,
+	RelationModifiesProcedure,
+	RelationModifiesStatement,
 	RelationParent,
 	RelationParentStar,
 	RelationCalls,

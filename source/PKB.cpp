@@ -533,7 +533,7 @@ std::vector<std::vector<int>> PKB::getChildrenStar(int stmt) {
 	}
 	if (static_cast<int>(data.size()) > 0) {
 		for (unsigned int i = 0; i < static_cast<int>(data.size()); i++) {
-			std::vector<std::vector<int>> recur_output = PKB::getChildrenStar(data[i][0]);
+			std::vector<std::vector<int>> recur_output = PKB::getChildren(data[i][0]);
 			for (unsigned int j = 0; j < static_cast<int>(recur_output.size()); j++) {
 				data.push_back({ recur_output[j][0] });
 			}
