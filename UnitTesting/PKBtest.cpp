@@ -360,6 +360,58 @@ namespace UnitTesting
 			Assert::AreEqual(true, (pkb.getAllProcedures() == data));
 		}
 
+		TEST_METHOD(PKBGetAllStatementsFromProcedure)
+		{
+			PKB pkb;
+			std::vector<std::vector<int>> data;
+
+			/* Null Test */
+			Assert::AreEqual(true, (pkb.getAllStatementsFromProcedure(1) == data));
+
+			pkb.insertToTable(PROC_INFO_TABLE, 1, { {1}, {}, {} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { {0}, {1, 2}, {1} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 2 },{3 },{ 2 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 3 },{ 4 },{ 3 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 4, { { 3 },{ 5,6 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 1, { {1}, {}, {}, {1} });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1,2 },{},{},{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 2 },{},{},{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 4, { { 3 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 5, { { 4 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 6, { { 4 },{},{},{ 1 } });
+
+			data = { {1}, {2},{ 3 },{ 4 },{ 5 },{ 6 } };
+			Assert::AreEqual(true, (pkb.getAllStatementsFromProcedure(1) == data));
+		}
+
+		TEST_METHOD(PKBGetProcedureFromStatement)
+		{
+			PKB pkb;
+			std::vector<std::vector<int>> data;
+
+			/* Null Test */
+			Assert::AreEqual(0, pkb.getProcedureFromStatement(1)[0][0]);
+
+			pkb.insertToTable(PROC_INFO_TABLE, 1, { { 1 },{},{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { { 0 },{ 1, 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 2 },{ 3 },{ 2 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 3 },{ 4 },{ 3 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 4, { { 3 },{ 5,6 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 1, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1,2 },{},{},{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 2 },{},{},{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 4, { { 3 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 5, { { 4 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 6, { { 4 },{},{},{ 1 } });
+
+			Assert::AreEqual(1, pkb.getProcedureFromStatement(1)[0][0]);
+			Assert::AreEqual(1, pkb.getProcedureFromStatement(2)[0][0]);
+			Assert::AreEqual(1, pkb.getProcedureFromStatement(3)[0][0]);
+			Assert::AreEqual(1, pkb.getProcedureFromStatement(4)[0][0]);
+			Assert::AreEqual(1, pkb.getProcedureFromStatement(5)[0][0]);
+			Assert::AreEqual(1, pkb.getProcedureFromStatement(6)[0][0]);
+		}
+
 		TEST_METHOD(PKBGetAllStatements)
 		{
 			PKB pkb;
