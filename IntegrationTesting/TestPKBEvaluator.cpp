@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
-#include "../source/PKB.h";
+#include "../SPA/PKB.h";
 #include "../SPA/QueryEvaluator.h";
 #include "../SPA/QueryObject.h";
 #include "../SPA/Pattern.h";
