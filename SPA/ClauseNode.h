@@ -14,9 +14,11 @@ private:
 	vector<ClauseNode> children;
 public:
 	ClauseNode();
-	ClauseNode(Clause, CLAUSE_NODE_TYPE);
-	ClauseNode(Pattern);
 	ClauseNode(OPERATORS);
+	void setClauseNode(Clause);
+	void setPatternNode(Pattern);
+	void setWithClauseNode(Clause);
+	void setOperatorNode(OPERATORS);
 	void addChildren(ClauseNode);
 	vector<ClauseNode> getChildren();
 	CLAUSE_NODE_TYPE getClauseNodeType();

@@ -39,8 +39,8 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 	if (clausesNodes.size() > 0) {
 		std::vector<ClauseNode> temp;
 		for (int i = 0; i < clausesNodes.size(); i++) {
-			if (clausesNodes[i].getClauseNodeType == OPERATOR) {
-				if (clausesNodes[i].getOperators == AND) {
+			if (clausesNodes[i].getClauseNodeType() == OPERATOR) {
+				if (clausesNodes[i].getOperators() == AND) {
 					if (temp.size() == 0) {
 						ClauseNode newParent = ClauseNode(AND);
 						newParent.addChildren(clauses[0]);
@@ -65,7 +65,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 						temp.clear();
 					}
 				}
-				else if (clausesNodes[i].getOperators == OR) {
+				else if (clausesNodes[i].getOperators() == OR) {
 					if (temp.size() == 1) {
 						ClauseNode newClause = temp[0];
 						temp.clear();
@@ -81,14 +81,14 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 				}
 			}
 			else {
-				if (clausesNodes[i].getClauseNodeType == CLAUSE) {
+				if (clausesNodes[i].getClauseNodeType() == CLAUSE) {
 					temp.push_back(clausesNodes[i]);
 				}
 			}
 		}
 	}
 
-	std::vector<ClauseNode> clausesNodes = qc.getPattern();
+	clausesNodes = qc.getPattern();
 	if (clausesNodes.size() > 0) {
 		std::vector<ClauseNode> temp;
 		for (int i = 0; i < clausesNodes.size(); i++) {
@@ -141,7 +141,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 		}
 	}
 
-	std::vector<ClauseNode> clausesNodes = qc.getWithClauses();
+	clausesNodes = qc.getWithClauses();
 	if (clausesNodes.size() > 0) {
 		std::vector<ClauseNode> temp;
 		for (int i = 0; i < clausesNodes.size(); i++) {
@@ -218,7 +218,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 std::vector<Clause> QueryQueuer::parseClauseTree(ClauseNode c) {
 
 	std::vector<Clause> clauses;
-	if (c.getClauseNodeType != OPERATOR) {
+	if (c.getClauseNodeType() != OPERATOR) {
 		clauses.push_back(c.getClause());
 	}
 	else {
@@ -235,7 +235,7 @@ std::vector<Clause> QueryQueuer::parseClauseTree(ClauseNode c) {
 std::vector<Clause> QueryQueuer::parseWithClauseTree(ClauseNode c) {
 
 	std::vector<Clause> withClauses;
-	if (c.getClauseNodeType != OPERATOR) {
+	if (c.getClauseNodeType() != OPERATOR) {
 		withClauses.push_back(c.getWithClause());
 	}
 	else {
@@ -252,7 +252,7 @@ std::vector<Clause> QueryQueuer::parseWithClauseTree(ClauseNode c) {
 std::vector<Pattern> QueryQueuer::parsePatternTree(ClauseNode c) {
 
 	std::vector<Pattern> patterns;
-	if (c.getClauseNodeType != OPERATOR) {
+	if (c.getClauseNodeType() != OPERATOR) {
 		patterns.push_back(c.getPattern());
 	}
 	else {

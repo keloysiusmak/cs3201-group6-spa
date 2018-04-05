@@ -6,23 +6,29 @@ ClauseNode::ClauseNode()
 
 }
 
-ClauseNode::ClauseNode(Clause clause, CLAUSE_NODE_TYPE t)
+ClauseNode::ClauseNode(OPERATORS op)
 {
-	if (t == WITH_CLAUSE) {
-		w = clause;
-	}
-	else {
-		c = clause;
-	}
+	t = OPERATOR;
+	o = op;
 }
 
-ClauseNode::ClauseNode(Pattern pattern)
-{
+void ClauseNode::setClauseNode(Clause clause) {
+	t = CLAUSE;
+	c = clause;
+}
+
+void ClauseNode::setPatternNode(Pattern pattern) {
+	t = PATTERN;
 	p = pattern;
 }
 
-ClauseNode::ClauseNode(OPERATORS op)
-{
+void ClauseNode::setWithClauseNode(Clause withClause) {
+	t = WITH_CLAUSE;
+	c = withClause;
+}
+
+void ClauseNode::setOperatorNode(OPERATORS op) {
+	t = OPERATOR;
 	o = op;
 }
 
