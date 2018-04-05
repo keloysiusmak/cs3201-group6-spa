@@ -1,7 +1,6 @@
 #pragma once
 
 #include "QueryObject.h"
-#include "QueryEvaluator.h"
 #include "QueryObject.h"
 #include "Utils.h"
 #include "RelationshipTable.h"
@@ -18,7 +17,8 @@ class Preprocessor {
 private:
 	unordered_map<string, string> declarationMap;
 	RelationshipTable relTable;
-	QueryEvaluator * _evaluator;
+	string errorMessage;
+	QueryObject qo;
 
 	int retrieveClauseArgType(string arg);
 	int retrieveExpressionType(string expression);
@@ -31,8 +31,6 @@ private:
 	bool checkBoolStmt(string query);
 public:
 	Preprocessor();
-	Preprocessor(QueryEvaluator &evaluator);
-	void setEvaluator(QueryEvaluator &evaluator);
 	void insertDeclarationToMap(string synonym, string declaration);
 	unordered_map<string, string> getDeclarationMap();
 	void preprocessQuery(string query);
@@ -55,4 +53,6 @@ public:
 	bool parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2);
 	bool parseWithClause(QueryObject &qo, string leftRef, string rightRef);
 	bool isValidSuchThatKeyword(string query);
+	string getErrorMessage();
+	QueryObject getQueryObject();
 };

@@ -5,7 +5,7 @@
 #include <list>
 #include <set>
 #include "QueryObject.h"
-#include "../source/PKB.h"
+#include "PKB.h"
 #include "Utils.h"
 #include "ClauseResults.h"
 #include "EvaluatorHelper.h";
@@ -23,7 +23,6 @@ public:
 
 	// Linkage to other components
 	void setQueryObject(QueryObject);
-	void setInvalidQuery(string);
 	void setPKB(PKB);
 
 	// Main Evaluation methods

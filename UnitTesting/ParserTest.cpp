@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "../source/PKB.h"
-#include "../source/PatternObject.h"
+#include "../SPA/PKB.h"
+#include "../SPA/PatternObject.h"
 #include "../SPA/Parser.h"
 #include "../SPA/Constants.h"
 

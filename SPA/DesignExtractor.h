@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../source/PKB.h"
+#include "PKB.h"
 
 class DesignExtractor
 {
@@ -14,10 +14,19 @@ private:
 	void extractCallsStar(PKB &);
 	void extractCallStatements(PKB &);
 	void extractUsesModifies(PKB &);
+
+	void precomputeWithProcNameVarName(PKB&);
+	void precomputeWithProcNameCallProcName(PKB&);
+	void precomputeWithVarNameCallProcName(PKB&);
+	void precomputeWithStmtNoConstValue(PKB&);
+	void precomputePatternTwoSyn(PKB&);
+
 	void countFollows(PKB &);
 	void countFollowsStar(PKB &);
-	void countUses(PKB &);
-	void countModifies(PKB &);
+	void countUsesProcedure(PKB &);
+	void countUsesStatement(PKB &);
+	void countModifiesProcedure(PKB &);
+	void countModifiesStatement(PKB &);
 	void countParent(PKB &);
 	void countParentStar(PKB &);
 	void countCalls(PKB &);
@@ -26,5 +35,12 @@ private:
 	void countAffectsStar(PKB &);
 	void countNext(PKB &);
 	void countNextStar(PKB &);
+
+	void countWithProcNameVarName(PKB&);
+	void countWithProcNameCallProcName(PKB&);
+	void countWithVarNameCallProcName(PKB&);
+	void countWithStmtNoConstValue(PKB&);
+
+	void countPattern(PKB&);
 };
 
