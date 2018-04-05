@@ -15,7 +15,9 @@ Clause::Clause(RelRef relRef, Param firstParam, Param secondParam) {
 }
 
 void Clause::setClause(RelRef relRef, Param firstParam, Param secondParam) {
-	
+	_relRef = relRef;
+	_leftParam = firstParam;
+	_rightParam = secondParam;
 }
 
 RelRef Clause::getRelRef() {
