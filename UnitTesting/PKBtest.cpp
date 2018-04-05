@@ -90,6 +90,15 @@ namespace UnitTesting
 				case STMT_NO_CONST_VALUE_TABLE:
 					tableValuesCount = 1;
 					break;
+				case PATTERN_ASSIGN_VARIABLE_TABLE:
+					tableValuesCount = 1;
+					break;
+				case PATTERN_WHILE_VARIABLE_TABLE:
+					tableValuesCount = 1;
+					break;
+				case PATTERN_IF_VARIABLE_TABLE:
+					tableValuesCount = 1;
+					break;
 				}
 				data.clear();
 				for (int j = 0; j < tableValuesCount; j++) {
@@ -169,6 +178,15 @@ namespace UnitTesting
 					tableValuesCount = 1;
 					break;
 				case STMT_NO_CONST_VALUE_TABLE:
+					tableValuesCount = 1;
+					break;
+				case PATTERN_ASSIGN_VARIABLE_TABLE:
+					tableValuesCount = 1;
+					break;
+				case PATTERN_WHILE_VARIABLE_TABLE:
+					tableValuesCount = 1;
+					break;
+				case PATTERN_IF_VARIABLE_TABLE:
 					tableValuesCount = 1;
 					break;
 				}
@@ -585,6 +603,69 @@ namespace UnitTesting
 			data = { { 5,5 },{ 7,7 } };
 			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(4) == data));
 
+		}
+
+		TEST_METHOD(PKBGetPatternOneSyn)
+		{
+			PKB pkb;
+
+			std::vector<std::vector<int>> data;
+			std::vector<std::vector<int>> result;
+			pkb.insertToTable(STATEMENT_TABLE, 1, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 1,2 },{},{},{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 4, { { 2,3,4 },{},{},{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 5, { { 3 },{},{},{ 4 } });
+			pkb.insertToTable(STATEMENT_TABLE, 6, { { 4,5 },{},{},{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 7, { { 5 },{},{},{ 4 } });
+			pkb.insertToTable(STATEMENT_TABLE, 8, { { 2 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 9, { { 1 },{},{},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 10, { { 6 },{ 1,2 },{ 3 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 11, { { 7 },{ 4,5 },{ 6 },{ 1 } });
+
+			data = { {1}, {2}, {8}, {9}, {10}, {11} };
+			result = pkb.getPatternOneSyn(ASSIGNMENT_TYPE);
+			std::sort(result.begin(), result.end());
+			Assert::AreEqual(true, (result == data));
+			data = { {3}, {6} };
+			result = pkb.getPatternOneSyn(WHILE_TYPE);
+			std::sort(result.begin(), result.end());
+			Assert::AreEqual(true, (result == data));
+			data = { {4} };
+			result = pkb.getPatternOneSyn(IF_TYPE);
+			std::sort(result.begin(), result.end());
+			Assert::AreEqual(true, (result == data));
+		}
+
+		TEST_METHOD(PKBGetPatternTwoSyn)
+		{
+			PKB pkb;
+
+			std::vector<std::vector<int>> data;
+			std::vector<std::vector<int>> result;
+			pkb.insertToTable(PATTERN_ASSIGN_VARIABLE_TABLE, 1, { {6} });
+			pkb.insertToTable(PATTERN_ASSIGN_VARIABLE_TABLE, 2, { { 6 } });
+			pkb.insertToTable(PATTERN_ASSIGN_VARIABLE_TABLE, 8, { { 6 } });
+			pkb.insertToTable(PATTERN_ASSIGN_VARIABLE_TABLE, 9, { { 6 } });
+			pkb.insertToTable(PATTERN_ASSIGN_VARIABLE_TABLE, 10, { { 6 } });
+			pkb.insertToTable(PATTERN_ASSIGN_VARIABLE_TABLE, 11, { { 6 } });
+			pkb.insertToTable(PATTERN_WHILE_VARIABLE_TABLE, 3, { { 3, 6 } });
+			pkb.insertToTable(PATTERN_WHILE_VARIABLE_TABLE, 6, { { 6 } });
+			pkb.insertToTable(PATTERN_IF_VARIABLE_TABLE, 4, { { 3 } });
+			pkb.insertToTable(PATTERN_IF_VARIABLE_TABLE, 4, { { 6 } });
+
+			data = { { 1, 6 },{ 2, 6 },{ 8, 6 },{ 9, 6 },{ 10, 6 },{ 11, 6 } };
+			result = pkb.getPatternTwoSyn(ASSIGNMENT_TYPE);
+			std::sort(result.begin(), result.end());
+			Assert::AreEqual(true, (result == data));
+			data = { { 3, 3  },{ 3, 6 },{ 6, 6 } };
+			result = pkb.getPatternTwoSyn(WHILE_TYPE);
+			std::sort(result.begin(), result.end());
+			Assert::AreEqual(true, (result == data));
+			data = { { 4,3 }, {4,6} };
+			result = pkb.getPatternTwoSyn(IF_TYPE);
+			std::sort(result.begin(), result.end());
+			Assert::AreEqual(true, (result == data));
 		}
 
 		TEST_METHOD(PKBFollows)
