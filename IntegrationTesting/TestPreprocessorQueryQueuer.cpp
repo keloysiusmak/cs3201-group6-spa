@@ -27,6 +27,9 @@ namespace PreprocessorEvaluatorIntegrationTesting
 				string query3 = "assign a; stmt s; Select s such that Follows*(a, 2)";
 				string query4 = "stmt s; variable v; Select s such that Modifies(s, v)";
 				string query5 = "assign a; while w; Select a such that Follows(w, a) pattern a(\"x\", _)";
+				string query6 = "assign a; while w; if ifs; Select a such that Follows(w, a) and Follows(a, ifs)";
+				string query7 = "assign a; while w; if ifs; Select a such that Follows(w, a) or Follows(a, ifs)";
+				string query8 = "assign a; while w; if ifs; Select a such that (Follows(w, 1) or Follows(a, 5)) and (Follows(if, 2) or Follows(2, 3)";
 
 				QueryObject expectedQo1;
 				expectedQo1.insertSelectStmt(ASSIGN, "a", NONE);
@@ -47,6 +50,24 @@ namespace PreprocessorEvaluatorIntegrationTesting
 				expectedQo5.insertSelectStmt(ASSIGN, "a", NONE);
 				expectedQo5.insertClause(Follows, WHILE, "w", ASSIGN, "a");
 				expectedQo5.insertPattern(ASSIGN, "a", VAR_IDENT, "x", ALL, "_");
+
+				QueryObject expectedQo6;
+				expectedQo6.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo6.insertClause(Follows, WHILE, "w", ASSIGN, "a");
+				expectedQo6.insertClause(Follows, ASSIGN, "a", IF, "ifs");
+
+				QueryObject expectedQo7a;
+				expectedQo7a.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo7a.insertClause(Follows, WHILE, "w", ASSIGN, "a");
+
+				QueryObject expectedQo7b;
+				expectedQo7b.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo7b.insertClause(Follows, ASSIGN, "a", IF, "ifs");
+
+				QueryObject expectedQo8a;
+				expectedQo8a.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo8a.insertClause(Follows, WHILE, "w", ASSIGN, "a");
+				expectedQo8a.insertClause(Follows, WHILE, "w", ASSIGN, "a");
 
 				QueryContent qc;
 
@@ -85,6 +106,20 @@ namespace PreprocessorEvaluatorIntegrationTesting
 				q = queryQueuer.parseQueryContent();
 				bool result5 = compareQueryObjectProperties(expectedQo5, q[0]); 
 				Assert::AreEqual(true, result5);
+
+				preprocessor.preprocessQuery(query6);
+				qc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(qc);
+				q = queryQueuer.parseQueryContent();
+				bool result6 = compareQueryObjectProperties(expectedQo6, q[0]);
+				Assert::AreEqual(true, result6);
+
+				preprocessor.preprocessQuery(query7);
+				qc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(qc);
+				q = queryQueuer.parseQueryContent();
+				bool result7 = compareQueryObjectProperties(expectedQo7a, q[0]) && compareQueryObjectProperties(expectedQo7b, q[1]);
+				Assert::AreEqual(true, result7);
 			}
 
 			//This test method will take in an invalid test query
