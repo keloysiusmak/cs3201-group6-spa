@@ -19,6 +19,9 @@ enum TABLES {
 	PROC_NAME_CALL_NAME_TABLE,
 	VAR_NAME_CALL_NAME_TABLE,
 	STMT_NO_CONST_VALUE_TABLE,
+	PATTERN_ASSIGN_VARIABLE_TABLE,
+	PATTERN_WHILE_VARIABLE_TABLE,
+	PATTERN_IF_VARIABLE_TABLE,
 	PATTERN_TABLE,
 	PROC_TABLE,
 	VAR_TABLE
@@ -31,6 +34,19 @@ enum TYPES {
 	IF_TYPE,
 	CALL_TYPE
 };
+
+enum ParamType {
+	ASSIGN, STMT, STMTLST, WHILE, PROG_LINE, IF, CALL, //Synonym with statement number
+	VARIABLE, CONSTANT, //Synonym
+	PROCEDURE, //Synonym
+	INTEGER,  //Statement Number
+	EXPR, EXPR_EXACT, //For pattern assign (RHS)
+	IDENT, //IDENT refers to "x"
+	SYNONYM, //Synonym is the general term
+	BOOLEAN, //return true/false
+	PROC_IDENT, VAR_IDENT, //differentiate IDENT
+	ALL
+}; // ALL represents _
 
 enum Relations {
 	RelationFollows,
@@ -47,5 +63,8 @@ enum Relations {
 	RelationAffectsStar,
 	RelationNext,
 	RelationNextStar,
+	RelationWithName,
+	RelationWithConst,
+	RelationPattern,
 	RELATIONS_SIZE
 };

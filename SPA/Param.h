@@ -1,22 +1,9 @@
 #pragma once
 
 #include <string>
+#include "../SPA/Constants.h"
 
 using namespace std;
-
-enum ParamType {
-	ASSIGN, STMT, STMTLST, WHILE, PROG_LINE, IF, CALL, //Synonym with statement number
-	VARIABLE, CONSTANT, //Synonym
-	PROCEDURE, //Synonym
-	INTEGER,  //Statement Number
-	EXPR, EXPR_EXACT, //For pattern assign (RHS)
-	IDENT, //IDENT refers to "x"
-	SYNONYM, //Synonym is the general term
-	BOOLEAN, //return true/false
-	PROC_IDENT, VAR_IDENT, //differentiate IDENT
-	ALL
-}; // ALL represents _
-
 
 /* Attribute type to account for with statements */
 enum AttrType {

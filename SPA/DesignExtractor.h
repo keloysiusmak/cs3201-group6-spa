@@ -15,6 +15,12 @@ private:
 	void extractCallStatements(PKB &);
 	void extractUsesModifies(PKB &);
 
+	void precomputeWithProcNameVarName(PKB&);
+	void precomputeWithProcNameCallProcName(PKB&);
+	void precomputeWithVarNameCallProcName(PKB&);
+	void precomputeWithStmtNoConstValue(PKB&);
+	void precomputePatternTwoSyn(PKB&);
+
 	void countFollows(PKB &);
 	void countFollowsStar(PKB &);
 	void countUsesProcedure(PKB &);
@@ -34,5 +40,7 @@ private:
 	void countWithProcNameCallProcName(PKB&);
 	void countWithVarNameCallProcName(PKB&);
 	void countWithStmtNoConstValue(PKB&);
+
+	void countPattern(PKB&);
 };
 

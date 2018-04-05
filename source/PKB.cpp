@@ -69,6 +69,15 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 	case STMT_NO_CONST_VALUE_TABLE:
 		tableValuesCount = 1;
 		break;
+	case PATTERN_ASSIGN_VARIABLE_TABLE:
+		tableValuesCount = 1;
+		break;
+	case PATTERN_WHILE_VARIABLE_TABLE:
+		tableValuesCount = 1;
+		break;
+	case PATTERN_IF_VARIABLE_TABLE:
+		tableValuesCount = 1;
+		break;
 	default:
 		return false;
 	}
@@ -404,6 +413,38 @@ std::vector<std::vector<int>> PKB::getWithStmtNoConstValue(int type) {
 		data = filtered;
 	}
 	std::sort(data.begin(), data.end());
+	return data;
+}
+std::vector<std::vector<int>> PKB::getPatternOneSyn(TYPES t) {
+	std::vector<std::vector<int>> data = PKB::getAllStatementsWithType(t);
+	return data;
+}
+std::vector<std::vector<int>> PKB::getPatternTwoSyn(TYPES t) {
+	std::vector<std::vector<int>> data;
+	if (t == ASSIGNMENT_TYPE) {
+		unordered_map<int, std::vector<std::vector<int>>> result = tables[PATTERN_ASSIGN_VARIABLE_TABLE - 1];
+		for (auto it = result.begin(); it != result.end(); ++it) {
+			for (int i = 0; i < it->second[0].size(); i++) {
+				data.push_back({ it->first, it->second[0][i] });
+			}
+		}
+	}
+	else if (t == WHILE_TYPE) {
+		unordered_map<int, std::vector<std::vector<int>>> result = tables[PATTERN_WHILE_VARIABLE_TABLE - 1];
+		for (auto it = result.begin(); it != result.end(); ++it) {
+			for (int i = 0; i < it->second[0].size(); i++) {
+				data.push_back({ it->first, it->second[0][i] });
+			}
+		}
+	}
+	else if (t == IF_TYPE) {
+		unordered_map<int, std::vector<std::vector<int>>> result = tables[PATTERN_IF_VARIABLE_TABLE - 1];
+		for (auto it = result.begin(); it != result.end(); ++it) {
+			for (int i = 0; i < it->second[0].size(); i++) {
+				data.push_back({ it->first, it->second[0][i] });
+			}
+		}
+	}
 	return data;
 }
 
