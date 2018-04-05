@@ -29,7 +29,7 @@ namespace UnitTesting
 			QueryObject expectedQo1;
 			expectedQo1.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
 			QueryObject expectedQo2;
-			expectedQo2.insertClause(Modifies, VARIABLE, "v", IDENT, "y");
+			expectedQo2.insertClause(Uses, VARIABLE, "v", IDENT, "y");
 			Assert::AreEqual(true, compareQueryObjectProperties(result[0], expectedQo1));
 			Assert::AreEqual(true, compareQueryObjectProperties(result[1], expectedQo2));
 
