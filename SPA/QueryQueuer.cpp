@@ -85,8 +85,10 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 				}
 			}
 		}
-		ClauseNode newClause1 = temp[0];
-		clauses.push_back(newClause1);
+		if (temp.size() > 0) {
+			ClauseNode newClause1 = temp[0];
+			clauses.push_back(newClause1);
+		}
 	}
 
 	clausesNodes = qc.getPattern();
@@ -140,8 +142,10 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 				}
 			}
 		}
-		ClauseNode newClause1 = temp[0];
-		pattern.push_back(newClause1);
+		if (temp.size() > 0) {
+			ClauseNode newClause1 = temp[0];
+			pattern.push_back(newClause1);
+		}
 	}
 
 	clausesNodes = qc.getWithClauses();
@@ -195,9 +199,10 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 				}
 			}
 		}
-		ClauseNode newClause1 = temp[0];
-		withClauses.push_back(newClause1);
-
+		if (temp.size() > 0) {
+			ClauseNode newClause1 = temp[0];
+			withClauses.push_back(newClause1);
+		}
 	}
 
 	std::vector<QueryObject> queryObjects;
