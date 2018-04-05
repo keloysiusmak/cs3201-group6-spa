@@ -186,6 +186,43 @@ namespace DesignExtractorTest
 			newResult = { { 3,4,6,7,11 },{ 1,3 } };
 			Assert::AreEqual(true, (newResult == pkb.getFromTable(MODIFIES_TABLE, 6)));
 		}
+		TEST_METHOD(DesignExtractorPrecomputeWithProcNameVarName)
+		{
+			de.extract(pkb);
+			std::vector<std::vector<int>> data = { { 1,6 },{ 2,5 },{ 3,4 } };
+			Assert::AreEqual(true, (pkb.getWithProcNameVarName() == data));
+		}
+		TEST_METHOD(DesignExtractorPrecomputeWithProcNameCallProcName)
+		{
+			de.extract(pkb);
+			std::vector<std::vector<int>> data = { { 2,5 },{ 3,7 } };
+			Assert::AreEqual(true, (pkb.getWithProcNameCallProcName() == data));
+		}
+		TEST_METHOD(DesignExtractorPrecomputeWithVarNameCallProcName)
+		{
+			de.extract(pkb);
+			std::vector<std::vector<int>> data = { { 5,5 },{ 4,7 } };
+			Assert::AreEqual(true, (pkb.getWithVarNameCallProcName() == data));
+		}
+		TEST_METHOD(DesignExtractorPrecomputeWithStmtNoConstValue)
+		{
+			de.extract(pkb);
+			vector<vector<int>> a = pkb.getWithStmtNoConstValue(0);
+			std::vector<std::vector<int>> data = { { 1,1 },{ 2,2 },{ 3,3 },{ 4,4 },{ 5,5 },{ 6,6 },{ 7, 7 },{ 8,8 },{ 9,9 },{ 10,10 },{ 11, 11 } };
+			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(0) == data));
+
+			data = { { 1,1 },{ 2,2 },{ 8,8 },{ 9,9 },{ 10,10 },{ 11, 11 } };
+			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(1) == data));
+
+			data = { { 3,3 },{ 6,6 } };
+			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(2) == data));
+
+			data = { { 4,4 } };
+			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(3) == data));
+
+			data = { { 5,5 },{ 7,7 } };
+			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(4) == data));
+		}
 		TEST_METHOD(DesignExtractorCountFollows)
 		{
 			de.extract(pkb);
@@ -355,42 +392,38 @@ namespace DesignExtractorTest
 			Assert::AreEqual(4, pkb.getFromResultTable(RelationAffectsStar, 0, 8));
 			Assert::AreEqual(1, pkb.getFromResultTable(RelationAffectsStar, 0, 10));
 		}
-		TEST_METHOD(DesignExtractorPrecomputeWithProcNameVarName)
+		TEST_METHOD(DesignExtractorCountWithProcNameVarName)
 		{
 			de.extract(pkb);
-			std::vector<std::vector<int>> data = { {1,6}, {2,5}, { 3,4 } };
-			Assert::AreEqual(true, (pkb.getWithProcNameVarName() == data));
+			Assert::AreEqual(3, pkb.getFromResultTable(RelationWithName, PROCEDURE, VARIABLE));
 		}
-		TEST_METHOD(DesignExtractorPrecomputeWithProcNameCallProcName)
+		TEST_METHOD(DesignExtractorCountWithProcNameCallProcName)
 		{
 			de.extract(pkb);
-			std::vector<std::vector<int>> data = { { 2,5 },{ 3,7 } };
-			Assert::AreEqual(true, (pkb.getWithProcNameCallProcName() == data));
+			Assert::AreEqual(2, pkb.getFromResultTable(RelationWithName, PROCEDURE, CALL));
 		}
-		TEST_METHOD(DesignExtractorPrecomputeWithVarNameCallProcName)
+		TEST_METHOD(DesignExtractorCountWithVarNameCallProcName)
 		{
 			de.extract(pkb);
-			std::vector<std::vector<int>> data = { { 5,5 },{ 4,7 } };
-			Assert::AreEqual(true, (pkb.getWithVarNameCallProcName() == data));
+			Assert::AreEqual(2, pkb.getFromResultTable(RelationWithName, VARIABLE, CALL));
 		}
-		TEST_METHOD(DesignExtractorPrecomputeWithStmtNoConstValue)
+		TEST_METHOD(DesignExtractorCountWithStmtNoConstValue)
 		{
 			de.extract(pkb);
-			vector<vector<int>> a = pkb.getWithStmtNoConstValue(0);
-			std::vector<std::vector<int>> data = { { 1,1 },{ 2,2 },{ 3,3 },{ 4,4 },{ 5,5 },{ 6,6 },{ 7, 7 },{ 8,8 },{ 9,9 },{ 10,10 },{11, 11} };
-			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(0) == data));
-
-			data = { { 1,1 },{ 2,2 },{ 8,8 },{ 9,9 },{ 10,10 },{ 11, 11 } };
-			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(1) == data));
-
-			data = { {3,3 },{ 6,6 } };
-			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(2) == data));
-
-			data = { { 4,4 } };
-			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(3) == data));
-
-			data = { { 5,5 }, {7,7} };
-			Assert::AreEqual(true, (pkb.getWithStmtNoConstValue(4) == data));
+			Assert::AreEqual(11, pkb.getFromResultTable(RelationWithConst, 0, 0));
+			Assert::AreEqual(6, pkb.getFromResultTable(RelationWithConst, ASSIGNMENT_TYPE, 0));
+			Assert::AreEqual(2, pkb.getFromResultTable(RelationWithConst, WHILE_TYPE, 0));
+			Assert::AreEqual(1, pkb.getFromResultTable(RelationWithConst, IF_TYPE, 0));
+			Assert::AreEqual(2, pkb.getFromResultTable(RelationWithConst, CALL_TYPE, 0));
+		}
+		TEST_METHOD(DesignExtractorCountPattern)
+		{
+			Assert::AreEqual(6, pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, 0));
+			Assert::AreEqual(2, pkb.getFromResultTable(RelationPattern, WHILE_TYPE, 0));
+			Assert::AreEqual(1, pkb.getFromResultTable(RelationPattern, IF_TYPE, 0));
+			Assert::AreEqual(6, pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, VARIABLE));
+			Assert::AreEqual(2, pkb.getFromResultTable(RelationPattern, WHILE_TYPE, VARIABLE));
+			Assert::AreEqual(1, pkb.getFromResultTable(RelationPattern, IF_TYPE, VARIABLE));
 		}
 	};
 }

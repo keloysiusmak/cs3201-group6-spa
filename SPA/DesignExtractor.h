@@ -34,5 +34,12 @@ private:
 	void countAffectsStar(PKB &);
 	void countNext(PKB &);
 	void countNextStar(PKB &);
+
+	void countWithProcNameVarName(PKB&);
+	void countWithProcNameCallProcName(PKB&);
+	void countWithVarNameCallProcName(PKB&);
+	void countWithStmtNoConstValue(PKB&);
+
+	void countPattern(PKB&);
 };
 
