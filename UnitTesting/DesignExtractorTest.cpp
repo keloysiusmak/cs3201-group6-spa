@@ -355,25 +355,25 @@ namespace DesignExtractorTest
 			Assert::AreEqual(4, pkb.getFromResultTable(RelationAffectsStar, 0, 8));
 			Assert::AreEqual(1, pkb.getFromResultTable(RelationAffectsStar, 0, 10));
 		}
-		TEST_METHOD(DesignExtractorCountWithProcNameVarName)
+		TEST_METHOD(DesignExtractorPrecomputeWithProcNameVarName)
 		{
 			de.extract(pkb);
 			std::vector<std::vector<int>> data = { {1,6}, {2,5}, { 3,4 } };
 			Assert::AreEqual(true, (pkb.getWithProcNameVarName() == data));
 		}
-		TEST_METHOD(DesignExtractorCountWithProcNameCallProcName)
+		TEST_METHOD(DesignExtractorPrecomputeWithProcNameCallProcName)
 		{
 			de.extract(pkb);
 			std::vector<std::vector<int>> data = { { 2,5 },{ 3,7 } };
 			Assert::AreEqual(true, (pkb.getWithProcNameCallProcName() == data));
 		}
-		TEST_METHOD(DesignExtractorCountWithVarNameCallProcName)
+		TEST_METHOD(DesignExtractorPrecomputeWithVarNameCallProcName)
 		{
 			de.extract(pkb);
 			std::vector<std::vector<int>> data = { { 5,5 },{ 4,7 } };
 			Assert::AreEqual(true, (pkb.getWithVarNameCallProcName() == data));
 		}
-		TEST_METHOD(DesignExtractorCountWithStmtNoConstValue)
+		TEST_METHOD(DesignExtractorPrecomputeWithStmtNoConstValue)
 		{
 			de.extract(pkb);
 			vector<vector<int>> a = pkb.getWithStmtNoConstValue(0);

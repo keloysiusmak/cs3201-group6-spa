@@ -30,10 +30,10 @@ bool DesignExtractor::extract(PKB &pkb) {
 	countNext(pkb);
 	countNextStar(pkb);
 
-	countWithProcNameVarName(pkb);
-	countWithProcNameCallProcName(pkb);
-	countWithVarNameCallProcName(pkb);
-	countWithStmtNoConstValue(pkb);
+	precomputeWithProcNameVarName(pkb);
+	precomputeWithProcNameCallProcName(pkb);
+	precomputeWithVarNameCallProcName(pkb);
+	precomputeWithStmtNoConstValue(pkb);
 	return true;
 }
 
@@ -489,7 +489,7 @@ void DesignExtractor::countAffectsStar(PKB &pkb) {
 	pkb.insertToResultTable(RelationAffectsStar, 0, 0, totalRowSize);
 }
 
-void DesignExtractor::countWithProcNameVarName(PKB &pkb) {
+void DesignExtractor::precomputeWithProcNameVarName(PKB &pkb) {
 	std::vector<std::vector<int>> procs = pkb.getAllProcedures();
 	for (int i = 0; i < procs.size(); i++) {
 		string procName = pkb.getProcedureName(procs[i][0]);
@@ -500,7 +500,7 @@ void DesignExtractor::countWithProcNameVarName(PKB &pkb) {
 	}
 }
 
-void DesignExtractor::countWithProcNameCallProcName(PKB &pkb) {
+void DesignExtractor::precomputeWithProcNameCallProcName(PKB &pkb) {
 	std::vector<std::vector<int>> calls = pkb.getAllStatementsWithType(4);
 	for (int i = 0; i < calls.size(); i++) {
 		int procId = pkb.getProcedureCalledByCallStatement(calls[i][0])[0][0];
@@ -510,7 +510,7 @@ void DesignExtractor::countWithProcNameCallProcName(PKB &pkb) {
 	}
 }
 
-void DesignExtractor::countWithVarNameCallProcName(PKB &pkb) {
+void DesignExtractor::precomputeWithVarNameCallProcName(PKB &pkb) {
 	std::vector<std::vector<int>> calls = pkb.getAllStatementsWithType(4);
 	for (int i = 0; i < calls.size(); i++) {
 		int procId = pkb.getProcedureCalledByCallStatement(calls[i][0])[0][0];
@@ -521,7 +521,7 @@ void DesignExtractor::countWithVarNameCallProcName(PKB &pkb) {
 	}
 }
 
-void DesignExtractor::countWithStmtNoConstValue(PKB &pkb) {
+void DesignExtractor::precomputeWithStmtNoConstValue(PKB &pkb) {
 	std::vector<std::vector<int>> consts = pkb.getAllConstants();
 	int stmtSize = pkb.getAllStatements().size();
 	for (int i = 0; i < consts.size(); i++) {

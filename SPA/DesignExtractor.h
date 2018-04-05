@@ -15,6 +15,11 @@ private:
 	void extractCallStatements(PKB &);
 	void extractUsesModifies(PKB &);
 
+	void precomputeWithProcNameVarName(PKB&);
+	void precomputeWithProcNameCallProcName(PKB&);
+	void precomputeWithVarNameCallProcName(PKB&);
+	void precomputeWithStmtNoConstValue(PKB&);
+
 	void countFollows(PKB &);
 	void countFollowsStar(PKB &);
 	void countUsesProcedure(PKB &);
@@ -29,10 +34,5 @@ private:
 	void countAffectsStar(PKB &);
 	void countNext(PKB &);
 	void countNextStar(PKB &);
-
-	void countWithProcNameVarName(PKB&);
-	void countWithProcNameCallProcName(PKB&);
-	void countWithVarNameCallProcName(PKB&);
-	void countWithStmtNoConstValue(PKB&);
 };
 
