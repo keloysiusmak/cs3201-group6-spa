@@ -105,27 +105,27 @@ void EvaluatorHelper::sortTable(Param &p, IntermediateTable &iTable) {
 
 /* Merge sort for nested vector, specify index for comparison */
 vector<vector<int>> EvaluatorHelper::mergeSortResults(int index, vector<vector<int>> &results) {
-	if (left >= right) { // Single element do nothing
+	if (results.size() < 2) { // Single element do nothing
 		return results;
 	} else {
 		int resultsSize = results.size();
 		vector<vector<int>> leftArr;
 		vector<vector<int>> rightArr;
 		copy(results.begin(), results.begin() + (resultsSize / 2), back_inserter(leftArr)); // Copy first to middle
-		copy(results.begin() + (resultsSize / 2) + 1, results.end(), back_inserter(rightArr)); // Copy middle + 1 to last
-		mergeSortResults(index, results);
-		mergeSortResults(index, results);
+		copy(results.begin() + (resultsSize / 2), results.end(), back_inserter(rightArr)); // Copy middle + 1 to last
+		leftArr = mergeSortResults(index, leftArr);
+		rightArr = mergeSortResults(index, rightArr);
 
 		vector<vector<int>> mergedResults;
 		int leftIndex = 0;
-		int rightIndex = resultsSize/2 + 1;
-		while (leftIndex <= resultsSize / 2 && rightIndex <= resultsSize) {
-			if (leftIndex > resultsSize / 2) { // Left array exhausted
+		int rightIndex = 0;
+		while (leftIndex < leftArr.size() || rightIndex < rightArr.size()) {
+			if (leftIndex >= leftArr.size()) { // Left array exhausted
 				mergedResults.push_back(rightArr[rightIndex]);
 				rightIndex++; 
 				continue;
 			}
-			if (rightIndex > resultsSize) { // Right array exhausted
+			if (rightIndex >= rightArr.size()) { // Right array exhausted
 				mergedResults.push_back(leftArr[leftIndex]);
 				leftIndex++; 
 				continue;
