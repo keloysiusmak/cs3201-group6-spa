@@ -8,12 +8,32 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-namespace UnitTesting
+namespace QueryQueuerTesting
 {
 	TEST_CLASS(QueryQueuerTest)
 	{
 	public:
 		
+		TEST_METHOD(QueryQueuerIsValidQuery)
+		{
+			QueryQueuer qq;
+
+			QueryContent qc;
+			qq.setQueryContent(qc);
+			Assert::AreEqual(true, qq.isValidQuery());
+			qq.setInvalidQuery("message");
+			Assert::AreEqual(false, qq.isValidQuery());
+		}
+
+		TEST_METHOD(QueryQueuerGetQueryContent)
+		{
+			QueryQueuer qq;
+
+			QueryContent qc;
+			qq.setQueryContent(qc);
+			Assert::AreEqual(true, compareQueryContentProperties(qc, qq.getQueryContent()));
+		}
+
 		TEST_METHOD(QueryQueuerParseQueryContent)
 		{
 			PKB pkb;
@@ -249,8 +269,7 @@ namespace UnitTesting
 			}
 			return true;
 		}
-		bool compareQueryObjectProperties(QueryObject qo1, QueryObject qo2) {
-
+		bool compareParams(QueryObject qo1, QueryObject qo2) {
 			bool isSameSelectStatement = qo1.getSelectStatements().size() == qo2.getSelectStatements().size();
 
 			if (isSameSelectStatement) {
@@ -258,13 +277,22 @@ namespace UnitTesting
 					Param s1 = qo1.getSelectStatements().at(i);
 					Param s2 = qo1.getSelectStatements().at(i);
 
-					if (s1.type != s2.type ||
-						s1.value.compare(s2.value) != 0 ||
-						s1.attribute != s2.attribute) {
-						isSameSelectStatement = false;
-					}
+					isSameSelectStatement = compareParam(s1, s2);
 				}
 			}
+			return isSameSelectStatement;
+		}
+		bool compareParam(Param s1, Param s2) {
+			if (s1.type != s2.type ||
+				s1.value.compare(s2.value) != 0 ||
+				s1.attribute != s2.attribute) {
+				return false;
+			}
+			return true;
+		}
+		bool compareQueryObjectProperties(QueryObject qo1, QueryObject qo2) {
+
+			bool isSameSelectStatement = compareParams(qo1, qo2);
 
 			bool isSameClauses = compareClauses(qo1, qo2);
 
@@ -273,6 +301,46 @@ namespace UnitTesting
 			bool isSameWithClauses = compareWithClauses(qo1, qo2);
 
 			return isSameSelectStatement && isSameClauses && isSamePatterns && isSameWithClauses;
+		}
+		bool compareQueryContentProperties(QueryContent qc1, QueryContent qc2) {
+			if (qc1.getSelect().size() != qc2.getSelect().size()) return false;
+			if (qc1.getClauses().size() != qc2.getClauses().size()) return false;
+			if (qc1.getPattern().size() != qc2.getPattern().size()) return false;
+			if (qc1.getWithClauses().size() != qc2.getWithClauses().size()) return false;
+			vector<Param> pr1 = qc1.getSelect();
+			vector<Param> pr2 = qc2.getSelect();
+			for (int i = 0; i < pr1.size(); i++) {
+				if (!compareParam(pr1[i], pr2[i])) return false;
+			}
+			vector<ClauseNode> c1 = qc1.getClauses();
+			vector<ClauseNode> c2 = qc2.getClauses();
+			for (int i = 0; i < c1.size(); i++) {
+				if (!compareClauseNode(c1[i], c2[i])) return false;
+			}
+			vector<ClauseNode> p1 = qc1.getPattern();
+			vector<ClauseNode> p2 = qc2.getPattern();
+			for (int i = 0; i < p1.size(); i++) {
+				if (!compareClauseNode(p1[i], p2[i])) return false;
+			}
+			vector<ClauseNode> w1 = qc1.getWithClauses();
+			vector<ClauseNode> w2 = qc2.getWithClauses();
+			for (int i = 0; i < w1.size(); i++) {
+				if (!compareClauseNode(w1[i], w2[i])) return false;
+			}
+
+			return true;
+		}
+		bool compareClauseNode(ClauseNode cn1, ClauseNode cn2) {
+			if (cn1.getChildren().size() != cn2.getChildren().size()) return false;
+			for (int i = 0; i < cn1.getChildren().size(); i++) {
+				if (!compareClauseNode(cn1.getChildren()[i], cn2.getChildren()[i])) return false;
+			}
+			if (cn1.getClauseNodeType() != cn2.getClauseNodeType()) return false;
+			if (!compareClause(cn1.getClause(), cn2.getClause())) return false;
+			if (!compareClause(cn1.getPattern(), cn2.getPattern())) return false;
+			if (!compareClause(cn1.getWithClause(), cn2.getWithClause())) return false;
+
+			return true;
 		}
 
 
