@@ -13,10 +13,11 @@ private:
 	vector<ClauseNode> _patterns;
 	vector<ClauseNode> _withClauses;
 public:
-	void setSelect(vector<Param>);
-	void insertClauses(ClauseNode);
-	void insertPatterns(ClauseNode);
-	void insertWithClauses(ClauseNode);
+	void insertSelect(ParamType, string, AttrType);
+	void insertClause(RelRef, ParamType, string, ParamType, string);
+	void insertPattern(ParamType, string, ParamType, string, ParamType, string);
+	void insertWithClause(ParamType, string, AttrType, ParamType, string, AttrType);
+	void insertOperator(CLAUSE_NODE_TYPE, OPERATORS);
 	vector<Param> getSelect();
 	vector<ClauseNode> getClauses();
 	vector<ClauseNode> getPattern();

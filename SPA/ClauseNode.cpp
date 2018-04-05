@@ -6,18 +6,29 @@ ClauseNode::ClauseNode()
 
 }
 
-ClauseNode::ClauseNode(Clause clause)
+ClauseNode::ClauseNode(OPERATORS op)
 {
+	t = OPERATOR;
+	o = op;
+}
+
+void ClauseNode::setClauseNode(Clause clause) {
+	t = CLAUSE;
 	c = clause;
 }
 
-ClauseNode::ClauseNode(Pattern pattern)
-{
+void ClauseNode::setPatternNode(Pattern pattern) {
+	t = PATTERN;
 	p = pattern;
 }
 
-ClauseNode::ClauseNode(OPERATORS op)
-{
+void ClauseNode::setWithClauseNode(Clause withClause) {
+	t = WITHCLAUSE;
+	c = withClause;
+}
+
+void ClauseNode::setOperatorNode(OPERATORS op) {
+	t = OPERATOR;
 	o = op;
 }
 
