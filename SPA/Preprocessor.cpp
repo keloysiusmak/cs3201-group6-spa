@@ -84,15 +84,16 @@ const regex attrRefRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*[.](procName|varName|va
 const regex refRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([0-9]+$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$|[a-zA-Z]([a-zA-Z]|[0-9]|[#])*[.](procName|varName|value|stmt#)))");
 
 Preprocessor::Preprocessor() {
-
+	errorMessage = "";
+	qo = QueryObject();
 }
 
-Preprocessor::Preprocessor(QueryEvaluator &evaluator) {
-	_evaluator = &evaluator;
+string Preprocessor::getErrorMessage() {
+	return errorMessage;
 }
 
-void Preprocessor::setEvaluator(QueryEvaluator &evaluator) {
-	_evaluator = &evaluator;
+QueryObject Preprocessor::getQueryObject() {
+	return qo;
 }
 
 void Preprocessor::insertDeclarationToMap(string synonym, string declaration) {
@@ -123,11 +124,10 @@ void Preprocessor::preprocessQuery(string query) {
 		if (!isValidQuery(q)) {
 			//Check if select statement requires return BOOLEAN
 			if (checkBoolStmt(q)) {
-				(*_evaluator).setInvalidQuery(FALSE_WORD);
+				errorMessage = FALSE_WORD;
 			}
 			else {
-				// insert evaluator invalid query api here
-				(*_evaluator).setInvalidQuery(EMPTY_STRING);
+				errorMessage = EMPTY_STRING;
 			}
 		}
 		return;
@@ -139,11 +139,10 @@ void Preprocessor::preprocessQuery(string query) {
 		if (!validateDeclaration) {
 			//Check if select statement requires return BOOLEAN
 			if (checkBoolStmt(q)) {
-				(*_evaluator).setInvalidQuery(FALSE_WORD);
+				errorMessage = FALSE_WORD;
 			}
 			else {
-				// insert evaluator invalid query api here
-				(*_evaluator).setInvalidQuery(EMPTY_STRING);
+				errorMessage = EMPTY_STRING;
 			}
 			return;
 		}
@@ -157,11 +156,10 @@ void Preprocessor::preprocessQuery(string query) {
 	if (!validQuery) {
 		//Check if select statement requires return BOOLEAN
 		if (checkBoolStmt(q)) {
-			(*_evaluator).setInvalidQuery(FALSE_WORD);
+			errorMessage = FALSE_WORD;
 		}
 		else {
-			// insert evaluator invalid query api here
-			(*_evaluator).setInvalidQuery(EMPTY_STRING);
+			errorMessage = EMPTY_STRING;
 		}
 	}
 };
@@ -327,8 +325,7 @@ bool Preprocessor::isValidQuery(string query) {
 
 	//Check if there is any such that or pattern clause
 	if (queryArr.size() == endOfSelectStatement) {
-		// insert evaluator query api here
-		(*_evaluator).setQueryObject(queryObject);
+		qo = queryObject;
 		return true;
 	}
 
@@ -705,8 +702,7 @@ bool Preprocessor::isValidQuery(string query) {
 		}
 	}
 
-	// insert evaluator query api here
-	(*_evaluator).setQueryObject(queryObject);
+	qo = queryObject;
 	return true;
 };
 

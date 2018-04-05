@@ -45,9 +45,6 @@ public:
 	TEST_METHOD(PreprocessorIsValidQuery) {
 
 		Preprocessor preprocessor;
-		QueryEvaluator evaluatorStub;
-
-		preprocessor.setEvaluator(evaluatorStub);
 
 		//Populate the declarationMap
 		preprocessor.insertDeclarationToMap("a", "assign");
