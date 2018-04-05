@@ -442,7 +442,7 @@ bool Parser::procedure() {
 bool Parser::program() {
 	procedure();
 	if (nextToken == "procedure") {
-		procedure();
+		program();
 	}
 	else if (nextToken == "") {
 		// program is finished
