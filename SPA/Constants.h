@@ -1,25 +1,81 @@
 #pragma once
 
-const int STATEMENT_TABLE = 1;
-const int STATEMENT_LIST_TABLE = 2;
-const int PROC_INFO_TABLE = 3;
-const int USES_TABLE = 4;
-const int MODIFIES_TABLE = 5;
-const int CONST_TABLE = 6;
-const int CALLS_TABLE = 7;
-const int CALLS_STAR_TABLE = 8;
-const int CALLS_INVERSE_TABLE = 9;
-const int CALLS_STAR_INVERSE_TABLE = 10;
-const int CALL_STATEMENT_TABLE = 11;
-const int NEXT_TABLE = 12;
-const int NEXT_INVERSE_TABLE = 13;
-const int PATTERN_TABLE = 14;
-const int PROC_TABLE = 15;
-const int VAR_TABLE = 16;
+enum CLAUSE_NODE_TYPE {
+	CLAUSE,
+	PATTERN,
+	WITH_CLAUSE,
+	OPERATOR
+};
+enum OPERATORS {
+	OR,
+	AND
+};
 
+enum TABLES {
+	BLANK_TABLE,
+	STATEMENT_TABLE,
+	STATEMENT_LIST_TABLE,
+	PROC_INFO_TABLE,
+	USES_TABLE,
+	MODIFIES_TABLE,
+	CONST_TABLE,
+	CALLS_TABLE,
+	CALLS_STAR_TABLE,
+	CALLS_INVERSE_TABLE,
+	CALLS_STAR_INVERSE_TABLE,
+	CALL_STATEMENT_TABLE,
+	NEXT_TABLE,
+	NEXT_INVERSE_TABLE,
+	PROC_NAME_VAR_NAME_TABLE,
+	PROC_NAME_CALL_NAME_TABLE,
+	VAR_NAME_CALL_NAME_TABLE,
+	STMT_NO_CONST_VALUE_TABLE,
+	PATTERN_ASSIGN_VARIABLE_TABLE,
+	PATTERN_WHILE_VARIABLE_TABLE,
+	PATTERN_IF_VARIABLE_TABLE,
+	PATTERN_TABLE,
+	PROC_TABLE,
+	VAR_TABLE
+};
 
-const int ASSIGNMENT_TYPE = 1;
-const int WHILE_TYPE = 2;
-const int IF_TYPE = 3;
-const int CALL_TYPE = 4;
-const int PROCEDURE_PARENT_ID = 0;
+enum TYPES {
+	PROCEDURE_PARENT_ID,
+	ASSIGNMENT_TYPE,
+	WHILE_TYPE,
+	IF_TYPE,
+	CALL_TYPE
+};
+
+enum ParamType {
+	ASSIGN, STMT, STMTLST, WHILE, PROG_LINE, IF, CALL, //Synonym with statement number
+	VARIABLE, CONSTANT, //Synonym
+	PROCEDURE, //Synonym
+	INTEGER,  //Statement Number
+	EXPR, EXPR_EXACT, //For pattern assign (RHS)
+	IDENT, //IDENT refers to "x"
+	SYNONYM, //Synonym is the general term
+	BOOLEAN, //return true/false
+	PROC_IDENT, VAR_IDENT, //differentiate IDENT
+	ALL
+}; // ALL represents _
+
+enum Relations {
+	RelationFollows,
+	RelationFollowsStar,
+	RelationUsesProcedure,
+	RelationUsesStatement,
+	RelationModifiesProcedure,
+	RelationModifiesStatement,
+	RelationParent,
+	RelationParentStar,
+	RelationCalls,
+	RelationCallsStar,
+	RelationAffects,
+	RelationAffectsStar,
+	RelationNext,
+	RelationNextStar,
+	RelationWithName,
+	RelationWithConst,
+	RelationPattern,
+	RELATIONS_SIZE
+};

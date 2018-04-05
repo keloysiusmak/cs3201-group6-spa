@@ -1,8 +1,6 @@
 #pragma once
 
-#include "QueryObject.h"
-#include "QueryEvaluator.h"
-#include "QueryObject.h"
+#include "QueryContent.h"
 #include "Utils.h"
 #include "RelationshipTable.h"
 #include <string>
@@ -18,7 +16,9 @@ class Preprocessor {
 private:
 	unordered_map<string, string> declarationMap;
 	RelationshipTable relTable;
-	QueryEvaluator * _evaluator;
+	string errorMessage;
+	bool isErrorExist;
+	QueryContent qc;
 
 	int retrieveClauseArgType(string arg);
 	int retrieveExpressionType(string expression);
@@ -31,8 +31,6 @@ private:
 	bool checkBoolStmt(string query);
 public:
 	Preprocessor();
-	Preprocessor(QueryEvaluator &evaluator);
-	void setEvaluator(QueryEvaluator &evaluator);
 	void insertDeclarationToMap(string synonym, string declaration);
 	unordered_map<string, string> getDeclarationMap();
 	void preprocessQuery(string query);
@@ -46,9 +44,16 @@ public:
 	bool isValidAttrRef(string attrRef);
 	bool isValidAttrName(ParamType synonymType, string attrName);
 	bool isValidRef(string ref);
+	bool isValidElem(vector<string> queryArr, int endOfSelectStatement, QueryContent &qc);
+	bool isValidClause(vector<string> queryArr, int &clauseLength, int pos, QueryContent &qc);
+	bool isValidPattern(vector<string> queryArr, int &patternLength, int pos, QueryContent &qc);
+	bool isValidWithClause(vector<string> queryArr, int &withLength, int pos, QueryContent &qc);
 	bool isDeclarationSynonymExist(string synonym);
-	bool parseClauseArg(QueryObject &qo, string relType, string arg1, string arg2);
-	bool parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2);
-	bool parseWithClause(QueryObject &qo, string leftRef, string rightRef);
+	bool parseClauseArg(QueryContent &qc, string relType, string arg1, string arg2);
+	bool parsePattern(QueryContent &qc, ParamType entityType, string entity, string arg1, string arg2);
+	bool parseWithClause(QueryContent &qc, string leftRef, string rightRef);
 	bool isValidSuchThatKeyword(string query);
+	string getErrorMessage();
+	QueryContent getQueryContent();
+	bool getIsErrorExist();
 };

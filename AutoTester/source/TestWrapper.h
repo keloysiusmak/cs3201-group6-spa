@@ -7,11 +7,11 @@
 
 // include your other headers here
 #include "AbstractWrapper.h"
-#include "PKB.h"
-//#include "../SPA/Evaluator.h"
+#include "../SPA/PKB.h"
 #include "../SPA/Preprocessor.h"
 #include "../SPA/QueryEvaluator.h"
 #include "../SPA/DesignExtractor.h"
+#include "../SPA/QueryQueuer.h"
 #include "../SPA/Parser.h"
 
 class TestWrapper : public AbstractWrapper {
@@ -23,6 +23,7 @@ private:
 	Preprocessor preprocessor;
 	Parser parser;
 	DesignExtractor de;
+	QueryQueuer queryQueuer;
 	//=========================================================
 
  public:

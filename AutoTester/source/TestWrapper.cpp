@@ -14,6 +14,7 @@ TestWrapper::TestWrapper() {
 	// create any objects here as instance variables of this class
 	// as well as any initialization required for your spa program
 	//preprocessor.setEvaluator(evaluator);
+	queryQueuer.setEvaluator(evaluator);
 }
 
 // method for parsing the SIMPLE source
@@ -26,7 +27,18 @@ void TestWrapper::parse(std::string filename) {
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
-	preprocessor.setEvaluator(evaluator);
-	preprocessor.preprocessQuery(query);
-	results = evaluator.evaluateQuery();
+
+	preprocessor.preprocessQuery(query);	
+
+	//Invalid Query
+	if (preprocessor.getIsErrorExist()) {
+		string errorMessage = preprocessor.getErrorMessage();
+		queryQueuer.setInvalidQuery(errorMessage);
+	}
+	else {
+		QueryContent qc;
+		qc = preprocessor.getQueryContent();
+		queryQueuer.setQueryContent(qc);
+	}
+	results = queryQueuer.evaluateQueries();
 }
