@@ -92,6 +92,58 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 	addClauseParamToTable(clauseResults, iTable);
 };
 
+/* Sort table according to specified param */
+void EvaluatorHelper::sortTable(Param &p, IntermediateTable &iTable) {
+
+	int paramIndex = iTable.getParamIndex(p);
+	assert(paramIndex > -1); // Assert param exists in table
+	
+	/* Mergesort on table */
+	vector<vector<int>> mergedResults = mergeSortResults(paramIndex, iTable.resultsTable);
+	iTable.setResultsTable(mergedResults);
+};
+
+/* Merge sort for nested vector, specify index for comparison */
+vector<vector<int>> EvaluatorHelper::mergeSortResults(int index, vector<vector<int>> &results) {
+	if (results.size() < 2) { // Single element do nothing
+		return results;
+	} else {
+		int resultsSize = results.size();
+		vector<vector<int>> leftArr;
+		vector<vector<int>> rightArr;
+		copy(results.begin(), results.begin() + (resultsSize / 2), back_inserter(leftArr)); // Copy first to middle
+		copy(results.begin() + (resultsSize / 2), results.end(), back_inserter(rightArr)); // Copy middle + 1 to last
+		leftArr = mergeSortResults(index, leftArr);
+		rightArr = mergeSortResults(index, rightArr);
+
+		vector<vector<int>> mergedResults;
+		int leftIndex = 0;
+		int rightIndex = 0;
+		while (leftIndex < leftArr.size() || rightIndex < rightArr.size()) {
+			if (leftIndex >= leftArr.size()) { // Left array exhausted
+				mergedResults.push_back(rightArr[rightIndex]);
+				rightIndex++; 
+				continue;
+			}
+			if (rightIndex >= rightArr.size()) { // Right array exhausted
+				mergedResults.push_back(leftArr[leftIndex]);
+				leftIndex++; 
+				continue;
+			}
+			if (leftArr[leftIndex][index] <= rightArr[rightIndex][index]) { // Left element smaller
+				mergedResults.push_back(leftArr[leftIndex]);
+				leftIndex++;
+			}
+			else { // Right element smaller
+				mergedResults.push_back(rightArr[rightIndex]); 
+				rightIndex++;
+			}
+		}
+
+		return mergedResults;
+	}
+}
+
 /* Merge Intermediate Tables 1 and 2 */
 IntermediateTable EvaluatorHelper::mergeIntermediateTables(IntermediateTable &iTable1, IntermediateTable &iTable2) {
 

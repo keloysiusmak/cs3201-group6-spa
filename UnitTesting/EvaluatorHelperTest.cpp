@@ -60,7 +60,7 @@ namespace EvaluatorHelperTest {
 			Assert::AreEqual(true, table.tableParams.size() == 5);
 		}
 
-		TEST_METHOD(GetParamIntTest) {
+		TEST_METHOD(EvaluatorHelperGetParamIntTest) {
 			IntermediateTable table;
 
 			/* Generate params */
@@ -107,7 +107,7 @@ namespace EvaluatorHelperTest {
 
 			/* Final params and results table after merge */
 			vector<vector<int>> resultsAfterMerge = { {1, 2, 3, 4, 1}, {1, 2, 3, 4, 2}, {2, 3, 4, 5, 1},
-				{2, 3, 4, 5, 2}, {3, 4, 5, 6, 1}, {3, 4, 5, 6, 2}, {4, 5, 6, 7, 1}, {4, 5, 6, 7, 2}, };
+							  {2, 3, 4, 5, 2}, {3, 4, 5, 6, 1}, {3, 4, 5, 6, 2}, {4, 5, 6, 7, 1}, {4, 5, 6, 7, 2}, };
 
 			Param p5 = createParam(STMT, "s2");
 			map<Param, int> updatedParams;
@@ -122,7 +122,7 @@ namespace EvaluatorHelperTest {
 					Assert::AreEqual(true, table.resultsTable[i][j] == resultsAfterMerge[i][j]);
 				}
 			}
-			
+
 			for (pair<Param, int> paramIndex : updatedParams) {
 				Assert::AreEqual(true, table.tableParams[paramIndex.first] == updatedParams[paramIndex.first]);
 			}
@@ -151,8 +151,8 @@ namespace EvaluatorHelperTest {
 
 			/* Final params and results table after merge */
 			vector<vector<int>> resultsAfterMerge = { {1, 2, 3, 4, 1, 3}, {1, 2, 3, 4, 2, 4},
-				{2, 3, 4, 5, 1, 3}, {2, 3, 4, 5, 2, 4}, {3, 4, 5, 6, 1, 3}, {3, 4, 5, 6, 2, 4},
-				{4, 5, 6, 7, 1, 3}, {4, 5, 6, 7, 2, 4}, };
+							  {2, 3, 4, 5, 1, 3}, {2, 3, 4, 5, 2, 4}, {3, 4, 5, 6, 1, 3}, {3, 4, 5, 6, 2, 4},
+							  {4, 5, 6, 7, 1, 3}, {4, 5, 6, 7, 2, 4}, };
 
 			Param p5 = createParam(STMT, "s2");
 			Param p6 = createParam(STMT, "s3");
@@ -198,13 +198,13 @@ namespace EvaluatorHelperTest {
 
 			/* Final params and results table after merge */
 			vector<vector<int>> resultsAfterMerge = {
-				{1, 2, 3, 4, 3},
-				{2, 3, 4, 5, 4},
+		  {1, 2, 3, 4, 3},
+		  {2, 3, 4, 5, 4},
 			};
 			Param p5 = createParam(STMT, "s3");
 			map<Param, int> updatedParams;
 			updatedParams[p1] = 0; updatedParams[p2] = 1; updatedParams[p3] = 2;
-			updatedParams[p4] = 3; updatedParams[p5] = 4; 
+			updatedParams[p4] = 3; updatedParams[p5] = 4;
 
 			/* Merge */
 			EvaluatorHelper::mergeWithOverlap(clauseResults, table);
@@ -244,7 +244,7 @@ namespace EvaluatorHelperTest {
 			clauseResults.setResults(clauseResultsTable);
 
 			/* Final params and results table after merge */
-			vector<vector<int>> resultsAfterMerge = { {1, 2, 3, 4}, {2, 3, 4, 5}};
+			vector<vector<int>> resultsAfterMerge = { {1, 2, 3, 4}, {2, 3, 4, 5} };
 
 			map<Param, int> updatedParams;
 			updatedParams[p1] = 0; updatedParams[p2] = 1; updatedParams[p3] = 2; updatedParams[p4] = 3;
@@ -263,6 +263,69 @@ namespace EvaluatorHelperTest {
 			}
 		}
 
+		TEST_METHOD(EvaluatorHelperSortTableTest) {
+
+			IntermediateTable iTable; iTable.instantiateTable();
+			vector<Param> params;
+			Param p1, p2, p3, p4;
+			p1 = createParam(ASSIGN, "a1");
+			p2 = createParam(ASSIGN, "a2");
+			p3 = createParam(VARIABLE, "v");
+			p4 = createParam(STMT, "s");
+			params.push_back(p1); params.push_back(p2); params.push_back(p3); params.push_back(p4);
+
+			vector<vector<int>> unsortedResults = {
+		  {1, 2, 3, 4},
+		  {3, 9, 8, 9},
+		  {1, 3, 7, 6},
+		  {4, 5, 8, 4},
+		  {5, 1, 4, 6},
+		  {3, 4, 4, 3},
+			};
+
+			iTable.setTableParams(params);
+			iTable.setResultsTable(unsortedResults);
+
+			Param paramToSortBy = createParam(ASSIGN, "a2");
+			EvaluatorHelper::sortTable(paramToSortBy, iTable);
+
+			vector<vector<int>> sortedResults = {
+		  {5, 1, 4, 6},
+		  {1, 2, 3, 4},
+		  {1, 3, 7, 6},
+		  {3, 4, 4, 3},
+		  {4, 5, 8, 4},
+		  {3, 9, 8, 9},
+			};
+
+			Assert::AreEqual(true, iTable.resultsTable == sortedResults);
+
+		};
+
+		TEST_METHOD(EvaluatorHelperMergeSortResultsTest) {
+			vector<vector<int>> unsortedResults = {
+		  {1, 1, 3, 4},
+		  {3, 2, 8, 9},
+		  {1, 3, 7, 6},
+		  {4, 2, 8, 4},
+		  {5, 5, 4, 6},
+		  {3, 1, 4, 3},
+			};
+
+			vector<vector<int>> sortedResults = {
+		  {1, 1, 3, 4},
+		  {3, 1, 4, 3},
+		  {3, 2, 8, 9},
+		  {4, 2, 8, 4},
+		  {1, 3, 7, 6},
+		  {5, 5, 4, 6},
+			};
+
+			int indexToSortBy = 1;
+			Assert::AreEqual(true, EvaluatorHelper::mergeSortResults(indexToSortBy, unsortedResults) == sortedResults);
+
+		};
+
 		TEST_METHOD(EvaluatorHelperWithClauseNumSynsTest) {
 			/* Instantiate table*/
 			IntermediateTable table;
@@ -277,10 +340,10 @@ namespace EvaluatorHelperTest {
 			params.push_back(p1); params.push_back(p2); params.push_back(p3); params.push_back(p4);
 
 			vector<vector<int>> resultsBeforeMerge = {
-				{1, 2, 3, 4},
-				{2, 3, 4, 5},
-				{3, 4, 5, 6},
-				{4, 5, 6, 7}
+		  {1, 2, 3, 4},
+		  {2, 3, 4, 5},
+		  {3, 4, 5, 6},
+		  {4, 5, 6, 7}
 			};
 
 			table.setTableParams(params);
@@ -310,7 +373,7 @@ namespace EvaluatorHelperTest {
 				table.push_back(row);
 			}
 			return table;
-		}
+		};
 
 		Param createParam(ParamType type, string value) {
 			Param param;
