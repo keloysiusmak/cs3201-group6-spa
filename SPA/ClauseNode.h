@@ -10,9 +10,13 @@ private:
 	Clause c;
 	Pattern p;
 	OPERATORS o;
-	ClauseNode &left;
-	ClauseNode &right;
+	vector<ClauseNode> children;
 public:
 	ClauseNode();
+	ClauseNode(Clause);
+	ClauseNode(Pattern);
+	ClauseNode(OPERATORS);
+	void addChildren(ClauseNode);
+	vector<ClauseNode> getChildren();
 };
 

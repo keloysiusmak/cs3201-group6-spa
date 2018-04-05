@@ -1,5 +1,15 @@
 #pragma once
 
+enum CLAUSE_NODE_TYPE {
+	CLAUSE,
+	PATTERN,
+	OPERATOR
+};
+enum OPERATORS {
+	OR,
+	AND
+};
+
 enum TABLES {
 	BLANK_TABLE,
 	STATEMENT_TABLE,
