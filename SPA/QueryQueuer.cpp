@@ -42,18 +42,31 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 			if (clausesNodes[i].getClauseNodeType() == OPERATOR) {
 				if (clausesNodes[i].getOperators() == AND) {
 					if (temp.size() == 0) {
-						ClauseNode newParent = ClauseNode(AND);
-						newParent.addChildren(clauses[0]);
-						newParent.addChildren(clauses[1]);
+						int sizeC = clauses.size();
+						std::vector<ClauseNode> hold1;
+						std::vector<ClauseNode> hold2;
+						for (int j = 0; j < sizeC / 2; j++) {
+							hold1.push_back(clauses[j]);
+						}
+						for (int j = sizeC / 2; j < sizeC; j++) {
+							hold2.push_back(clauses[j]);
+						}
 						clauses.clear();
-						clauses.push_back(newParent);
+						for (int x = 0; x < hold1.size(); x++) {
+							for (int y = 0; y < hold2.size(); y++) {
+								ClauseNode newParent = ClauseNode(AND);
+								newParent.addChildren(hold1[x]);
+								newParent.addChildren(hold2[y]);
+								clauses.push_back(newParent);
+							}
+						}
 					}
 					else if (temp.size() == 1) {
-						for (int i = 0; i < clauses.size(); i++) {
+						for (int j = 0; j < clauses.size(); j++) {
 							ClauseNode newParent = ClauseNode(AND);
-							newParent.addChildren(clauses[i]);
+							newParent.addChildren(clauses[j]);
 							newParent.addChildren(temp[0]);
-							clauses[i] = newParent;
+							clauses[j] = newParent;
 						}
 						temp.clear();
 					}
@@ -99,18 +112,31 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 			if (clausesNodes[i].getClauseNodeType() == OPERATOR) {
 				if (clausesNodes[i].getOperators() == AND) {
 					if (temp.size() == 0) {
-						ClauseNode newParent = ClauseNode(AND);
-						newParent.addChildren(pattern[0]);
-						newParent.addChildren(pattern[1]);
+						int sizeC = pattern.size();
+						std::vector<ClauseNode> hold1;
+						std::vector<ClauseNode> hold2;
+						for (int j = 0; j < sizeC / 2; j++) {
+							hold1.push_back(clauses[j]);
+						}
+						for (int j = sizeC / 2; j < sizeC; j++) {
+							hold2.push_back(clauses[j]);
+						}
 						pattern.clear();
-						pattern.push_back(newParent);
+						for (int x = 0; x < hold1.size(); x++) {
+							for (int y = 0; y < hold2.size(); y++) {
+								ClauseNode newParent = ClauseNode(AND);
+								newParent.addChildren(hold1[x]);
+								newParent.addChildren(hold2[y]);
+								pattern.push_back(newParent);
+							}
+						}
 					}
 					else if (temp.size() == 1) {
-						for (int i = 0; i < pattern.size(); i++) {
+						for (int j = 0; j < pattern.size(); j++) {
 							ClauseNode newParent = ClauseNode(AND);
-							newParent.addChildren(pattern[i]);
+							newParent.addChildren(pattern[j]);
 							newParent.addChildren(temp[0]);
-							pattern[i] = newParent;
+							pattern[j] = newParent;
 						}
 						temp.clear();
 					}
@@ -156,18 +182,31 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 			if (clausesNodes[i].getClauseNodeType() == OPERATOR) {
 				if (clausesNodes[i].getOperators() == AND) {
 					if (temp.size() == 0) {
-						ClauseNode newParent = ClauseNode(AND);
-						newParent.addChildren(withClauses[0]);
-						newParent.addChildren(withClauses[1]);
+						int sizeC = withClauses.size();
+						std::vector<ClauseNode> hold1;
+						std::vector<ClauseNode> hold2;
+						for (int j = 0; j < sizeC / 2; j++) {
+							hold1.push_back(withClauses[j]);
+						}
+						for (int j = sizeC / 2; j < sizeC; j++) {
+							hold2.push_back(withClauses[j]);
+						}
 						withClauses.clear();
-						withClauses.push_back(newParent);
+						for (int x = 0; x < hold1.size(); x++) {
+							for (int y = 0; y < hold2.size(); y++) {
+								ClauseNode newParent = ClauseNode(AND);
+								newParent.addChildren(hold1[x]);
+								newParent.addChildren(hold2[y]);
+								clauses.push_back(newParent);
+							}
+						}
 					}
 					else if (temp.size() == 1) {
-						for (int i = 0; i < withClauses.size(); i++) {
+						for (int j = 0; j < withClauses.size(); j++) {
 							ClauseNode newParent = ClauseNode(AND);
-							newParent.addChildren(withClauses[i]);
+							newParent.addChildren(withClauses[j]);
 							newParent.addChildren(temp[0]);
-							withClauses[i] = newParent;
+							withClauses[j] = newParent;
 						}
 						temp.clear();
 					}
