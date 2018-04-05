@@ -13,7 +13,7 @@ volatile bool TestWrapper::GlobalStop = false;
 TestWrapper::TestWrapper() {
 	// create any objects here as instance variables of this class
 	// as well as any initialization required for your spa program
-	//preprocessor.setEvaluator(evaluator);
+	queryQueuer.setEvaluator(evaluator);
 }
 
 // method for parsing the SIMPLE source
@@ -27,20 +27,17 @@ void TestWrapper::parse(std::string filename) {
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
 
-	string errorMessage;
-	preprocessor.preprocessQuery(query);
-	errorMessage = preprocessor.getErrorMessage();
-	QueryObject qo;
-	if (errorMessage == "") {
-		qo = preprocessor.getQueryObject();
+	preprocessor.preprocessQuery(query);	
 
-		queryQueuer.setEvaluator(evaluator);
-		queryQueuer.setQueryObject(qo);
-		results = queryQueuer.evaluateQueries();
+	//Invalid Query
+	if (preprocessor.getIsErrorExist()) {
+		string errorMessage = preprocessor.getErrorMessage();
+		queryQueuer.setInvalidQuery(errorMessage);
 	}
 	else {
-		queryQueuer.setInvalidQuery(errorMessage);
+		QueryObject qo;
+		qo = preprocessor.getQueryObject();
 		queryQueuer.setQueryObject(qo);
-		results = queryQueuer.evaluateQueries();
 	}
+	results = queryQueuer.evaluateQueries();
 }

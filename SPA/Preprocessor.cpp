@@ -84,8 +84,9 @@ const regex attrRefRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*[.](procName|varName|va
 const regex refRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([0-9]+$)|\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$|[a-zA-Z]([a-zA-Z]|[0-9]|[#])*[.](procName|varName|value|stmt#)))");
 
 Preprocessor::Preprocessor() {
-	errorMessage = "";
+	errorMessage = EMPTY_STRING;
 	qo = QueryObject();
+	isErrorExist = false;
 }
 
 string Preprocessor::getErrorMessage() {
@@ -94,6 +95,10 @@ string Preprocessor::getErrorMessage() {
 
 QueryObject Preprocessor::getQueryObject() {
 	return qo;
+}
+
+bool Preprocessor::getIsErrorExist() {
+	return isErrorExist;
 }
 
 void Preprocessor::insertDeclarationToMap(string synonym, string declaration) {
@@ -118,10 +123,16 @@ void Preprocessor::preprocessQuery(string query) {
 	//The position of the query will always be the last element of the vector
 	int queryIndex = declarations.size() - 1;
 
+	//Reset Error
+	isErrorExist = false;
+
 	//if queryIndex is 0, means no declarations at all
 	if (queryIndex <= 0) {
 
 		if (!isValidQuery(q)) {
+
+			isErrorExist = true;
+
 			//Check if select statement requires return BOOLEAN
 			if (checkBoolStmt(q)) {
 				errorMessage = FALSE_WORD;
@@ -137,6 +148,7 @@ void Preprocessor::preprocessQuery(string query) {
 		bool validateDeclaration = isValidDeclaration(Utils::sanitise(declarations.at(i)));
 
 		if (!validateDeclaration) {
+			isErrorExist = true;
 			//Check if select statement requires return BOOLEAN
 			if (checkBoolStmt(q)) {
 				errorMessage = FALSE_WORD;
@@ -154,6 +166,7 @@ void Preprocessor::preprocessQuery(string query) {
 	bool validQuery = isValidQuery(queryPortion);
 
 	if (!validQuery) {
+		isErrorExist = true;
 		//Check if select statement requires return BOOLEAN
 		if (checkBoolStmt(q)) {
 			errorMessage = FALSE_WORD;

@@ -18,6 +18,7 @@ private:
 	unordered_map<string, string> declarationMap;
 	RelationshipTable relTable;
 	string errorMessage;
+	bool isErrorExist;
 	QueryObject qo;
 
 	int retrieveClauseArgType(string arg);
@@ -55,4 +56,5 @@ public:
 	bool isValidSuchThatKeyword(string query);
 	string getErrorMessage();
 	QueryObject getQueryObject();
+	bool getIsErrorExist();
 };
