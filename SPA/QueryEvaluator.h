@@ -5,7 +5,7 @@
 #include <list>
 #include <set>
 #include "QueryObject.h"
-#include "../source/PKB.h"
+#include "PKB.h"
 #include "Utils.h"
 #include "ClauseResults.h"
 #include "EvaluatorHelper.h";

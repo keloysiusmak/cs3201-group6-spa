@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../SPA/QueryEvaluator.h"
-#include "./PKB.h"
+#include "../SPA/PKB.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;

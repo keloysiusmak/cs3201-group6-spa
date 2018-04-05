@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../source/PKB.h"
+#include "PKB.h"
 
 class DesignExtractor
 {
