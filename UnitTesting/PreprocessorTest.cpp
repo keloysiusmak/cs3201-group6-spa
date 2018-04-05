@@ -51,6 +51,7 @@ public:
 
 		//Populate the declarationMap
 		preprocessor.insertDeclarationToMap("a", "assign");
+		preprocessor.insertDeclarationToMap("s", "stmt");
 		preprocessor.insertDeclarationToMap("w", "while");
 		preprocessor.insertDeclarationToMap("v", "variable");
 		preprocessor.insertDeclarationToMap("c", "constant");
@@ -147,6 +148,8 @@ public:
 		string invalidQuery14 = "Select a with prog_line.stmt# = 3";
 		string invalidQuery15 = "Select a with c1.procName = n";
 		string invalidQuery16 = "Select a such that Parent*(a, 2) and a(v, _)";
+		string invalidQuery17 = "Select a such that Parent*(s, s)";
+		string invalidQuery18 = "Select a such that Parent*(1, 1)";
 
 		//Valid
 		Assert::AreEqual(true, preprocessor.isValidQuery(query1));
@@ -217,6 +220,8 @@ public:
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery14));
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery15));
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery16));
+		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery17));
+		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery18));
 	}
 
 	TEST_METHOD(PreprocessorIsValidSynonym) {
