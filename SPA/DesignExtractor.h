@@ -19,6 +19,7 @@ private:
 	void precomputeWithProcNameCallProcName(PKB&);
 	void precomputeWithVarNameCallProcName(PKB&);
 	void precomputeWithStmtNoConstValue(PKB&);
+	void precomputePatternTwoSyn(PKB&);
 
 	void countFollows(PKB &);
 	void countFollowsStar(PKB &);

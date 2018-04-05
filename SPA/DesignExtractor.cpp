@@ -19,6 +19,7 @@ bool DesignExtractor::extract(PKB &pkb) {
 	precomputeWithProcNameCallProcName(pkb);
 	precomputeWithVarNameCallProcName(pkb);
 	precomputeWithStmtNoConstValue(pkb);
+	precomputePatternTwoSyn(pkb);
 
 	countFollows(pkb);
 	countFollowsStar(pkb);
@@ -38,6 +39,7 @@ bool DesignExtractor::extract(PKB &pkb) {
 	countWithProcNameCallProcName(pkb);
 	countWithVarNameCallProcName(pkb);
 	countWithStmtNoConstValue(pkb);
+	countPattern(pkb);
 	return true;
 }
 
@@ -346,6 +348,34 @@ void DesignExtractor::precomputeWithStmtNoConstValue(PKB &pkb) {
 	for (int i = 0; i < consts.size(); i++) {
 		if (consts[i][0] <= stmtSize) {
 			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, consts[i][0], { { consts[i][0] } });
+		}
+	}
+}
+
+void DesignExtractor::precomputePatternTwoSyn(PKB &pkb) {
+
+	std::vector<TYPES> types = {ASSIGNMENT_TYPE, WHILE_TYPE, IF_TYPE};
+
+	for (int i = 0; i < types.size(); i++) {
+		TYPES t = types[i];
+		
+		std::vector<std::vector<int>> stmts = pkb.getAllStatementsWithType(t);
+		for (int i = 0; i < stmts.size(); i++) {
+			if (t == ASSIGNMENT_TYPE) {
+				int v;
+				v = pkb.getVariableId(pkb.getFromNameTable(PATTERN_TABLE, stmts[i][0])[0]);
+				pkb.insertToTable(PATTERN_ASSIGN_VARIABLE_TABLE, stmts[i][0], { { v } });
+			}
+			else if (t == WHILE_TYPE) {
+				int v;
+				v = pkb.getVariableId(pkb.getFromNameTable(PATTERN_TABLE, stmts[i][0])[0]);
+				pkb.insertToTable(PATTERN_WHILE_VARIABLE_TABLE, stmts[i][0], { { v } });
+			}
+			else if (t == IF_TYPE) {
+				int v;
+				v = pkb.getVariableId(pkb.getFromNameTable(PATTERN_TABLE, stmts[i][0])[0]);
+				pkb.insertToTable(PATTERN_IF_VARIABLE_TABLE, stmts[i][0], { { v } });
+			}
 		}
 	}
 }
