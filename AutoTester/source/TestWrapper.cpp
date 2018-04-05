@@ -28,17 +28,17 @@ void TestWrapper::parse(std::string filename) {
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
 
-	string errorMessage;
-	preprocessor.preprocessQuery(query);
-	errorMessage = preprocessor.getErrorMessage();
-	QueryContent qc;
-	if (errorMessage == "") {
-		qc = preprocessor.getQueryContent();
-		queryQueuer.setQueryContent(qc);
-		results = queryQueuer.evaluateQueries();
+	preprocessor.preprocessQuery(query);	
+
+	//Invalid Query
+	if (preprocessor.getIsErrorExist()) {
+		string errorMessage = preprocessor.getErrorMessage();
+		queryQueuer.setInvalidQuery(errorMessage);
 	}
 	else {
-		queryQueuer.setInvalidQuery(errorMessage);
-		results = queryQueuer.evaluateQueries();
+		QueryContent qc;
+		qc = preprocessor.getQueryContent();
+		queryQueuer.setQueryContent(qc);
 	}
+	results = queryQueuer.evaluateQueries();
 }

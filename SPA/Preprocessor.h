@@ -17,6 +17,7 @@ private:
 	unordered_map<string, string> declarationMap;
 	RelationshipTable relTable;
 	string errorMessage;
+	bool isErrorExist;
 	QueryContent qc;
 
 	int retrieveClauseArgType(string arg);
@@ -43,6 +44,10 @@ public:
 	bool isValidAttrRef(string attrRef);
 	bool isValidAttrName(ParamType synonymType, string attrName);
 	bool isValidRef(string ref);
+	bool isValidElem(vector<string> queryArr, int endOfSelectStatement, QueryObject &qo);
+	bool isValidClause(vector<string> queryArr, int &clauseLength, int pos, QueryObject &qo);
+	bool isValidPattern(vector<string> queryArr, int &patternLength, int pos, QueryObject &qo);
+	bool isValidWithClause(vector<string> queryArr, int &withLength, int pos, QueryObject &qo);
 	bool isDeclarationSynonymExist(string synonym);
 	bool parseClauseArg(QueryObject &qo, string relType, string arg1, string arg2);
 	bool parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2);
@@ -50,4 +55,5 @@ public:
 	bool isValidSuchThatKeyword(string query);
 	string getErrorMessage();
 	QueryContent getQueryContent();
+	bool getIsErrorExist();
 };
