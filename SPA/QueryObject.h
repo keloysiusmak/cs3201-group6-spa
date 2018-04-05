@@ -22,9 +22,13 @@ public:
 	void insertPattern(ParamType, string, ParamType, string, ParamType, string);
 	void insertSelectStmt(ParamType, string, AttrType);
 	void insertWithClause(ParamType, string, AttrType, ParamType, string, AttrType);
+	void setClause(vector<Clause>);
+	void setWithClause(vector<Clause>);
+	void setPattern(vector<Pattern>);
 
 	vector<Clause> getClauses();
 	vector<Pattern> getPatterns();
 	vector<Clause> getWithClauses();
 	vector<Param> getSelectStatements();
+
 };

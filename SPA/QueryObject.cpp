@@ -79,6 +79,18 @@ void QueryObject::insertWithClause(ParamType leftArgType, string leftArg, AttrTy
 	_withClauses.push_back(withClause);
 }
 
+void QueryObject::setClause(vector<Clause> c) {
+	_clauses = c;
+}
+
+void QueryObject::setWithClause(vector<Clause> w) {
+	_withClauses = w;
+}
+
+void QueryObject::setPattern(vector<Pattern> p) {
+	_Patterns = p;
+}
+
 vector<Clause> QueryObject::getClauses() {
 	return _clauses;
 }

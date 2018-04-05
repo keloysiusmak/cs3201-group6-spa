@@ -23,5 +23,9 @@ public:
 	void setEvaluator(QueryEvaluator &);
 	void setInvalidQuery(string);
 	list<string> evaluateQueries();
+	std::vector<QueryObject> parseQueryContent();
+	std::vector<Clause> parseClauseTree(ClauseNode);
+	std::vector<Clause> parseWithClauseTree(ClauseNode);
+	std::vector<Pattern> parsePatternTree(ClauseNode);
 };
 

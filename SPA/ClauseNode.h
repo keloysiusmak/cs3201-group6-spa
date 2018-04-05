@@ -9,6 +9,7 @@ private:
 	CLAUSE_NODE_TYPE t;
 	Clause c;
 	Pattern p;
+	Clause w;
 	OPERATORS o;
 	vector<ClauseNode> children;
 public:
@@ -20,5 +21,10 @@ public:
 	void setOperatorNode(OPERATORS);
 	void addChildren(ClauseNode);
 	vector<ClauseNode> getChildren();
+	CLAUSE_NODE_TYPE getClauseNodeType();
+	Clause getClause();
+	Clause getWithClause();
+	Pattern getPattern();
+	OPERATORS getOperators();
 };
 

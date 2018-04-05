@@ -23,7 +23,7 @@ void ClauseNode::setPatternNode(Pattern pattern) {
 }
 
 void ClauseNode::setWithClauseNode(Clause withClause) {
-	t = WITHCLAUSE;
+	t = WITH_CLAUSE;
 	c = withClause;
 }
 
@@ -38,4 +38,19 @@ void ClauseNode::addChildren(ClauseNode c) {
 
 vector<ClauseNode> ClauseNode::getChildren() {
 	return children;
+}
+CLAUSE_NODE_TYPE ClauseNode::getClauseNodeType() {
+	return t;
+}
+Clause ClauseNode::getClause() {
+	return c;
+}
+Clause ClauseNode::getWithClause() {
+	return w;
+}
+Pattern ClauseNode::getPattern() {
+	return p;
+}
+OPERATORS ClauseNode::getOperators() {
+	return o;
 }
