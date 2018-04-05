@@ -24,7 +24,7 @@ void ClauseNode::setPatternNode(Pattern pattern) {
 
 void ClauseNode::setWithClauseNode(Clause withClause) {
 	t = WITH_CLAUSE;
-	c = withClause;
+	w = withClause;
 }
 
 void ClauseNode::setOperatorNode(OPERATORS op) {
