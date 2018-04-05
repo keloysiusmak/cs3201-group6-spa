@@ -1,7 +1,6 @@
 #pragma once
 
-#include "QueryObject.h"
-#include "QueryObject.h"
+#include "QueryContent.h"
 #include "Utils.h"
 #include "RelationshipTable.h"
 #include <string>
@@ -18,7 +17,7 @@ private:
 	unordered_map<string, string> declarationMap;
 	RelationshipTable relTable;
 	string errorMessage;
-	QueryObject qo;
+	QueryContent qc;
 
 	int retrieveClauseArgType(string arg);
 	int retrieveExpressionType(string expression);
@@ -50,5 +49,5 @@ public:
 	bool parseWithClause(QueryObject &qo, string leftRef, string rightRef);
 	bool isValidSuchThatKeyword(string query);
 	string getErrorMessage();
-	QueryObject getQueryObject();
+	QueryContent getQueryContent();
 };

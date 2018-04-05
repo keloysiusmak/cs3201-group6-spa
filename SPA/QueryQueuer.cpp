@@ -4,7 +4,7 @@ using namespace std;
 
 QueryQueuer::QueryQueuer() {
 	bool validQuery = true;
-	QueryObject qo;
+	QueryContent qc;
 }
 
 void QueryQueuer::setEvaluator(QueryEvaluator &evaluator) {
@@ -21,16 +21,18 @@ void QueryQueuer::setInvalidQuery(string message) {
 	else invalidQueryMessage = {};
 };
 
-void QueryQueuer::setQueryObject(QueryObject setQo) {
-	qo = setQo;
+void QueryQueuer::setQueryContent(QueryContent setQc) {
+	qc = setQc;
 }
-QueryObject QueryQueuer::getQueryObject() {
-	return qo;
+QueryContent QueryQueuer::getQueryContent() {
+	return qc;
 }
 
 list<string> QueryQueuer::evaluateQueries() {
 
 	list<string> results;
+
+	QueryObject qo;
 
 	if (validQuery) {
 		_evaluator.setQueryObject(qo);
