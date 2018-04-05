@@ -92,8 +92,8 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 	if (clausesNodes.size() > 0) {
 		std::vector<ClauseNode> temp;
 		for (int i = 0; i < clausesNodes.size(); i++) {
-			if (clausesNodes[i].getClauseNodeType == OPERATOR) {
-				if (clausesNodes[i].getOperators == AND) {
+			if (clausesNodes[i].getClauseNodeType() == OPERATOR) {
+				if (clausesNodes[i].getOperators() == AND) {
 					if (temp.size() == 0) {
 						ClauseNode newParent = ClauseNode(AND);
 						newParent.addChildren(pattern[0]);
@@ -118,7 +118,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 						temp.clear();
 					}
 				}
-				else if (clausesNodes[i].getOperators == OR) {
+				else if (clausesNodes[i].getOperators() == OR) {
 					if (temp.size() == 1) {
 						ClauseNode newClause = temp[0];
 						temp.clear();
@@ -134,7 +134,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 				}
 			}
 			else {
-				if (clausesNodes[i].getClauseNodeType == PATTERN) {
+				if (clausesNodes[i].getClauseNodeType() == PATTERN) {
 					temp.push_back(clausesNodes[i]);
 				}
 			}
@@ -145,8 +145,8 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 	if (clausesNodes.size() > 0) {
 		std::vector<ClauseNode> temp;
 		for (int i = 0; i < clausesNodes.size(); i++) {
-			if (clausesNodes[i].getClauseNodeType == OPERATOR) {
-				if (clausesNodes[i].getOperators == AND) {
+			if (clausesNodes[i].getClauseNodeType() == OPERATOR) {
+				if (clausesNodes[i].getOperators() == AND) {
 					if (temp.size() == 0) {
 						ClauseNode newParent = ClauseNode(AND);
 						newParent.addChildren(withClauses[0]);
@@ -171,7 +171,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 						temp.clear();
 					}
 				}
-				else if (clausesNodes[i].getOperators == OR) {
+				else if (clausesNodes[i].getOperators() == OR) {
 					if (temp.size() == 1) {
 						ClauseNode newClause = temp[0];
 						temp.clear();
@@ -187,7 +187,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 				}
 			}
 			else {
-				if (clausesNodes[i].getClauseNodeType == WITH_CLAUSE) {
+				if (clausesNodes[i].getClauseNodeType() == WITH_CLAUSE) {
 					temp.push_back(clausesNodes[i]);
 				}
 			}

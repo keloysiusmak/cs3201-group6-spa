@@ -78,7 +78,7 @@ void QueryContent::insertOperator(CLAUSE_NODE_TYPE nodeRef, OPERATORS op) {
 	case PATTERN:
 		_patterns.push_back(ClauseNode(op));
 	break;
-	case WITHCLAUSE:
+	case WITH_CLAUSE:
 		_withClauses.push_back(ClauseNode(op));
 	break;
 	}

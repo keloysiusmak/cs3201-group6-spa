@@ -241,7 +241,7 @@ bool Preprocessor::isValidQuery(string query) {
 
 			//even position must be elem
 			if (endOfSelectStatement % 2 == 0) {
-				if (!isValidElem(queryArr, endOfSelectStatement, queryObject)) {
+				if (!isValidElem(queryArr, endOfSelectStatement, queryContent)) {
 					return false;
 				}
 			}
@@ -262,11 +262,11 @@ bool Preprocessor::isValidQuery(string query) {
 	}
 	//if is a BOOLEAN
 	else if (Utils::sanitise(queryArr.at(endOfSelectStatement)).compare(BOOLEAN_WORD) == 0) {
-		queryObject.insertSelectStmt(BOOLEAN, BOOLEAN_WORD, NONE);
+		queryContent.insertSelect(BOOLEAN, BOOLEAN_WORD, NONE);
 	}
 	//single elem
 	else {
-		if (!isValidElem(queryArr, endOfSelectStatement, queryObject)) {
+		if (!isValidElem(queryArr, endOfSelectStatement, queryContent)) {
 			return false;
 		}
 	}
@@ -302,7 +302,7 @@ bool Preprocessor::isValidQuery(string query) {
 			//Add "that"
 			clauseLength++;
 
-			if (!isValidClause(queryArr, clauseLength, i, queryObject)) {
+			if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
 				return false;
 			}
 
@@ -317,7 +317,7 @@ bool Preprocessor::isValidQuery(string query) {
 			//Keep track of the length of pattern
 			int patternLength = 1;
 
-			if (!isValidPattern(queryArr, patternLength, i, queryObject)) {
+			if (!isValidPattern(queryArr, patternLength, i, queryContent)) {
 				return false;
 			}
 
@@ -332,7 +332,7 @@ bool Preprocessor::isValidQuery(string query) {
 			//Keep track of the length of with clause
 			int withLength = 1;
 			
-			if (!isValidWithClause(queryArr, withLength, i, queryObject)) {
+			if (!isValidWithClause(queryArr, withLength, i, queryContent)) {
 				return false;
 			}
 
@@ -352,7 +352,7 @@ bool Preprocessor::isValidQuery(string query) {
 
 				int clauseLength = 1;
 
-				if (!isValidClause(queryArr, clauseLength, i, queryObject)) {
+				if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
 					return false;
 				}
 				//Finish processing this clause
@@ -364,7 +364,7 @@ bool Preprocessor::isValidQuery(string query) {
 				//Keep track of the length of pattern
 				int patternLength = 1;
 
-				if (!isValidPattern(queryArr, patternLength, i, queryObject)) {
+				if (!isValidPattern(queryArr, patternLength, i, queryContent)) {
 					return false;
 				}
 
@@ -377,7 +377,7 @@ bool Preprocessor::isValidQuery(string query) {
 				//Keep track of the length of with clause
 				int withLength = 1;
 
-				if (!isValidWithClause(queryArr, withLength, i, queryObject)) {
+				if (!isValidWithClause(queryArr, withLength, i, queryContent)) {
 					return false;
 				}
 
@@ -482,7 +482,7 @@ bool Preprocessor::isDeclarationSynonymExist(string synonym) {
 	return true;
 }
 
-bool Preprocessor::isValidElem(vector<string> queryArr, int endOfSelectStatement, QueryObject &qo) {
+bool Preprocessor::isValidElem(vector<string> queryArr, int endOfSelectStatement, QueryContent &qc) {
 	string elem = Utils::sanitise(queryArr.at(endOfSelectStatement));
 
 	if (isValidAttrRef(elem)) {
@@ -502,7 +502,7 @@ bool Preprocessor::isValidElem(vector<string> queryArr, int endOfSelectStatement
 
 		//insert selectType of QueryObject
 		AttrType getAttrName = KEYWORDS_WITH_TYPE.find(attrRef.at(1))->second;
-		qo.insertSelectStmt(searchDeclareType->second, searchSynonym->first, getAttrName);
+		qc.insertSelect(searchDeclareType->second, searchSynonym->first, getAttrName);
 	}
 	else if (isValidSynonym(elem)) {
 		//check if select synonym exist in the declarationMap
@@ -513,7 +513,7 @@ bool Preprocessor::isValidElem(vector<string> queryArr, int endOfSelectStatement
 		//Populate the selectType of QueryObject
 		auto searchSynonym = declarationMap.find(elem);
 		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-		qo.insertSelectStmt(searchDeclareType->second, searchSynonym->first, NONE);
+		qc.insertSelect(searchDeclareType->second, searchSynonym->first, NONE);
 	}
 	else {
 		return false;
@@ -522,7 +522,7 @@ bool Preprocessor::isValidElem(vector<string> queryArr, int endOfSelectStatement
 	return true;
 }
 
-bool Preprocessor::isValidClause(vector<string> queryArr, int &clauseLength, int pos, QueryObject &qo) {
+bool Preprocessor::isValidClause(vector<string> queryArr, int &clauseLength, int pos, QueryContent &qc) {
 	//check whether clause exists
 	if ((pos + clauseLength) >= queryArr.size() || KEYWORDS_CLAUSES.find(queryArr.at(pos + clauseLength)) == KEYWORDS_CLAUSES.end()) {
 		return false;
@@ -547,13 +547,13 @@ bool Preprocessor::isValidClause(vector<string> queryArr, int &clauseLength, int
 	//Add all the right Param
 	string rightArg = retrieveParamFromQuery(queryArr, clauseLength, pos, string(1, SYMBOL_CLOSE_BRACKET));
 
-	if (!parseClauseArg(qo, clauseValue, leftArg, rightArg)) {
+	if (!parseClauseArg(qc, clauseValue, leftArg, rightArg)) {
 		return false;
 	}
 	return true;
 }
 
-bool Preprocessor::isValidPattern(vector<string> queryArr, int &patternLength, int pos, QueryObject &qo) {
+bool Preprocessor::isValidPattern(vector<string> queryArr, int &patternLength, int pos, QueryContent &qc) {
 	if ((pos + patternLength) >= queryArr.size() || !isDeclarationSynonymExist(queryArr.at(pos + patternLength))) {
 		return false;
 	}
@@ -648,13 +648,13 @@ bool Preprocessor::isValidPattern(vector<string> queryArr, int &patternLength, i
 		patternLength++;
 	}
 
-	if (!parsePattern(qo, searchDeclareType->second, searchSynonym->first, leftArg, rightArg)) {
+	if (!parsePattern(qc, searchDeclareType->second, searchSynonym->first, leftArg, rightArg)) {
 		return false;
 	}
 	return true;
 }
 
-bool Preprocessor::isValidWithClause(vector<string> queryArr, int &withLength, int pos, QueryObject &qo) {
+bool Preprocessor::isValidWithClause(vector<string> queryArr, int &withLength, int pos, QueryContent &qo) {
 	
 
 	if ((pos + withLength) >= queryArr.size() ||
@@ -681,7 +681,7 @@ bool Preprocessor::isValidWithClause(vector<string> queryArr, int &withLength, i
 	return true;
 }
 
-bool Preprocessor::parseClauseArg(QueryObject &qo, string relType, string arg1, string arg2) {
+bool Preprocessor::parseClauseArg(QueryContent &qc, string relType, string arg1, string arg2) {
 
 	//Clear all the unwanted spaces on relType, left and right arguments
 	string rel = Utils::sanitise(relType);
@@ -790,13 +790,13 @@ bool Preprocessor::parseClauseArg(QueryObject &qo, string relType, string arg1, 
 		return false;
 	}
 
-	qo.insertClause(searchRelType->second, leftArgType, leftArg,
+	qc.insertClause(searchRelType->second, leftArgType, leftArg,
 		rightArgType, rightArg);
 
 	return true;
 }
 
-bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string entity, string arg1, string arg2)
+bool Preprocessor::parsePattern(QueryContent &qc, ParamType entityType, string entity, string arg1, string arg2)
 {
 
 	string leftArg = Utils::sanitise(arg1);
@@ -860,13 +860,13 @@ bool Preprocessor::parsePattern(QueryObject &qo, ParamType entityType, string en
 		return false;
 	}
 
-	qo.insertPattern(entityType, entity, leftArgType,
+	qc.insertPattern(entityType, entity, leftArgType,
 		leftArg, rightArgType, rightArg);
 
 	return true;
 }
 
-bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string rightRef) {
+bool Preprocessor::parseWithClause(QueryContent &qc, string leftRef, string rightRef) {
 	
 	string leftArg;
 	string rightArg;
@@ -1018,7 +1018,7 @@ bool Preprocessor::parseWithClause(QueryObject &qo, string leftRef, string right
 		return leftArg.compare(rightArg) == 0;
 	}
 	else {
-		qo.insertWithClause(leftArgType, leftArg, leftAttrType,
+		qc.insertWithClause(leftArgType, leftArg, leftAttrType,
 			rightArgType, rightArg, rightAttrType);
 	}
 

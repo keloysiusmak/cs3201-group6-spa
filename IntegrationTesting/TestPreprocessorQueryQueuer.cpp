@@ -48,36 +48,42 @@ namespace PreprocessorEvaluatorIntegrationTesting
 				expectedQo5.insertClause(Follows, WHILE, "w", ASSIGN, "a");
 				expectedQo5.insertPattern(ASSIGN, "a", VAR_IDENT, "x", ALL, "_");
 
-				QueryObject qo;
+				QueryContent qc;
 
 				preprocessor.preprocessQuery(query1);
-				qo = preprocessor.getQueryObject();
-				queryQueuer.setQueryObject(qo);
-				bool result1 = compareQueryObjectProperties(expectedQo1, queryQueuer.getQueryObject());
+				qc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(qc);
+				std::vector<QueryObject> q = queryQueuer.parseQueryContent();
+				bool result1 = compareQueryObjectProperties(expectedQo1, q[0]);
 				Assert::AreEqual(true, result1);
 
+
 				preprocessor.preprocessQuery(query2);
-				qo = preprocessor.getQueryObject();
-				queryQueuer.setQueryObject(qo);
-				bool result2 = compareQueryObjectProperties(expectedQo2, queryQueuer.getQueryObject());
+				qc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(qc);
+				q = queryQueuer.parseQueryContent();
+				bool result2 = compareQueryObjectProperties(expectedQo2, q[0]); 
 				Assert::AreEqual(true, result2);
 
 				preprocessor.preprocessQuery(query3);
-				qo = preprocessor.getQueryObject();
-				queryQueuer.setQueryObject(qo);
-				bool result3 = compareQueryObjectProperties(expectedQo3, queryQueuer.getQueryObject());
+				qc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(qc);
+				q = queryQueuer.parseQueryContent();
+				bool result3 = compareQueryObjectProperties(expectedQo3, q[0]);
 				Assert::AreEqual(true, result3);
 
 				preprocessor.preprocessQuery(query4);
-				qo = preprocessor.getQueryObject();
-				queryQueuer.setQueryObject(qo);
-				bool result4 = compareQueryObjectProperties(expectedQo4, queryQueuer.getQueryObject());
+				qc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(qc);
+				q = queryQueuer.parseQueryContent();
+				bool result4 = compareQueryObjectProperties(expectedQo4, q[0]);
 				Assert::AreEqual(true, result4);
 
 				preprocessor.preprocessQuery(query5);
-				qo = preprocessor.getQueryObject();
-				queryQueuer.setQueryObject(qo);
-				bool result5 = compareQueryObjectProperties(expectedQo5, queryQueuer.getQueryObject());
+				qc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(qc);
+				q = queryQueuer.parseQueryContent();
+				bool result5 = compareQueryObjectProperties(expectedQo5, q[0]); 
 				Assert::AreEqual(true, result5);
 			}
 
@@ -169,7 +175,7 @@ namespace PreprocessorEvaluatorIntegrationTesting
 							p1.getRightParam().type != p2.getRightParam().type ||
 							p1.getRightParam().value.compare(p2.getRightParam().value) != 0 ||
 							p1.getRightParam().attribute != p2.getRightParam().attribute) {
-							isSameClauses = false;
+							isSamePatterns = false;
 							break;
 						}
 					}
