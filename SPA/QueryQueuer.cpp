@@ -30,7 +30,6 @@ QueryContent QueryQueuer::getQueryContent() {
 
 std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 
-	std::vector<QueryObject> queryObjectArray;
 	std::vector<ClauseNode> clauses;
 	std::vector<ClauseNode> withClauses;
 	std::vector<ClauseNode> pattern;
@@ -195,24 +194,33 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 	}
 
 	std::vector<QueryObject> queryObjects;
-	int total = clauses.size() * withClauses.size() * pattern.size();
+	int cSize = (clauses.size() > 0) ? clauses.size() : 1;
+	int wSize = (withClauses.size() > 0) ? withClauses.size() : 1;
+	int pSize = (pattern.size() > 0) ? pattern.size() : 1;
+	int total =  cSize * wSize * pSize;
 	for (int i = 0; i < total; i++) {
 		QueryObject qo;
 		queryObjects.push_back(qo);
 	}
-	for (int i = 0; i < total; i++) {
-		int c = i % clauses.size();
-		queryObjects[i].setClause(parseClauseTree(clauses[c]));
+	if (clauses.size() > 0) {
+		for (int i = 0; i < total; i++) {
+			int c = i % cSize;
+			queryObjects[i].setClause(parseClauseTree(clauses[c]));
+		}
 	}
-	for (int i = 0; i < total; i++) {
-		int c = i % pattern.size();
-		queryObjects[i].setPattern(parsePatternTree(pattern[c]));
+	if (pattern.size() > 0) {
+		for (int i = 0; i < total; i++) {
+			int c = i % pSize;
+			queryObjects[i].setPattern(parsePatternTree(pattern[c]));
+		}
 	}
-	for (int i = 0; i < total; i++) {
-		int c = i % withClauses.size();
-		queryObjects[i].setWithClause(parseWithClauseTree(withClauses[c]));
+	if (withClauses.size() > 0) {
+		for (int i = 0; i < total; i++) {
+			int c = i % wSize;
+			queryObjects[i].setWithClause(parseWithClauseTree(withClauses[c]));
+		}
 	}
-	return queryObjectArray;
+	return queryObjects;
 }
 
 std::vector<Clause> QueryQueuer::parseClauseTree(ClauseNode c) {

@@ -29,7 +29,7 @@ namespace UnitTesting
 			QueryObject expectedQo1;
 			expectedQo1.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
 			QueryObject expectedQo2;
-			expectedQo2.insertClause(Modifies, VARIABLE, "v", IDENT, "y");
+			expectedQo2.insertClause(Uses, VARIABLE, "v", IDENT, "y");
 			Assert::AreEqual(true, compareQueryObjectProperties(result[0], expectedQo1));
 			Assert::AreEqual(true, compareQueryObjectProperties(result[1], expectedQo2));
 
@@ -163,11 +163,11 @@ namespace UnitTesting
 
 			std::vector<Clause> clause = qq.parseClauseTree(c4);
 			Clause expectedClause1;
-			expectedClause1.setClause(Modifies, lp, rp);
+			expectedClause1.setClause(With, lp, rp);
 			Clause expectedClause2;
-			expectedClause2.setClause(Modifies, lp, rp);
+			expectedClause2.setClause(With, lp, rp);
 			Clause expectedClause3;
-			expectedClause3.setClause(Modifies, lp, rp);
+			expectedClause3.setClause(With, lp, rp);
 			Assert::AreEqual(true, compareClause(expectedClause1, clause[0]));
 			Assert::AreEqual(true, compareClause(expectedClause2, clause[1]));
 			Assert::AreEqual(true, compareClause(expectedClause3, clause[2]));
