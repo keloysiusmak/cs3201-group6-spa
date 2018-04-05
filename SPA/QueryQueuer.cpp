@@ -22,6 +22,7 @@ void QueryQueuer::setInvalidQuery(string message) {
 };
 
 void QueryQueuer::setQueryContent(QueryContent setQc) {
+	validQuery = true;
 	qc = setQc;
 }
 QueryContent QueryQueuer::getQueryContent() {
