@@ -1,7 +1,6 @@
 #pragma once
 
-#include "QueryObject.h"
-#include "QueryObject.h"
+#include "QueryContent.h"
 #include "Utils.h"
 #include "RelationshipTable.h"
 #include <string>
@@ -19,7 +18,7 @@ private:
 	RelationshipTable relTable;
 	string errorMessage;
 	bool isErrorExist;
-	QueryObject qo;
+	QueryContent qc;
 
 	int retrieveClauseArgType(string arg);
 	int retrieveExpressionType(string expression);
@@ -55,6 +54,6 @@ public:
 	bool parseWithClause(QueryObject &qo, string leftRef, string rightRef);
 	bool isValidSuchThatKeyword(string query);
 	string getErrorMessage();
-	QueryObject getQueryObject();
+	QueryContent getQueryContent();
 	bool getIsErrorExist();
 };

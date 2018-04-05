@@ -85,7 +85,7 @@ const regex refRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([0-9]+$)|\"([a-zA-Z](
 
 Preprocessor::Preprocessor() {
 	errorMessage = EMPTY_STRING;
-	qo = QueryObject();
+	qc = QueryContent();
 	isErrorExist = false;
 }
 
@@ -93,8 +93,8 @@ string Preprocessor::getErrorMessage() {
 	return errorMessage;
 }
 
-QueryObject Preprocessor::getQueryObject() {
-	return qo;
+QueryContent Preprocessor::getQueryContent() {
+	return qc;
 }
 
 bool Preprocessor::getIsErrorExist() {
@@ -221,7 +221,7 @@ bool Preprocessor::isValidQuery(string query) {
 	//Replace all the clauses with * to T
 	replaceStarWithT(q);
 
-	QueryObject queryObject;
+	QueryContent queryContent;
 	vector<string> queryArr = Utils::explode(q + SYMBOL_SPACE, DELIM_STRING, DELIMITERS_QUERY);
 
 	//Check if Select word exists and if there's at least 2 elements in the query (e.g. "select", "s")
@@ -275,7 +275,7 @@ bool Preprocessor::isValidQuery(string query) {
 
 	//Check if there is any such that or pattern clause
 	if (queryArr.size() == endOfSelectStatement) {
-		qo = queryObject;
+		qc = queryContent;
 		return true;
 	}
 
@@ -393,7 +393,7 @@ bool Preprocessor::isValidQuery(string query) {
 		}
 	}
 
-	qo = queryObject;
+	qc = queryContent;
 	return true;
 };
 

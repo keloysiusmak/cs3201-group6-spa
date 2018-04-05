@@ -13,6 +13,7 @@ volatile bool TestWrapper::GlobalStop = false;
 TestWrapper::TestWrapper() {
 	// create any objects here as instance variables of this class
 	// as well as any initialization required for your spa program
+	//preprocessor.setEvaluator(evaluator);
 	queryQueuer.setEvaluator(evaluator);
 }
 
@@ -35,9 +36,9 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
 		queryQueuer.setInvalidQuery(errorMessage);
 	}
 	else {
-		QueryObject qo;
-		qo = preprocessor.getQueryObject();
-		queryQueuer.setQueryObject(qo);
+		QueryContent qc;
+		qc = preprocessor.getQueryContent();
+		queryQueuer.setQueryContent(qc);
 	}
 	results = queryQueuer.evaluateQueries();
 }
