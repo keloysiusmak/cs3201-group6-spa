@@ -89,7 +89,7 @@ vector<Param> QueryContent::getSelect() {
 }
 
 vector<ClauseNode> QueryContent::getClauses() {
-	return _withClauses;
+	return _clauses;
 }
 
 vector<ClauseNode> QueryContent::getPattern() {
@@ -97,5 +97,5 @@ vector<ClauseNode> QueryContent::getPattern() {
 }
 
 vector<ClauseNode> QueryContent::getWithClauses() {
-	return _clauses;
+	return _withClauses;
 }
