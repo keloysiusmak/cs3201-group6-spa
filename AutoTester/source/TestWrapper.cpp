@@ -26,7 +26,21 @@ void TestWrapper::parse(std::string filename) {
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
-	preprocessor.setEvaluator(evaluator);
+
+	string errorMessage;
 	preprocessor.preprocessQuery(query);
-	results = evaluator.evaluateQuery();
+	errorMessage = preprocessor.getErrorMessage();
+	QueryObject qo;
+	if (errorMessage == "") {
+		qo = preprocessor.getQueryObject();
+
+		queryQueuer.setEvaluator(evaluator);
+		queryQueuer.setQueryObject(qo);
+		results = queryQueuer.evaluateQueries();
+	}
+	else {
+		queryQueuer.setInvalidQuery(errorMessage);
+		queryQueuer.setQueryObject(qo);
+		results = queryQueuer.evaluateQueries();
+	}
 }

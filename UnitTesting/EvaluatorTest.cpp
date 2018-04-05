@@ -18,10 +18,5 @@ namespace EvaluatorTest {
 			evaluator.setQueryObject(queryObjectStub);
 			Assert::AreEqual(true, evaluator.isValidQuery());
 		};
-
-		TEST_METHOD(EvaluatorInvalidQueryObjectSetter) {
-			evaluator.setInvalidQuery({});
-			Assert::AreEqual(false, evaluator.isValidQuery());
-		};
 	};
 }

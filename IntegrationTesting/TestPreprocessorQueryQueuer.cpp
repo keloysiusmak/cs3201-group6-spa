@@ -1,21 +1,20 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../SPA/Preprocessor.h"
-#include "../SPA/QueryEvaluator.h"
+#include "../SPA/QueryQueuer.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
 namespace PreprocessorEvaluatorIntegrationTesting
 {
-	QueryEvaluator evaluator;
+	QueryQueuer queryQueuer;
 	Preprocessor preprocessor;
 
 	TEST_CLASS(PreprocessorEvaluatorIntegration) {
 		public:
 
 			TEST_CLASS_INITIALIZE(setup) {
-				preprocessor.setEvaluator(evaluator);
 			}
 
 			//This test method will take in an actual test query
@@ -49,24 +48,36 @@ namespace PreprocessorEvaluatorIntegrationTesting
 				expectedQo5.insertClause(Follows, WHILE, "w", ASSIGN, "a");
 				expectedQo5.insertPattern(ASSIGN, "a", VAR_IDENT, "x", ALL, "_");
 
+				QueryObject qo;
+
 				preprocessor.preprocessQuery(query1);
-				bool result1 = compareQueryObjectProperties(expectedQo1, evaluator.getQueryObject());
+				qo = preprocessor.getQueryObject();
+				queryQueuer.setQueryObject(qo);
+				bool result1 = compareQueryObjectProperties(expectedQo1, queryQueuer.getQueryObject());
 				Assert::AreEqual(true, result1);
 
 				preprocessor.preprocessQuery(query2);
-				bool result2 = compareQueryObjectProperties(expectedQo2, evaluator.getQueryObject());
+				qo = preprocessor.getQueryObject();
+				queryQueuer.setQueryObject(qo);
+				bool result2 = compareQueryObjectProperties(expectedQo2, queryQueuer.getQueryObject());
 				Assert::AreEqual(true, result2);
 
 				preprocessor.preprocessQuery(query3);
-				bool result3 = compareQueryObjectProperties(expectedQo3, evaluator.getQueryObject());
+				qo = preprocessor.getQueryObject();
+				queryQueuer.setQueryObject(qo);
+				bool result3 = compareQueryObjectProperties(expectedQo3, queryQueuer.getQueryObject());
 				Assert::AreEqual(true, result3);
 
 				preprocessor.preprocessQuery(query4);
-				bool result4 = compareQueryObjectProperties(expectedQo4, evaluator.getQueryObject());
+				qo = preprocessor.getQueryObject();
+				queryQueuer.setQueryObject(qo);
+				bool result4 = compareQueryObjectProperties(expectedQo4, queryQueuer.getQueryObject());
 				Assert::AreEqual(true, result4);
 
 				preprocessor.preprocessQuery(query5);
-				bool result5 = compareQueryObjectProperties(expectedQo5, evaluator.getQueryObject());
+				qo = preprocessor.getQueryObject();
+				queryQueuer.setQueryObject(qo);
+				bool result5 = compareQueryObjectProperties(expectedQo5, queryQueuer.getQueryObject());
 				Assert::AreEqual(true, result5);
 			}
 
@@ -82,22 +93,28 @@ namespace PreprocessorEvaluatorIntegrationTesting
 				string invalidQuery6 = "stmt s; variable v; Select s such  that Uses(_, v)"; //Such That can only have single space in between
 
 				preprocessor.preprocessQuery(invalidQuery1);
-				Assert::AreNotEqual(true, evaluator.isValidQuery());
+				queryQueuer.setInvalidQuery(preprocessor.getErrorMessage());
+				Assert::AreNotEqual(true, queryQueuer.isValidQuery());
 
 				preprocessor.preprocessQuery(invalidQuery2);
-				Assert::AreNotEqual(true, evaluator.isValidQuery());
+				queryQueuer.setInvalidQuery(preprocessor.getErrorMessage());
+				Assert::AreNotEqual(true, queryQueuer.isValidQuery());
 
 				preprocessor.preprocessQuery(invalidQuery3);
-				Assert::AreNotEqual(true, evaluator.isValidQuery());
+				queryQueuer.setInvalidQuery(preprocessor.getErrorMessage());
+				Assert::AreNotEqual(true, queryQueuer.isValidQuery());
 
 				preprocessor.preprocessQuery(invalidQuery4);
-				Assert::AreNotEqual(true, evaluator.isValidQuery());
+				queryQueuer.setInvalidQuery(preprocessor.getErrorMessage());
+				Assert::AreNotEqual(true, queryQueuer.isValidQuery());
 
 				preprocessor.preprocessQuery(invalidQuery5);
-				Assert::AreNotEqual(true, evaluator.isValidQuery());
+				queryQueuer.setInvalidQuery(preprocessor.getErrorMessage());
+				Assert::AreNotEqual(true, queryQueuer.isValidQuery());
 
 				preprocessor.preprocessQuery(invalidQuery6);
-				Assert::AreNotEqual(true, evaluator.isValidQuery());
+				queryQueuer.setInvalidQuery(preprocessor.getErrorMessage());
+				Assert::AreNotEqual(true, queryQueuer.isValidQuery());
 			}
 
 			bool compareQueryObjectProperties(QueryObject qo1, QueryObject qo2) {

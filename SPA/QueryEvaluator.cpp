@@ -33,12 +33,6 @@ bool QueryEvaluator::isValidQuery() {
 	return validQuery;
 };
 
-void QueryEvaluator::setInvalidQuery(string message) {
-	validQuery = false;
-	if (message != "") invalidQueryMessage = { message };
-	else invalidQueryMessage = {};
-};
-
 /*
   Possible Optimizations: Check if clauseresults or table is empty at any point of time, if yes, return null
 */
