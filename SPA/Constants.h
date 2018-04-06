@@ -59,6 +59,16 @@ enum ParamType {
 	ALL
 }; // ALL represents _
 
+/* Attribute type to account for with statements */
+enum AttrType {
+	PROCNAME, VARNAME, VALUE, STMT_NO, NONE //attrName for with clause
+};
+
+enum RelRef {
+	Modifies, Uses, Parent, ParentT, Follows, FollowsT,
+	Next, NextT, Calls, CallsT, Affects, AffectsT, With, None
+};
+
 enum Relations {
 	RelationFollows,
 	RelationFollowsStar,

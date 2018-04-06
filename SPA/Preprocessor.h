@@ -27,6 +27,7 @@ private:
 	string retrievePatternFromQuery(vector<string> queryArr, int &patternLength, int pos, string end);
 	void replaceStarWithT(string& source);
 	string infixToPostFix(string infix);
+	bool convertToPostFix(vector<string> queryArr, int conditionType, int &queryLength, int pos, QueryContent &qc);
 	int higherPrecedenceValidate(char operator1, char operator2);
 	int getPrecedence(char op);
 	bool checkBoolStmt(string query);
