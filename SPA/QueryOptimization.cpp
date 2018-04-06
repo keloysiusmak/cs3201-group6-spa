@@ -103,7 +103,7 @@ map<Param, Node> QueryOptimization::ufdsParams(vector<Clause> &clauses) {
 			Node newNode = Node(lhs);
 			paramsHash[lhs] = newNode;
 		}
-		if (Utils::isSynonym(rhs) && lhs.type != ALL) {
+		if (Utils::isSynonym(rhs) && rhs.type != ALL) {
 			Node newNode = Node(rhs);
 			paramsHash[rhs] = newNode;
 		}
