@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "../SPA/DesignExtractor.h"
 #include "../SPA/Constants.h";
+#include "../SPA/Utils.h";
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;

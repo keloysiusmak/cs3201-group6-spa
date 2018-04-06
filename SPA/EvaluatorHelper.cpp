@@ -43,54 +43,195 @@ Possible optimization: Hash results / Sort merge tables
 */
 void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, IntermediateTable &iTable) {
 
-	int firstParamInt = iTable.getParamIndex(clauseResults.tableParams[0]);
-	if (clauseResults.numParamsInResult() == 2) {
-		int secondParamInt = iTable.getParamIndex(clauseResults.tableParams[1]);
-		vector<vector<int>> newTable;
+	if (clauseResults.numParamsInResult() == 2) { // Two synonyms
+
+		/* 0: both params in table
+		1: left param in table
+		2: right param in table */
+		int paramsInTableCase;
+
+		Param leftParam = clauseResults.tableParams[0];
+		Param rightParam = clauseResults.tableParams[1];
+		int leftParamIndex = iTable.getParamIndex(leftParam);
+		int rightParamIndex = iTable.getParamIndex(rightParam);
+
+		if (leftParamIndex >= 0 && rightParamIndex >= 0) { // If both params are in table
+			paramsInTableCase = 0;
+			clauseResults.setResults(mergeSortResults(0, mergeSortResults(1, clauseResults.results)));
+			sortTable(rightParam, iTable); sortTable(leftParam, iTable);
+
+		} else if (leftParamIndex >= 0) { // Left param in table
+			paramsInTableCase = 1;
+			clauseResults.setResults(mergeSortResults(0, clauseResults.results));
+	  		sortTable(leftParam, iTable);
+
+		} else { // Right param in table
+			paramsInTableCase = 2;
+			clauseResults.setResults(mergeSortResults(1, clauseResults.results));
+			sortTable(rightParam, iTable);
+		}
+
+		vector<vector<int>> mergedResults;
+		int tableResultsIndex = 0;
+		int clauseResultsIndex = 0;
 			
-		for (vector<int> tableRow : iTable.resultsTable) {
-			for (vector<int> resultRow : clauseResults.results) {
-				int resultFirstParamValue = resultRow[0];
-				int resultSecondParamValue = resultRow[1];
-				if (firstParamInt > -1 && secondParamInt > -1) { // Both params in table
-					if (resultFirstParamValue == tableRow[firstParamInt] &&
-						resultSecondParamValue == tableRow[secondParamInt]) {
-						newTable.push_back(tableRow);
-						tableRow.pop_back();
+		while (tableResultsIndex < iTable.resultsTable.size() && clauseResultsIndex < clauseResults.results.size()) {
+
+			if (paramsInTableCase == 0) { // Both params in table
+				int tableLeftParamValue = iTable.resultsTable[tableResultsIndex][leftParamIndex];
+				int tableRightParamValue = iTable.resultsTable[tableResultsIndex][rightParamIndex];
+				int clauseLeftParamValue = clauseResults.results[clauseResultsIndex][0];
+				int clauseRightParamValue = clauseResults.results[clauseResultsIndex][1];
+
+				if (tableLeftParamValue == clauseLeftParamValue) { // left param equals
+
+					if (tableRightParamValue == clauseRightParamValue) {
+						mergedResults.push_back(iTable.resultsTable[tableResultsIndex]);
+						tableResultsIndex++; clauseResultsIndex++;
+					} else if (tableRightParamValue > clauseRightParamValue) {
+						clauseResultsIndex++;
+					} else {
+						tableResultsIndex++;
 					}
-				} else if (firstParamInt > -1) { // First param in table
-					if (resultFirstParamValue == tableRow[firstParamInt]) {
-						tableRow.push_back(resultSecondParamValue); // Add in second param value
-						newTable.push_back(tableRow);
-						tableRow.pop_back();
-					}
-				} else { // Second param in table
-					if (resultSecondParamValue == tableRow[secondParamInt]) {
-						tableRow.push_back(resultFirstParamValue); // Add in first param value
-						newTable.push_back(tableRow);
-						tableRow.pop_back();
-					}
+				} else {
+					(tableLeftParamValue < clauseLeftParamValue) ?
+						clauseResultsIndex++ : tableResultsIndex++;
 				}
+				
+			} else if (paramsInTableCase == 1) { // Left param in table
+
+				int tableLeftParamValue = iTable.resultsTable[tableResultsIndex][leftParamIndex];
+				int clauseLeftParamValue = clauseResults.results[clauseResultsIndex][0];
+				
+				if (tableLeftParamValue == clauseLeftParamValue) {
+					int tableIndex = tableResultsIndex;
+					vector<int> tableRow;
+					while (iTable.resultsTable[tableIndex][leftParamIndex] == clauseLeftParamValue) {
+						tableRow = iTable.resultsTable[tableResultsIndex];
+						tableRow.push_back(clauseResults.results[clauseResultsIndex][1]);
+						tableIndex++;
+						mergedResults.push_back(tableRow);
+					}
+					tableResultsIndex++;
+					clauseResultsIndex++;
+
+				} else {
+					(tableLeftParamValue < clauseLeftParamValue) ?
+						clauseResultsIndex++ : tableResultsIndex++;
+				}
+
+			} else { // Right param in table
+
+				int tableRightParamValue = iTable.resultsTable[tableResultsIndex][rightParamIndex];
+				int clauseRightParamValue = clauseResults.results[clauseResultsIndex][1];
+				
+				if (tableRightParamValue == clauseRightParamValue) {
+
+					int tableIndex = tableResultsIndex++;
+					vector<int> tableRow;
+					while (iTable.resultsTable[tableIndex][rightParamIndex] == clauseRightParamValue) {
+						tableRow = iTable.resultsTable[tableResultsIndex];
+						tableRow.push_back(clauseResults.results[clauseResultsIndex][0]);
+						tableIndex++;
+					}
+					tableResultsIndex++;
+					clauseResultsIndex++;
+
+				} else {
+					(tableRightParamValue < clauseRightParamValue) ?
+						clauseResultsIndex++ : tableResultsIndex++;
+				}
+
 			}
 		}
-		iTable.setResultsTable(newTable);
-	}
-	else { // Only 1 synonym
-		vector<vector<int>> newTable;
-		for (vector<int> tableRow : iTable.resultsTable) {
-			for (vector<int> resultRow : clauseResults.results) {
-				int resultsParamValue = resultRow[0];
-				if (resultsParamValue == tableRow[firstParamInt]) {
-					newTable.push_back(tableRow);
-				}
+
+		iTable.setResultsTable(mergedResults);
+
+	} else { // Only 1 synonym
+		Param paramToSortBy = clauseResults.tableParams[0];
+		int paramIndex = iTable.getParamIndex(paramToSortBy);
+
+		// Sort clauseResults and table results to facilitate merging
+		clauseResults.setResults(mergeSortResults(0, clauseResults.results));
+		sortTable(paramToSortBy, iTable);
+
+		vector<vector<int>> mergedResults;
+		int tableResultsIndex = 0;
+		int clauseResultsIndex = 0;
+		// Increment pointers in tableResults and clauseResults
+		while (tableResultsIndex < iTable.resultsTable.size() && clauseResultsIndex < clauseResults.results.size()) {
+
+			int tableValue = iTable.resultsTable[tableResultsIndex][paramIndex];
+			int clauseValue = clauseResults.results[clauseResultsIndex][0];
+			if (tableValue == clauseValue) { // Same value
+				mergedResults.push_back(clauseResults.results[clauseResultsIndex]);
+				tableResultsIndex++;
+				clauseResultsIndex++;
+			} else if (tableValue > clauseValue) {
+				clauseResultsIndex++;
+			} else {
+				tableResultsIndex++;
 			}
 		}
-		iTable.setResultsTable(newTable);
+
+		iTable.setResultsTable(mergedResults);
 	}
 
 	/* Add table params */
 	addClauseParamToTable(clauseResults, iTable);
 };
+
+/* Sort table according to specified param */
+void EvaluatorHelper::sortTable(Param &p, IntermediateTable &iTable) {
+
+	int paramIndex = iTable.getParamIndex(p);
+	assert(paramIndex > -1); // Assert param exists in table
+	
+	/* Mergesort on table */
+	vector<vector<int>> mergedResults = mergeSortResults(paramIndex, iTable.resultsTable);
+	iTable.setResultsTable(mergedResults);
+};
+
+/* Merge sort for nested vector, specify index for comparison */
+vector<vector<int>> EvaluatorHelper::mergeSortResults(int index, vector<vector<int>> &results) {
+	if (results.size() < 2) { // Single element do nothing
+		return results;
+	} else {
+		int resultsSize = results.size();
+		vector<vector<int>> leftArr;
+		vector<vector<int>> rightArr;
+		copy(results.begin(), results.begin() + (resultsSize / 2), back_inserter(leftArr)); // Copy first to middle
+		copy(results.begin() + (resultsSize / 2), results.end(), back_inserter(rightArr)); // Copy middle + 1 to last
+		leftArr = mergeSortResults(index, leftArr);
+		rightArr = mergeSortResults(index, rightArr);
+
+		vector<vector<int>> mergedResults;
+		int leftIndex = 0;
+		int rightIndex = 0;
+		while (leftIndex < leftArr.size() || rightIndex < rightArr.size()) {
+			if (leftIndex >= leftArr.size()) { // Left array exhausted
+				mergedResults.push_back(rightArr[rightIndex]);
+				rightIndex++; 
+				continue;
+			}
+			if (rightIndex >= rightArr.size()) { // Right array exhausted
+				mergedResults.push_back(leftArr[leftIndex]);
+				leftIndex++; 
+				continue;
+			}
+			if (leftArr[leftIndex][index] <= rightArr[rightIndex][index]) { // Left element smaller
+				mergedResults.push_back(leftArr[leftIndex]);
+				leftIndex++;
+			}
+			else { // Right element smaller
+				mergedResults.push_back(rightArr[rightIndex]); 
+				rightIndex++;
+			}
+		}
+
+		return mergedResults;
+	}
+}
 
 /* Merge Intermediate Tables 1 and 2 */
 IntermediateTable EvaluatorHelper::mergeIntermediateTables(IntermediateTable &iTable1, IntermediateTable &iTable2) {

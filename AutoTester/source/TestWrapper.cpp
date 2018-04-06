@@ -36,9 +36,12 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
 		queryQueuer.setInvalidQuery(errorMessage);
 	}
 	else {
-		QueryContent qc;
-		qc = preprocessor.getQueryContent();
-		queryQueuer.setQueryContent(qc);
+		std::vector<QueryContent> vqc;
+		vqc = preprocessor.getQueryContent();
+		queryQueuer.setQueryContent(vqc);
+		for (int i = 0; i < vqc.size(); i++) {
+			list<string> result = queryQueuer.evaluateQueries();
+			results.insert(results.end(), result.begin(), result.end());
+		}
 	}
-	results = queryQueuer.evaluateQueries();
 }

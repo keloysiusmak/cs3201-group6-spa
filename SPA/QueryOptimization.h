@@ -14,6 +14,7 @@ struct Node {
 	Node() { ; };
 	Node(Param self) {
 		this->self = self;
+		hasParent = false;
 	};
 
 	void setParent(Node* node) {

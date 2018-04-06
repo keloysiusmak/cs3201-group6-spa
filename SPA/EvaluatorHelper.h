@@ -3,7 +3,7 @@
 #include "Utils.h"
 #include "IntermediateTable.h"
 #include <list>
-
+#include <assert.h>
 
 class EvaluatorHelper {
 
@@ -11,6 +11,9 @@ public:
 	static void mergeClauseTable(ClauseResults &clauseResults, IntermediateTable &iTable);
 	static void mergeWithoutOverlap(ClauseResults &clauseResults, IntermediateTable &iTable);
 	static void mergeWithOverlap(ClauseResults &clauseResults, IntermediateTable &iTable);
+
+	static void sortTable(Param &p, IntermediateTable &iTable);
+	static vector<vector<int>> mergeSortResults(int index, vector<vector<int>> &results);
 
 	static IntermediateTable mergeIntermediateTables(IntermediateTable &iTable1, IntermediateTable &iTable2);
 
