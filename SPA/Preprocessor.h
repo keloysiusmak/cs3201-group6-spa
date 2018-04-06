@@ -18,7 +18,7 @@ private:
 	RelationshipTable relTable;
 	string errorMessage;
 	bool isErrorExist;
-	std::vector<QueryContent> qc;
+	std::vector<QueryContent> vqc;
 
 	int retrieveClauseArgType(string arg);
 	int retrieveExpressionType(string expression);

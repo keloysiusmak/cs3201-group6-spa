@@ -93,7 +93,7 @@ string Preprocessor::getErrorMessage() {
 }
 
 std::vector<QueryContent> Preprocessor::getQueryContent() {
-	return qc;
+	return vqc;
 }
 
 bool Preprocessor::getIsErrorExist() {
@@ -274,7 +274,7 @@ bool Preprocessor::isValidQuery(string query) {
 
 	//Check if there is any such that or pattern clause
 	if (queryArr.size() == endOfSelectStatement) {
-		qc.push_back(queryContent);
+		vqc.push_back(queryContent);
 		return true;
 	}
 
@@ -392,7 +392,7 @@ bool Preprocessor::isValidQuery(string query) {
 		}
 	}
 
-	qc.push_back(queryContent);
+	vqc.push_back(queryContent);
 	return true;
 };
 
