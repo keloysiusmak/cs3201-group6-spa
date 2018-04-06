@@ -47,6 +47,12 @@ list<string> QueryEvaluator::evaluateQuery() {
 
 		map<int, vector<Clause>> sortedClauses = QueryOptimization::sortIntoGroups(consolidatedClauses);
 
+		/* Convert to vector<Clause> */
+		vector<vector<Clause>> sortedClausesVector;
+		for (pair<int, vector<Clause>> groupedClauses : sortedClauses) {
+			sortedClausesVector.push_back(groupedClauses.second);
+		}
+
 		vector<Param> selectParams = queryObject.getSelectStatements();
 
 		vector<IntermediateTable> tables;
