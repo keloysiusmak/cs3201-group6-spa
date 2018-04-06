@@ -18,20 +18,28 @@ namespace QueryQueuerTesting
 		{
 			QueryQueuer qq;
 
+			std::vector<QueryContent> vqc;
 			QueryContent qc;
-			qq.setQueryContent(qc);
-			Assert::AreEqual(true, qq.isValidQuery());
-			qq.setInvalidQuery("message");
-			Assert::AreEqual(false, qq.isValidQuery());
+			vqc.push_back(qc);
+			for (int i = 0; i < vqc.size(); i++) {
+				qq.setQueryContent(vqc);
+				Assert::AreEqual(true, qq.isValidQuery());
+				qq.setInvalidQuery("message");
+				Assert::AreEqual(false, qq.isValidQuery());
+			}
 		}
 
 		TEST_METHOD(QueryQueuerGetQueryContent)
 		{
 			QueryQueuer qq;
 
+			std::vector<QueryContent> vqc;
+			qq.setQueryContent(vqc);
 			QueryContent qc;
-			qq.setQueryContent(qc);
-			Assert::AreEqual(true, compareQueryContentProperties(qc, qq.getQueryContent()));
+
+			for (int i = 0; i < vqc.size(); i++) {
+				Assert::AreEqual(true, compareQueryContentProperties(vqc[i], qq.getQueryContent()[i]));
+			}
 		}
 
 		TEST_METHOD(QueryQueuerParseQueryContent)
@@ -44,15 +52,18 @@ namespace QueryQueuerTesting
 			qc.insertClause(Uses, VARIABLE, "v", IDENT, "y");
 			qc.insertOperator(CLAUSE, OR);
 
-			qq.setQueryContent(qc);
-			std::vector<QueryObject> result = qq.parseQueryContent();
-			QueryObject expectedQo1;
-			expectedQo1.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
-			QueryObject expectedQo2;
-			expectedQo2.insertClause(Uses, VARIABLE, "v", IDENT, "y");
-			Assert::AreEqual(true, compareQueryObjectProperties(result[0], expectedQo1));
-			Assert::AreEqual(true, compareQueryObjectProperties(result[1], expectedQo2));
-
+			std::vector<QueryContent> vqc;
+			vqc.push_back(qc);
+			qq.setQueryContent(vqc);
+			for (int i = 0; i < vqc.size(); i++) {
+				std::vector<QueryObject> result = qq.parseQueryContent(vqc[i]);
+				QueryObject expectedQo1;
+				expectedQo1.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
+				QueryObject expectedQo2;
+				expectedQo2.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+				Assert::AreEqual(true, compareQueryObjectProperties(result[0], expectedQo1));
+				Assert::AreEqual(true, compareQueryObjectProperties(result[1], expectedQo2));
+			}
 		}
 
 		TEST_METHOD(QueryQueuerParseClauseTree)

@@ -70,56 +70,71 @@ namespace PreprocessorEvaluatorIntegrationTesting
 				expectedQo8a.insertClause(Follows, WHILE, "w", ASSIGN, "a");
 
 				QueryContent qc;
+				std::vector<QueryContent> vqc;
 
 				preprocessor.preprocessQuery(query1);
-				qc = preprocessor.getQueryContent();
-				queryQueuer.setQueryContent(qc);
-				std::vector<QueryObject> q = queryQueuer.parseQueryContent();
-				bool result1 = compareQueryObjectProperties(expectedQo1, q[0]);
-				Assert::AreEqual(true, result1);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result1 = compareQueryObjectProperties(expectedQo1, q[0]);
+					Assert::AreEqual(true, result1);
+				}
 
 
 				preprocessor.preprocessQuery(query2);
-				qc = preprocessor.getQueryContent();
-				queryQueuer.setQueryContent(qc);
-				q = queryQueuer.parseQueryContent();
-				bool result2 = compareQueryObjectProperties(expectedQo2, q[0]); 
-				Assert::AreEqual(true, result2);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result2 = compareQueryObjectProperties(expectedQo2, q[0]);
+					Assert::AreEqual(true, result2);
+				}
 
 				preprocessor.preprocessQuery(query3);
-				qc = preprocessor.getQueryContent();
-				queryQueuer.setQueryContent(qc);
-				q = queryQueuer.parseQueryContent();
-				bool result3 = compareQueryObjectProperties(expectedQo3, q[0]);
-				Assert::AreEqual(true, result3);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result3 = compareQueryObjectProperties(expectedQo3, q[0]);
+					Assert::AreEqual(true, result3);
+				}
 
 				preprocessor.preprocessQuery(query4);
-				qc = preprocessor.getQueryContent();
-				queryQueuer.setQueryContent(qc);
-				q = queryQueuer.parseQueryContent();
-				bool result4 = compareQueryObjectProperties(expectedQo4, q[0]);
-				Assert::AreEqual(true, result4);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result4 = compareQueryObjectProperties(expectedQo4, q[0]);
+					Assert::AreEqual(true, result4);
+				}
 
 				preprocessor.preprocessQuery(query5);
-				qc = preprocessor.getQueryContent();
-				queryQueuer.setQueryContent(qc);
-				q = queryQueuer.parseQueryContent();
-				bool result5 = compareQueryObjectProperties(expectedQo5, q[0]); 
-				Assert::AreEqual(true, result5);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result5 = compareQueryObjectProperties(expectedQo5, q[0]);
+					Assert::AreEqual(true, result5);
+				}
 
 				preprocessor.preprocessQuery(query6);
-				qc = preprocessor.getQueryContent();
-				queryQueuer.setQueryContent(qc);
-				q = queryQueuer.parseQueryContent();
-				bool result6 = compareQueryObjectProperties(expectedQo6, q[0]);
-				Assert::AreEqual(true, result6);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result6 = compareQueryObjectProperties(expectedQo6, q[0]);
+					Assert::AreEqual(true, result6);
+				}
 
 				preprocessor.preprocessQuery(query7);
-				qc = preprocessor.getQueryContent();
-				queryQueuer.setQueryContent(qc);
-				q = queryQueuer.parseQueryContent();
-				bool result7 = compareQueryObjectProperties(expectedQo7a, q[0]) && compareQueryObjectProperties(expectedQo7b, q[1]);
-				Assert::AreEqual(true, result7);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result7 = compareQueryObjectProperties(expectedQo7a, q[0]) && compareQueryObjectProperties(expectedQo7b, q[1]);
+					Assert::AreEqual(true, result7);
+				}
 			}
 
 			//This test method will take in an invalid test query
