@@ -3,8 +3,10 @@
 #include "../SPA/PKB.h"
 #include "../SPA/Pattern.h"
 #include "../SPA/Constants.h";
+#include "../SPA/Utils.h";
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
 using namespace std;
 
 namespace PKBTest

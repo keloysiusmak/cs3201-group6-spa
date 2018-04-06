@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <queue>
 #include "Param.h"
+#include "QueryContent.h"
+#include "QueryObject.h"
 
 using namespace std;
 
@@ -26,6 +28,17 @@ public:
 	static bool isValidConstant(string);
 	static bool isOpenBracket(string);
 	static bool isCloseBracket(string);
+	static bool compareClauses(QueryObject, QueryObject);
+	static bool compareClause(Clause, Clause);
+	static bool comparePatterns(QueryObject, QueryObject);
+	static bool comparePattern(Pattern, Pattern);
+	static bool compareWithClauses(QueryObject, QueryObject);
+	static bool compareWithClause(Clause, Clause);
+	static bool compareParams(QueryObject, QueryObject);
+	static bool compareParam(Param, Param);
+	static bool compareQueryObjectProperties(QueryObject, QueryObject);
+	static bool compareQueryContentProperties(QueryContent, QueryContent);
+	static bool compareClauseNode(ClauseNode, ClauseNode);
 };
 
 namespace UtilsConstants {

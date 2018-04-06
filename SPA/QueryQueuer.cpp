@@ -4,7 +4,7 @@ using namespace std;
 
 QueryQueuer::QueryQueuer() {
 	bool validQuery = true;
-	QueryContent qc;
+	std::vector<QueryContent> qc;
 }
 
 void QueryQueuer::setEvaluator(QueryEvaluator &evaluator) {
@@ -21,14 +21,15 @@ void QueryQueuer::setInvalidQuery(string message) {
 	else invalidQueryMessage = {};
 };
 
-void QueryQueuer::setQueryContent(QueryContent setQc) {
+void QueryQueuer::setQueryContent(std::vector<QueryContent> setQc) {
+	validQuery = true;
 	qc = setQc;
 }
-QueryContent QueryQueuer::getQueryContent() {
+std::vector<QueryContent> QueryQueuer::getQueryContent() {
 	return qc;
 }
 
-std::vector<QueryObject> QueryQueuer::parseQueryContent() {
+std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 
 	std::vector<ClauseNode> clauses;
 	std::vector<ClauseNode> withClauses;
@@ -41,18 +42,31 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 			if (clausesNodes[i].getClauseNodeType() == OPERATOR) {
 				if (clausesNodes[i].getOperators() == AND) {
 					if (temp.size() == 0) {
-						ClauseNode newParent = ClauseNode(AND);
-						newParent.addChildren(clauses[0]);
-						newParent.addChildren(clauses[1]);
+						int sizeC = clauses.size();
+						std::vector<ClauseNode> hold1;
+						std::vector<ClauseNode> hold2;
+						for (int j = 0; j < sizeC / 2; j++) {
+							hold1.push_back(clauses[j]);
+						}
+						for (int j = sizeC / 2; j < sizeC; j++) {
+							hold2.push_back(clauses[j]);
+						}
 						clauses.clear();
-						clauses.push_back(newParent);
+						for (int x = 0; x < hold1.size(); x++) {
+							for (int y = 0; y < hold2.size(); y++) {
+								ClauseNode newParent = ClauseNode(AND);
+								newParent.addChildren(hold1[x]);
+								newParent.addChildren(hold2[y]);
+								clauses.push_back(newParent);
+							}
+						}
 					}
 					else if (temp.size() == 1) {
-						for (int i = 0; i < clauses.size(); i++) {
+						for (int j = 0; j < clauses.size(); j++) {
 							ClauseNode newParent = ClauseNode(AND);
-							newParent.addChildren(clauses[i]);
+							newParent.addChildren(clauses[j]);
 							newParent.addChildren(temp[0]);
-							clauses[i] = newParent;
+							clauses[j] = newParent;
 						}
 						temp.clear();
 					}
@@ -85,6 +99,10 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 				}
 			}
 		}
+		if (temp.size() > 0) {
+			ClauseNode newClause1 = temp[0];
+			clauses.push_back(newClause1);
+		}
 	}
 
 	clausesNodes = qc.getPattern();
@@ -94,18 +112,31 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 			if (clausesNodes[i].getClauseNodeType() == OPERATOR) {
 				if (clausesNodes[i].getOperators() == AND) {
 					if (temp.size() == 0) {
-						ClauseNode newParent = ClauseNode(AND);
-						newParent.addChildren(pattern[0]);
-						newParent.addChildren(pattern[1]);
+						int sizeC = pattern.size();
+						std::vector<ClauseNode> hold1;
+						std::vector<ClauseNode> hold2;
+						for (int j = 0; j < sizeC / 2; j++) {
+							hold1.push_back(clauses[j]);
+						}
+						for (int j = sizeC / 2; j < sizeC; j++) {
+							hold2.push_back(clauses[j]);
+						}
 						pattern.clear();
-						pattern.push_back(newParent);
+						for (int x = 0; x < hold1.size(); x++) {
+							for (int y = 0; y < hold2.size(); y++) {
+								ClauseNode newParent = ClauseNode(AND);
+								newParent.addChildren(hold1[x]);
+								newParent.addChildren(hold2[y]);
+								pattern.push_back(newParent);
+							}
+						}
 					}
 					else if (temp.size() == 1) {
-						for (int i = 0; i < pattern.size(); i++) {
+						for (int j = 0; j < pattern.size(); j++) {
 							ClauseNode newParent = ClauseNode(AND);
-							newParent.addChildren(pattern[i]);
+							newParent.addChildren(pattern[j]);
 							newParent.addChildren(temp[0]);
-							pattern[i] = newParent;
+							pattern[j] = newParent;
 						}
 						temp.clear();
 					}
@@ -138,6 +169,10 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 				}
 			}
 		}
+		if (temp.size() > 0) {
+			ClauseNode newClause1 = temp[0];
+			pattern.push_back(newClause1);
+		}
 	}
 
 	clausesNodes = qc.getWithClauses();
@@ -147,18 +182,31 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 			if (clausesNodes[i].getClauseNodeType() == OPERATOR) {
 				if (clausesNodes[i].getOperators() == AND) {
 					if (temp.size() == 0) {
-						ClauseNode newParent = ClauseNode(AND);
-						newParent.addChildren(withClauses[0]);
-						newParent.addChildren(withClauses[1]);
+						int sizeC = withClauses.size();
+						std::vector<ClauseNode> hold1;
+						std::vector<ClauseNode> hold2;
+						for (int j = 0; j < sizeC / 2; j++) {
+							hold1.push_back(withClauses[j]);
+						}
+						for (int j = sizeC / 2; j < sizeC; j++) {
+							hold2.push_back(withClauses[j]);
+						}
 						withClauses.clear();
-						withClauses.push_back(newParent);
+						for (int x = 0; x < hold1.size(); x++) {
+							for (int y = 0; y < hold2.size(); y++) {
+								ClauseNode newParent = ClauseNode(AND);
+								newParent.addChildren(hold1[x]);
+								newParent.addChildren(hold2[y]);
+								clauses.push_back(newParent);
+							}
+						}
 					}
 					else if (temp.size() == 1) {
-						for (int i = 0; i < withClauses.size(); i++) {
+						for (int j = 0; j < withClauses.size(); j++) {
 							ClauseNode newParent = ClauseNode(AND);
-							newParent.addChildren(withClauses[i]);
+							newParent.addChildren(withClauses[j]);
 							newParent.addChildren(temp[0]);
-							withClauses[i] = newParent;
+							withClauses[j] = newParent;
 						}
 						temp.clear();
 					}
@@ -191,6 +239,10 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 				}
 			}
 		}
+		if (temp.size() > 0) {
+			ClauseNode newClause1 = temp[0];
+			withClauses.push_back(newClause1);
+		}
 	}
 
 	std::vector<QueryObject> queryObjects;
@@ -198,26 +250,32 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent() {
 	int wSize = (withClauses.size() > 0) ? withClauses.size() : 1;
 	int pSize = (pattern.size() > 0) ? pattern.size() : 1;
 	int total =  cSize * wSize * pSize;
-	for (int i = 0; i < total; i++) {
-		QueryObject qo;
-		queryObjects.push_back(qo);
-	}
-	if (clauses.size() > 0) {
+	if (!(clauses.size() == 0 && withClauses.size() && pattern.size())) {
 		for (int i = 0; i < total; i++) {
-			int c = i % cSize;
-			queryObjects[i].setClause(parseClauseTree(clauses[c]));
+			QueryObject qo;
+			std::vector<Param> p = qc.getSelect();
+			for (int x = 0; x < p.size(); x++) {
+				qo.insertSelectStmt(p[x].type, p[x].value, p[x].attribute);
+			}
+			queryObjects.push_back(qo);
 		}
-	}
-	if (pattern.size() > 0) {
-		for (int i = 0; i < total; i++) {
-			int c = i % pSize;
-			queryObjects[i].setPattern(parsePatternTree(pattern[c]));
+		if (clauses.size() > 0) {
+			for (int i = 0; i < total; i++) {
+				int c = i % cSize;
+				queryObjects[i].setClause(parseClauseTree(clauses[c]));
+			}
 		}
-	}
-	if (withClauses.size() > 0) {
-		for (int i = 0; i < total; i++) {
-			int c = i % wSize;
-			queryObjects[i].setWithClause(parseWithClauseTree(withClauses[c]));
+		if (pattern.size() > 0) {
+			for (int i = 0; i < total; i++) {
+				int c = i % pSize;
+				queryObjects[i].setPattern(parsePatternTree(pattern[c]));
+			}
+		}
+		if (withClauses.size() > 0) {
+			for (int i = 0; i < total; i++) {
+				int c = i % wSize;
+				queryObjects[i].setWithClause(parseWithClauseTree(withClauses[c]));
+			}
 		}
 	}
 	return queryObjects;
@@ -277,20 +335,22 @@ std::vector<Pattern> QueryQueuer::parsePatternTree(ClauseNode c) {
 list<string> QueryQueuer::evaluateQueries() {
 
 	list<string> output;
-	std::vector<QueryObject> q = parseQueryContent();
-	for (int i = 0; i < q.size(); i++) {
-		list<string> results;
+	for (int j = 0; j < qc.size(); j++) {
+		std::vector<QueryObject> q = parseQueryContent(qc[j]);
+		for (int i = 0; i < q.size(); i++) {
+			list<string> results;
 
-		QueryObject qo;
+			QueryObject qo;
 
-		if (validQuery) {
-			_evaluator.setQueryObject(q[i]);
-			results = _evaluator.evaluateQuery();
-			output.insert(output.end(), results.begin(), results.end());
-		}
-		else {
-			results = invalidQueryMessage;
-			output.insert(output.end(), results.begin(), results.end());
+			if (validQuery) {
+				_evaluator.setQueryObject(q[i]);
+				results = _evaluator.evaluateQuery();
+				output.insert(output.end(), results.begin(), results.end());
+			}
+			else {
+				results = invalidQueryMessage;
+				output.insert(output.end(), results.begin(), results.end());
+			}
 		}
 	}
 

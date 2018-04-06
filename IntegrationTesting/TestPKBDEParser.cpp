@@ -45,6 +45,7 @@ namespace PKBDEParserIntegrationTesting
 			
 			*/
 			testString = "procedure a {a = b; while c { b = (a + 1 )* 4; call b; } if a then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ f = g; while h { while i { j = 1; }} }";
+			//testString = "procedure Main {while one {seven = two + three * four * five * six;four = four + 3;three = three - one * ( two + ten);eight = three + 1; }one = 5;two = one;call Third;three = two + 2;four = 1;call Second;one = two + one + three + five +5;while eight {one = three + 3 + 2+two;four = four + 7;if eight then{ten = five + 10; }else {three = one + 1;while three {two = three + one * ten - two;if eight then {if five then {eleven = five + 1;twelve = thirteen * five * five;while ten {call Second;}fourteen = 2 * thirteen * five - seven + eight;}else{twelve = night * ten;fifteen = 2 * night + ten;}}else{three = one + 3 * ( two - nine);}}while two{en = five - 500;night = two + three * ( three * three - ( three + three ) );}six = fourteen * 3;one = one + two + three;}one = one + two + three + seven * five;while eight {eight = eight + 1 * five * fifteen;}}one = one + sixteen ;}procedure Second {thirteen = 2;eleven = twelve - thirteen;while one {call Third;}if two then {one = two + three * ten;}else {call Third;one = two;while three {one = two;}}}procedure Third {if seven then {fifteen = sixteen - six + six;}else {seven = three * ten; }}";
 			pkb = parser.Parse(simpleSource, pkb, true, testString);
 			de = DesignExtractor();
 			de.extract(pkb);

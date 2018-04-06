@@ -8,12 +8,40 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-namespace UnitTesting
+namespace QueryQueuerTesting
 {
 	TEST_CLASS(QueryQueuerTest)
 	{
 	public:
 		
+		TEST_METHOD(QueryQueuerIsValidQuery)
+		{
+			QueryQueuer qq;
+
+			std::vector<QueryContent> vqc;
+			QueryContent qc;
+			vqc.push_back(qc);
+			for (int i = 0; i < vqc.size(); i++) {
+				qq.setQueryContent(vqc);
+				Assert::AreEqual(true, qq.isValidQuery());
+				qq.setInvalidQuery("message");
+				Assert::AreEqual(false, qq.isValidQuery());
+			}
+		}
+
+		TEST_METHOD(QueryQueuerGetQueryContent)
+		{
+			QueryQueuer qq;
+
+			std::vector<QueryContent> vqc;
+			qq.setQueryContent(vqc);
+			QueryContent qc;
+
+			for (int i = 0; i < vqc.size(); i++) {
+				Assert::AreEqual(true, Utils::compareQueryContentProperties(vqc[i], qq.getQueryContent()[i]));
+			}
+		}
+
 		TEST_METHOD(QueryQueuerParseQueryContent)
 		{
 			PKB pkb;
@@ -24,15 +52,50 @@ namespace UnitTesting
 			qc.insertClause(Uses, VARIABLE, "v", IDENT, "y");
 			qc.insertOperator(CLAUSE, OR);
 
-			qq.setQueryContent(qc);
-			std::vector<QueryObject> result = qq.parseQueryContent();
-			QueryObject expectedQo1;
-			expectedQo1.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
-			QueryObject expectedQo2;
-			expectedQo2.insertClause(Uses, VARIABLE, "v", IDENT, "y");
-			Assert::AreEqual(true, compareQueryObjectProperties(result[0], expectedQo1));
-			Assert::AreEqual(true, compareQueryObjectProperties(result[1], expectedQo2));
+			std::vector<QueryContent> vqc;
+			vqc.push_back(qc);
+			qq.setQueryContent(vqc);
+			for (int i = 0; i < vqc.size(); i++) {
+				std::vector<QueryObject> result = qq.parseQueryContent(vqc[i]);
+				QueryObject expectedQo1a;
+				expectedQo1a.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
+				QueryObject expectedQo1b;
+				expectedQo1b.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[0], expectedQo1a));
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[1], expectedQo1b));
+			}
 
+			QueryContent qc1;
+			qc1.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
+			qc1.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+			qc1.insertOperator(CLAUSE, OR);
+			qc1.insertClause(Modifies, VARIABLE, "v", IDENT, "a");
+			qc1.insertClause(Uses, VARIABLE, "v", IDENT, "b");
+			qc1.insertOperator(CLAUSE, OR);
+			qc1.insertOperator(CLAUSE, AND);
+
+			std::vector<QueryContent> vqc1;
+			vqc1.push_back(qc1);
+			qq.setQueryContent(vqc1);
+			for (int i = 0; i < vqc1.size(); i++) {
+				std::vector<QueryObject> result = qq.parseQueryContent(vqc1[i]);
+				QueryObject expectedQo2a;
+				expectedQo2a.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
+				expectedQo2a.insertClause(Modifies, VARIABLE, "v", IDENT, "a");
+				QueryObject expectedQo2b;
+				expectedQo2b.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
+				expectedQo2b.insertClause(Uses, VARIABLE, "v", IDENT, "b");
+				QueryObject expectedQo2c;
+				expectedQo2c.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+				expectedQo2c.insertClause(Modifies, VARIABLE, "v", IDENT, "a");
+				QueryObject expectedQo2d;
+				expectedQo2d.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+				expectedQo2d.insertClause(Uses, VARIABLE, "v", IDENT, "b");
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[0], expectedQo2a));
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[1], expectedQo2b));
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[2], expectedQo2c));
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[3], expectedQo2d));
+			}
 		}
 
 		TEST_METHOD(QueryQueuerParseClauseTree)
@@ -74,9 +137,9 @@ namespace UnitTesting
 			expectedClause2.setClause(Modifies, lp, rp);
 			Clause expectedClause3;
 			expectedClause3.setClause(Modifies, lp, rp);
-			Assert::AreEqual(true, compareClause(expectedClause1, clause[0]));
-			Assert::AreEqual(true, compareClause(expectedClause2, clause[1]));
-			Assert::AreEqual(true, compareClause(expectedClause3, clause[2]));
+			Assert::AreEqual(true, Utils::compareClause(expectedClause1, clause[0]));
+			Assert::AreEqual(true, Utils::compareClause(expectedClause2, clause[1]));
+			Assert::AreEqual(true, Utils::compareClause(expectedClause3, clause[2]));
 		}
 
 		TEST_METHOD(QueryQueuerParsePatternTree)
@@ -124,9 +187,9 @@ namespace UnitTesting
 			expectedPattern2.setPattern(lp, rp, rrp);
 			Pattern expectedPattern3;
 			expectedPattern3.setPattern(lp, rp, rrp);
-			Assert::AreEqual(true, comparePattern(expectedPattern1, patterns[0]));
-			Assert::AreEqual(true, comparePattern(expectedPattern2, patterns[1]));
-			Assert::AreEqual(true, comparePattern(expectedPattern3, patterns[2]));
+			Assert::AreEqual(true, Utils::comparePattern(expectedPattern1, patterns[0]));
+			Assert::AreEqual(true, Utils::comparePattern(expectedPattern2, patterns[1]));
+			Assert::AreEqual(true, Utils::comparePattern(expectedPattern3, patterns[2]));
 		}
 
 		TEST_METHOD(QueryQueuerParseWithClauseTree)
@@ -168,111 +231,9 @@ namespace UnitTesting
 			expectedClause2.setClause(With, lp, rp);
 			Clause expectedClause3;
 			expectedClause3.setClause(With, lp, rp);
-			Assert::AreEqual(true, compareClause(expectedClause1, clause[0]));
-			Assert::AreEqual(true, compareClause(expectedClause2, clause[1]));
-			Assert::AreEqual(true, compareClause(expectedClause3, clause[2]));
-		}
-
-		bool compareClauses(QueryObject qo1, QueryObject qo2) {
-			bool isSameClauses = qo1.getClauses().size() == qo2.getClauses().size();
-
-			if (isSameClauses) {
-				for (size_t i = 0; i < qo1.getClauses().size(); i++) {
-					Clause c1 = qo1.getClauses().at(i);
-					Clause c2 = qo2.getClauses().at(i);
-
-					isSameClauses = compareClause(c1, c2);
-				}
-			}
-			return isSameClauses;
-		}
-		bool compareClause(Clause c1, Clause c2) {
-			if (c1.getRelRef() != c2.getRelRef() ||
-				c1.getLeftParam().type != c2.getLeftParam().type ||
-				c1.getLeftParam().value.compare(c2.getLeftParam().value) != 0 ||
-				c1.getLeftParam().attribute != c2.getLeftParam().attribute ||
-				c1.getRightParam().type != c2.getRightParam().type ||
-				c1.getRightParam().value.compare(c2.getRightParam().value) != 0 ||
-				c1.getRightParam().attribute != c2.getRightParam().attribute) {
-				return false;
-			}
-			return true;
-		}
-		bool comparePatterns(QueryObject qo1, QueryObject qo2) {
-			bool isSamePatterns = qo1.getPatterns().size() == qo2.getPatterns().size();
-
-			if (isSamePatterns) {
-				for (size_t i = 0; i < qo1.getPatterns().size(); i++) {
-					Pattern p1 = qo1.getPatterns().at(i);
-					Pattern p2 = qo2.getPatterns().at(i);
-
-					isSamePatterns = comparePattern(p1, p2);
-				}
-			}
-			return isSamePatterns;
-		}
-		bool comparePattern(Pattern p1, Pattern p2) {
-			if (p1.getEntity().type != p2.getEntity().type ||
-				p1.getEntity().value.compare(p2.getEntity().value) != 0 ||
-				p1.getLeftParam().type != p2.getLeftParam().type ||
-				p1.getLeftParam().value.compare(p2.getLeftParam().value) != 0 ||
-				p1.getLeftParam().attribute != p2.getLeftParam().attribute ||
-				p1.getRightParam().type != p2.getRightParam().type ||
-				p1.getRightParam().value.compare(p2.getRightParam().value) != 0 ||
-				p1.getRightParam().attribute != p2.getRightParam().attribute) {
-				return false;
-			}
-			return true;
-		}
-		bool compareWithClauses(QueryObject qo1, QueryObject qo2) {
-			bool isSameWithClauses = qo1.getWithClauses().size() == qo2.getWithClauses().size();
-
-			if (isSameWithClauses) {
-				for (size_t i = 0; i < qo1.getWithClauses().size(); i++) {
-					Clause w1 = qo1.getWithClauses().at(i);
-					Clause w2 = qo2.getWithClauses().at(i);
-
-					isSameWithClauses = compareWithClause(w1, w2);
-				}
-			}
-			return isSameWithClauses;
-		}
-		bool compareWithClause(Clause w1, Clause w2) {
-			if (w1.getRelRef() != w2.getRelRef() ||
-				w1.getLeftParam().type != w2.getLeftParam().type ||
-				w1.getLeftParam().value.compare(w2.getLeftParam().value) != 0 ||
-				w1.getLeftParam().attribute != w2.getLeftParam().attribute ||
-				w1.getRightParam().type != w2.getRightParam().type ||
-				w1.getRightParam().value.compare(w2.getRightParam().value) != 0 ||
-				w1.getRightParam().attribute != w2.getRightParam().attribute) {
-				return false;
-			}
-			return true;
-		}
-		bool compareQueryObjectProperties(QueryObject qo1, QueryObject qo2) {
-
-			bool isSameSelectStatement = qo1.getSelectStatements().size() == qo2.getSelectStatements().size();
-
-			if (isSameSelectStatement) {
-				for (size_t i = 0; i < qo1.getSelectStatements().size(); i++) {
-					Param s1 = qo1.getSelectStatements().at(i);
-					Param s2 = qo1.getSelectStatements().at(i);
-
-					if (s1.type != s2.type ||
-						s1.value.compare(s2.value) != 0 ||
-						s1.attribute != s2.attribute) {
-						isSameSelectStatement = false;
-					}
-				}
-			}
-
-			bool isSameClauses = compareClauses(qo1, qo2);
-
-			bool isSamePatterns = comparePatterns(qo1, qo2);
-
-			bool isSameWithClauses = compareWithClauses(qo1, qo2);
-
-			return isSameSelectStatement && isSameClauses && isSamePatterns && isSameWithClauses;
+			Assert::AreEqual(true, Utils::compareClause(expectedClause1, clause[0]));
+			Assert::AreEqual(true, Utils::compareClause(expectedClause2, clause[1]));
+			Assert::AreEqual(true, Utils::compareClause(expectedClause3, clause[2]));
 		}
 
 

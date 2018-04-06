@@ -128,6 +128,17 @@ public:
 		string query50 = "Select BOOLEAN with c5.procName=\"haha\"";
 		string query51 = "Select BOOLEAN";
 
+		//Query with or
+		string query52 = "Select a such that Parent*(w, a) or Follows(a, n)";
+		string query53 = "Select a pattern a(v, \"x	+     y - z\") or w(v, _)";
+		string query54 = "Select v with v.varName = c1.procName or c1.procName = \"haha\"";
+
+		//Query with and and or
+		string query55 = "Select a such that Affects*(5,5) or Next*(8,1) and Calls(p, v) or Follows(s1,s2)";
+
+		//Query with parenthesis
+		string query56 = "Select ifs such that (Parent(5,6) or Parent(5,7)) and ((Parent 3,5) or Parent(5,6))";
+
 		string invalidQuery1 = "Selecta"; //Must have space in between select and a
 		string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
 		string invalidQuery3 = "Select a such Follows*(a, 2)"; //Must have "that" word
@@ -199,6 +210,12 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query48));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query49));
 		Assert::AreEqual(false, preprocessor.isValidQuery(query50));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query51));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query52));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query53));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query54));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query55));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query56));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
