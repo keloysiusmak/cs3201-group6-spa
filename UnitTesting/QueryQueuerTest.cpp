@@ -57,12 +57,44 @@ namespace QueryQueuerTesting
 			qq.setQueryContent(vqc);
 			for (int i = 0; i < vqc.size(); i++) {
 				std::vector<QueryObject> result = qq.parseQueryContent(vqc[i]);
-				QueryObject expectedQo1;
-				expectedQo1.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
-				QueryObject expectedQo2;
-				expectedQo2.insertClause(Uses, VARIABLE, "v", IDENT, "y");
-				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[0], expectedQo1));
-				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[1], expectedQo2));
+				QueryObject expectedQo1a;
+				expectedQo1a.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
+				QueryObject expectedQo1b;
+				expectedQo1b.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[0], expectedQo1a));
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[1], expectedQo1b));
+			}
+
+			QueryContent qc1;
+			qc1.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
+			qc1.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+			qc1.insertOperator(CLAUSE, OR);
+			qc1.insertClause(Modifies, VARIABLE, "v", IDENT, "a");
+			qc1.insertClause(Uses, VARIABLE, "v", IDENT, "b");
+			qc1.insertOperator(CLAUSE, OR);
+			qc1.insertOperator(CLAUSE, AND);
+
+			std::vector<QueryContent> vqc1;
+			vqc1.push_back(qc1);
+			qq.setQueryContent(vqc1);
+			for (int i = 0; i < vqc1.size(); i++) {
+				std::vector<QueryObject> result = qq.parseQueryContent(vqc1[i]);
+				QueryObject expectedQo2a;
+				expectedQo2a.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
+				expectedQo2a.insertClause(Modifies, VARIABLE, "v", IDENT, "a");
+				QueryObject expectedQo2b;
+				expectedQo2b.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
+				expectedQo2b.insertClause(Uses, VARIABLE, "v", IDENT, "b");
+				QueryObject expectedQo2c;
+				expectedQo2c.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+				expectedQo2c.insertClause(Modifies, VARIABLE, "v", IDENT, "a");
+				QueryObject expectedQo2d;
+				expectedQo2d.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+				expectedQo2d.insertClause(Uses, VARIABLE, "v", IDENT, "b");
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[0], expectedQo2a));
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[1], expectedQo2b));
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[2], expectedQo2c));
+				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[3], expectedQo2d));
 			}
 		}
 
