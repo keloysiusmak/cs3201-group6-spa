@@ -47,6 +47,12 @@ list<string> QueryEvaluator::evaluateQuery() {
 
 		map<int, vector<Clause>> sortedClauses = QueryOptimization::sortIntoGroups(consolidatedClauses);
 
+		/* Convert to vector<Clause> */
+		vector<vector<Clause>> sortedClausesVector;
+		for (pair<int, vector<Clause>> groupedClauses : sortedClauses) {
+			sortedClausesVector.push_back(groupedClauses.second);
+		}
+
 		vector<Param> selectParams = queryObject.getSelectStatements();
 
 		vector<IntermediateTable> tables;
@@ -306,8 +312,11 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results;
-			if (leftParam.type == PROCEDURE) { results = pkb.getAllProcedureModifiesVariables();
-			} else { results = pkb.getAllStatementModifiesVariables(); }
+			if (leftParam.type == PROCEDURE) {
+				results = pkb.getAllProcedureModifiesVariables();
+			} else {
+				results = pkb.getAllStatementModifiesVariables();
+			}
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
