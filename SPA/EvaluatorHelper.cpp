@@ -64,11 +64,13 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 			paramsInTableCase = 1;
 			clauseResults.setResults(mergeSortResults(0, clauseResults.results));
 	  		sortTable(leftParam, iTable);
+			iTable.addTableParams(rightParam);
 
 		} else { // Right param in table
 			paramsInTableCase = 2;
 			clauseResults.setResults(mergeSortResults(1, clauseResults.results));
 			sortTable(rightParam, iTable);
+			iTable.addTableParams(leftParam);
 		}
 
 		vector<vector<int>> mergedResults;
@@ -93,15 +95,53 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 					} else {
 						tableResultsIndex++;
 					}
-				} else if (tableLeftParamValue > clauseLeftParamValue) { // table left param > clause left param
-					clauseResultsIndex++;
-				} else { // table left param < clause left param
-					tableResultsIndex++;
+				} else {
+					(tableLeftParamValue < clauseLeftParamValue) ?
+						clauseResultsIndex++ : tableResultsIndex++;
 				}
 				
 			} else if (paramsInTableCase == 1) { // Left param in table
 
+				int tableLeftParamValue = iTable.resultsTable[tableResultsIndex][leftParamIndex];
+				int clauseLeftParamValue = clauseResults.results[clauseResultsIndex][0];
+				
+				if (tableLeftParamValue == clauseLeftParamValue) {
+					int tableIndex = tableResultsIndex++;
+					vector<int> tableRow;
+					while (iTable.resultsTable[tableIndex][leftParamIndex] == clauseLeftParamValue) {
+						tableRow = iTable.resultsTable[tableResultsIndex];
+						tableRow.push_back(clauseResults.results[clauseResultsIndex][1]);
+						tableIndex++;
+					}
+					tableResultsIndex++;
+					clauseResultsIndex++;
+
+				} else {
+					(tableLeftParamValue < clauseLeftParamValue) ?
+						clauseResultsIndex++ : tableResultsIndex++;
+				}
+
 			} else { // Right param in table
+
+				int tableRightParamValue = iTable.resultsTable[tableResultsIndex][rightParamIndex];
+				int clauseRightParamValue = clauseResults.results[clauseResultsIndex][1];
+				
+				if (tableRightParamValue == clauseRightParamValue) {
+
+					int tableIndex = tableResultsIndex++;
+					vector<int> tableRow;
+					while (iTable.resultsTable[tableIndex][rightParamIndex] == clauseRightParamValue) {
+						tableRow = iTable.resultsTable[tableResultsIndex];
+						tableRow.push_back(clauseResults.results[clauseResultsIndex][0]);
+						tableIndex++;
+					}
+					tableResultsIndex++;
+					clauseResultsIndex++;
+
+				} else {
+					(tableRightParamValue < clauseRightParamValue) ?
+						clauseResultsIndex++ : tableResultsIndex++;
+				}
 
 			}
 		}
