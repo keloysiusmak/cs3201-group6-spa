@@ -45,6 +45,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 		QueryOptimization::consolidateClauses(queryObject.getPatterns(), consolidatedClauses);
 		QueryOptimization::consolidateClauses(queryObject.getWithClauses(), consolidatedClauses);
 
+		// Grouping according to syns
 		map<int, vector<Clause>> sortedClauses = QueryOptimization::sortIntoGroups(consolidatedClauses);
 
 		/* Convert to vector<Clause> */
@@ -53,11 +54,15 @@ list<string> QueryEvaluator::evaluateQuery() {
 			sortedClausesVector.push_back(groupedClauses.second);
 		}
 
-		vector<Param> selectParams = queryObject.getSelectStatements();
+		vector<Param> selectParams = queryObject.getSelectStatements(); // Selected Params
+		map<Clause, vector<vector<int>>> cached; // For cached results
 
 		vector<IntermediateTable> tables;
 		for (pair<int, vector<Clause>> groupedClauses : sortedClauses) {
-			IntermediateTable iTable; iTable.instantiateTable();
+
+			IntermediateTable iTable; // Instantiate table for each group
+			iTable.instantiateTable();
+			// Evaluate each clause within group
 			for (Clause clause : groupedClauses.second) {
 				ClauseResults clauseResults;
 				evaluateClauseGeneral(clause, clauseResults, iTable);
