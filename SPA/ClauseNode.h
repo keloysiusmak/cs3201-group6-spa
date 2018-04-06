@@ -2,6 +2,7 @@
 #include "Clause.h";
 #include "Pattern.h";
 #include "Constants.h";
+#include <vector>;
 
 class ClauseNode
 {
