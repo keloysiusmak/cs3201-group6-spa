@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Clause.h"
+#include "Utils.h"
 
 using namespace std;
 
