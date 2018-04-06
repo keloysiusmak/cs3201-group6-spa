@@ -64,13 +64,11 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 			paramsInTableCase = 1;
 			clauseResults.setResults(mergeSortResults(0, clauseResults.results));
 	  		sortTable(leftParam, iTable);
-			iTable.addTableParams(rightParam);
 
 		} else { // Right param in table
 			paramsInTableCase = 2;
 			clauseResults.setResults(mergeSortResults(1, clauseResults.results));
 			sortTable(rightParam, iTable);
-			iTable.addTableParams(leftParam);
 		}
 
 		vector<vector<int>> mergedResults;
@@ -106,12 +104,13 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 				int clauseLeftParamValue = clauseResults.results[clauseResultsIndex][0];
 				
 				if (tableLeftParamValue == clauseLeftParamValue) {
-					int tableIndex = tableResultsIndex++;
+					int tableIndex = tableResultsIndex;
 					vector<int> tableRow;
 					while (iTable.resultsTable[tableIndex][leftParamIndex] == clauseLeftParamValue) {
 						tableRow = iTable.resultsTable[tableResultsIndex];
 						tableRow.push_back(clauseResults.results[clauseResultsIndex][1]);
 						tableIndex++;
+						mergedResults.push_back(tableRow);
 					}
 					tableResultsIndex++;
 					clauseResultsIndex++;
@@ -145,6 +144,8 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 
 			}
 		}
+
+		iTable.setResultsTable(mergedResults);
 
 	} else { // Only 1 synonym
 		Param paramToSortBy = clauseResults.tableParams[0];
