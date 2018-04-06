@@ -85,7 +85,6 @@ const regex refRegex("(^(([a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)|([0-9]+$)|\"([a-zA-Z](
 
 Preprocessor::Preprocessor() {
 	errorMessage = EMPTY_STRING;
-	qc = QueryContent();
 	isErrorExist = false;
 }
 
@@ -93,7 +92,7 @@ string Preprocessor::getErrorMessage() {
 	return errorMessage;
 }
 
-QueryContent Preprocessor::getQueryContent() {
+std::vector<QueryContent> Preprocessor::getQueryContent() {
 	return qc;
 }
 
@@ -275,7 +274,7 @@ bool Preprocessor::isValidQuery(string query) {
 
 	//Check if there is any such that or pattern clause
 	if (queryArr.size() == endOfSelectStatement) {
-		qc = queryContent;
+		qc.push_back(queryContent);
 		return true;
 	}
 
@@ -393,7 +392,7 @@ bool Preprocessor::isValidQuery(string query) {
 		}
 	}
 
-	qc = queryContent;
+	qc.push_back(queryContent);
 	return true;
 };
 

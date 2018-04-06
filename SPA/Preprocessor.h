@@ -18,7 +18,7 @@ private:
 	RelationshipTable relTable;
 	string errorMessage;
 	bool isErrorExist;
-	QueryContent qc;
+	std::vector<QueryContent> qc;
 
 	int retrieveClauseArgType(string arg);
 	int retrieveExpressionType(string expression);
@@ -54,6 +54,6 @@ public:
 	bool parseWithClause(QueryContent &qc, string leftRef, string rightRef);
 	bool isValidSuchThatKeyword(string query);
 	string getErrorMessage();
-	QueryContent getQueryContent();
+	std::vector<QueryContent> getQueryContent();
 	bool getIsErrorExist();
 };
