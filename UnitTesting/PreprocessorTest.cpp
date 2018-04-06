@@ -127,6 +127,10 @@ public:
 		string query49 = "Select BOOLEAN with 3=3";
 		string query50 = "Select BOOLEAN with c5.procName=\"haha\"";
 		string query51 = "Select BOOLEAN";
+		
+		//Extension for AND, OR, NOT
+		string query52 = "Select BOOLEAN such that (Parent*(w, a) and Follows(a, n))";
+		string query53 = "Select a such that Parent*(w, a) such that Follows(a, n)";
 
 		string invalidQuery1 = "Selecta"; //Must have space in between select and a
 		string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
@@ -199,6 +203,8 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query48));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query49));
 		Assert::AreEqual(false, preprocessor.isValidQuery(query50));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query51));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query52));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));

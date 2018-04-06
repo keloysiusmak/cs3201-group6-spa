@@ -29,6 +29,7 @@ const string THAT_WORD = "that";
 const string PATTERN_WORD = "pattern";
 const string BOOLEAN_WORD = "BOOLEAN";
 const string AND_WORD = "and";
+const string OR_WORD = "or";
 const string WITH_WORD = "with";
 
 const string SYNONYM_WORD = "synonym";
@@ -74,6 +75,8 @@ const unordered_map<string, ParamType> REL_MAPPING_RIGHT_IDENT = { { "Modifies",
 { "Uses", VAR_IDENT },{ "Calls", PROC_IDENT },{ "CallsT", PROC_IDENT } };
 
 const unordered_map<bool, string> WITH_RELTABLE = { { true, "withString" }, { false, "withNumber" } };
+const unordered_map<char, OPERATORS> MAP_OPERATORS = { { '*', AND }, { '+', OR } };
+const unordered_map<string, char> MAP_SYMBOL_OPERATORS = { { "and", '*' },{ "or", '+' } };
 
 const regex synonymRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)");
 const regex identRegex("(^(\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$))");
@@ -279,12 +282,7 @@ bool Preprocessor::isValidQuery(string query) {
 		return true;
 	}
 
-	//prevAndClause will keep track the condition "and" should correspond to which clauses
-	//1 == such that
-	//2 == pattern
-	//3 == with
-	//0 == there is nothing to correspond
-	int prevAndClause = 0;
+	int prevSelectedClause = 0;
 
 	for (int i = endOfSelectStatement; i < queryArr.size(); i++) {
 
@@ -302,14 +300,27 @@ bool Preprocessor::isValidQuery(string query) {
 			//Add "that"
 			clauseLength++;
 
-			if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
-				return false;
+			prevSelectedClause = 1;
+
+			//Check whether the next element is a open bracket
+			if (queryArr.at(i + clauseLength).at(0) == SYMBOL_OPEN_BRACKET) {
+				if (!convertToPostFix(queryArr, prevSelectedClause, clauseLength, i, queryContent)) {
+					return false;
+				}
+			}
+			else {
+				if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
+					return false;
+				}
+
+				//Check whether need to append AND
+				if (queryContent.getClauses().size() != 1) {
+					queryContent.insertOperator(CLAUSE, MAP_OPERATORS.find(SYMBOL_MULTIPLICATION)->second);
+				}
 			}
 
 			//Finish processing this clause
 			i += (clauseLength - 1);
-
-			prevAndClause = 1;
 		}
 		//check whether "pattern" word exists
 		else if (queryArr.at(i).compare(PATTERN_WORD) == 0) {
@@ -324,7 +335,7 @@ bool Preprocessor::isValidQuery(string query) {
 			//Finish processing this pattern
 			i += (patternLength - 1);
 
-			prevAndClause = 2;
+			prevSelectedClause = 2;
 		}
 		//check whether "with" word exists
 		else if (queryArr.at(i).compare(WITH_WORD) == 0) {
@@ -338,7 +349,7 @@ bool Preprocessor::isValidQuery(string query) {
 
 			i += withLength;
 
-			prevAndClause = 3;
+			prevSelectedClause = 3;
 		}
 		else if (queryArr.at(i).compare(AND_WORD) == 0) {
 
@@ -348,19 +359,33 @@ bool Preprocessor::isValidQuery(string query) {
 			}
 
 			//such that
-			if (prevAndClause == 1) {
+			if (prevSelectedClause == 1) {
 
 				int clauseLength = 1;
 
-				if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
-					return false;
+				//Check whether the next element is a open bracket
+				if (queryArr.at(i + clauseLength).at(0) == SYMBOL_OPEN_BRACKET) {
+					if (!convertToPostFix(queryArr, prevSelectedClause, clauseLength, i, queryContent)) {
+						return false;
+					}
 				}
+				else {
+					if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
+						return false;
+					}
+
+					//Check whether need to append AND
+					if (queryContent.getClauses().size() != 1) {
+						queryContent.insertOperator(CLAUSE, MAP_OPERATORS.find(SYMBOL_MULTIPLICATION)->second);
+					}
+				}
+
 				//Finish processing this clause
 				i += (clauseLength - 1);
 
 			}
 			//pattern
-			else if (prevAndClause == 2) {
+			else if (prevSelectedClause == 2) {
 				//Keep track of the length of pattern
 				int patternLength = 1;
 
@@ -372,7 +397,7 @@ bool Preprocessor::isValidQuery(string query) {
 				i += (patternLength - 1);
 			}
 			//with
-			else if (prevAndClause == 3) {
+			else if (prevSelectedClause == 3) {
 
 				//Keep track of the length of with clause
 				int withLength = 1;
@@ -396,6 +421,90 @@ bool Preprocessor::isValidQuery(string query) {
 	qc = queryContent;
 	return true;
 };
+
+bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, int &queryLength, int pos, QueryContent &qc) {
+	
+	stack<char> operators;
+	bool isOperandClause = false;
+	bool isMathOperatorRepeated = false;
+	bool isOperandRepeated = false;
+	
+	operators.push(SYMBOL_OPEN_BRACKET);
+	queryLength++;
+
+	while (!operators.empty() && pos + queryLength < queryArr.size()) {
+		if (queryArr.at(pos + queryLength).compare(AND_WORD) == 0) {
+
+			if (isMathOperatorRepeated) {
+				return false;
+			}
+
+			operators.push(MAP_SYMBOL_OPERATORS.find(queryArr.at(pos + queryLength))->second);
+			isMathOperatorRepeated = true;
+			isOperandRepeated = false;
+		}
+		else if (KEYWORDS_CLAUSES.find(queryArr.at(pos + queryLength)) != KEYWORDS_CLAUSES.end()) {
+
+			if (isOperandRepeated) {
+				return false;
+			}
+
+			switch (conditionType) {
+			case 1:
+				if (!isValidClause(queryArr, queryLength, pos, qc)) {
+					return false;
+				}
+				queryLength--;
+				break;
+			case 2:
+				if (!isValidPattern(queryArr, queryLength, pos, qc)) {
+					return false;
+				}
+				queryLength--;
+				break;
+			case 3:
+				if (!isValidWithClause(queryArr, queryLength, pos, qc)) {
+					return false;
+				}
+				break;
+			}
+
+			isMathOperatorRepeated = false;
+			isOperandRepeated = true;
+			
+		}
+		//Checking for open bracket
+		else if (queryArr.at(pos + queryLength).at(0) == SYMBOL_OPEN_BRACKET) {
+
+			operators.push(SYMBOL_OPEN_BRACKET);
+
+			isMathOperatorRepeated = false;
+			isOperandRepeated = false;
+		}
+		//Checking for closing bracket
+		else if (queryArr.at(pos + queryLength).at(0) == SYMBOL_CLOSE_BRACKET) {
+			while (!operators.empty() && operators.top() != SYMBOL_OPEN_BRACKET) {
+				qc.insertOperator(CLAUSE, MAP_OPERATORS.find(operators.top())->second);
+				operators.pop();
+			}
+
+			if (operators.empty()) {
+				return false;
+			}
+			else {
+				operators.pop();
+			}
+
+			isMathOperatorRepeated = false;
+			isOperandRepeated = false;
+		}
+		else {
+			return false;
+		}
+		queryLength++;
+	}
+	return true;
+}
 
 bool Preprocessor::isValidSynonym(string synonym) {
 	if (synonym.length() == 0) {
