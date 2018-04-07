@@ -807,7 +807,7 @@ string QueryEvaluator::getProcOrVarName(AttrType type, int id) {
 list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<IntermediateTable> &iTables) {
 	if (selectedParams.size() == 1) {
 		Param selected = selectedParams[0];
-		IntermediateTable tableWithParam = *(EvaluatorHelper::findTableWithParam(selected, iTables));
+		IntermediateTable tableWithParam = EvaluatorHelper::findTableWithParam(selected, iTables);
 		if (selected.type == BOOLEAN) { // Select Boolean
 			if (tableWithParam.resultsTable.size() > 0 || // Table not empty
 				tableWithParam.tableParams.size() == 0) { // No statement to evaluate
@@ -826,17 +826,20 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 
 		IntermediateTable mergedTable;
 
+		// Merge tables for tuples
 		for (Param p : selectedParams) {
-			IntermediateTable* tableWithParam = EvaluatorHelper::findTableWithParam(p, iTables);
-			mergedTable = EvaluatorHelper::mergeIntermediateTables(mergedTable, *tableWithParam);
+			IntermediateTable tableWithParam = EvaluatorHelper::findTableWithParam(p, iTables);
+			mergedTable = EvaluatorHelper::mergeIntermediateTables(tableWithParam, mergedTable);
 			paramIndexes.push_back(mergedTable.getParamIndex(p));
 		}
 
 		stringstream tupleRowString;
+		// Iterate through all rows
 		for (size_t i = 0; i < mergedTable.resultsTable.size(); i++) {
 			vector<int> tableRow = mergedTable.resultsTable[i];
 			tupleRowString.str("");
 
+			// Iterate through each value of row
 			for (size_t j = 0; j < paramIndexes.size(); j++) {
 				int indexOfParam = paramIndexes[j];
 				int paramValue = tableRow[indexOfParam];
@@ -854,7 +857,8 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 				else tupleRowString << value << " ";
 			}
 			tupleResultSet.insert(tupleRowString.str());
-	}
+		}
+
 		for (string ans : tupleResultSet) {
 			tupleResult.push_back(ans);
 		}

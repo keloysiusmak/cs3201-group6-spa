@@ -25,4 +25,8 @@ public:
 	Param getRightParam();
 
 	bool hasSynonymsNotALL();
+
+	bool operator<(Clause other) const {
+		return _relRef < other.getRelRef();
+	}
 };
