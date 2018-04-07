@@ -2,6 +2,27 @@
 
 using namespace std;
 
+/* Store the unsanitized results of the clause, i.e. replacing syn with ALL */
+void EvaluatorHelper::cacheUnsanitized(ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache) {
+
+};
+
+/* Store actual results of clause in cache */
+void EvaluatorHelper::cacheSanitized(ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache) {
+
+};
+
+/* Checks if actual clause is in cache */
+void EvaluatorHelper::clauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache) {
+	// Check ParamType
+};
+
+/* Checks if unsanitized clause is in cache */
+void EvaluatorHelper::unsanitizedClauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache) {
+	// Check ParamType
+
+}
+
 /* Merges the clauseResults into the intermediate table */
 void EvaluatorHelper::mergeClauseTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
 	if (clauseParamsInTable(clauseResults, iTable)) {
@@ -249,10 +270,14 @@ IntermediateTable EvaluatorHelper::mergeIntermediateTables(IntermediateTable &iT
 	// Cross product of two results tables
 	vector<vector<int>> mergedResultsTable;
 	for (vector<int> table1Row : iTable1.resultsTable) {
-		for (vector<int> table2Row : iTable2.resultsTable) {
-			vector<int> mergedRow = table1Row;
-			mergedRow.insert(mergedRow.end(), table2Row.begin(), table2Row.end());
-			mergedResultsTable.push_back(mergedRow);
+		if (iTable2.hasResults) {
+			mergedResultsTable.push_back(table1Row);
+		} else {
+			for (vector<int> table2Row : iTable2.resultsTable) {
+				vector<int> mergedRow = table1Row;
+				mergedRow.insert(mergedRow.end(), table2Row.begin(), table2Row.end());
+				mergedResultsTable.push_back(mergedRow);
+			}
 		}
 	}
 
@@ -283,15 +308,18 @@ void EvaluatorHelper::addClauseParamToTable(ClauseResults &clauseResults, Interm
 };
 
 /* Returns the pointer to the table containing the param */
-IntermediateTable* EvaluatorHelper::findTableWithParam(Param p, vector<IntermediateTable> &iTables) {
+IntermediateTable EvaluatorHelper::findTableWithParam(Param p, vector<IntermediateTable> &iTables) {
+
 	for (IntermediateTable iTable : iTables) {
-		if (iTable.getParamIndex(p) != -1) {
-			return &iTable;
+		int paramIndex = iTable.getParamIndex(p);
+		if (paramIndex > -1) {
+			return iTable;
 		}
 	}
-	IntermediateTable emptyTable; map<Param, int> emptyTableParams; vector<vector<int>> emptyTableResults;
-	emptyTable.setTableParams(emptyTableParams); emptyTable.setResultsTable(emptyTableResults);
-	return &emptyTable;
+
+	IntermediateTable emptyTable;
+	emptyTable.instantiateTable();
+	return emptyTable;
 }
 
 /* Returns number of params of With Clause in table */

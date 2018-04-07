@@ -55,7 +55,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 		}
 
 		vector<Param> selectParams = queryObject.getSelectStatements(); // Selected Params
-		map<Clause, vector<vector<int>>> cached; // For cached results
+		map<Clause, vector<vector<int>>> cache; // For cached results
 
 		vector<IntermediateTable> tables;
 		for (pair<int, vector<Clause>> groupedClauses : sortedClauses) {
@@ -65,7 +65,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 			// Evaluate each clause within group
 			for (Clause clause : groupedClauses.second) {
 				ClauseResults clauseResults;
-				evaluateClauseGeneral(clause, clauseResults, iTable);
+				evaluateClauseGeneral(clause, clauseResults, iTable, cache);
 			}
 			tables.push_back(iTable);
 		}
@@ -80,7 +80,8 @@ list<string> QueryEvaluator::evaluateQuery() {
 }
 
 // General evaluation method for base Clause type
-void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clauseResults, IntermediateTable &iTable) {
+void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clauseResults,
+	IntermediateTable &iTable, map<Clause, vector<vector<int>>> &cache) {
 	if (clause.getRelRef() == With) { // With
 		handleWithClause(clause, iTable);
 	} else {
@@ -90,9 +91,11 @@ void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clause
 		}
 		else { // Such That
 			evaluateClause(clause, clauseResults);
+			// EvaluatorHelper::storeUnsanitized();
 		}
 		clauseResults.removeALLSyns(); // Sanitization
 		filterStmts(clauseResults);
+		// EvaluatorHelper::storeSanitized();
 		EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
 	}
 };

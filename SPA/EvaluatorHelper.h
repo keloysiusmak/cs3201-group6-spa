@@ -8,6 +8,11 @@
 class EvaluatorHelper {
 
 public:
+	static void cacheUnsanitized(ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache);
+	static void cacheSanitized(ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache);
+	static void clauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache);
+	static void unsanitizedClauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache);
+
 	static void mergeClauseTable(ClauseResults &clauseResults, IntermediateTable &iTable);
 	static void mergeWithoutOverlap(ClauseResults &clauseResults, IntermediateTable &iTable);
 	static void mergeWithOverlap(ClauseResults &clauseResults, IntermediateTable &iTable);
@@ -20,7 +25,7 @@ public:
 	static bool clauseParamsInTable(ClauseResults &clauseResults, IntermediateTable &iTable);
 	static void addClauseParamToTable(ClauseResults &clauseResults, IntermediateTable &iTable);
 
-	static IntermediateTable* findTableWithParam(Param p, vector<IntermediateTable> &iTables);
+	static IntermediateTable findTableWithParam(Param p, vector<IntermediateTable> &iTables);
 
 	static int withClauseNumSyns(Clause &clause, IntermediateTable &iTable);
 };
