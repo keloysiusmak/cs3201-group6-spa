@@ -81,7 +81,6 @@ namespace PreprocessorEvaluatorIntegrationTesting
 					Assert::AreEqual(true, result1);
 				}
 
-
 				preprocessor.preprocessQuery(query2);
 				vqc = preprocessor.getQueryContent();
 				queryQueuer.setQueryContent(vqc);
