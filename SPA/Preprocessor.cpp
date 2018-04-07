@@ -607,6 +607,10 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 	bool isOperandClause = false;
 	bool isMathOperatorRepeated = false;
 	bool isOperandRepeated = false;
+	bool isOperatorAtTheStart = false;
+	bool isOperatorAtTheEnd = false;
+	bool isOperandBesideStarBracket = false;
+	bool isCloseBracketBesideOperand = false;
 	
 	operators.push(SYMBOL_OPEN_BRACKET);
 	queryLength++;
@@ -615,7 +619,7 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 		if (queryArr.at(pos + queryLength).compare(AND_WORD) == 0 ||
 			queryArr.at(pos + queryLength).compare(OR_WORD) == 0) {
 
-			if (isMathOperatorRepeated) {
+			if (isMathOperatorRepeated || isOperatorAtTheStart || isOperatorAtTheEnd) {
 				return false;
 			}
 
@@ -638,6 +642,10 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 			operators.push(MAP_SYMBOL_OPERATORS.find(queryArr.at(pos + queryLength))->second);
 			isMathOperatorRepeated = true;
 			isOperandRepeated = false;
+			isOperatorAtTheStart = false;
+			isOperatorAtTheEnd = true;
+			isOperandBesideStarBracket = false;
+			isCloseBracketBesideOperand = false;
 		}
 		else if (KEYWORDS_CLAUSES.find(queryArr.at(pos + queryLength)) != KEYWORDS_CLAUSES.end() ||
 				(isDeclarationSynonymExist(queryArr.at(pos + queryLength)) && 
@@ -647,7 +655,7 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 					Utils::sanitise(queryArr.at(pos + queryLength + 1)).at(0) == SYMBOL_EQUALS &&
 					isValidRef(Utils::sanitise(queryArr.at(pos + queryLength + 2))))) {
 
-			if (isOperandRepeated) {
+			if (isOperandRepeated || isCloseBracketBesideOperand) {
 				return false;
 			}
 
@@ -673,15 +681,26 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 
 			isMathOperatorRepeated = false;
 			isOperandRepeated = true;
-			
+			isOperatorAtTheStart = false;
+			isOperatorAtTheEnd = false;
+			isOperandBesideStarBracket = true;
+			isCloseBracketBesideOperand = false;
 		}
 		//Checking for open bracket
 		else if (queryArr.at(pos + queryLength).at(0) == SYMBOL_OPEN_BRACKET) {
+
+			if (isOperandBesideStarBracket) {
+				return false;
+			}
 
 			operators.push(SYMBOL_OPEN_BRACKET);
 
 			isMathOperatorRepeated = false;
 			isOperandRepeated = false;
+			isOperatorAtTheEnd = false;
+			isOperatorAtTheStart = true;
+			isOperandBesideStarBracket = false;
+			isCloseBracketBesideOperand = false;
 		}
 		//Checking for closing bracket
 		else if (queryArr.at(pos + queryLength).at(0) == SYMBOL_CLOSE_BRACKET) {
@@ -700,7 +719,7 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 				operators.pop();
 			}
 
-			if (operators.empty()) {
+			if (operators.empty() || isOperatorAtTheEnd) {
 				return false;
 			}
 			else {
@@ -709,6 +728,10 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 
 			isMathOperatorRepeated = false;
 			isOperandRepeated = false;
+			isOperatorAtTheStart = false;
+			isOperatorAtTheEnd = false;
+			isOperandBesideStarBracket = false;
+			isCloseBracketBesideOperand = true;
 		}
 		else {
 			return false;
