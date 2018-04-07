@@ -113,6 +113,9 @@ unordered_map<string, string> Preprocessor::getDeclarationMap() {
 
 void Preprocessor::preprocessQuery(string query) {
 
+	//Clear the contents of vector<QueryContent>
+	vqc.clear();
+
 	//Clear the contents in declarationMap first before processing the query
 	declarationMap.clear();
 
