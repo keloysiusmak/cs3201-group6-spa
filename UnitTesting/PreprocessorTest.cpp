@@ -49,6 +49,8 @@ public:
 		//Populate the declarationMap
 		preprocessor.insertDeclarationToMap("a", "assign");
 		preprocessor.insertDeclarationToMap("s", "stmt");
+		preprocessor.insertDeclarationToMap("s1", "stmt");
+		preprocessor.insertDeclarationToMap("s2", "stmt");
 		preprocessor.insertDeclarationToMap("w", "while");
 		preprocessor.insertDeclarationToMap("v", "variable");
 		preprocessor.insertDeclarationToMap("c", "constant");
@@ -138,10 +140,14 @@ public:
 		string query56 = "Select v with v.varName = c1.procName or c1.procName = \"haha\"";
 
 		//Query with and and or
-		string query57 = "Select a such that Affects*(5,5) or Next*(8,1) and Calls(p, v) or Follows(s1,s2)";
+		string query57 = "Select a such that Affects*(5,5) or Next*(8,1) and Calls(p, \"first\") or Follows(s1,s2)";
 
 		//Query with parenthesis
-		string query58 = "Select ifs such that (Parent(5,6) or Parent(5,7)) and ((Parent 3,5) or Parent(5,6))";
+		string query58 = "Select ifs such that (Parent(5,6) or Parent(5,7)) and (Parent(3,5) or Parent(5,6))";
+
+		string query59 = "Select a with (v.varName = c1.procName or c1.procName = \"haha\") with (p.procName = c1.procName or c1.stmt# = 5)";
+		string query60 = "Select BOOLEAN such that Affects*(5,5) or Next*(8,1) such that (Calls(p, \"first\") or Follows(s1,s2))";
+		string query61 = "Select a such that ((Affects*(5,5) or Next*(8,1)) or Follows(s1,s2)) and Calls(p, \"first\")";
 
 		string invalidQuery1 = "Selecta"; //Must have space in between select and a
 		string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
@@ -217,9 +223,14 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query51));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query52));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query53));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query54));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query55));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query56));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query54));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query55));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query56));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query57));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query58));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query59));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query60));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query61));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));

@@ -113,6 +113,9 @@ unordered_map<string, string> Preprocessor::getDeclarationMap() {
 
 void Preprocessor::preprocessQuery(string query) {
 
+	//Clear the contents of vector<QueryContent>
+	vqc.clear();
+
 	//Clear the contents in declarationMap first before processing the query
 	declarationMap.clear();
 
@@ -283,6 +286,10 @@ bool Preprocessor::isValidQuery(string query) {
 
 	int prevSelectedClause = 0;
 
+	stack<char> suchThatOperator;
+	stack<char> patternOperator;
+	stack<char> withOperator;
+
 	for (int i = endOfSelectStatement; i < queryArr.size(); i++) {
 
 		//check "such" word exists
@@ -301,8 +308,17 @@ bool Preprocessor::isValidQuery(string query) {
 
 			prevSelectedClause = 1;
 
+			if (queryContent.getClauses().size() != 0) {
+				while (!suchThatOperator.empty() && higherPrecedenceValidate(suchThatOperator.top(), SYMBOL_MULTIPLICATION)) {
+					queryContent.insertOperator(CLAUSE, MAP_OPERATORS.find(suchThatOperator.top())->second);
+					suchThatOperator.pop();
+				}
+
+				suchThatOperator.push(SYMBOL_MULTIPLICATION);
+			}
+
 			//Check whether the next element is a open bracket
-			if (queryArr.at(i + clauseLength).at(0) == SYMBOL_OPEN_BRACKET) {
+			if (i + clauseLength < queryArr.size() && queryArr.at(i + clauseLength).at(0) == SYMBOL_OPEN_BRACKET) {
 				if (!convertToPostFix(queryArr, prevSelectedClause, clauseLength, i, queryContent)) {
 					return false;
 				}
@@ -310,11 +326,6 @@ bool Preprocessor::isValidQuery(string query) {
 			else {
 				if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
 					return false;
-				}
-
-				//Check whether need to append AND
-				if (queryContent.getClauses().size() != 1) {
-					queryContent.insertOperator(CLAUSE, MAP_OPERATORS.find(SYMBOL_MULTIPLICATION)->second);
 				}
 			}
 
@@ -327,14 +338,30 @@ bool Preprocessor::isValidQuery(string query) {
 			//Keep track of the length of pattern
 			int patternLength = 1;
 
-			if (!isValidPattern(queryArr, patternLength, i, queryContent)) {
-				return false;
+			prevSelectedClause = 2;
+
+			if (queryContent.getPattern().size() != 0) {
+				while (!patternOperator.empty() && higherPrecedenceValidate(patternOperator.top(), SYMBOL_MULTIPLICATION)) {
+					queryContent.insertOperator(PATTERN, MAP_OPERATORS.find(patternOperator.top())->second);
+					patternOperator.pop();
+				}
+
+				patternOperator.push(SYMBOL_MULTIPLICATION);
+			}
+
+			if (i + patternLength < queryArr.size() && queryArr.at(i + patternLength).at(0) == SYMBOL_OPEN_BRACKET) {
+				if (!convertToPostFix(queryArr, prevSelectedClause, patternLength, i, queryContent)) {
+					return false;
+				}
+			}
+			else {
+				if (!isValidPattern(queryArr, patternLength, i, queryContent)) {
+					return false;
+				}
 			}
 
 			//Finish processing this pattern
 			i += (patternLength - 1);
-
-			prevSelectedClause = 2;
 		}
 		//check whether "with" word exists
 		else if (queryArr.at(i).compare(WITH_WORD) == 0) {
@@ -342,13 +369,30 @@ bool Preprocessor::isValidQuery(string query) {
 			//Keep track of the length of with clause
 			int withLength = 1;
 			
-			if (!isValidWithClause(queryArr, withLength, i, queryContent)) {
-				return false;
+			prevSelectedClause = 3;
+
+			if (queryContent.getWithClauses().size() != 0) {
+				while (!withOperator.empty() && higherPrecedenceValidate(withOperator.top(), SYMBOL_MULTIPLICATION)) {
+					queryContent.insertOperator(WITH_CLAUSE, MAP_OPERATORS.find(withOperator.top())->second);
+					withOperator.pop();
+				}
+
+				withOperator.push(SYMBOL_MULTIPLICATION);
 			}
 
-			i += withLength;
+			if (i + withLength < queryArr.size() && queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+				if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
+					return false;
+				}
+				withLength--;
+			}
+			else {
+				if (!isValidWithClause(queryArr, withLength, i, queryContent)) {
+					return false;
+				}
+			}
 
-			prevSelectedClause = 3;
+			i += withLength;		
 		}
 		else if (queryArr.at(i).compare(AND_WORD) == 0) {
 
@@ -362,6 +406,13 @@ bool Preprocessor::isValidQuery(string query) {
 
 				int clauseLength = 1;
 
+				while (!suchThatOperator.empty() && higherPrecedenceValidate(suchThatOperator.top(), SYMBOL_MULTIPLICATION)) {
+					queryContent.insertOperator(CLAUSE, MAP_OPERATORS.find(suchThatOperator.top())->second);
+					suchThatOperator.pop();
+				}
+
+				suchThatOperator.push(SYMBOL_MULTIPLICATION);
+
 				//Check whether the next element is a open bracket
 				if (queryArr.at(i + clauseLength).at(0) == SYMBOL_OPEN_BRACKET) {
 					if (!convertToPostFix(queryArr, prevSelectedClause, clauseLength, i, queryContent)) {
@@ -371,11 +422,6 @@ bool Preprocessor::isValidQuery(string query) {
 				else {
 					if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
 						return false;
-					}
-
-					//Check whether need to append AND
-					if (queryContent.getClauses().size() != 1) {
-						queryContent.insertOperator(CLAUSE, MAP_OPERATORS.find(SYMBOL_MULTIPLICATION)->second);
 					}
 				}
 
@@ -388,8 +434,22 @@ bool Preprocessor::isValidQuery(string query) {
 				//Keep track of the length of pattern
 				int patternLength = 1;
 
-				if (!isValidPattern(queryArr, patternLength, i, queryContent)) {
-					return false;
+				while (!patternOperator.empty() && higherPrecedenceValidate(patternOperator.top(), SYMBOL_MULTIPLICATION)) {
+					queryContent.insertOperator(PATTERN, MAP_OPERATORS.find(patternOperator.top())->second);
+					patternOperator.pop();
+				}
+
+				patternOperator.push(SYMBOL_MULTIPLICATION);
+
+				if (queryArr.at(i + patternLength).at(0) == SYMBOL_OPEN_BRACKET) {
+					if (!convertToPostFix(queryArr, prevSelectedClause, patternLength, i, queryContent)) {
+						return false;
+					}
+				}
+				else {
+					if (!isValidPattern(queryArr, patternLength, i, queryContent)) {
+						return false;
+					}
 				}
 
 				//Finish processing this pattern
@@ -401,8 +461,116 @@ bool Preprocessor::isValidQuery(string query) {
 				//Keep track of the length of with clause
 				int withLength = 1;
 
-				if (!isValidWithClause(queryArr, withLength, i, queryContent)) {
-					return false;
+				while (!withOperator.empty() && higherPrecedenceValidate(withOperator.top(), SYMBOL_MULTIPLICATION)) {
+					queryContent.insertOperator(WITH_CLAUSE, MAP_OPERATORS.find(withOperator.top())->second);
+					withOperator.pop();
+				}
+
+				withOperator.push(SYMBOL_MULTIPLICATION);
+
+				if (queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+					if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
+						return false;
+					}
+					withLength--;
+				}
+				else {
+					if (!isValidWithClause(queryArr, withLength, i, queryContent)) {
+						return false;
+					}
+				}
+
+				i += withLength;
+
+			}
+			else {
+				return false;
+			}
+		}
+		else if (queryArr.at(i).compare(OR_WORD) == 0) {
+
+			// check whether "and" have continuation
+			if ((i + 1) >= queryArr.size()) {
+				return false;
+			}
+
+			//such that
+			if (prevSelectedClause == 1) {
+
+				int clauseLength = 1;
+
+				while (!suchThatOperator.empty() && higherPrecedenceValidate(suchThatOperator.top(), SYMBOL_PLUS)) {
+					queryContent.insertOperator(CLAUSE, MAP_OPERATORS.find(suchThatOperator.top())->second);
+					suchThatOperator.pop();
+				}
+
+				suchThatOperator.push(SYMBOL_PLUS);
+
+				//Check whether the next element is a open bracket
+				if (queryArr.at(i + clauseLength).at(0) == SYMBOL_OPEN_BRACKET) {
+					if (!convertToPostFix(queryArr, prevSelectedClause, clauseLength, i, queryContent)) {
+						return false;
+					}
+				}
+				else {
+					if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
+						return false;
+					}
+				}
+
+				//Finish processing this clause
+				i += (clauseLength - 1);
+
+			}
+			//pattern
+			else if (prevSelectedClause == 2) {
+				//Keep track of the length of pattern
+				int patternLength = 1;
+
+				while (!patternOperator.empty() && higherPrecedenceValidate(patternOperator.top(), SYMBOL_PLUS)) {
+					queryContent.insertOperator(PATTERN, MAP_OPERATORS.find(patternOperator.top())->second);
+					patternOperator.pop();
+				}
+
+				patternOperator.push(SYMBOL_PLUS);
+
+				if (queryArr.at(i + patternLength).at(0) == SYMBOL_OPEN_BRACKET) {
+					if (!convertToPostFix(queryArr, prevSelectedClause, patternLength, i, queryContent)) {
+						return false;
+					}
+				}
+				else {
+					if (!isValidPattern(queryArr, patternLength, i, queryContent)) {
+						return false;
+					}
+				}
+
+				//Finish processing this pattern
+				i += (patternLength - 1);
+			}
+			//with
+			else if (prevSelectedClause == 3) {
+
+				//Keep track of the length of with clause
+				int withLength = 1;
+
+				while (!withOperator.empty() && higherPrecedenceValidate(withOperator.top(), SYMBOL_PLUS)) {
+					queryContent.insertOperator(WITH_CLAUSE, MAP_OPERATORS.find(withOperator.top())->second);
+					withOperator.pop();
+				}
+
+				withOperator.push(SYMBOL_PLUS);
+
+				if (queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+					if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
+						return false;
+					}
+					withLength--;
+				}
+				else {
+					if (!isValidWithClause(queryArr, withLength, i, queryContent)) {
+						return false;
+					}
 				}
 
 				i += withLength;
@@ -417,6 +585,21 @@ bool Preprocessor::isValidQuery(string query) {
 		}
 	}
 
+	while (!suchThatOperator.empty()) {
+		queryContent.insertOperator(CLAUSE, MAP_OPERATORS.find(suchThatOperator.top())->second);
+		suchThatOperator.pop();
+	}
+
+	while (!patternOperator.empty()) {
+		queryContent.insertOperator(PATTERN, MAP_OPERATORS.find(patternOperator.top())->second);
+		patternOperator.pop();
+	}
+
+	while (!withOperator.empty()) {
+		queryContent.insertOperator(WITH_CLAUSE, MAP_OPERATORS.find(withOperator.top())->second);
+		withOperator.pop();
+	}
+
 	vqc.push_back(queryContent);
 	return true;
 };
@@ -427,24 +610,55 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 	bool isOperandClause = false;
 	bool isMathOperatorRepeated = false;
 	bool isOperandRepeated = false;
+	bool isOperatorAtTheStart = false;
+	bool isOperatorAtTheEnd = false;
+	bool isOperandBesideStarBracket = false;
+	bool isCloseBracketBesideOperand = false;
 	
 	operators.push(SYMBOL_OPEN_BRACKET);
 	queryLength++;
 
 	while (!operators.empty() && pos + queryLength < queryArr.size()) {
-		if (queryArr.at(pos + queryLength).compare(AND_WORD) == 0) {
+		if (queryArr.at(pos + queryLength).compare(AND_WORD) == 0 ||
+			queryArr.at(pos + queryLength).compare(OR_WORD) == 0) {
 
-			if (isMathOperatorRepeated) {
+			if (isMathOperatorRepeated || isOperatorAtTheStart || isOperatorAtTheEnd) {
 				return false;
+			}
+
+			char tempOp = MAP_SYMBOL_OPERATORS.find(queryArr.at(pos + queryLength))->second;
+			while (!operators.empty() && higherPrecedenceValidate(operators.top(), tempOp)) {
+				switch (conditionType) {
+				case 1:
+					qc.insertOperator(CLAUSE, MAP_OPERATORS.find(operators.top())->second);
+					break;
+				case 2:
+					qc.insertOperator(PATTERN, MAP_OPERATORS.find(operators.top())->second);
+					break;
+				case 3:
+					qc.insertOperator(WITH_CLAUSE, MAP_OPERATORS.find(operators.top())->second);
+					break;
+				}
+				operators.pop();
 			}
 
 			operators.push(MAP_SYMBOL_OPERATORS.find(queryArr.at(pos + queryLength))->second);
 			isMathOperatorRepeated = true;
 			isOperandRepeated = false;
+			isOperatorAtTheStart = false;
+			isOperatorAtTheEnd = true;
+			isOperandBesideStarBracket = false;
+			isCloseBracketBesideOperand = false;
 		}
-		else if (KEYWORDS_CLAUSES.find(queryArr.at(pos + queryLength)) != KEYWORDS_CLAUSES.end()) {
+		else if (KEYWORDS_CLAUSES.find(queryArr.at(pos + queryLength)) != KEYWORDS_CLAUSES.end() ||
+				(isDeclarationSynonymExist(queryArr.at(pos + queryLength)) && 
+					KEYWORDS_PATTERN_TYPE.find(declarationMap.find(queryArr.at(pos + queryLength))->second) != KEYWORDS_PATTERN_TYPE.end()) ||
+				((pos + queryLength + 1) < queryArr.size() && (pos + queryLength + 2) < queryArr.size() &&
+					isValidRef(Utils::sanitise(queryArr.at(pos + queryLength))) && 
+					Utils::sanitise(queryArr.at(pos + queryLength + 1)).at(0) == SYMBOL_EQUALS &&
+					isValidRef(Utils::sanitise(queryArr.at(pos + queryLength + 2))))) {
 
-			if (isOperandRepeated) {
+			if (isOperandRepeated || isCloseBracketBesideOperand) {
 				return false;
 			}
 
@@ -470,24 +684,45 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 
 			isMathOperatorRepeated = false;
 			isOperandRepeated = true;
-			
+			isOperatorAtTheStart = false;
+			isOperatorAtTheEnd = false;
+			isOperandBesideStarBracket = true;
+			isCloseBracketBesideOperand = false;
 		}
 		//Checking for open bracket
 		else if (queryArr.at(pos + queryLength).at(0) == SYMBOL_OPEN_BRACKET) {
+
+			if (isOperandBesideStarBracket) {
+				return false;
+			}
 
 			operators.push(SYMBOL_OPEN_BRACKET);
 
 			isMathOperatorRepeated = false;
 			isOperandRepeated = false;
+			isOperatorAtTheEnd = false;
+			isOperatorAtTheStart = true;
+			isOperandBesideStarBracket = false;
+			isCloseBracketBesideOperand = false;
 		}
 		//Checking for closing bracket
 		else if (queryArr.at(pos + queryLength).at(0) == SYMBOL_CLOSE_BRACKET) {
 			while (!operators.empty() && operators.top() != SYMBOL_OPEN_BRACKET) {
-				qc.insertOperator(CLAUSE, MAP_OPERATORS.find(operators.top())->second);
+				switch (conditionType) {
+				case 1:
+					qc.insertOperator(CLAUSE, MAP_OPERATORS.find(operators.top())->second);
+					break;
+				case 2:
+					qc.insertOperator(PATTERN, MAP_OPERATORS.find(operators.top())->second);
+					break;
+				case 3:
+					qc.insertOperator(WITH_CLAUSE, MAP_OPERATORS.find(operators.top())->second);
+					break;
+				}
 				operators.pop();
 			}
 
-			if (operators.empty()) {
+			if (operators.empty() || isOperatorAtTheEnd) {
 				return false;
 			}
 			else {
@@ -496,6 +731,10 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 
 			isMathOperatorRepeated = false;
 			isOperandRepeated = false;
+			isOperatorAtTheStart = false;
+			isOperatorAtTheEnd = false;
+			isOperandBesideStarBracket = false;
+			isCloseBracketBesideOperand = true;
 		}
 		else {
 			return false;
@@ -816,12 +1055,18 @@ bool Preprocessor::parseClauseArg(QueryContent &qc, string relType, string arg1,
 
 	bool sameSynonymValue = false;
 	bool sameIntegerValue = false;
+	bool LHSInvalidHigher = false;
 
 	//Check if both synonym are the same value
 	if (leftArgType == SYNONYM && rightArgType == SYNONYM) {
 		sameSynonymValue = leftArg.compare(rightArg) == 0;
 	} else if (leftArgType == INTEGER && rightArgType == INTEGER) {
+
+		//Check if both integer are the same value
 		sameIntegerValue = leftArg.compare(rightArg) == 0;
+
+		//Check if LHS is higher than RHS
+		LHSInvalidHigher = stoi(leftArg) > stoi(rightArg);
 	}
 
 	switch (searchRelType->second)
@@ -836,7 +1081,12 @@ bool Preprocessor::parseClauseArg(QueryContent &qc, string relType, string arg1,
 			return false;
 		}
 		break;
-	case Parent: case ParentT: case Follows: case FollowsT: case Next:
+	case Parent: case ParentT: case Follows: case FollowsT: 
+		if (!isValidStmtRef(leftArg) || !isValidStmtRef(rightArg) || sameSynonymValue || sameIntegerValue || LHSInvalidHigher) {
+			return false;
+		}
+		break;
+	case Next:
 		if (!isValidStmtRef(leftArg) || !isValidStmtRef(rightArg) || sameSynonymValue || sameIntegerValue) {
 			return false;
 		}
