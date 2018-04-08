@@ -459,7 +459,7 @@ public:
 		string secondParamValue = "3|";
 
 		//valid
-		Assert::AreEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2));
+		Assert::AreEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false));
 		Assert::AreEqual(static_cast<int>(ASSIGN), static_cast<int>(qc.getPattern().at(0).getPattern().getEntity().type));
 		Assert::AreEqual(entity, qc.getPattern().at(0).getPattern().getEntity().value);
 		Assert::AreEqual(static_cast<int>(VAR_IDENT), static_cast<int>(qc.getPattern().at(0).getPattern().getLeftParam().type));
@@ -474,7 +474,7 @@ public:
 		secondParamValue = "x|y|+|z|*|";
 
 		//valid
-		Assert::AreEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2));
+		Assert::AreEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false));
 		Assert::AreEqual(static_cast<int>(ASSIGN), static_cast<int>(qc.getPattern().at(1).getPattern().getEntity().type));
 		Assert::AreEqual(entity, qc.getPattern().at(1).getPattern().getEntity().value);
 		Assert::AreEqual(static_cast<int>(VARIABLE), static_cast<int>(qc.getPattern().at(1).getPattern().getLeftParam().type));
@@ -489,7 +489,7 @@ public:
 		secondParamValue = "x|y|+|1|-|";
 
 		//valid
-		Assert::AreEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2));
+		Assert::AreEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false));
 		Assert::AreEqual(static_cast<int>(ASSIGN), static_cast<int>(qc.getPattern().at(2).getPattern().getEntity().type));
 		Assert::AreEqual(entity, qc.getPattern().at(2).getPattern().getEntity().value);
 		Assert::AreEqual(static_cast<int>(VARIABLE), static_cast<int>(qc.getPattern().at(2).getPattern().getLeftParam().type));
@@ -504,7 +504,7 @@ public:
 		secondParamValue = "_";
 
 		//valid
-		Assert::AreEqual(true, preprocessor.parsePattern(qc, WHILE, entity, arg1, arg2));
+		Assert::AreEqual(true, preprocessor.parsePattern(qc, WHILE, entity, arg1, arg2, false));
 		Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qc.getPattern().at(3).getPattern().getEntity().type));
 		Assert::AreEqual(entity, qc.getPattern().at(3).getPattern().getEntity().value);
 		Assert::AreEqual(static_cast<int>(VARIABLE), static_cast<int>(qc.getPattern().at(3).getPattern().getLeftParam().type));
@@ -526,18 +526,18 @@ public:
 		string invalidExpr4 = "\"z(x+y)\"";
 		string invalidExpr5 = "\"(x+y)z\"";
 
-		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, invalidArg1Empty, arg2));
-		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, invalidArg1EntRef1, arg2));
-		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, invalidArg1EntRef2, arg2));
-		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, invalidArg1StmtRefNotExist, arg2));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, invalidArg1Empty, arg2, false));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, invalidArg1EntRef1, arg2, false));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, invalidArg1EntRef2, arg2, false));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, invalidArg1StmtRefNotExist, arg2, false));
 
-		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidArg2Empty));
-		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidArg2ExpressSpec));
-		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidExpr1));
-		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidExpr2));
-		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidExpr3));
-		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidExpr4));
-		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidExpr5));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidArg2Empty, false));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidArg2ExpressSpec, false));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidExpr1, false));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidExpr2, false));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidExpr3, false));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidExpr4, false));
+		Assert::AreNotEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, invalidExpr5, false));
 	}
 
 	TEST_METHOD(PreprocessorParseWithClause) {
@@ -561,7 +561,7 @@ public:
 		string secondParamValue = "3";
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2));
+		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2, false));
 		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qc.getWithClauses().at(0).getWithClause().getRelRef()));
 		Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qc.getWithClauses().at(0).getWithClause().getLeftParam().type));
 		Assert::AreEqual(static_cast<int>(STMT_NO), static_cast<int>(qc.getWithClauses().at(0).getWithClause().getLeftParam().attribute));
@@ -577,7 +577,7 @@ public:
 		secondParamValue = "c";
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2));
+		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2, false));
 		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qc.getWithClauses().at(1).getWithClause().getRelRef()));
 		Assert::AreEqual(static_cast<int>(PROG_LINE), static_cast<int>(qc.getWithClauses().at(1).getWithClause().getLeftParam().type));
 		Assert::AreEqual(static_cast<int>(NONE), static_cast<int>(qc.getWithClauses().at(1).getWithClause().getLeftParam().attribute));
@@ -593,7 +593,7 @@ public:
 		secondParamValue = "first";
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2));
+		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2, false));
 		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qc.getWithClauses().at(2).getWithClause().getRelRef()));
 		Assert::AreEqual(static_cast<int>(PROCEDURE), static_cast<int>(qc.getWithClauses().at(2).getWithClause().getLeftParam().type));
 		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qc.getWithClauses().at(2).getWithClause().getLeftParam().attribute));
@@ -609,7 +609,7 @@ public:
 		secondParamValue = "c";
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2));
+		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2, false));
 		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qc.getWithClauses().at(3).getWithClause().getRelRef()));
 		Assert::AreEqual(static_cast<int>(PROCEDURE), static_cast<int>(qc.getWithClauses().at(3).getWithClause().getLeftParam().type));
 		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qc.getWithClauses().at(3).getWithClause().getLeftParam().attribute));
@@ -622,13 +622,13 @@ public:
 		arg2 = "5";
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2));
+		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2, false));
 
 		arg1 = "\"x\"";
 		arg2 = "\"y\"";
 
 		//Valid
-		Assert::AreEqual(false, preprocessor.parseWithClause(qc, arg1, arg2));
+		Assert::AreEqual(false, preprocessor.parseWithClause(qc, arg1, arg2, false));
 	}
 
 	TEST_METHOD(PreprocessorIsValidSuchThatKeyword) {

@@ -49,12 +49,12 @@ public:
 	bool isValidRef(string ref);
 	bool isValidElem(vector<string> queryArr, int endOfSelectStatement, QueryContent &qc);
 	bool isValidClause(vector<string> queryArr, int &clauseLength, int pos, QueryContent &qc, bool invert);
-	bool isValidPattern(vector<string> queryArr, int &patternLength, int pos, QueryContent &qc);
-	bool isValidWithClause(vector<string> queryArr, int &withLength, int pos, QueryContent &qc);
+	bool isValidPattern(vector<string> queryArr, int &patternLength, int pos, QueryContent &qc, bool invert);
+	bool isValidWithClause(vector<string> queryArr, int &withLength, int pos, QueryContent &qc, bool invert);
 	bool isDeclarationSynonymExist(string synonym);
 	bool parseClauseArg(QueryContent &qc, string relType, string arg1, string arg2, bool invert);
-	bool parsePattern(QueryContent &qc, ParamType entityType, string entity, string arg1, string arg2);
-	bool parseWithClause(QueryContent &qc, string leftRef, string rightRef);
+	bool parsePattern(QueryContent &qc, ParamType entityType, string entity, string arg1, string arg2, bool invert);
+	bool parseWithClause(QueryContent &qc, string leftRef, string rightRef, bool invert);
 	bool isValidSuchThatKeyword(string query);
 	string getErrorMessage();
 	vector<QueryContent> getQueryContent();
