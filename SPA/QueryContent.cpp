@@ -83,7 +83,9 @@ void QueryContent::insertOperator(CLAUSE_NODE_TYPE nodeRef, OPERATORS op) {
 	break;
 	}
 }
-
+void QueryContent::setChildren(QueryContent * vqc) {
+	children.push_back(vqc);
+}
 vector<Param> QueryContent::getSelect() {
 	return _selectStmt;
 }
@@ -98,4 +100,7 @@ vector<ClauseNode> QueryContent::getPattern() {
 
 vector<ClauseNode> QueryContent::getWithClauses() {
 	return _withClauses;
+}
+vector<QueryContent *> QueryContent::getChildren() {
+	return children;
 }

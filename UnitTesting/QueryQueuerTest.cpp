@@ -236,6 +236,43 @@ namespace QueryQueuerTesting
 			Assert::AreEqual(true, Utils::compareClause(expectedClause3, clause[2]));
 		}
 
+		TEST_METHOD(QueryQueuerSortQueryContent)
+		{
+			QueryQueuer qq;
+
+			QueryContent qc1;
+			qc1.insertClause(Modifies, VARIABLE, "x", VARIABLE, "y1", false);
+			QueryContent qc2;
+			qc2.insertClause(Modifies, VARIABLE, "x", VARIABLE, "y2", true);
+			QueryContent qc3;
+			qc3.insertClause(Modifies, VARIABLE, "x", VARIABLE, "y3", true);
+			QueryContent qc4;
+			qc4.insertClause(Modifies, VARIABLE, "x", VARIABLE, "y4", true);
+			std::vector<QueryContent> vqc;
+
+			vqc.push_back(qc1);
+			qq.setQueryContent(vqc);
+			vqc = qq.sortQueryContent();
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc1, vqc[0]));
+
+			vqc.clear();
+			qc1.setChildren(&qc2);
+			qc1.setChildren(&qc3);
+			qc3.setChildren(&qc4);
+			vqc.push_back(qc1);
+			vqc.push_back(qc2);
+			vqc.push_back(qc3);
+			vqc.push_back(qc4);
+
+			qq.setQueryContent(vqc);
+			vqc = qq.sortQueryContent();
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc4, vqc[0]));
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc3, vqc[1]));
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc2, vqc[2]));
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc1, vqc[3]));
+
+		}
+
 
 	};
 
