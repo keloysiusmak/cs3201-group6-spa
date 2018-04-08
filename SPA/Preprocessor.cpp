@@ -1873,3 +1873,6 @@ vector<string> Preprocessor::applyDeMorgan(vector<string> queryArr, int startPos
 	}
 	return tempArr;
 }
+unordered_map<int, Param *> Preprocessor::getSubQueryMapping() {
+	return subQueryMapping;
+}

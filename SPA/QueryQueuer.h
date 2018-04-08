@@ -15,12 +15,15 @@ private:
 	std::vector<QueryContent> qc;
 	QueryEvaluator _evaluator;
 	list<string> invalidQueryMessage;
+	unordered_map<int, Param *> subQueryMapping;
 
 public:
 	QueryQueuer();
 	bool isValidQuery();
 	void setQueryContent(std::vector<QueryContent>);
 	std::vector<QueryContent> getQueryContent();
+	void setSubQueryMapping(unordered_map<int, Param *>);
+	unordered_map<int, Param *> getSubQueryMapping();
 	void setEvaluator(QueryEvaluator &);
 	void setInvalidQuery(string);
 	list<string> evaluateQueries();
@@ -28,5 +31,6 @@ public:
 	std::vector<Clause> parseClauseTree(ClauseNode);
 	std::vector<Clause> parseWithClauseTree(ClauseNode);
 	std::vector<Pattern> parsePatternTree(ClauseNode);
+	std::vector<QueryContent> QueryQueuer::sortQueryContent();
 };
 

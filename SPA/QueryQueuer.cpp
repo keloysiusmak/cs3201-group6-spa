@@ -334,21 +334,11 @@ std::vector<Pattern> QueryQueuer::parsePatternTree(ClauseNode c) {
 
 list<string> QueryQueuer::evaluateQueries() {
 
-	Graph g(qc.size());
-
-	for(int i = 0; i < qc.size(); i++) {
-		std::vector<QueryContent *> children = qc[i].getChildren();
-
-		for (int j = 0; j < children.size(); j++) {
-			g.addEdge(i, j);
-		}
-	}
-
-	std::vector<int> sorted = g.topologicalSort();
+	std::vector<QueryContent> sortedQc = QueryQueuer::sortQueryContent();
 
 	list<string> output;
-	for (int j = 0; j < qc.size(); j++) {
-		std::vector<QueryObject> q = parseQueryContent(qc[j]);
+	for (int j = 0; j < sortedQc.size(); j++) {
+		std::vector<QueryObject> q = parseQueryContent(sortedQc[j]);
 		for (int i = 0; i < q.size(); i++) {
 			list<string> results;
 
@@ -366,5 +356,31 @@ list<string> QueryQueuer::evaluateQueries() {
 		}
 	}
 
+	return output;
+}
+void QueryQueuer::setSubQueryMapping(unordered_map<int, Param *> sqm) {
+	subQueryMapping = sqm;
+}
+unordered_map<int, Param *> QueryQueuer::getSubQueryMapping() {
+	return subQueryMapping;
+}
+std::vector<QueryContent> QueryQueuer::sortQueryContent() {
+	Graph g(qc.size());
+
+	for (int i = 0; i < qc.size(); i++) {
+		std::vector<QueryContent *> children = qc[i].getChildren();
+
+		for (int j = 0; j < children.size(); j++) {
+			auto it = std::find(children.begin(), children.begin(), children[j]);
+			auto index = std::distance(children.begin(), it);
+			g.addEdge(i, index);
+		}
+	}
+
+	std::vector<int> sorted = g.topologicalSort();
+	std::vector<QueryContent> output;
+	for (int i = 0; i < sorted.size(); i++) {
+		output.push_back(qc[sorted[i]]);
+	}
 	return output;
 }
