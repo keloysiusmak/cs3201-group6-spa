@@ -1,5 +1,9 @@
 #include "QueryOptimization.h"
 
+void QueryOptimization::setPKB(PKB generatedPKB) {
+	PKB pkb = generatedPKB;
+}
+
 void QueryOptimization::consolidateClauses(vector<Clause> const &clauses, vector<Clause> &consolidated) {
 	for (Clause clause : clauses) { consolidated.push_back(clause); } }
 void QueryOptimization::consolidateClauses(vector<Pattern> const &clauses, vector<Clause> &consolidated) {
@@ -11,6 +15,383 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 	map<int, vector<Clause>> groupedClauses = groupClauses(clauses, paramsHash);
 	return groupedClauses;
 };
+
+/* vector<Clause> QueryOptimization::numResultsGroupClauses(vector<Clause> groupedClauses) {
+
+	vector<int> size;
+	vector<int> newSize;
+	vector<Clause> reGroupedClauses;
+	vector<Clause> newReGroupedClauses;
+
+	for (Clause clause : groupedClauses) {
+		RelRef relation = clause.getRelRef();
+		Param leftParam = clause.getLeftParam();
+		Param rightParam = clause.getRightParam();
+		vector<int> index;
+		int i = 0;
+
+		if (relation == Follows) {
+			if (Utils::isSynonym(leftParam)) {
+				size.push_back(pkb.getFromResultTable(RelationFollows, 0, stoi(rightParam.value)));
+				newSize.push_back(pkb.getFromResultTable(RelationFollows, 0, stoi(rightParam.value)));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else if (Utils::isSynonym(rightParam)) {
+				size.push_back(pkb.getFromResultTable(RelationFollows, stoi(leftParam.value), 0));
+				newSize.push_back(pkb.getFromResultTable(RelationFollows, stoi(leftParam.value), 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else {
+				size.push_back(pkb.getFromResultTable(RelationFollows, 0, 0));
+				newSize.push_back(pkb.getFromResultTable(RelationFollows, 0, 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+		}
+
+		if (relation == FollowsT) {
+			if (Utils::isSynonym(leftParam)) {
+				size.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, stoi(rightParam.value)));
+				newSize.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, stoi(rightParam.value)));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else if (Utils::isSynonym(rightParam)) {
+				size.push_back(pkb.getFromResultTable(RelationFollowsStar, stoi(leftParam.value), 0));
+				newSize.push_back(pkb.getFromResultTable(RelationFollowsStar, stoi(leftParam.value), 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else {
+				size.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, 0));
+				newSize.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+		}
+
+		if (relation == Calls) {
+			if (Utils::isSynonym(leftParam)) {
+				size.push_back(pkb.getFromResultTable(RelationCalls, 0, stoi(rightParam.value)));
+				newSize.push_back(pkb.getFromResultTable(RelationCalls, 0, stoi(rightParam.value)));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else if (Utils::isSynonym(rightParam)) {
+				size.push_back(pkb.getFromResultTable(RelationCalls, stoi(leftParam.value), 0));
+				newSize.push_back(pkb.getFromResultTable(RelationCalls, stoi(leftParam.value), 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else {
+				size.push_back(pkb.getFromResultTable(RelationCalls, 0, 0));
+				newSize.push_back(pkb.getFromResultTable(RelationCalls, stoi(leftParam.value), 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+		}
+
+		if (relation == CallsT) {
+			if (Utils::isSynonym(leftParam)) {
+				size.push_back(pkb.getFromResultTable(RelationCallsStar, 0, stoi(rightParam.value)));
+				newSize.push_back(pkb.getFromResultTable(RelationCallsStar, 0, stoi(rightParam.value)));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else if (Utils::isSynonym(rightParam)) {
+				size.push_back(pkb.getFromResultTable(RelationCallsStar, stoi(leftParam.value), 0));
+				newSize.push_back(pkb.getFromResultTable(RelationCallsStar, stoi(leftParam.value), 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else {
+				size.push_back(pkb.getFromResultTable(RelationCallsStar, 0, 0));
+				newSize.push_back(pkb.getFromResultTable(RelationCallsStar, 0, 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+		}
+
+		if (relation == Uses) {
+			if (leftParam.type == PROCEDURE) {
+				if (Utils::isSynonym(leftParam)) {
+					size.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (Utils::isSynonym(rightParam)) {
+					size.push_back(pkb.getFromResultTable(RelationUsesProcedure, stoi(leftParam.value), 0));
+					newSize.push_back(pkb.getFromResultTable(RelationUsesProcedure, stoi(leftParam.value), 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else {
+					size.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+			}
+			else if (leftParam.type == STMT) {
+				if (Utils::isSynonym(leftParam)) {
+					size.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (Utils::isSynonym(rightParam)) {
+					size.push_back(pkb.getFromResultTable(RelationUsesStatement, stoi(leftParam.value), 0));
+					newSize.push_back(pkb.getFromResultTable(RelationUsesStatement, stoi(leftParam.value), 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else {
+					size.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+			}
+		}
+
+		if (relation == Modifies) {
+			if (leftParam.type == PROCEDURE) {
+				if (Utils::isSynonym(leftParam)) {
+					size.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (Utils::isSynonym(rightParam)) {
+					size.push_back(pkb.getFromResultTable(RelationModifiesProcedure, stoi(leftParam.value), 0));
+					newSize.push_back(pkb.getFromResultTable(RelationModifiesProcedure, stoi(leftParam.value), 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else {
+					size.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+			}
+			else if (leftParam.type == STMT) {
+				if (Utils::isSynonym(leftParam)) {
+					size.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (Utils::isSynonym(rightParam)) {
+					size.push_back(pkb.getFromResultTable(RelationModifiesStatement, stoi(leftParam.value), 0));
+					newSize.push_back(pkb.getFromResultTable(RelationModifiesStatement, stoi(leftParam.value), 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else {
+					size.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+			}
+		}
+
+		if (relation == Affects) {
+			if (Utils::isSynonym(leftParam)) {
+				size.push_back(pkb.getFromResultTable(RelationAffects, 0, stoi(rightParam.value)));
+				newSize.push_back(pkb.getFromResultTable(RelationAffects, 0, stoi(rightParam.value)));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else if (Utils::isSynonym(rightParam)) {
+				size.push_back(pkb.getFromResultTable(RelationAffects, stoi(leftParam.value), 0));
+				newSize.push_back(pkb.getFromResultTable(RelationAffects, stoi(leftParam.value), 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else {
+				size.push_back(pkb.getFromResultTable(RelationAffects, 0, 0));
+				newSize.push_back(pkb.getFromResultTable(RelationAffects, 0, 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+		}
+
+		if (relation == AffectsT) {
+			if (Utils::isSynonym(leftParam)) {
+				size.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, stoi(rightParam.value)));
+				newSize.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, stoi(rightParam.value)));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else if (Utils::isSynonym(rightParam)) {
+				size.push_back(pkb.getFromResultTable(RelationAffectsStar, stoi(leftParam.value), 0));
+				newSize.push_back(pkb.getFromResultTable(RelationAffectsStar, stoi(leftParam.value), 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else {
+				size.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, 0));
+				newSize.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+		}
+
+		if (relation == Next) {
+			if (Utils::isSynonym(leftParam)) {
+				size.push_back(pkb.getFromResultTable(RelationNext, 0, stoi(rightParam.value)));
+				newSize.push_back(pkb.getFromResultTable(RelationNext, 0, stoi(rightParam.value)));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else if (Utils::isSynonym(rightParam)) {
+				size.push_back(pkb.getFromResultTable(RelationNext, stoi(leftParam.value), 0));
+				newSize.push_back(pkb.getFromResultTable(RelationNext, stoi(leftParam.value), 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else {
+				size.push_back(pkb.getFromResultTable(RelationNext, 0, 0));
+				newSize.push_back(pkb.getFromResultTable(RelationNext, 0, 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+		}
+
+		if (relation == NextT) {
+			if (Utils::isSynonym(leftParam)) {
+				size.push_back(pkb.getFromResultTable(RelationNextStar, 0, stoi(rightParam.value)));
+				newSize.push_back(pkb.getFromResultTable(RelationNextStar, 0, stoi(rightParam.value)));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else if (Utils::isSynonym(rightParam)) {
+				size.push_back(pkb.getFromResultTable(RelationNextStar, stoi(leftParam.value), 0));
+				newSize.push_back(pkb.getFromResultTable(RelationNextStar, stoi(leftParam.value), 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+			else {
+				size.push_back(pkb.getFromResultTable(RelationNextStar, 0, 0));
+				newSize.push_back(pkb.getFromResultTable(RelationNextStar, 0, 0));
+				reGroupedClauses.push_back(clause);
+				newReGroupedClauses.push_back(clause);
+			}
+		}
+
+		if (relation == With) {
+			if (leftParam.type == PROCEDURE) {
+				if (rightParam.type == CALL) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (rightParam.type == VARIABLE) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (rightParam.type == PROCEDURE) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+			}
+			else if (leftParam.type == VARIABLE) {
+				if (rightParam.type == CALL) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (rightParam.type == VARIABLE) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (rightParam.type == PROCEDURE) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+			}
+			else if (leftParam.type == CALL) {
+				if (rightParam.type == CALL) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (rightParam.type == VARIABLE) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (rightParam.type == PROCEDURE) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+			}
+			else if (Utils::isSynonym(leftParam)) {
+				if (leftParam.type == STMT) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, 0, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, 0, 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (leftParam.type == ASSIGN) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, ASSIGNMENT_TYPE, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, ASSIGNMENT_TYPE, 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (leftParam.type == WHILE) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, WHILE_TYPE, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, WHILE_TYPE, 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (leftParam.type == IF) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, IF_TYPE, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, IF_TYPE, 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+				else if (leftParam.type == CALL) {
+					size.push_back(pkb.getFromResultTable(RelationWithName, CALL_TYPE, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationWithName, CALL_TYPE, 0));
+					reGroupedClauses.push_back(clause);
+					newReGroupedClauses.push_back(clause);
+				}
+			}
+		}
+	}
+
+	sort(size.begin(), size.end());
+	for (int i = 0; i < size.size; i++) {
+		for (int j = 0; j < size.size; j++) {
+			if (size[j] == newSize[i]) {
+				newReGroupedClauses[j] = reGroupedClauses[i];
+				continue;
+			}
+		}
+	}
+
+	return newReGroupedClauses;
+} */
 
 /* map<int, vector<Clause>> QueryOptimization::numConstantsGroupClauses(vector<Clause> groupedClauses) {
 
