@@ -331,56 +331,96 @@ std::vector<Pattern> QueryQueuer::parsePatternTree(ClauseNode c) {
 
 	return patterns;
 }
+ClauseNode QueryQueuer::replaceClauseNode(QueryContent qc, CLAUSE_SELECTOR clauseOrWithClauseOrPattern, int clauseNo, CLAUSE_LEFT_OR_RIGHT leftOrRight, string val) {
+	ClauseNode cn;
+	if (clauseOrWithClauseOrPattern == REPLACE_CLAUSE) {
+		cn = qc.getClauses()[clauseNo];
+	}
+	else if (clauseOrWithClauseOrPattern == REPLACE_WITH_CLAUSE) {
+		cn = qc.getWithClauses()[clauseNo];
+	}
+	else if (clauseOrWithClauseOrPattern == REPLACE_PATTERN) {
+		cn = qc.getPattern()[clauseNo];
+	}
+	Clause c = cn.getClause();
+	Param pl, pr;
+	pl = c.getLeftParam();
+	pr = c.getRightParam();
+	if (leftOrRight == LEFT_PARAM) {
+		pl.value = val;
+	}
+	else {
+		pr.value = val;
+	}
+	c = Clause(c.getRelRef(), pl, pr, c.getIsInverted());
+	cn.setClauseNode(c);
+	return cn;
+}
 
 list<string> QueryQueuer::evaluateQueries() {
-
-	std::vector<QueryContent> sortedQc = QueryQueuer::sortQueryContent();
-
+	
+	std::vector<int> sortedInts = QueryQueuer::sortQueryContent();
+	std::vector<QueryContent> sortedQc = QueryQueuer::convertSortedToQC(sortedInts);
+	unordered_map<int, std::vector<int>> subQueryMapping = QueryQueuer::getSubQueryMapping();
 	list<string> output;
-	for (int j = 0; j < sortedQc.size(); j++) {
-		std::vector<QueryObject> q = parseQueryContent(sortedQc[j]);
 
+	//sort the QueryContent, run it in reverse topological sort
+	for (int j = 0; j < sortedQc.size(); j++) {
+
+		int dependencies = sortedQc[j].getChildren().size();
+		QueryContent thisQc = sortedQc[j];
+		std::vector<QueryObject> q = parseQueryContent(thisQc);
+
+		//split into query objects and run
+		list<string> results;
 		for (int i = 0; i < q.size(); i++) {
-			list<string> results;
 
 			QueryObject qo;
 
 			if (validQuery) {
 				_evaluator.setQueryObject(q[i]);
 				results = _evaluator.evaluateQuery();
-				output.insert(output.end(), results.begin(), results.end());
 			}
 			else {
 				output.clear();
 				results = invalidQueryMessage;
-				output.insert(output.end(), results.begin(), results.end());
 				break;
 			}
 		}
+
+		//fill in results obtained into any parent query object
+		/*
+		vector<int> paramInQn = subQueryMapping[sortedInts[j]];
+		QueryQueuer::replaceClauseNode(thisQc, (CLAUSE_SELECTOR)paramInQn[0], paramInQn[1], (CLAUSE_LEFT_OR_RIGHT)paramInQn[2], "x");
+		*/
+		output.insert(output.end(), results.begin(), results.end());
 	}
 
 	return output;
 }
-void QueryQueuer::setSubQueryMapping(unordered_map<QueryContent *, Param *> sqm) {
+void QueryQueuer::setSubQueryMapping(unordered_map<int, vector<int>> sqm) {
 	subQueryMapping = sqm;
 }
-unordered_map<QueryContent *, Param *> QueryQueuer::getSubQueryMapping() {
+unordered_map<int, vector<int>> QueryQueuer::getSubQueryMapping() {
 	return subQueryMapping;
 }
-std::vector<QueryContent> QueryQueuer::sortQueryContent() {
+std::vector<int> QueryQueuer::sortQueryContent() {
 	Graph g(qc.size());
 
 	for (int i = 0; i < qc.size(); i++) {
 		std::vector<QueryContent *> children = qc[i].getChildren();
 
 		for (int j = 0; j < children.size(); j++) {
-			auto it = std::find(children.begin(), children.begin(), children[j]);
+			auto it = std::find(children.begin(), children.end(), children[j]);
 			auto index = std::distance(children.begin(), it);
 			g.addEdge(i, index);
 		}
 	}
 
 	std::vector<int> sorted = g.topologicalSort();
+	return sorted;
+}
+std::vector<QueryContent> QueryQueuer::convertSortedToQC(std::vector<int> sorted) {
 	std::vector<QueryContent> output;
 	for (int i = 0; i < sorted.size(); i++) {
 		output.push_back(qc[sorted[i]]);
