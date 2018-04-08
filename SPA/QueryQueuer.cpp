@@ -29,13 +29,6 @@ std::vector<QueryContent> QueryQueuer::getQueryContent() {
 	return qc;
 }
 
-void QueryQueuer::setSubQueryMapping(unordered_map<int, Param&> mapping) {
-	subQueryMapping = mapping;
-}
-std::vector<QueryContent> QueryQueuer::getSubQueryMapping() {
-	return subQueryMapping;
-}
-
 std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 
 	std::vector<ClauseNode> clauses;
@@ -340,6 +333,18 @@ std::vector<Pattern> QueryQueuer::parsePatternTree(ClauseNode c) {
 }
 
 list<string> QueryQueuer::evaluateQueries() {
+
+	Graph g(qc.size());
+
+	for(int i = 0; i < qc.size(); i++) {
+		std::vector<QueryContent *> children = qc[i].getChildren();
+
+		for (int j = 0; j < children.size(); j++) {
+			g.addEdge(i, j);
+		}
+	}
+
+	std::vector<int> sorted = g.topologicalSort();
 
 	list<string> output;
 	for (int j = 0; j < qc.size(); j++) {

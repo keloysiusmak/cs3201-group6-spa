@@ -100,10 +100,6 @@ std::vector<QueryContent> Preprocessor::getQueryContent() {
 	return vqc;
 }
 
-unordered_map<int, Param&> Preprocessor::getSubQueryMapping() {
-	return subQueryMapping;
-}
-
 bool Preprocessor::getIsErrorExist() {
 	return isErrorExist;
 }
