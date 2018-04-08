@@ -14,9 +14,9 @@ private:
 	vector<ClauseNode> _withClauses;
 public:
 	void insertSelect(ParamType, string, AttrType);
-	void insertClause(RelRef, ParamType, string, ParamType, string);
-	void insertPattern(ParamType, string, ParamType, string, ParamType, string);
-	void insertWithClause(ParamType, string, AttrType, ParamType, string, AttrType);
+	void insertClause(RelRef, ParamType, string, ParamType, string, bool);
+	void insertPattern(ParamType, string, ParamType, string, ParamType, string, bool);
+	void insertWithClause(ParamType, string, AttrType, ParamType, string, AttrType, bool);
 	void insertOperator(CLAUSE_NODE_TYPE, OPERATORS);
 	vector<Param> getSelect();
 	vector<ClauseNode> getClauses();

@@ -354,8 +354,8 @@ namespace EvaluatorHelperTest {
 			p5 = createParam(ASSIGN, "a1"); p6 = createParam(ASSIGN, "a2");
 			p7 = createParam(INTEGER, "4");
 
-			Clause oneSynInClause = Clause(With, p5, p7);
-			Clause twoSynInClause = Clause(With, p5, p6);
+			Clause oneSynInClause = Clause(With, p5, p7, false);
+			Clause twoSynInClause = Clause(With, p5, p6, false);
 			Assert::AreEqual(true, EvaluatorHelper::withClauseNumSyns(oneSynInClause, table) == 1);
 			Assert::AreEqual(true, EvaluatorHelper::withClauseNumSyns(twoSynInClause, table) == 2);
 		}
@@ -385,7 +385,7 @@ namespace EvaluatorHelperTest {
 		ClauseResults createClauseResult(RelRef rel, ParamType lhsType, string lhsValue, ParamType rhsType, string rhsValue) {
 			Param lhs = createParam(lhsType, lhsValue);
 			Param rhs = createParam(rhsType, rhsValue);
-			Clause clause = Clause(rel, lhs, rhs);
+			Clause clause = Clause(rel, lhs, rhs, false);
 			ClauseResults results;
 			results.instantiateClause(clause);
 			return results;

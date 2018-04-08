@@ -22,7 +22,7 @@ namespace QueryObjectTest {
 
 		TEST_METHOD(QueryObjectInsertClause) {
 			QueryObject queryObject;
-			queryObject.insertClause(Parent, INTEGER, "1", ASSIGN, "a");
+			queryObject.insertClause(Parent, INTEGER, "1", ASSIGN, "a", false);
 
 			Assert::AreEqual(1, static_cast<int>(queryObject.getClauses().size()));
 
@@ -34,7 +34,7 @@ namespace QueryObjectTest {
 			rightArg.type = ASSIGN;
 			rightArg.value = "a";
 
-			Clause testClause(Parent, leftArg, rightArg);
+			Clause testClause(Parent, leftArg, rightArg, false);
 
 			Clause fromQueryObject = queryObject.getClauses().at(0);
 
@@ -51,7 +51,7 @@ namespace QueryObjectTest {
 
 		TEST_METHOD(QueryObjectInsertPattern) {
 			QueryObject queryObject;
-			queryObject.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "_\"a\"_");
+			queryObject.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "_\"a\"_", false);
 
 			Assert::AreEqual(1, static_cast<int>(queryObject.getPatterns().size()));
 
@@ -67,7 +67,7 @@ namespace QueryObjectTest {
 			rightArg.type = EXPR;
 			rightArg.value = "_\"a\"_";
 
-			Pattern testPattern(pattern, leftArg, rightArg);
+			Pattern testPattern(pattern, leftArg, rightArg, false);
 
 			Pattern fromQueryObject = queryObject.getPatterns().at(0);
 
