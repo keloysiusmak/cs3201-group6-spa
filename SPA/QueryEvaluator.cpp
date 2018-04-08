@@ -817,8 +817,7 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 		Param selected = selectedParams[0];
 		IntermediateTable tableWithParam = EvaluatorHelper::findTableWithParam(selected, iTables);
 		if (selected.type == BOOLEAN) { // Select Boolean
-			if (tableWithParam.resultsTable.size() > 0 || // Table not empty
-				tableWithParam.tableParams.size() == 0) { // No statement to evaluate
+			if (tableWithParam.tableHasResults()) {
 				return{ "true" };
 			} else {
 				return{ "false" };
@@ -830,15 +829,14 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 	} else { // Select Tuple
 		set<string> tupleResultSet;
 		list<string> tupleResult;
-		vector<int> paramIndexes;
 
 		IntermediateTable mergedTable;
+		mergedTable.instantiateTable();
 
 		// Merge tables for tuples
 		for (Param p : selectedParams) {
 			IntermediateTable tableWithParam = EvaluatorHelper::findTableWithParam(p, iTables);
 			mergedTable = EvaluatorHelper::mergeIntermediateTables(tableWithParam, mergedTable);
-			paramIndexes.push_back(mergedTable.getParamIndex(p));
 		}
 
 		stringstream tupleRowString;
@@ -848,8 +846,8 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 			tupleRowString.str("");
 
 			// Iterate through each value of row
-			for (size_t j = 0; j < paramIndexes.size(); j++) {
-				int indexOfParam = paramIndexes[j];
+			for (size_t j = 0; j < selectedParams.size(); j++) {
+				int indexOfParam = mergedTable.getParamIndex(selectedParams[j]);
 				int paramValue = tableRow[indexOfParam];
 
 				string value;
@@ -861,7 +859,7 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 					value = to_string(tableRow[indexOfParam]);
 				}
 
-				if (j == paramIndexes.size() - 1) tupleRowString << value;
+				if (j == selectedParams.size() - 1) tupleRowString << value;
 				else tupleRowString << value << " ";
 			}
 			tupleResultSet.insert(tupleRowString.str());
@@ -901,8 +899,10 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 		}
 		return paramValues;
 	}
-	else { // Selected param not in table
+	else if (iTable.tableHasResults()) { // Selected param not in table
 		return getAllParamsOfType(p);
+	} else {
+		return{}; // Results table is empty
 	}
 };
 

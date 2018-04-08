@@ -267,31 +267,36 @@ vector<vector<int>> EvaluatorHelper::mergeSortResults(int index, vector<vector<i
 IntermediateTable EvaluatorHelper::mergeIntermediateTables(IntermediateTable &iTable1, IntermediateTable &iTable2) {
 
 	for (pair<Param, int> paramInt : iTable2.tableParams) { // Check if table 2 is already merged
-		if (iTable1.tableParams[paramInt.first] != -1) return iTable1;
+		if (iTable1.getParamIndex(paramInt.first) != -1) return iTable1;
 	}
 
-	int table1NumParams = iTable1.tableParams.size();
-	// Add table2 params
-	for (pair<Param, int> paramInt : iTable2.tableParams) {
-		iTable1.tableParams[paramInt.first] = table1NumParams + paramInt.second;
+	IntermediateTable mergedTable;
+	mergedTable.instantiateTable();
+
+	// Add table params
+	for (size_t i = 0; i < iTable1.tableParams.size(); i++) {
+		mergedTable.addTableParams(iTable1.getParamFromIndex(i));
+	}
+	for (size_t j = 0; j < iTable2.tableParams.size(); j++) {
+		mergedTable.addTableParams(iTable2.getParamFromIndex(j));
 	}
 
 	// Cross product of two results tables
 	vector<vector<int>> mergedResultsTable;
 	for (vector<int> table1Row : iTable1.resultsTable) {
-		if (iTable2.hasResults) {
+		if (!iTable2.tableHasResults()) { // Add vector in if table2 empty
 			mergedResultsTable.push_back(table1Row);
 		} else {
-			for (vector<int> table2Row : iTable2.resultsTable) {
+			for (vector<int> table2Row : iTable2.resultsTable) { // Concat vectors and add
 				vector<int> mergedRow = table1Row;
-				mergedRow.insert(mergedRow.end(), table2Row.begin(), table2Row.end());
+				for (int table2RowValue : table2Row) {
+					mergedRow.push_back(table2RowValue);
+				}
 				mergedResultsTable.push_back(mergedRow);
 			}
 		}
 	}
 
-	IntermediateTable mergedTable; mergedTable.instantiateTable();
-	mergedTable.setTableParams(iTable1.tableParams);
 	mergedTable.setResultsTable(mergedResultsTable);
 	
 	return mergedTable;
