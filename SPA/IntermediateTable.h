@@ -16,4 +16,5 @@ struct IntermediateTable {
 	bool tableHasResults();
 
 	int getParamIndex(Param p);
+	Param getParamFromIndex(int index);
 };

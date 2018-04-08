@@ -36,3 +36,9 @@ int IntermediateTable::getParamIndex(Param p) {
 	if (tableParams.find(p) != tableParams.end()) return tableParams[p];
 	else return -1;
 };
+
+Param IntermediateTable::getParamFromIndex(int index) {
+	for (pair<Param, int> paramIndex : tableParams) {
+		if (paramIndex.second == index) return paramIndex.first;
+	}
+};
