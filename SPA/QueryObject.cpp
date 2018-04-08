@@ -13,7 +13,7 @@ QueryObject::QueryObject(string query) {
 
 }
 
-void QueryObject::insertClause(RelRef relRef, ParamType firstParamType, string firstParam, ParamType secondParamType, string secondParam) {
+void QueryObject::insertClause(RelRef relRef, ParamType firstParamType, string firstParam, ParamType secondParamType, string secondParam, bool invert) {
 
 	Param fp;
 	fp.type = firstParamType;
@@ -25,12 +25,12 @@ void QueryObject::insertClause(RelRef relRef, ParamType firstParamType, string f
 	sp.value = secondParam;
 	sp.attribute = NONE;
 
-	Clause clause(relRef, fp, sp);
+	Clause clause(relRef, fp, sp, invert);
 
 	_clauses.push_back(clause);
 }
 
-void QueryObject::insertPattern(ParamType entityType, string entity, ParamType leftParamType, string leftParam, ParamType rightParamType, string rightParam) {
+void QueryObject::insertPattern(ParamType entityType, string entity, ParamType leftParamType, string leftParam, ParamType rightParamType, string rightParam, bool invert) {
 
 	Param ep;
 	ep.type = entityType;
@@ -47,7 +47,7 @@ void QueryObject::insertPattern(ParamType entityType, string entity, ParamType l
 	rp.value = rightParam;
 	rp.attribute = NONE;
 
-	Pattern pattern(ep, lp, rp);
+	Pattern pattern(ep, lp, rp, invert);
 
 	_Patterns.push_back(pattern);
 }
@@ -62,7 +62,7 @@ void QueryObject::insertSelectStmt(ParamType selectType, string synonym, AttrTyp
 }
 
 void QueryObject::insertWithClause(ParamType leftArgType, string leftArg, AttrType leftAttr,
-	ParamType rightArgType, string rightArg, AttrType rightAttr) {
+	ParamType rightArgType, string rightArg, AttrType rightAttr, bool invert) {
 
 	Param leftParam;
 	leftParam.type = leftArgType;
@@ -74,7 +74,7 @@ void QueryObject::insertWithClause(ParamType leftArgType, string leftArg, AttrTy
 	rightParam.value = rightArg;
 	rightParam.attribute = rightAttr;
 
-	Clause withClause(With, leftParam, rightParam);
+	Clause withClause(With, leftParam, rightParam, invert);
 
 	_withClauses.push_back(withClause);
 }
