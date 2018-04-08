@@ -339,6 +339,7 @@ list<string> QueryQueuer::evaluateQueries() {
 	list<string> output;
 	for (int j = 0; j < sortedQc.size(); j++) {
 		std::vector<QueryObject> q = parseQueryContent(sortedQc[j]);
+
 		for (int i = 0; i < q.size(); i++) {
 			list<string> results;
 
@@ -350,18 +351,20 @@ list<string> QueryQueuer::evaluateQueries() {
 				output.insert(output.end(), results.begin(), results.end());
 			}
 			else {
+				output.clear();
 				results = invalidQueryMessage;
 				output.insert(output.end(), results.begin(), results.end());
+				break;
 			}
 		}
 	}
 
 	return output;
 }
-void QueryQueuer::setSubQueryMapping(unordered_map<int, Param *> sqm) {
+void QueryQueuer::setSubQueryMapping(unordered_map<QueryContent *, Param *> sqm) {
 	subQueryMapping = sqm;
 }
-unordered_map<int, Param *> QueryQueuer::getSubQueryMapping() {
+unordered_map<QueryContent *, Param *> QueryQueuer::getSubQueryMapping() {
 	return subQueryMapping;
 }
 std::vector<QueryContent> QueryQueuer::sortQueryContent() {

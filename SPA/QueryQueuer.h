@@ -15,15 +15,15 @@ private:
 	std::vector<QueryContent> qc;
 	QueryEvaluator _evaluator;
 	list<string> invalidQueryMessage;
-	unordered_map<int, Param *> subQueryMapping;
+	unordered_map<QueryContent *, Param *> subQueryMapping;
 
 public:
 	QueryQueuer();
 	bool isValidQuery();
 	void setQueryContent(std::vector<QueryContent>);
 	std::vector<QueryContent> getQueryContent();
-	void setSubQueryMapping(unordered_map<int, Param *>);
-	unordered_map<int, Param *> getSubQueryMapping();
+	void setSubQueryMapping(unordered_map<QueryContent *, Param *>);
+	unordered_map<QueryContent *, Param *> getSubQueryMapping();
 	void setEvaluator(QueryEvaluator &);
 	void setInvalidQuery(string);
 	list<string> evaluateQueries();
