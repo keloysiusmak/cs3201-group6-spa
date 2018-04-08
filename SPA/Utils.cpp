@@ -161,7 +161,8 @@ bool Utils::compareClause(Clause c1, Clause c2) {
 		c1.getLeftParam().attribute != c2.getLeftParam().attribute ||
 		c1.getRightParam().type != c2.getRightParam().type ||
 		c1.getRightParam().value.compare(c2.getRightParam().value) != 0 ||
-		c1.getRightParam().attribute != c2.getRightParam().attribute) {
+		c1.getRightParam().attribute != c2.getRightParam().attribute ||
+		c1.getIsInverted() != c2.getIsInverted()) {
 		return false;
 	}
 	return true;
@@ -187,7 +188,8 @@ bool Utils::comparePattern(Pattern p1, Pattern p2) {
 		p1.getLeftParam().attribute != p2.getLeftParam().attribute ||
 		p1.getRightParam().type != p2.getRightParam().type ||
 		p1.getRightParam().value.compare(p2.getRightParam().value) != 0 ||
-		p1.getRightParam().attribute != p2.getRightParam().attribute) {
+		p1.getRightParam().attribute != p2.getRightParam().attribute ||
+		p1.getIsInverted() != p2.getIsInverted()) {
 		return false;
 	}
 	return true;
@@ -212,7 +214,8 @@ bool Utils::compareWithClause(Clause w1, Clause w2) {
 		w1.getLeftParam().attribute != w2.getLeftParam().attribute ||
 		w1.getRightParam().type != w2.getRightParam().type ||
 		w1.getRightParam().value.compare(w2.getRightParam().value) != 0 ||
-		w1.getRightParam().attribute != w2.getRightParam().attribute) {
+		w1.getRightParam().attribute != w2.getRightParam().attribute || 
+		w1.getIsInverted() != w2.getIsInverted()) {
 		return false;
 	}
 	return true;
