@@ -6,12 +6,12 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-namespace PreprocessorEvaluatorIntegrationTesting
+namespace PreprocessorQueryQueuerIntegrationTesting
 {
 	QueryQueuer queryQueuer;
 	Preprocessor preprocessor;
 
-	TEST_CLASS(PreprocessorEvaluatorIntegration) {
+	TEST_CLASS(PreprocessorQueryQueuerIntegration) {
 		public:
 
 			TEST_CLASS_INITIALIZE(setup) {
