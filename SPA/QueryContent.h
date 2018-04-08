@@ -12,6 +12,7 @@ private:
 	vector<ClauseNode> _clauses;
 	vector<ClauseNode> _patterns;
 	vector<ClauseNode> _withClauses;
+	vector<QueryContent *> children;
 public:
 	void insertSelect(ParamType, string, AttrType);
 	void insertClause(RelRef, ParamType, string, ParamType, string, bool);
@@ -19,9 +20,11 @@ public:
 	void insertWithClause(ParamType, string, AttrType, ParamType, string, AttrType, bool);
 	void insertOperator(CLAUSE_NODE_TYPE, OPERATORS);
 	void setNegation(CLAUSE_NODE_TYPE, int);
+	void setChildren(QueryContent *);
 	vector<Param> getSelect();
 	vector<ClauseNode> getClauses();
 	vector<ClauseNode> getPattern();
 	vector<ClauseNode> getWithClauses();
+	vector<QueryContent *> getChildren();
 };
 
