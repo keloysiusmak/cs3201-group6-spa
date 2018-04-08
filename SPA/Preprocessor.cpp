@@ -382,8 +382,32 @@ bool Preprocessor::isValidQuery(string query) {
 					return false;
 				}
 			}
+			else if (i + patternLength < queryArr.size() && queryArr.at(i + patternLength).compare(NOT_WORD) == 0) {
+
+				//Add "not"
+				patternLength++;
+
+				if (i + patternLength < queryArr.size() && queryArr.at(i + patternLength).at(0) == SYMBOL_OPEN_BRACKET) {
+					int startPtrNegation = queryContent.getClauses().size() - 1;
+					if (!convertToPostFix(queryArr, prevSelectedClause, patternLength, i, queryContent)) {
+						return false;
+					}
+					int endPtrNegation = queryContent.getClauses().size() - 1;
+
+					while (endPtrNegation != startPtrNegation) {
+						queryContent.setNegation(PATTERN, endPtrNegation);
+						endPtrNegation--;
+					}
+				}
+				else {
+					if (!isValidPattern(queryArr, patternLength, i, queryContent, true)) {
+						return false;
+					}
+				}
+
+			}
 			else {
-				if (!isValidPattern(queryArr, patternLength, i, queryContent)) {
+				if (!isValidPattern(queryArr, patternLength, i, queryContent, false)) {
 					return false;
 				}
 			}
@@ -414,8 +438,33 @@ bool Preprocessor::isValidQuery(string query) {
 				}
 				withLength--;
 			}
+			else if (i + withLength < queryArr.size() && queryArr.at(i + withLength).compare(NOT_WORD) == 0) {
+
+				//Add "not"
+				withLength++;
+
+				if (i + withLength < queryArr.size() && queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+					int startPtrNegation = queryContent.getClauses().size() - 1;
+					if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
+						return false;
+					}
+					withLength--;
+					int endPtrNegation = queryContent.getClauses().size() - 1;
+
+					while (endPtrNegation != startPtrNegation) {
+						queryContent.setNegation(WITH_CLAUSE, endPtrNegation);
+						endPtrNegation--;
+					}
+				}
+				else {
+					if (!isValidWithClause(queryArr, withLength, i, queryContent, true)) {
+						return false;
+					}
+				}
+
+			}
 			else {
-				if (!isValidWithClause(queryArr, withLength, i, queryContent)) {
+				if (!isValidWithClause(queryArr, withLength, i, queryContent, false)) {
 					return false;
 				}
 			}
@@ -498,8 +547,32 @@ bool Preprocessor::isValidQuery(string query) {
 						return false;
 					}
 				}
+				else if (i + patternLength < queryArr.size() && queryArr.at(i + patternLength).compare(NOT_WORD) == 0) {
+
+					//Add "not"
+					patternLength++;
+
+					if (i + patternLength < queryArr.size() && queryArr.at(i + patternLength).at(0) == SYMBOL_OPEN_BRACKET) {
+						int startPtrNegation = queryContent.getClauses().size() - 1;
+						if (!convertToPostFix(queryArr, prevSelectedClause, patternLength, i, queryContent)) {
+							return false;
+						}
+						int endPtrNegation = queryContent.getClauses().size() - 1;
+
+						while (endPtrNegation != startPtrNegation) {
+							queryContent.setNegation(PATTERN, endPtrNegation);
+							endPtrNegation--;
+						}
+					}
+					else {
+						if (!isValidPattern(queryArr, patternLength, i, queryContent, true)) {
+							return false;
+						}
+					}
+
+				}
 				else {
-					if (!isValidPattern(queryArr, patternLength, i, queryContent)) {
+					if (!isValidPattern(queryArr, patternLength, i, queryContent, false)) {
 						return false;
 					}
 				}
@@ -526,8 +599,33 @@ bool Preprocessor::isValidQuery(string query) {
 					}
 					withLength--;
 				}
+				else if (i + withLength < queryArr.size() && queryArr.at(i + withLength).compare(NOT_WORD) == 0) {
+
+					//Add "not"
+					withLength++;
+
+					if (i + withLength < queryArr.size() && queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+						int startPtrNegation = queryContent.getClauses().size() - 1;
+						if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
+							return false;
+						}
+						withLength--;
+						int endPtrNegation = queryContent.getClauses().size() - 1;
+
+						while (endPtrNegation != startPtrNegation) {
+							queryContent.setNegation(WITH_CLAUSE, endPtrNegation);
+							endPtrNegation--;
+						}
+					}
+					else {
+						if (!isValidWithClause(queryArr, withLength, i, queryContent, true)) {
+							return false;
+						}
+					}
+
+				}
 				else {
-					if (!isValidWithClause(queryArr, withLength, i, queryContent)) {
+					if (!isValidWithClause(queryArr, withLength, i, queryContent, false)) {
 						return false;
 					}
 				}
@@ -615,8 +713,32 @@ bool Preprocessor::isValidQuery(string query) {
 						return false;
 					}
 				}
+				else if (i + patternLength < queryArr.size() && queryArr.at(i + patternLength).compare(NOT_WORD) == 0) {
+
+					//Add "not"
+					patternLength++;
+
+					if (i + patternLength < queryArr.size() && queryArr.at(i + patternLength).at(0) == SYMBOL_OPEN_BRACKET) {
+						int startPtrNegation = queryContent.getClauses().size() - 1;
+						if (!convertToPostFix(queryArr, prevSelectedClause, patternLength, i, queryContent)) {
+							return false;
+						}
+						int endPtrNegation = queryContent.getClauses().size() - 1;
+
+						while (endPtrNegation != startPtrNegation) {
+							queryContent.setNegation(PATTERN, endPtrNegation);
+							endPtrNegation--;
+						}
+					}
+					else {
+						if (!isValidPattern(queryArr, patternLength, i, queryContent, true)) {
+							return false;
+						}
+					}
+
+				}
 				else {
-					if (!isValidPattern(queryArr, patternLength, i, queryContent)) {
+					if (!isValidPattern(queryArr, patternLength, i, queryContent, false)) {
 						return false;
 					}
 				}
@@ -643,8 +765,33 @@ bool Preprocessor::isValidQuery(string query) {
 					}
 					withLength--;
 				}
+				else if (i + withLength < queryArr.size() && queryArr.at(i + withLength).compare(NOT_WORD) == 0) {
+
+					//Add "not"
+					withLength++;
+
+					if (i + withLength < queryArr.size() && queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+						int startPtrNegation = queryContent.getClauses().size() - 1;
+						if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
+							return false;
+						}
+						withLength--;
+						int endPtrNegation = queryContent.getClauses().size() - 1;
+
+						while (endPtrNegation != startPtrNegation) {
+							queryContent.setNegation(WITH_CLAUSE, endPtrNegation);
+							endPtrNegation--;
+						}
+					}
+					else {
+						if (!isValidWithClause(queryArr, withLength, i, queryContent, true)) {
+							return false;
+						}
+					}
+
+				}
 				else {
-					if (!isValidWithClause(queryArr, withLength, i, queryContent)) {
+					if (!isValidWithClause(queryArr, withLength, i, queryContent, false)) {
 						return false;
 					}
 				}
@@ -770,13 +917,13 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 				queryLength--;
 				break;
 			case 2:
-				if (!isValidPattern(queryArr, queryLength, pos, qc)) {
+				if (!isValidPattern(queryArr, queryLength, pos, qc, negateOperand)) {
 					return false;
 				}
 				queryLength--;
 				break;
 			case 3:
-				if (!isValidWithClause(queryArr, queryLength, pos, qc)) {
+				if (!isValidWithClause(queryArr, queryLength, pos, qc, negateOperand)) {
 					return false;
 				}
 				break;
@@ -1035,7 +1182,7 @@ bool Preprocessor::isValidClause(vector<string> queryArr, int &clauseLength, int
 	return true;
 }
 
-bool Preprocessor::isValidPattern(vector<string> queryArr, int &patternLength, int pos, QueryContent &qc) {
+bool Preprocessor::isValidPattern(vector<string> queryArr, int &patternLength, int pos, QueryContent &qc, bool invert) {
 	if ((pos + patternLength) >= queryArr.size() || !isDeclarationSynonymExist(queryArr.at(pos + patternLength))) {
 		return false;
 	}
@@ -1130,13 +1277,13 @@ bool Preprocessor::isValidPattern(vector<string> queryArr, int &patternLength, i
 		patternLength++;
 	}
 
-	if (!parsePattern(qc, searchDeclareType->second, searchSynonym->first, leftArg, rightArg)) {
+	if (!parsePattern(qc, searchDeclareType->second, searchSynonym->first, leftArg, rightArg, invert)) {
 		return false;
 	}
 	return true;
 }
 
-bool Preprocessor::isValidWithClause(vector<string> queryArr, int &withLength, int pos, QueryContent &qo) {
+bool Preprocessor::isValidWithClause(vector<string> queryArr, int &withLength, int pos, QueryContent &qo, bool invert) {
 	
 
 	if ((pos + withLength) >= queryArr.size() ||
@@ -1157,7 +1304,7 @@ bool Preprocessor::isValidWithClause(vector<string> queryArr, int &withLength, i
 		return false;
 	}
 
-	if (!parseWithClause(qo, ref1, ref2)) {
+	if (!parseWithClause(qo, ref1, ref2, invert)) {
 		return false;
 	}
 	return true;
@@ -1289,7 +1436,7 @@ bool Preprocessor::parseClauseArg(QueryContent &qc, string relType, string arg1,
 	return true;
 }
 
-bool Preprocessor::parsePattern(QueryContent &qc, ParamType entityType, string entity, string arg1, string arg2)
+bool Preprocessor::parsePattern(QueryContent &qc, ParamType entityType, string entity, string arg1, string arg2, bool invert)
 {
 
 	string leftArg = Utils::sanitise(arg1);
@@ -1354,12 +1501,12 @@ bool Preprocessor::parsePattern(QueryContent &qc, ParamType entityType, string e
 	}
 
 	qc.insertPattern(entityType, entity, leftArgType,
-		leftArg, rightArgType, rightArg, false);
+		leftArg, rightArgType, rightArg, invert);
 
 	return true;
 }
 
-bool Preprocessor::parseWithClause(QueryContent &qc, string leftRef, string rightRef) {
+bool Preprocessor::parseWithClause(QueryContent &qc, string leftRef, string rightRef, bool invert) {
 	
 	string leftArg;
 	string rightArg;
@@ -1512,7 +1659,7 @@ bool Preprocessor::parseWithClause(QueryContent &qc, string leftRef, string righ
 	}
 	else {
 		qc.insertWithClause(leftArgType, leftArg, leftAttrType,
-			rightArgType, rightArg, rightAttrType, false);
+			rightArgType, rightArg, rightAttrType, invert);
 	}
 
 	return true;
