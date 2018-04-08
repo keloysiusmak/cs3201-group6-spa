@@ -29,6 +29,13 @@ std::vector<QueryContent> QueryQueuer::getQueryContent() {
 	return qc;
 }
 
+void QueryQueuer::setSubQueryMapping(unordered_map<int, Param&> mapping) {
+	subQueryMapping = mapping;
+}
+std::vector<QueryContent> QueryQueuer::getSubQueryMapping() {
+	return subQueryMapping;
+}
+
 std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 
 	std::vector<ClauseNode> clauses;
