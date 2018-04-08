@@ -18,10 +18,10 @@ public:
 	QueryObject();
 	QueryObject(string);
 
-	void insertClause(RelRef, ParamType, string, ParamType, string);
-	void insertPattern(ParamType, string, ParamType, string, ParamType, string);
+	void insertClause(RelRef, ParamType, string, ParamType, string, bool);
+	void insertPattern(ParamType, string, ParamType, string, ParamType, string, bool);
 	void insertSelectStmt(ParamType, string, AttrType);
-	void insertWithClause(ParamType, string, AttrType, ParamType, string, AttrType);
+	void insertWithClause(ParamType, string, AttrType, ParamType, string, AttrType, bool);
 	void setClause(vector<Clause>);
 	void setWithClause(vector<Clause>);
 	void setPattern(vector<Pattern>);

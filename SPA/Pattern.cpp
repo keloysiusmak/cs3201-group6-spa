@@ -8,15 +8,20 @@ Pattern::Pattern() {
 	_relRef = None;
 }
 
-Pattern::Pattern(Param entity, Param leftParam, Param rightParam) {
+Pattern::Pattern(Param entity, Param leftParam, Param rightParam, bool invert) {
 	_relRef = None;
 	_entity = entity;
 	_leftParam = leftParam;
 	_rightParam = rightParam;
+	isInverted = invert;
 }
 
-void Pattern::setPattern(Param entity, Param leftParam, Param rightParam) {
-	
+void Pattern::setPattern(Param entity, Param leftParam, Param rightParam, bool invert) {
+	_relRef = None;
+	_entity = entity;
+	_leftParam = leftParam;
+	_rightParam = rightParam;
+	isInverted = invert;
 }
 
 Param Pattern::getEntity() {

@@ -9,16 +9,18 @@ Clause::Clause() {
 
 }
 
-Clause::Clause(RelRef relRef, Param firstParam, Param secondParam) {
+Clause::Clause(RelRef relRef, Param firstParam, Param secondParam, bool invert) {
 	_relRef = relRef;
 	_leftParam = firstParam;
 	_rightParam = secondParam;
+	isInverted = invert;
 }
 
-void Clause::setClause(RelRef relRef, Param firstParam, Param secondParam) {
+void Clause::setClause(RelRef relRef, Param firstParam, Param secondParam, bool invert) {
 	_relRef = relRef;
 	_leftParam = firstParam;
 	_rightParam = secondParam;
+	isInverted = invert;
 }
 
 RelRef Clause::getRelRef() {
@@ -31,6 +33,10 @@ Param Clause::getLeftParam() {
 
 Param Clause::getRightParam() {
 	return _rightParam;
+}
+
+bool Clause::getIsInverted() {
+	return isInverted;
 }
 
 bool Clause::hasSynonymsNotALL() {

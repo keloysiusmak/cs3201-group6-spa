@@ -8,7 +8,7 @@ void QueryContent::insertSelect(ParamType selectType, string synonym, AttrType a
 
 	_selectStmt.push_back(result);
 }
-void QueryContent::insertClause(RelRef relRef, ParamType firstParamType, string firstParam, ParamType secondParamType, string secondParam) {
+void QueryContent::insertClause(RelRef relRef, ParamType firstParamType, string firstParam, ParamType secondParamType, string secondParam, bool invert) {
 	Param fp;
 	fp.type = firstParamType;
 	fp.value = firstParam;
@@ -19,14 +19,14 @@ void QueryContent::insertClause(RelRef relRef, ParamType firstParamType, string 
 	sp.value = secondParam;
 	sp.attribute = NONE;
 
-	Clause clause(relRef, fp, sp);
+	Clause clause(relRef, fp, sp, invert);
 
 	ClauseNode cn;
 	cn.setClauseNode(clause);
 
 	_clauses.push_back(cn);
 }
-void QueryContent::insertPattern(ParamType entityType, string entity, ParamType leftParamType, string leftParam, ParamType rightParamType, string rightParam) {
+void QueryContent::insertPattern(ParamType entityType, string entity, ParamType leftParamType, string leftParam, ParamType rightParamType, string rightParam, bool invert) {
 	Param ep;
 	ep.type = entityType;
 	ep.value = entity;
@@ -42,7 +42,7 @@ void QueryContent::insertPattern(ParamType entityType, string entity, ParamType 
 	rp.value = rightParam;
 	rp.attribute = NONE;
 
-	Pattern pattern(ep, lp, rp);
+	Pattern pattern(ep, lp, rp, invert);
 
 	ClauseNode cn;
 	cn.setPatternNode(pattern);
@@ -50,7 +50,7 @@ void QueryContent::insertPattern(ParamType entityType, string entity, ParamType 
 	_patterns.push_back(cn);
 }
 void QueryContent::insertWithClause(ParamType leftArgType, string leftArg, AttrType leftAttr,
-	ParamType rightArgType, string rightArg, AttrType rightAttr) {
+	ParamType rightArgType, string rightArg, AttrType rightAttr, bool invert) {
 	
 	Param leftParam;
 	leftParam.type = leftArgType;
@@ -62,7 +62,7 @@ void QueryContent::insertWithClause(ParamType leftArgType, string leftArg, AttrT
 	rightParam.value = rightArg;
 	rightParam.attribute = rightAttr;
 
-	Clause withClause(With, leftParam, rightParam);
+	Clause withClause(With, leftParam, rightParam, invert);
 
 	ClauseNode cn;
 	cn.setWithClauseNode(withClause);

@@ -31,6 +31,8 @@ private:
 	int higherPrecedenceValidate(char operator1, char operator2);
 	int getPrecedence(char op);
 	bool checkBoolStmt(string query);
+	vector<string> performDeMorganProcess(vector<string> queryArr, int startPos);
+	vector<string> applyDeMorgan(vector<string> queryArr, int startPos);
 public:
 	Preprocessor();
 	void insertDeclarationToMap(string synonym, string declaration);
