@@ -331,7 +331,7 @@ std::vector<Pattern> QueryQueuer::parsePatternTree(ClauseNode c) {
 
 	return patterns;
 }
-ClauseNode QueryQueuer::replaceClauseNode(QueryContent qc, CLAUSE_SELECTOR clauseOrWithClauseOrPattern, int clauseNo, CLAUSE_LEFT_OR_RIGHT leftOrRight, string val) {
+QueryContent QueryQueuer::replaceClauseNode(QueryContent qc, CLAUSE_SELECTOR clauseOrWithClauseOrPattern, int clauseNo, CLAUSE_LEFT_OR_RIGHT leftOrRight, string val) {
 	ClauseNode cn;
 	if (clauseOrWithClauseOrPattern == REPLACE_CLAUSE) {
 		cn = qc.getClauses()[clauseNo];
@@ -354,7 +354,24 @@ ClauseNode QueryQueuer::replaceClauseNode(QueryContent qc, CLAUSE_SELECTOR claus
 	}
 	c = Clause(c.getRelRef(), pl, pr, c.getIsInverted());
 	cn.setClauseNode(c);
-	return cn;
+
+	std::vector<ClauseNode> clauseNodes;
+	if (clauseOrWithClauseOrPattern == REPLACE_CLAUSE) {
+		clauseNodes = qc.getClauses();
+		clauseNodes[clauseNo] = cn;
+		qc.setClause(clauseNodes);
+	}
+	else if (clauseOrWithClauseOrPattern == REPLACE_WITH_CLAUSE) {
+		clauseNodes = qc.getWithClauses();
+		clauseNodes[clauseNo] = cn;
+		qc.setWithClause(clauseNodes);
+	}
+	else if (clauseOrWithClauseOrPattern == REPLACE_PATTERN) {
+		clauseNodes = qc.getPattern();
+		clauseNodes[clauseNo] = cn;
+		qc.setPattern(clauseNodes);
+	}
+	return qc;
 }
 
 list<string> QueryQueuer::evaluateQueries() {
@@ -364,37 +381,77 @@ list<string> QueryQueuer::evaluateQueries() {
 	unordered_map<int, std::vector<int>> subQueryMapping = QueryQueuer::getSubQueryMapping();
 	list<string> output;
 
+	//indexed by qcId, then indexed by mapping params that need to be updated, and the results obtained from subquery
+	unordered_map<int, list<string>> dependencyTable;
+
 	//sort the QueryContent, run it in reverse topological sort
 	for (int j = 0; j < sortedQc.size(); j++) {
 
 		int dependencies = sortedQc[j].getChildren().size();
 		QueryContent thisQc = sortedQc[j];
-		std::vector<QueryObject> q = parseQueryContent(thisQc);
+		int thisQcId = sortedInts[j];
 
-		//split into query objects and run
-		list<string> results;
-		for (int i = 0; i < q.size(); i++) {
+		int loops;
+		std::vector<list<string>> resultList;
+		std::vector<std::vector<int>> paramList;
+		if (dependencies == 0) loops = 1;
+		else {
+			std::vector<QueryContent *> children = thisQc.getChildren();
 
-			QueryObject qo;
+			loops = 1;
+			for (int j = 0; j < children.size(); j++) {
+				auto it = std::find(children.begin(), children.end(), children[j]);
+				auto index = std::distance(children.begin(), it);
 
-			if (validQuery) {
-				_evaluator.setQueryObject(q[i]);
-				results = _evaluator.evaluateQuery();
+				list<string> result = dependencyTable[index];
+				resultList.push_back(result);
+				std::vector<int> param = subQueryMapping[index];
+				paramList.push_back(param);
+				loops *= result.size();
 			}
-			else {
-				output.clear();
-				results = invalidQueryMessage;
-				break;
+		}
+		list<string> results;
+		results.clear();
+		for (int r = 0; r < loops; r++) {
+			for (int d = 0; d < dependencies; d++) {
+				int p = r;
+				for (int dx = 0; dx < d; dx++) {
+					p = p / resultList[dx].size();
+				}
+				p = p % resultList[d].size();
+				list<string>::iterator it = resultList[d].begin();
+				std::advance(it, p);
+				string value = *it;
+				thisQc = QueryQueuer::replaceClauseNode(thisQc, (CLAUSE_SELECTOR)paramList[d][1], paramList[d][2], (CLAUSE_LEFT_OR_RIGHT)paramList[d][3], value);
+			}
+
+			std::vector<QueryObject> q = parseQueryContent(thisQc);
+
+			//split into query objects and run
+			for (int i = 0; i < q.size(); i++) {
+
+				QueryObject qo;
+
+				if (validQuery) {
+					_evaluator.setQueryObject(q[i]);
+					list<string> tempResult = _evaluator.evaluateQuery();
+					std::copy(results.begin(), results.end(), std::back_insert_iterator<std::list<string>> (tempResult));
+				}
+				else {
+					output.clear();
+					results = invalidQueryMessage;
+					break;
+				}
 			}
 		}
 
 		//fill in results obtained into any parent query object
-		/*
-		vector<int> paramInQn = subQueryMapping[sortedInts[j]];
-		QueryQueuer::replaceClauseNode(thisQc, (CLAUSE_SELECTOR)paramInQn[0], paramInQn[1], (CLAUSE_LEFT_OR_RIGHT)paramInQn[2], "x");
-		*/
+		unordered_map<std::vector<int>, list<string>> innerDepTable;
+		dependencyTable.insert({ sortedInts[j], results});
 		output.insert(output.end(), results.begin(), results.end());
 	}
+
+	output.unique();
 
 	return output;
 }

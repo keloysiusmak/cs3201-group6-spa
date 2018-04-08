@@ -104,3 +104,12 @@ vector<ClauseNode> QueryContent::getWithClauses() {
 vector<QueryContent *> QueryContent::getChildren() {
 	return children;
 }
+void QueryContent::setClause(vector<ClauseNode> c) {
+	_clauses = c;
+}
+void QueryContent::setWithClause(vector<ClauseNode> w) {
+	_withClauses = w;
+}
+void QueryContent::setPattern(vector<ClauseNode> p) {
+	_patterns = p;
+}

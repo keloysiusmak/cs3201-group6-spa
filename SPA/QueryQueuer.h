@@ -43,7 +43,7 @@ public:
 	std::vector<Pattern> parsePatternTree(ClauseNode);
 	std::vector<int> sortQueryContent();
 	std::vector<QueryContent> convertSortedToQC(std::vector<int>);
-	ClauseNode replaceClauseNode(QueryContent, CLAUSE_SELECTOR, int, CLAUSE_LEFT_OR_RIGHT, string);
+	QueryContent replaceClauseNode(QueryContent, CLAUSE_SELECTOR, int, CLAUSE_LEFT_OR_RIGHT, string);
 };
 
 

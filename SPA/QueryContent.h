@@ -20,10 +20,14 @@ public:
 	void insertWithClause(ParamType, string, AttrType, ParamType, string, AttrType, bool);
 	void insertOperator(CLAUSE_NODE_TYPE, OPERATORS);
 	void setChildren(QueryContent *);
+	void setClause(vector<ClauseNode>);
+	void setWithClause(vector<ClauseNode>);
+	void setPattern(vector<ClauseNode>);
 	vector<Param> getSelect();
 	vector<ClauseNode> getClauses();
 	vector<ClauseNode> getPattern();
 	vector<ClauseNode> getWithClauses();
 	vector<QueryContent *> getChildren();
+	
 };
 
