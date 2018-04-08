@@ -684,7 +684,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p1(ep, lp, rp);
+			Pattern p1(ep, lp, rp, false);
 			std::vector<std::vector<int>> expected = { { 1 },{ 3 },{ 7 }, {8}, {9}, {10},{13} };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p1) == expected));
 
@@ -701,7 +701,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "a|1|+|";
 			rp.attribute = NONE;
 
-			Pattern p2(ep, lp, rp);
+			Pattern p2(ep, lp, rp, false);
 			expected = { {3} };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p2) == expected));
 
@@ -718,7 +718,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "a|1|+|";
 			rp.attribute = NONE;
 
-			Pattern p3(ep, lp, rp);
+			Pattern p3(ep, lp, rp, false);
 			expected.clear();
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p3) == expected));
 
@@ -735,7 +735,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p4(ep, lp, rp);
+			Pattern p4(ep, lp, rp, false);
 			expected = { { 1,1 },{ 3,2 },{ 7,3 },{ 8,5 },{ 9,4 },{ 10,6 },{ 13,10 } };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p4) == expected));
 
@@ -752,7 +752,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p5(ep, lp, rp);
+			Pattern p5(ep, lp, rp, false);
 			expected = { { 1 } };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p5) == expected));
 
@@ -769,7 +769,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "a|1|+|";
 			rp.attribute = NONE;
 
-			Pattern p6(ep, lp, rp);
+			Pattern p6(ep, lp, rp, false);
 			expected = { { 3, 2 } };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p6) == expected));
 
@@ -786,7 +786,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "a|1|+|";
 			rp.attribute = NONE;
 
-			Pattern p7(ep, lp, rp);
+			Pattern p7(ep, lp, rp, false);
 			expected.clear();
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p7) == expected));
 
@@ -803,7 +803,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "a|1|+|";
 			rp.attribute = NONE;
 
-			Pattern p8(ep, lp, rp);
+			Pattern p8(ep, lp, rp, false);
 			expected = { { 3 } };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p8) == expected));
 
@@ -820,7 +820,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "a|1|+|";
 			rp.attribute = NONE;
 
-			Pattern p9(ep, lp, rp);
+			Pattern p9(ep, lp, rp, false);
 			expected.clear();
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p9) == expected));
 
@@ -837,7 +837,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "a|1|+|";
 			rp.attribute = NONE;
 
-			Pattern p10(ep, lp, rp);
+			Pattern p10(ep, lp, rp, false);
 			expected = { { 3 } };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p10) == expected));
 
@@ -854,7 +854,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "a|1|+|";
 			rp.attribute = NONE;
 
-			Pattern p11(ep, lp, rp);
+			Pattern p11(ep, lp, rp, false);
 			expected.clear();
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p11) == expected));
 
@@ -871,7 +871,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p12(ep, lp, rp);
+			Pattern p12(ep, lp, rp, false);
 			expected = { { 5} };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p12) == expected));
 
@@ -888,7 +888,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p13(ep, lp, rp);
+			Pattern p13(ep, lp, rp, false);
 			expected = { { 5,1 } };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p13) == expected));
 
@@ -905,7 +905,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p14(ep, lp, rp);
+			Pattern p14(ep, lp, rp, false);
 			expected = { { 5 } };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p14) == expected));
 
@@ -922,7 +922,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p15(ep, lp, rp);
+			Pattern p15(ep, lp, rp, false);
 			expected.clear();
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p15) == expected));
 
@@ -939,7 +939,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p17(ep, lp, rp);
+			Pattern p17(ep, lp, rp, false);
 			expected = { { 6}, {12}, {11}, {2} };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p17) == expected));
 
@@ -956,7 +956,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p18(ep, lp, rp);
+			Pattern p18(ep, lp, rp, false);
 			expected = {{ 6,4 },{ 12,9 },{ 11,8 },{ 2,3 } };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p18) == expected));
 
@@ -973,7 +973,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p19(ep, lp, rp);
+			Pattern p19(ep, lp, rp, false);
 			expected = { { 11 } };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p19) == expected));
 
@@ -990,7 +990,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p20(ep, lp, rp);
+			Pattern p20(ep, lp, rp, false);
 			expected = { { 12 } };
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p20) == expected));
 
@@ -1007,7 +1007,7 @@ namespace PKBDEParserIntegrationTesting
 			rp.value = "_";
 			rp.attribute = NONE;
 
-			Pattern p21(ep, lp, rp);
+			Pattern p21(ep, lp, rp, false);
 			expected.clear();
 			Assert::AreEqual(true, (pkb.getStatementsWithPattern(p21) == expected));
 		}
