@@ -38,6 +38,9 @@ void EvaluatorHelper::mergeWithoutOverlap(ClauseResults &clauseResults, Intermed
 	/* Add table params */
 	addClauseParamToTable(clauseResults, iTable);
 
+	/* Set iTable as hasResults if clauseResults is (concrete, concrete) and true */
+	if (clauseResults.isValid()) iTable.hasResults = true;
+
 	vector<vector<int>> newTable;
 	if (iTable.resultsTable.size() == 0) { // Table has no values
 		for (vector<int> resultsRow : clauseResults.results) {
@@ -185,9 +188,15 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 			int tableValue = iTable.resultsTable[tableResultsIndex][paramIndex];
 			int clauseValue = clauseResults.results[clauseResultsIndex][0];
 			if (tableValue == clauseValue) { // Same value
-				mergedResults.push_back(clauseResults.results[clauseResultsIndex]);
-				tableResultsIndex++;
+
+				// Get all vectors in iTable overlapping with clauseResult value
+				while (tableValue == clauseValue && tableResultsIndex < iTable.resultsTable.size() - 1) {
+					mergedResults.push_back(iTable.resultsTable[tableResultsIndex]);
+					tableResultsIndex++;
+					tableValue = iTable.resultsTable[tableResultsIndex][paramIndex];
+				}
 				clauseResultsIndex++;
+
 			} else if (tableValue > clauseValue) {
 				clauseResultsIndex++;
 			} else {
@@ -318,7 +327,8 @@ IntermediateTable EvaluatorHelper::findTableWithParam(Param p, vector<Intermedia
 	}
 
 	IntermediateTable emptyTable;
-	emptyTable.instantiateTable();
+	emptyTable.instantiateTable(); 
+	emptyTable.hasResults = true; // Assume has results
 	return emptyTable;
 }
 
