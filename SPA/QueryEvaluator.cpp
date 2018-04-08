@@ -54,6 +54,21 @@ list<string> QueryEvaluator::evaluateQuery() {
 			sortedClausesVector.push_back(groupedClauses.second);
 		}
 
+		/* map<int, vector<Clause>> groupsAfterSortingByConstants;
+		for (vector<Clause> reGroupedClauses : sortedClausesVector) {
+			map<int, vector<Clause>> groupsAfterSortingByConstants = QueryOptimization::numConstantsGroupClauses(sortedClausesVector);
+		}
+
+		vector<vector<Clause>> sortNumResults;
+		for (pair<int, vector<Clause>> constantGroupedClauses : groupsAfterSortingByConstants) {
+			sortNumResults.push_back(constantGroupedClauses.second);
+		}
+
+		map<int, vector<Clause>> groupsAfterSortingByNumResults;
+		for (vector<Clause> groupByConstants : sortNumResults) {
+			vector<Clause> groupsAfterSortingByNumResults = QueryOptimization::numResultsGroupClauses(sortNumResults);
+		} */
+
 		vector<Param> selectParams = queryObject.getSelectStatements(); // Selected Params
 		map<Clause, vector<vector<int>>> cache; // For cached results
 

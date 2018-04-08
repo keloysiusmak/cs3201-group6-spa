@@ -19,6 +19,7 @@ public:
 	void insertPattern(ParamType, string, ParamType, string, ParamType, string, bool);
 	void insertWithClause(ParamType, string, AttrType, ParamType, string, AttrType, bool);
 	void insertOperator(CLAUSE_NODE_TYPE, OPERATORS);
+	void setNegation(CLAUSE_NODE_TYPE, int);
 	void setChildren(QueryContent *);
 	void setClause(vector<ClauseNode>);
 	void setWithClause(vector<ClauseNode>);

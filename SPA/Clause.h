@@ -20,6 +20,7 @@ public:
 
 	//Methods
 	void setClause(RelRef, Param, Param, bool);
+	void setInverted();
 
 	RelRef getRelRef();
 	Param getLeftParam();

@@ -49,3 +49,7 @@ bool Clause::hasSynonymsNotALL() {
 
 	return false;
 }
+
+void Clause::setInverted() {
+	isInverted = !isInverted;
+}

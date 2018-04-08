@@ -21,6 +21,7 @@ public:
 	void setWithClauseNode(Clause);
 	void setOperatorNode(OPERATORS);
 	void addChildren(ClauseNode);
+	void setNegation(CLAUSE_NODE_TYPE);
 	vector<ClauseNode> getChildren();
 	CLAUSE_NODE_TYPE getClauseNodeType();
 	Clause getClause();
