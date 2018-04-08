@@ -48,8 +48,8 @@ namespace QueryQueuerTesting
 			QueryQueuer qq;
 
 			QueryContent qc;
-			qc.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
-			qc.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+			qc.insertClause(Modifies, VARIABLE, "v", IDENT, "x", false);
+			qc.insertClause(Uses, VARIABLE, "v", IDENT, "y", false);
 			qc.insertOperator(CLAUSE, OR);
 
 			std::vector<QueryContent> vqc;
@@ -58,19 +58,19 @@ namespace QueryQueuerTesting
 			for (int i = 0; i < vqc.size(); i++) {
 				std::vector<QueryObject> result = qq.parseQueryContent(vqc[i]);
 				QueryObject expectedQo1a;
-				expectedQo1a.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
+				expectedQo1a.insertClause(Modifies, VARIABLE, "v", IDENT, "x", false);
 				QueryObject expectedQo1b;
-				expectedQo1b.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+				expectedQo1b.insertClause(Uses, VARIABLE, "v", IDENT, "y", false);
 				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[0], expectedQo1a));
 				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[1], expectedQo1b));
 			}
 
 			QueryContent qc1;
-			qc1.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
-			qc1.insertClause(Uses, VARIABLE, "v", IDENT, "y");
+			qc1.insertClause(Modifies, VARIABLE, "v", IDENT, "x", false);
+			qc1.insertClause(Uses, VARIABLE, "v", IDENT, "y", false);
 			qc1.insertOperator(CLAUSE, OR);
-			qc1.insertClause(Modifies, VARIABLE, "v", IDENT, "a");
-			qc1.insertClause(Uses, VARIABLE, "v", IDENT, "b");
+			qc1.insertClause(Modifies, VARIABLE, "v", IDENT, "a", false);
+			qc1.insertClause(Uses, VARIABLE, "v", IDENT, "b", false);
 			qc1.insertOperator(CLAUSE, OR);
 			qc1.insertOperator(CLAUSE, AND);
 
@@ -80,17 +80,17 @@ namespace QueryQueuerTesting
 			for (int i = 0; i < vqc1.size(); i++) {
 				std::vector<QueryObject> result = qq.parseQueryContent(vqc1[i]);
 				QueryObject expectedQo2a;
-				expectedQo2a.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
-				expectedQo2a.insertClause(Modifies, VARIABLE, "v", IDENT, "a");
+				expectedQo2a.insertClause(Modifies, VARIABLE, "v", IDENT, "x", false);
+				expectedQo2a.insertClause(Modifies, VARIABLE, "v", IDENT, "a", false);
 				QueryObject expectedQo2b;
-				expectedQo2b.insertClause(Modifies, VARIABLE, "v", IDENT, "x");
-				expectedQo2b.insertClause(Uses, VARIABLE, "v", IDENT, "b");
+				expectedQo2b.insertClause(Modifies, VARIABLE, "v", IDENT, "x", false);
+				expectedQo2b.insertClause(Uses, VARIABLE, "v", IDENT, "b", false);
 				QueryObject expectedQo2c;
-				expectedQo2c.insertClause(Uses, VARIABLE, "v", IDENT, "y");
-				expectedQo2c.insertClause(Modifies, VARIABLE, "v", IDENT, "a");
+				expectedQo2c.insertClause(Uses, VARIABLE, "v", IDENT, "y", false);
+				expectedQo2c.insertClause(Modifies, VARIABLE, "v", IDENT, "a", false);
 				QueryObject expectedQo2d;
-				expectedQo2d.insertClause(Uses, VARIABLE, "v", IDENT, "y");
-				expectedQo2d.insertClause(Uses, VARIABLE, "v", IDENT, "b");
+				expectedQo2d.insertClause(Uses, VARIABLE, "v", IDENT, "y", false);
+				expectedQo2d.insertClause(Uses, VARIABLE, "v", IDENT, "b", false);
 				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[0], expectedQo2a));
 				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[1], expectedQo2b));
 				Assert::AreEqual(true, Utils::compareQueryObjectProperties(result[2], expectedQo2c));
@@ -119,7 +119,7 @@ namespace QueryQueuerTesting
 			rp.type = IDENT;
 			rp.value = "x";
 			rp.attribute = NONE;
-			Clause c = Clause(Modifies, lp, rp);
+			Clause c = Clause(Modifies, lp, rp, false);
 			c2.setClauseNode(c);
 			c3.setClauseNode(c);
 			c5.setClauseNode(c);
@@ -132,11 +132,11 @@ namespace QueryQueuerTesting
 
 			std::vector<Clause> clause = qq.parseClauseTree(c4);
 			Clause expectedClause1;
-			expectedClause1.setClause(Modifies, lp, rp);
+			expectedClause1.setClause(Modifies, lp, rp, false);
 			Clause expectedClause2;
-			expectedClause2.setClause(Modifies, lp, rp);
+			expectedClause2.setClause(Modifies, lp, rp, false);
 			Clause expectedClause3;
-			expectedClause3.setClause(Modifies, lp, rp);
+			expectedClause3.setClause(Modifies, lp, rp, false);
 			Assert::AreEqual(true, Utils::compareClause(expectedClause1, clause[0]));
 			Assert::AreEqual(true, Utils::compareClause(expectedClause2, clause[1]));
 			Assert::AreEqual(true, Utils::compareClause(expectedClause3, clause[2]));
@@ -169,7 +169,7 @@ namespace QueryQueuerTesting
 			rrp.value = "_";
 			rrp.attribute = NONE;
 
-			Pattern c = Pattern(lp, rp, rrp);
+			Pattern c = Pattern(lp, rp, rrp, false);
 			c2.setClauseNode(c);
 			c3.setClauseNode(c);
 			c5.setClauseNode(c);
@@ -182,11 +182,11 @@ namespace QueryQueuerTesting
 
 			std::vector<Pattern> patterns = qq.parsePatternTree(c4);
 			Pattern expectedPattern1;
-			expectedPattern1.setPattern(lp, rp, rrp);
+			expectedPattern1.setPattern(lp, rp, rrp, false);
 			Pattern expectedPattern2;
-			expectedPattern2.setPattern(lp, rp, rrp);
+			expectedPattern2.setPattern(lp, rp, rrp, false);
 			Pattern expectedPattern3;
-			expectedPattern3.setPattern(lp, rp, rrp);
+			expectedPattern3.setPattern(lp, rp, rrp, false);
 			Assert::AreEqual(true, Utils::comparePattern(expectedPattern1, patterns[0]));
 			Assert::AreEqual(true, Utils::comparePattern(expectedPattern2, patterns[1]));
 			Assert::AreEqual(true, Utils::comparePattern(expectedPattern3, patterns[2]));
@@ -213,7 +213,7 @@ namespace QueryQueuerTesting
 			rp.type = PROCEDURE;
 			rp.value = "p";
 			rp.attribute = PROCNAME;
-			Clause c = Clause(With, lp, rp);
+			Clause c = Clause(With, lp, rp, false);
 			c2.setClauseNode(c);
 			c3.setClauseNode(c);
 			c5.setClauseNode(c);
@@ -226,11 +226,11 @@ namespace QueryQueuerTesting
 
 			std::vector<Clause> clause = qq.parseClauseTree(c4);
 			Clause expectedClause1;
-			expectedClause1.setClause(With, lp, rp);
+			expectedClause1.setClause(With, lp, rp, false);
 			Clause expectedClause2;
-			expectedClause2.setClause(With, lp, rp);
+			expectedClause2.setClause(With, lp, rp, false);
 			Clause expectedClause3;
-			expectedClause3.setClause(With, lp, rp);
+			expectedClause3.setClause(With, lp, rp, false);
 			Assert::AreEqual(true, Utils::compareClause(expectedClause1, clause[0]));
 			Assert::AreEqual(true, Utils::compareClause(expectedClause2, clause[1]));
 			Assert::AreEqual(true, Utils::compareClause(expectedClause3, clause[2]));
