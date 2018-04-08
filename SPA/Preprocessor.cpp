@@ -1802,6 +1802,7 @@ vector<string> Preprocessor::performDeMorganProcess(vector<string> queryArr, int
 			newQueryArr.push_back(queryArr.at(i));
 		}
 	}
+	return newQueryArr;
 }
 
 vector<string> Preprocessor::applyDeMorgan(vector<string> queryArr, int startPos) {
@@ -1870,4 +1871,5 @@ vector<string> Preprocessor::applyDeMorgan(vector<string> queryArr, int startPos
 			
 		}
 	}
+	return tempArr;
 }
