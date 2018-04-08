@@ -20,6 +20,7 @@ private:
 	string errorMessage;
 	bool isErrorExist;
 	std::vector<QueryContent> vqc;
+	unordered_map<int, Param&> subQueryMapping;
 
 	int retrieveClauseArgType(string arg);
 	int retrieveExpressionType(string expression);
@@ -59,5 +60,6 @@ public:
 	bool isValidSuchThatKeyword(string query);
 	string getErrorMessage();
 	std::vector<QueryContent> getQueryContent();
+	unordered_map<int, Param&> getSubQueryMapping();
 	bool getIsErrorExist();
 };
