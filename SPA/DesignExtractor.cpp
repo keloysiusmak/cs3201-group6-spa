@@ -294,7 +294,13 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 					stmts.push_back(parents[k][0]);
 					pkb.insertToTable(STATEMENT_TABLE, parents[k][0], { {}, procUses, procModifies,{} });
 				}
-				int topStmtListId = pkb.getFromTable(STATEMENT_TABLE, parents[parents.size() - 1][0])[0][0];
+				int topStmtListId;
+				if (parents.size() > 0) {
+					topStmtListId = pkb.getFromTable(STATEMENT_TABLE, parents[parents.size() - 1][0])[0][0];
+				}
+				else {
+					topStmtListId = pkb.getFromTable(STATEMENT_TABLE, callStmts[j])[0][0];
+				}
 				std::vector<std::vector<int>> proc = pkb.getFromTable(STATEMENT_LIST_TABLE, topStmtListId);
 				if (proc.size() > 2 && proc[2].size() > 0) {
 					pkb.insertToTable(PROC_INFO_TABLE, proc[2][0], { {}, procUses, procModifies });
