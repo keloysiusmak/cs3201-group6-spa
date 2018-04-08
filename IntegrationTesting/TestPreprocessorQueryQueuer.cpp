@@ -36,38 +36,38 @@ namespace PreprocessorEvaluatorIntegrationTesting
 
 				QueryObject expectedQo2;
 				expectedQo2.insertSelectStmt(ASSIGN, "a", NONE);
-				expectedQo2.insertPattern(ASSIGN, "a", VAR_IDENT, "x", EXPR, "y|1|+|");
+				expectedQo2.insertPattern(ASSIGN, "a", VAR_IDENT, "x", EXPR, "y|1|+|", false);
 
 				QueryObject expectedQo3;
 				expectedQo3.insertSelectStmt(STMT, "s", NONE);
-				expectedQo3.insertClause(FollowsT, ASSIGN, "a", INTEGER, "2");
+				expectedQo3.insertClause(FollowsT, ASSIGN, "a", INTEGER, "2", false);
 
 				QueryObject expectedQo4;
 				expectedQo4.insertSelectStmt(STMT, "s", NONE);
-				expectedQo4.insertClause(Modifies, STMT, "s", VARIABLE, "v");
+				expectedQo4.insertClause(Modifies, STMT, "s", VARIABLE, "v", false);
 
 				QueryObject expectedQo5;
 				expectedQo5.insertSelectStmt(ASSIGN, "a", NONE);
-				expectedQo5.insertClause(Follows, WHILE, "w", ASSIGN, "a");
-				expectedQo5.insertPattern(ASSIGN, "a", VAR_IDENT, "x", ALL, "_");
+				expectedQo5.insertClause(Follows, WHILE, "w", ASSIGN, "a", false);
+				expectedQo5.insertPattern(ASSIGN, "a", VAR_IDENT, "x", ALL, "_", false);
 
 				QueryObject expectedQo6;
 				expectedQo6.insertSelectStmt(ASSIGN, "a", NONE);
-				expectedQo6.insertClause(Follows, WHILE, "w", ASSIGN, "a");
-				expectedQo6.insertClause(Follows, ASSIGN, "a", IF, "ifs");
+				expectedQo6.insertClause(Follows, WHILE, "w", ASSIGN, "a", false);
+				expectedQo6.insertClause(Follows, ASSIGN, "a", IF, "ifs", false);
 
 				QueryObject expectedQo7a;
 				expectedQo7a.insertSelectStmt(ASSIGN, "a", NONE);
-				expectedQo7a.insertClause(Follows, WHILE, "w", ASSIGN, "a");
+				expectedQo7a.insertClause(Follows, WHILE, "w", ASSIGN, "a", false);
 
 				QueryObject expectedQo7b;
 				expectedQo7b.insertSelectStmt(ASSIGN, "a", NONE);
-				expectedQo7b.insertClause(Follows, ASSIGN, "a", IF, "ifs");
+				expectedQo7b.insertClause(Follows, ASSIGN, "a", IF, "ifs", false);
 
 				QueryObject expectedQo8a;
 				expectedQo8a.insertSelectStmt(ASSIGN, "a", NONE);
-				expectedQo8a.insertClause(Follows, WHILE, "w", ASSIGN, "a");
-				expectedQo8a.insertClause(Follows, WHILE, "w", ASSIGN, "a");
+				expectedQo8a.insertClause(Follows, WHILE, "w", ASSIGN, "a", false);
+				expectedQo8a.insertClause(Follows, WHILE, "w", ASSIGN, "a", false);
 
 				QueryContent qc;
 				std::vector<QueryContent> vqc;
