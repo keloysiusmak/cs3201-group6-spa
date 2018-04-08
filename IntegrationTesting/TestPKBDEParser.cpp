@@ -49,7 +49,6 @@ namespace PKBDEParserIntegrationTesting
 			pkb = parser.Parse(simpleSource, pkb, true, testString);
 			de = DesignExtractor();
 			de.extract(pkb);
-			int a = 1;
 		}
 
 		TEST_METHOD(PKBDEParserGetFollowsBeforeInvalid)

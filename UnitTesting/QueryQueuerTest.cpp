@@ -170,9 +170,9 @@ namespace QueryQueuerTesting
 			rrp.attribute = NONE;
 
 			Pattern c = Pattern(lp, rp, rrp, false);
-			c2.setClauseNode(c);
-			c3.setClauseNode(c);
-			c5.setClauseNode(c);
+			c2.setPatternNode(c);
+			c3.setPatternNode(c);
+			c5.setPatternNode(c);
 			c1.setOperatorNode(AND);
 			c1.addChildren(c2);
 			c1.addChildren(c3);
