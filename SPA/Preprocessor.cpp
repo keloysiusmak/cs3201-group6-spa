@@ -16,6 +16,7 @@ const char SYMBOL_PLUS = '+';
 const char SYMBOL_MINUS = '-';
 const char SYMBOL_MULTIPLICATION = '*';
 const char SYMBOL_DIVIDER = '|';
+const char SYMBOL_NEGATION = '~';
 
 const string EMPTY_STRING = "";
 const string DELIM_STRING = " ,()<>=+-*";
@@ -77,7 +78,7 @@ const unordered_map<string, ParamType> REL_MAPPING_RIGHT_IDENT = { { "Modifies",
 
 const unordered_map<bool, string> WITH_RELTABLE = { { true, "withString" }, { false, "withNumber" } };
 const unordered_map<char, OPERATORS> MAP_OPERATORS = { { '*', AND }, { '+', OR } };
-const unordered_map<string, char> MAP_SYMBOL_OPERATORS = { { "and", '*' },{ "or", '+' } };
+const unordered_map<string, char> MAP_SYMBOL_OPERATORS = { { "and", '*' }, { "or", '+' }, { "not", '~' } };
 
 const regex synonymRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)");
 const regex identRegex("(^(\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$))");
@@ -326,8 +327,32 @@ bool Preprocessor::isValidQuery(string query) {
 					return false;
 				}
 			}
+			else if (i + clauseLength < queryArr.size() && queryArr.at(i + clauseLength).compare(NOT_WORD) == 0) {
+
+				//Add "not"
+				clauseLength++;
+
+				if (i + clauseLength < queryArr.size() && queryArr.at(i + clauseLength).at(0) == SYMBOL_OPEN_BRACKET) {
+					int startPtrNegation = queryContent.getClauses().size() - 1;
+					if (!convertToPostFix(queryArr, prevSelectedClause, clauseLength, i, queryContent)) {
+						return false;
+					}
+					int endPtrNegation = queryContent.getClauses().size() - 1;
+
+					while (endPtrNegation != startPtrNegation) {
+						queryContent.setNegation(CLAUSE, endPtrNegation);
+						endPtrNegation--;
+					}
+				}
+				else {
+					if (!isValidClause(queryArr, clauseLength, i, queryContent, true)) {
+						return false;
+					}
+				}
+
+			}
 			else {
-				if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
+				if (!isValidClause(queryArr, clauseLength, i, queryContent, false)) {
 					return false;
 				}
 			}
@@ -422,8 +447,32 @@ bool Preprocessor::isValidQuery(string query) {
 						return false;
 					}
 				}
+				else if (i + clauseLength < queryArr.size() && queryArr.at(i + clauseLength).compare(NOT_WORD) == 0) {
+
+					//Add "not"
+					clauseLength++;
+
+					if (i + clauseLength < queryArr.size() && queryArr.at(i + clauseLength).at(0) == SYMBOL_OPEN_BRACKET) {
+						int startPtrNegation = queryContent.getClauses().size() - 1;
+						if (!convertToPostFix(queryArr, prevSelectedClause, clauseLength, i, queryContent)) {
+							return false;
+						}
+						int endPtrNegation = queryContent.getClauses().size() - 1;
+
+						while (endPtrNegation != startPtrNegation) {
+							queryContent.setNegation(CLAUSE, endPtrNegation);
+							endPtrNegation--;
+						}
+					}
+					else {
+						if (!isValidClause(queryArr, clauseLength, i, queryContent, true)) {
+							return false;
+						}
+					}
+
+				}
 				else {
-					if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
+					if (!isValidClause(queryArr, clauseLength, i, queryContent, false)) {
 						return false;
 					}
 				}
@@ -515,8 +564,32 @@ bool Preprocessor::isValidQuery(string query) {
 						return false;
 					}
 				}
+				else if (i + clauseLength < queryArr.size() && queryArr.at(i + clauseLength).compare(NOT_WORD) == 0) {
+
+					//Add "not"
+					clauseLength++;
+
+					if (i + clauseLength < queryArr.size() && queryArr.at(i + clauseLength).at(0) == SYMBOL_OPEN_BRACKET) {
+						int startPtrNegation = queryContent.getClauses().size() - 1;
+						if (!convertToPostFix(queryArr, prevSelectedClause, clauseLength, i, queryContent)) {
+							return false;
+						}
+						int endPtrNegation = queryContent.getClauses().size() - 1;
+
+						while (endPtrNegation != startPtrNegation) {
+							queryContent.setNegation(CLAUSE, endPtrNegation);
+							endPtrNegation--;
+						}
+					}
+					else {
+						if (!isValidClause(queryArr, clauseLength, i, queryContent, true)) {
+							return false;
+						}
+					}
+
+				}
 				else {
-					if (!isValidClause(queryArr, clauseLength, i, queryContent)) {
+					if (!isValidClause(queryArr, clauseLength, i, queryContent, false)) {
 						return false;
 					}
 				}
@@ -610,6 +683,7 @@ bool Preprocessor::isValidQuery(string query) {
 bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, int &queryLength, int pos, QueryContent &qc) {
 	
 	stack<char> operators;
+	stack<int> startPtrNegation;
 	bool isOperandClause = false;
 	bool isMathOperatorRepeated = false;
 	bool isOperandRepeated = false;
@@ -617,6 +691,8 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 	bool isOperatorAtTheEnd = false;
 	bool isOperandBesideStarBracket = false;
 	bool isCloseBracketBesideOperand = false;
+	bool negateOperand = false;
+	bool negateBracket = false;
 	
 	operators.push(SYMBOL_OPEN_BRACKET);
 	queryLength++;
@@ -652,6 +728,27 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 			isOperatorAtTheEnd = true;
 			isOperandBesideStarBracket = false;
 			isCloseBracketBesideOperand = false;
+			negateOperand = false;
+		}
+		else if (queryArr.at(pos + queryLength).compare(NOT_WORD) == 0) {
+			//Check for open bracket
+			if (pos + queryLength + 1 < queryArr.size() && queryArr.at(pos + queryLength + 1).at(0) == SYMBOL_OPEN_BRACKET) {				
+				negateBracket = true;
+				switch (conditionType) {
+				case 1:
+					startPtrNegation.push(qc.getClauses().size() - 1);
+					break;
+				case 2:
+					startPtrNegation.push(qc.getPattern().size() - 1);
+					break;
+				case 3:
+					startPtrNegation.push(qc.getWithClauses().size() - 1);
+					break;
+				}
+			}
+			else {
+				negateOperand = true;
+			}
 		}
 		else if (KEYWORDS_CLAUSES.find(queryArr.at(pos + queryLength)) != KEYWORDS_CLAUSES.end() ||
 				(isDeclarationSynonymExist(queryArr.at(pos + queryLength)) && 
@@ -667,7 +764,7 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 
 			switch (conditionType) {
 			case 1:
-				if (!isValidClause(queryArr, queryLength, pos, qc)) {
+				if (!isValidClause(queryArr, queryLength, pos, qc, negateOperand)) {
 					return false;
 				}
 				queryLength--;
@@ -691,6 +788,7 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 			isOperatorAtTheEnd = false;
 			isOperandBesideStarBracket = true;
 			isCloseBracketBesideOperand = false;
+			negateOperand = false;
 		}
 		//Checking for open bracket
 		else if (queryArr.at(pos + queryLength).at(0) == SYMBOL_OPEN_BRACKET) {
@@ -707,6 +805,7 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 			isOperatorAtTheStart = true;
 			isOperandBesideStarBracket = false;
 			isCloseBracketBesideOperand = false;
+			negateOperand = false;
 		}
 		//Checking for closing bracket
 		else if (queryArr.at(pos + queryLength).at(0) == SYMBOL_CLOSE_BRACKET) {
@@ -732,12 +831,45 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 				operators.pop();
 			}
 
+			if (negateBracket) {
+				negateBracket = false;
+
+				int endPtr, startPtr = startPtrNegation.top();
+				CLAUSE_NODE_TYPE nodeType;
+				startPtrNegation.pop();
+
+				switch (conditionType) {
+				case 1: {
+					endPtr = qc.getClauses().size() - 1;
+					nodeType = CLAUSE;
+				}
+				break;
+				case 2: {
+					endPtr = qc.getPattern().size() - 1;
+					nodeType = PATTERN;
+				}
+				break;
+				case 3: {
+					endPtr = qc.getWithClauses().size() - 1;
+					nodeType = WITH_CLAUSE;
+				}
+				break;
+				}
+
+				while (endPtr != startPtr) {
+					qc.setNegation(nodeType, endPtr);
+					endPtr--;
+				}
+			}
+
 			isMathOperatorRepeated = false;
 			isOperandRepeated = false;
 			isOperatorAtTheStart = false;
 			isOperatorAtTheEnd = false;
 			isOperandBesideStarBracket = false;
 			isCloseBracketBesideOperand = true;
+			negateOperand = false;
+			negateBracket = false;
 		}
 		else {
 			return false;
@@ -872,7 +1004,7 @@ bool Preprocessor::isValidElem(vector<string> queryArr, int endOfSelectStatement
 	return true;
 }
 
-bool Preprocessor::isValidClause(vector<string> queryArr, int &clauseLength, int pos, QueryContent &qc) {
+bool Preprocessor::isValidClause(vector<string> queryArr, int &clauseLength, int pos, QueryContent &qc, bool invert) {
 	//check whether clause exists
 	if ((pos + clauseLength) >= queryArr.size() || KEYWORDS_CLAUSES.find(queryArr.at(pos + clauseLength)) == KEYWORDS_CLAUSES.end()) {
 		return false;
@@ -897,7 +1029,7 @@ bool Preprocessor::isValidClause(vector<string> queryArr, int &clauseLength, int
 	//Add all the right Param
 	string rightArg = retrieveParamFromQuery(queryArr, clauseLength, pos, string(1, SYMBOL_CLOSE_BRACKET));
 
-	if (!parseClauseArg(qc, clauseValue, leftArg, rightArg)) {
+	if (!parseClauseArg(qc, clauseValue, leftArg, rightArg, invert)) {
 		return false;
 	}
 	return true;
@@ -1031,7 +1163,7 @@ bool Preprocessor::isValidWithClause(vector<string> queryArr, int &withLength, i
 	return true;
 }
 
-bool Preprocessor::parseClauseArg(QueryContent &qc, string relType, string arg1, string arg2) {
+bool Preprocessor::parseClauseArg(QueryContent &qc, string relType, string arg1, string arg2, bool invert) {
 
 	//Clear all the unwanted spaces on relType, left and right arguments
 	string rel = Utils::sanitise(relType);
@@ -1152,7 +1284,7 @@ bool Preprocessor::parseClauseArg(QueryContent &qc, string relType, string arg1,
 	}
 
 	qc.insertClause(searchRelType->second, leftArgType, leftArg,
-		rightArgType, rightArg, false);
+		rightArgType, rightArg, invert);
 
 	return true;
 }
@@ -1753,123 +1885,4 @@ bool Preprocessor::checkBoolStmt(string query) {
 		}
 	}
 	return false;
-}
-
-vector<string> Preprocessor::performDeMorganProcess(vector<string> queryArr, int startPos) {
-	
-	vector<string> newQueryArr;
-	stack<string> s;
-	int subCount;
-
-	for (size_t i = startPos; i < queryArr.size(); i++) {
-		
-		//Detect NOT word
-		if (queryArr.at(i).compare(NOT_WORD)) {
-			
-			//Check if the next element is a open bracket
-			if (queryArr.at(i + 1).at(0) == SYMBOL_OPEN_BRACKET) {
-
-				//Retrieve the part of the NOT where we have to use DeMorgan's law
-				subCount = 2;
-				while (true) {
-					
-					//Invalid detected
-					if ((i + subCount) >= queryArr.size()) {
-						newQueryArr.clear();
-						newQueryArr.push_back(EMPTY_STRING);
-						return newQueryArr;
-					}
-
-					string temp = Utils::sanitise(queryArr.at(i + subCount));
-
-					if (temp.at(0) == SYMBOL_CLOSE_BRACKET && s.empty()) {
-						break;
-					}
-					else {
-						if (temp.at(0) == SYMBOL_OPEN_BRACKET) {
-							s.push(temp);
-						}
-						else if (temp.at(0) == SYMBOL_CLOSE_BRACKET) {
-							s.pop();
-						}
-					}
-					subCount++;
-				}
-
-			}
-		}
-		else {
-			newQueryArr.push_back(queryArr.at(i));
-		}
-	}
-	return newQueryArr;
-}
-
-vector<string> Preprocessor::applyDeMorgan(vector<string> queryArr, int startPos) {
-	
-	vector<string> algebraArr;
-	vector<string> tempArr;
-	unordered_map<int, string> tempStoreClause;
-	int id = 1;
-	stack<string> s;
-	int clauseLength = 6;
-	int countOpenBracket = 0, countCloseBracket = 0, level = 1;
-
-	//Convert the queryArr to boolean algebra format
-	for (size_t i = startPos; i < queryArr.size(); i++) {
-
-		string temp = Utils::sanitise(queryArr.at(i));
-
-		if (KEYWORDS_CLAUSES.find(temp) != KEYWORDS_CLAUSES.end()) {
-			string tempClause;
-			for (size_t j = 0; j < clauseLength; j++) {
-				tempClause += Utils::sanitise(queryArr.at(i + j));
-			}
-			tempStoreClause.insert({ id, tempClause });
-			algebraArr.push_back(to_string(id));
-			id++;
-			i += (clauseLength - 1);
-		}
-		else {
-			algebraArr.push_back(temp);
-		}
-	}
-	
-	int count = 0;
-	while (true) {
-		string temp = Utils::sanitise(algebraArr.at(count));
-
-		if (temp.compare(NOT_WORD) == 0 || temp.at(0) == SYMBOL_OPEN_BRACKET ||
-			temp.compare(AND_WORD) == 0 || temp.compare(OR_WORD) == 0) {
-			s.push(temp);
-		}
-		else if (temp.at(0) == SYMBOL_CLOSE_BRACKET) {
-			while (!s.empty() && s.top().at(0) != SYMBOL_OPEN_BRACKET) {
-
-				string stackElem = s.top();
-				s.pop();
-
-				if (Utils::isInteger(stackElem)) {
-					tempArr.insert(tempArr.begin(), stackElem);
-					if (s.top().compare(NOT_WORD) == 0) {		
-						s.pop();
-					}
-					else {
-						tempArr.insert(tempArr.begin(), NOT_WORD);
-					}
-				}
-				else if (stackElem.compare(AND_WORD)) {
-					tempArr.insert(tempArr.begin(), OR_WORD);
-				}
-				else if (stackElem.compare(OR_WORD)) {
-					tempArr.insert(tempArr.begin(), AND_WORD);
-				}
-			}
-
-			//Pop the open bracket
-			s.pop();
-			
-		}
-	}
-	return tempArr;
 }

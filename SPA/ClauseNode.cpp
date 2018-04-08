@@ -36,6 +36,20 @@ void ClauseNode::addChildren(ClauseNode c) {
 	children.push_back(c);
 }
 
+void ClauseNode::setNegation(CLAUSE_NODE_TYPE nodeType) {
+	switch (nodeType) {
+	case CLAUSE:
+		c.setInverted();
+		break;
+	case PATTERN:
+		p.setInverted();
+		break;
+	case WITH_CLAUSE:
+		w.setInverted();
+		break;
+	}
+}
+
 vector<ClauseNode> ClauseNode::getChildren() {
 	return children;
 }

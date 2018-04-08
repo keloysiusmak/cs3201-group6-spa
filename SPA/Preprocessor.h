@@ -31,8 +31,6 @@ private:
 	int higherPrecedenceValidate(char operator1, char operator2);
 	int getPrecedence(char op);
 	bool checkBoolStmt(string query);
-	vector<string> performDeMorganProcess(vector<string> queryArr, int startPos);
-	vector<string> applyDeMorgan(vector<string> queryArr, int startPos);
 public:
 	Preprocessor();
 	void insertDeclarationToMap(string synonym, string declaration);
@@ -49,11 +47,11 @@ public:
 	bool isValidAttrName(ParamType synonymType, string attrName);
 	bool isValidRef(string ref);
 	bool isValidElem(vector<string> queryArr, int endOfSelectStatement, QueryContent &qc);
-	bool isValidClause(vector<string> queryArr, int &clauseLength, int pos, QueryContent &qc);
+	bool isValidClause(vector<string> queryArr, int &clauseLength, int pos, QueryContent &qc, bool invert);
 	bool isValidPattern(vector<string> queryArr, int &patternLength, int pos, QueryContent &qc);
 	bool isValidWithClause(vector<string> queryArr, int &withLength, int pos, QueryContent &qc);
 	bool isDeclarationSynonymExist(string synonym);
-	bool parseClauseArg(QueryContent &qc, string relType, string arg1, string arg2);
+	bool parseClauseArg(QueryContent &qc, string relType, string arg1, string arg2, bool invert);
 	bool parsePattern(QueryContent &qc, ParamType entityType, string entity, string arg1, string arg2);
 	bool parseWithClause(QueryContent &qc, string leftRef, string rightRef);
 	bool isValidSuchThatKeyword(string query);

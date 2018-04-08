@@ -148,6 +148,14 @@ public:
 		string query59 = "Select a with (v.varName = c1.procName or c1.procName = \"haha\") with (p.procName = c1.procName or c1.stmt# = 5)";
 		string query60 = "Select BOOLEAN such that Affects*(5,5) or Next*(8,1) such that (Calls(p, \"first\") or Follows(s1,s2))";
 		string query61 = "Select a such that ((Affects*(5,5) or Next*(8,1)) or Follows(s1,s2)) and Calls(p, \"first\")";
+		
+		//Query with not
+		string query62 = "Select a such that not Parent(5,6)";
+		string query63 = "Select a such that not (Parent(5,6) or Affects*(5,5))";
+		string query64 = "Select a such that not ((Affects*(5,5) and Next*(8,1)) or (Calls(p, \"first\") and Follows(s1,s2)))";
+		string query65 = "Select a such that not (Affects*(5,5) or Next*(8,1) and Parent(5,6))";
+		string query66 = "Select a such that not (((Affects*(5,5) and Next*(8,1)) or Parent(5,6)) or Calls(p, \"first\"))";
+		string query67 = "Select a such that not (( not (Affects*(5,5) and Next*(8,1)) or Parent(5,6)) or Calls(p, \"first\"))";
 
 		string invalidQuery1 = "Selecta"; //Must have space in between select and a
 		string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
@@ -231,6 +239,12 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query59));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query60));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query61));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query62));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query63));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query64));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query65));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query66));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query67));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
@@ -336,7 +350,7 @@ public:
 		secondParamValue += arg2.at(1);
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, arg2));
+		Assert::AreEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, arg2, false));
 		Assert::AreEqual(static_cast<int>(Modifies), static_cast<int>(qc.getClauses().at(0).getClause().getRelRef()));
 		Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qc.getClauses().at(0).getClause().getLeftParam().type));
 		Assert::AreEqual(firstParamValue, qc.getClauses().at(0).getClause().getLeftParam().value);
@@ -356,16 +370,16 @@ public:
 		string underScore = "_";
 		string integerZero = "0";
 
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1Empty, arg2));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRef1, arg2));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRefNotExist, arg2));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, integerZero, arg2));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, underScore, arg2));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1Empty, arg2, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRef1, arg2, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRefNotExist, arg2, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, integerZero, arg2, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, underScore, arg2, false));
 
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2Empty));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRef1));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRef2));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRefNotExist));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2Empty, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRef1, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRef2, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRefNotExist, false));
 
 	}
 
@@ -390,7 +404,7 @@ public:
 		secondParamValue += arg2.at(0);
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, arg2));
+		Assert::AreEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, arg2, false));
 		Assert::AreEqual(static_cast<int>(ParentT), static_cast<int>(qc.getClauses().at(0).getClause().getRelRef()));
 		Assert::AreEqual(static_cast<int>(INTEGER), static_cast<int>(qc.getClauses().at(0).getClause().getLeftParam().type));
 		Assert::AreEqual(firstParamValue, qc.getClauses().at(0).getClause().getLeftParam().value);
@@ -412,19 +426,19 @@ public:
 		string integerZero = "0";
 		string invalidSameStmtRef = "s";
 
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1Empty, arg2));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRef1, arg2));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRef2, arg2));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRefNotExist, arg2));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, integerZero, arg2));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1Empty, arg2, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRef1, arg2, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRef2, arg2, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRefNotExist, arg2, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, integerZero, arg2, false));
 
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2Empty));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2StmtRef1));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2StmtRef2));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRefNotExist));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, integerZero));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2Empty, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2StmtRef1, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2StmtRef2, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRefNotExist, false));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, integerZero, false));
 
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidSameStmtRef, invalidSameStmtRef));
+		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidSameStmtRef, invalidSameStmtRef, false));
 	}
 
 	TEST_METHOD(PreprocessorParsePattern) {

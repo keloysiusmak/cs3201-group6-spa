@@ -99,3 +99,53 @@ vector<ClauseNode> QueryContent::getPattern() {
 vector<ClauseNode> QueryContent::getWithClauses() {
 	return _withClauses;
 }
+
+void QueryContent::setNegation(CLAUSE_NODE_TYPE nodeRef, int nodePosition) {
+	switch (nodeRef) {
+	case CLAUSE: {
+		ClauseNode& clauseNode = _clauses.at(nodePosition);
+		if (clauseNode.getClauseNodeType() == OPERATOR) {
+			if (clauseNode.getOperators() == AND) {
+				clauseNode.setOperatorNode(OR);
+			}
+			else {
+				clauseNode.setOperatorNode(AND);
+			}
+		}
+		else {
+			clauseNode.setNegation(nodeRef);
+		}
+	}
+	break;
+	case PATTERN: {
+		ClauseNode& patternNode = _patterns.at(nodePosition);
+		if (patternNode.getClauseNodeType() == OPERATOR) {
+			if (patternNode.getOperators() == AND) {
+				patternNode.setOperatorNode(OR);
+			}
+			else {
+				patternNode.setOperatorNode(AND);
+			}
+		}
+		else {
+			patternNode.setNegation(nodeRef);
+		}
+	}
+	break;
+	case WITH_CLAUSE: {
+		ClauseNode& withClauseNode = _withClauses.at(nodePosition);
+		if (withClauseNode.getClauseNodeType() == OPERATOR) {
+			if (withClauseNode.getOperators() == AND) {
+				withClauseNode.setOperatorNode(OR);
+			}
+			else {
+				withClauseNode.setOperatorNode(AND);
+			}
+		}
+		else {
+			withClauseNode.setNegation(nodeRef);
+		}
+	}
+	break;
+	}
+}
