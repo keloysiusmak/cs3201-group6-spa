@@ -2,6 +2,27 @@
 
 using namespace std;
 
+/* Store the unsanitized results of the clause, i.e. replacing syn with ALL */
+void EvaluatorHelper::cacheUnsanitized(ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache) {
+
+};
+
+/* Store actual results of clause in cache */
+void EvaluatorHelper::cacheSanitized(ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache) {
+
+};
+
+/* Checks if actual clause is in cache */
+void EvaluatorHelper::clauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache) {
+	// Check ParamType
+};
+
+/* Checks if unsanitized clause is in cache */
+void EvaluatorHelper::unsanitizedClauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache) {
+	// Check ParamType
+
+}
+
 /* Merges the clauseResults into the intermediate table */
 void EvaluatorHelper::mergeClauseTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
 	if (clauseParamsInTable(clauseResults, iTable)) {
@@ -16,6 +37,9 @@ void EvaluatorHelper::mergeClauseTable(ClauseResults &clauseResults, Intermediat
 void EvaluatorHelper::mergeWithoutOverlap(ClauseResults &clauseResults, IntermediateTable &iTable) {
 	/* Add table params */
 	addClauseParamToTable(clauseResults, iTable);
+
+	/* Set iTable as hasResults if clauseResults is (concrete, concrete) and true */
+	if (clauseResults.isValid()) iTable.hasResults = true;
 
 	vector<vector<int>> newTable;
 	if (iTable.resultsTable.size() == 0) { // Table has no values
@@ -164,9 +188,15 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 			int tableValue = iTable.resultsTable[tableResultsIndex][paramIndex];
 			int clauseValue = clauseResults.results[clauseResultsIndex][0];
 			if (tableValue == clauseValue) { // Same value
-				mergedResults.push_back(clauseResults.results[clauseResultsIndex]);
-				tableResultsIndex++;
+
+				// Get all vectors in iTable overlapping with clauseResult value
+				while (tableValue == clauseValue && tableResultsIndex < iTable.resultsTable.size() - 1) {
+					mergedResults.push_back(iTable.resultsTable[tableResultsIndex]);
+					tableResultsIndex++;
+					tableValue = iTable.resultsTable[tableResultsIndex][paramIndex];
+				}
 				clauseResultsIndex++;
+
 			} else if (tableValue > clauseValue) {
 				clauseResultsIndex++;
 			} else {
@@ -237,27 +267,36 @@ vector<vector<int>> EvaluatorHelper::mergeSortResults(int index, vector<vector<i
 IntermediateTable EvaluatorHelper::mergeIntermediateTables(IntermediateTable &iTable1, IntermediateTable &iTable2) {
 
 	for (pair<Param, int> paramInt : iTable2.tableParams) { // Check if table 2 is already merged
-		if (iTable1.tableParams[paramInt.first] != -1) return iTable1;
+		if (iTable1.getParamIndex(paramInt.first) != -1) return iTable1;
 	}
 
-	int table1NumParams = iTable1.tableParams.size();
-	// Add table2 params
-	for (pair<Param, int> paramInt : iTable2.tableParams) {
-		iTable1.tableParams[paramInt.first] = table1NumParams + paramInt.second;
+	IntermediateTable mergedTable;
+	mergedTable.instantiateTable();
+
+	// Add table params
+	for (size_t i = 0; i < iTable1.tableParams.size(); i++) {
+		mergedTable.addTableParams(iTable1.getParamFromIndex(i));
+	}
+	for (size_t j = 0; j < iTable2.tableParams.size(); j++) {
+		mergedTable.addTableParams(iTable2.getParamFromIndex(j));
 	}
 
 	// Cross product of two results tables
 	vector<vector<int>> mergedResultsTable;
 	for (vector<int> table1Row : iTable1.resultsTable) {
-		for (vector<int> table2Row : iTable2.resultsTable) {
-			vector<int> mergedRow = table1Row;
-			mergedRow.insert(mergedRow.end(), table2Row.begin(), table2Row.end());
-			mergedResultsTable.push_back(mergedRow);
+		if (!iTable2.tableHasResults()) { // Add vector in if table2 empty
+			mergedResultsTable.push_back(table1Row);
+		} else {
+			for (vector<int> table2Row : iTable2.resultsTable) { // Concat vectors and add
+				vector<int> mergedRow = table1Row;
+				for (int table2RowValue : table2Row) {
+					mergedRow.push_back(table2RowValue);
+				}
+				mergedResultsTable.push_back(mergedRow);
+			}
 		}
 	}
 
-	IntermediateTable mergedTable; mergedTable.instantiateTable();
-	mergedTable.setTableParams(iTable1.tableParams);
 	mergedTable.setResultsTable(mergedResultsTable);
 	
 	return mergedTable;
@@ -283,15 +322,19 @@ void EvaluatorHelper::addClauseParamToTable(ClauseResults &clauseResults, Interm
 };
 
 /* Returns the pointer to the table containing the param */
-IntermediateTable* EvaluatorHelper::findTableWithParam(Param p, vector<IntermediateTable> &iTables) {
+IntermediateTable EvaluatorHelper::findTableWithParam(Param p, vector<IntermediateTable> &iTables) {
+
 	for (IntermediateTable iTable : iTables) {
-		if (iTable.getParamIndex(p) != -1) {
-			return &iTable;
+		int paramIndex = iTable.getParamIndex(p);
+		if (paramIndex > -1) {
+			return iTable;
 		}
 	}
-	IntermediateTable emptyTable; map<Param, int> emptyTableParams; vector<vector<int>> emptyTableResults;
-	emptyTable.setTableParams(emptyTableParams); emptyTable.setResultsTable(emptyTableResults);
-	return &emptyTable;
+
+	IntermediateTable emptyTable;
+	emptyTable.instantiateTable(); 
+	emptyTable.hasResults = true; // Assume has results
+	return emptyTable;
 }
 
 /* Returns number of params of With Clause in table */
