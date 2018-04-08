@@ -74,7 +74,7 @@ map<int, vector<Clause>> QueryOptimization::groupClauses(vector<Clause> &clauses
 			continue;
 		}
 
-		if (Utils::isSynonym(lhs) && lhs.type != ALL) { // RHS
+		if (Utils::isSynonym(rhs) && rhs.type != ALL) { // RHS
 			Node* rhsSetNode = findSet(paramsHash[rhs], paramsHash);
 			int groupNum = nodeInt[*rhsSetNode];
 			groupedClauses[groupNum].push_back(clause);
