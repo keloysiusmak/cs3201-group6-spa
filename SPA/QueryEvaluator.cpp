@@ -67,7 +67,15 @@ list<string> QueryEvaluator::evaluateQuery() {
 				ClauseResults clauseResults;
 				evaluateClauseGeneral(clause, clauseResults, iTable, cache);
 			}
-			tables.push_back(iTable);
+			if (!iTable.tableHasResults()) {
+				if (selectParams[0].type == BOOLEAN) { // Short circuit if no results
+					return{ "false" };
+				} else {
+					return{};
+				}
+			} else {
+				tables.push_back(iTable);
+			}
 		}
 
 		// To be refactored...
