@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../SPA/PKB.h"
-#include "../SPA/Pattern.h"
 #include "../SPA/QueryQueuer.h";
-#include "../SPA/Constants.h";
 #include "../SPA/QueryEvaluator.h";
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -284,16 +282,16 @@ namespace QueryQueuerTesting
 			expectedQc1.insertClause(Modifies, VARIABLE, "x", VARIABLE, "y1", false);
 			Assert::AreEqual(true, Utils::compareClauseNode(qc1.getClauses()[0], expectedQc1.getClauses()[0]));
 
-			ClauseNode outputQN2a = qq.replaceClauseNode(qc1, REPLACE_CLAUSE, 0, LEFT_PARAM, "z");
-			ClauseNode outputQN2b = qq.replaceClauseNode(qc1, REPLACE_CLAUSE, 0, RIGHT_PARAM, "y2");
+			QueryContent outputQc2a = qq.replaceClauseNode(qc1, REPLACE_CLAUSE, 0, LEFT_PARAM, "z");
+			QueryContent outputQc2b = qq.replaceClauseNode(qc1, REPLACE_CLAUSE, 0, RIGHT_PARAM, "y2");
 
 			QueryContent expectedQc2a;
 			expectedQc2a.insertClause(Modifies, VARIABLE, "z", VARIABLE, "y1", false);
-			Assert::AreEqual(true, Utils::compareClauseNode(expectedQc2a.getClauses()[0], outputQN2a));
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(expectedQc2a, outputQc2a));
 
 			QueryContent expectedQc2b;
 			expectedQc2b.insertClause(Modifies, VARIABLE, "x", VARIABLE, "y2", false);
-			Assert::AreEqual(true, Utils::compareClauseNode(expectedQc2b.getClauses()[0], outputQN2b));
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(expectedQc2b, outputQc2b));
 		}
 
 

@@ -7,15 +7,6 @@
 #include <string>
 #include <vector>
 
-enum CLAUSE_SELECTOR {
-	REPLACE_CLAUSE,
-	REPLACE_WITH_CLAUSE,
-	REPLACE_PATTERN
-};
-enum CLAUSE_LEFT_OR_RIGHT {
-	LEFT_PARAM,
-	RIGHT_PARAM
-};
 
 class QueryQueuer
 {

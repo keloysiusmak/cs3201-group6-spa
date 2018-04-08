@@ -1,7 +1,6 @@
 #pragma once
 
 #include "QueryContent.h"
-#include "QueryObject.h"
 #include "Utils.h"
 #include "RelationshipTable.h"
 #include <string>

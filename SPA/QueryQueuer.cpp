@@ -331,16 +331,16 @@ std::vector<Pattern> QueryQueuer::parsePatternTree(ClauseNode c) {
 
 	return patterns;
 }
-QueryContent QueryQueuer::replaceClauseNode(QueryContent qc, CLAUSE_SELECTOR clauseOrWithClauseOrPattern, int clauseNo, CLAUSE_LEFT_OR_RIGHT leftOrRight, string val) {
+QueryContent QueryQueuer::replaceClauseNode(QueryContent qcr, CLAUSE_SELECTOR clauseOrWithClauseOrPattern, int clauseNo, CLAUSE_LEFT_OR_RIGHT leftOrRight, string val) {
 	ClauseNode cn;
 	if (clauseOrWithClauseOrPattern == REPLACE_CLAUSE) {
-		cn = qc.getClauses()[clauseNo];
+		cn = qcr.getClauses()[clauseNo];
 	}
 	else if (clauseOrWithClauseOrPattern == REPLACE_WITH_CLAUSE) {
-		cn = qc.getWithClauses()[clauseNo];
+		cn = qcr.getWithClauses()[clauseNo];
 	}
 	else if (clauseOrWithClauseOrPattern == REPLACE_PATTERN) {
-		cn = qc.getPattern()[clauseNo];
+		cn = qcr.getPattern()[clauseNo];
 	}
 	Clause c = cn.getClause();
 	Param pl, pr;
@@ -357,21 +357,21 @@ QueryContent QueryQueuer::replaceClauseNode(QueryContent qc, CLAUSE_SELECTOR cla
 
 	std::vector<ClauseNode> clauseNodes;
 	if (clauseOrWithClauseOrPattern == REPLACE_CLAUSE) {
-		clauseNodes = qc.getClauses();
+		clauseNodes = qcr.getClauses();
 		clauseNodes[clauseNo] = cn;
-		qc.setClause(clauseNodes);
+		qcr.setClause(clauseNodes);
 	}
 	else if (clauseOrWithClauseOrPattern == REPLACE_WITH_CLAUSE) {
-		clauseNodes = qc.getWithClauses();
+		clauseNodes = qcr.getWithClauses();
 		clauseNodes[clauseNo] = cn;
-		qc.setWithClause(clauseNodes);
+		qcr.setWithClause(clauseNodes);
 	}
 	else if (clauseOrWithClauseOrPattern == REPLACE_PATTERN) {
-		clauseNodes = qc.getPattern();
+		clauseNodes = qcr.getPattern();
 		clauseNodes[clauseNo] = cn;
-		qc.setPattern(clauseNodes);
+		qcr.setPattern(clauseNodes);
 	}
-	return qc;
+	return qcr;
 }
 
 list<string> QueryQueuer::evaluateQueries() {
