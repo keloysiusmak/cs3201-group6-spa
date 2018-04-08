@@ -2,7 +2,7 @@
 using namespace std;
 
 void IntermediateTable::instantiateTable() {
-	hasResults = true;
+	hasResults = false;
 };
 
 void IntermediateTable::setTableParams(vector<Param> params) {
@@ -25,7 +25,20 @@ void IntermediateTable::setResultsTable(vector<vector<int>> &table) {
 	resultsTable = table;
 };
 
+bool IntermediateTable::tableHasResults() {
+	if (tableParams.size() > 0) {
+		return (resultsTable.size() > 0);
+	}
+	else return hasResults;
+}
+
 int IntermediateTable::getParamIndex(Param p) {
 	if (tableParams.find(p) != tableParams.end()) return tableParams[p];
 	else return -1;
+};
+
+Param IntermediateTable::getParamFromIndex(int index) {
+	for (pair<Param, int> paramIndex : tableParams) {
+		if (paramIndex.second == index) return paramIndex.first;
+	}
 };

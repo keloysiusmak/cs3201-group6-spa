@@ -13,6 +13,8 @@ struct IntermediateTable {
 	void setTableParams(map<Param, int> params);
 	void addTableParams(Param p);
 	void setResultsTable(vector<vector<int>> &table);
+	bool tableHasResults();
 
 	int getParamIndex(Param p);
+	Param getParamFromIndex(int index);
 };

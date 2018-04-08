@@ -45,6 +45,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 		QueryOptimization::consolidateClauses(queryObject.getPatterns(), consolidatedClauses);
 		QueryOptimization::consolidateClauses(queryObject.getWithClauses(), consolidatedClauses);
 
+		// Grouping according to syns
 		map<int, vector<Clause>> sortedClauses = QueryOptimization::sortIntoGroups(consolidatedClauses);
 
 		/* Convert to vector<Clause> */
@@ -53,16 +54,28 @@ list<string> QueryEvaluator::evaluateQuery() {
 			sortedClausesVector.push_back(groupedClauses.second);
 		}
 
-		vector<Param> selectParams = queryObject.getSelectStatements();
+		vector<Param> selectParams = queryObject.getSelectStatements(); // Selected Params
+		map<Clause, vector<vector<int>>> cache; // For cached results
 
 		vector<IntermediateTable> tables;
 		for (pair<int, vector<Clause>> groupedClauses : sortedClauses) {
-			IntermediateTable iTable; iTable.instantiateTable();
+
+			IntermediateTable iTable; // Instantiate table for each group
+			iTable.instantiateTable();
+			// Evaluate each clause within group
 			for (Clause clause : groupedClauses.second) {
 				ClauseResults clauseResults;
-				evaluateClauseGeneral(clause, clauseResults, iTable);
+				evaluateClauseGeneral(clause, clauseResults, iTable, cache);
 			}
-			tables.push_back(iTable);
+			if (!iTable.tableHasResults()) {
+				if (selectParams[0].type == BOOLEAN) { // Short circuit if no results
+					return{ "false" };
+				} else {
+					return{};
+				}
+			} else {
+				tables.push_back(iTable);
+			}
 		}
 
 		// To be refactored...
@@ -75,7 +88,8 @@ list<string> QueryEvaluator::evaluateQuery() {
 }
 
 // General evaluation method for base Clause type
-void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clauseResults, IntermediateTable &iTable) {
+void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clauseResults,
+	IntermediateTable &iTable, map<Clause, vector<vector<int>>> &cache) {
 	if (clause.getRelRef() == With) { // With
 		handleWithClause(clause, iTable);
 	} else {
@@ -85,9 +99,11 @@ void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clause
 		}
 		else { // Such That
 			evaluateClause(clause, clauseResults);
+			// EvaluatorHelper::storeUnsanitized();
 		}
 		clauseResults.removeALLSyns(); // Sanitization
 		filterStmts(clauseResults);
+		// EvaluatorHelper::storeSanitized();
 		EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
 	}
 };
@@ -799,10 +815,9 @@ string QueryEvaluator::getProcOrVarName(AttrType type, int id) {
 list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<IntermediateTable> &iTables) {
 	if (selectedParams.size() == 1) {
 		Param selected = selectedParams[0];
-		IntermediateTable tableWithParam = *(EvaluatorHelper::findTableWithParam(selected, iTables));
+		IntermediateTable tableWithParam = EvaluatorHelper::findTableWithParam(selected, iTables);
 		if (selected.type == BOOLEAN) { // Select Boolean
-			if (tableWithParam.resultsTable.size() > 0 || // Table not empty
-				tableWithParam.tableParams.size() == 0) { // No statement to evaluate
+			if (tableWithParam.tableHasResults()) {
 				return{ "true" };
 			} else {
 				return{ "false" };
@@ -814,23 +829,25 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 	} else { // Select Tuple
 		set<string> tupleResultSet;
 		list<string> tupleResult;
-		vector<int> paramIndexes;
 
 		IntermediateTable mergedTable;
+		mergedTable.instantiateTable();
 
+		// Merge tables for tuples
 		for (Param p : selectedParams) {
-			IntermediateTable* tableWithParam = EvaluatorHelper::findTableWithParam(p, iTables);
-			mergedTable = EvaluatorHelper::mergeIntermediateTables(mergedTable, *tableWithParam);
-			paramIndexes.push_back(mergedTable.getParamIndex(p));
+			IntermediateTable tableWithParam = EvaluatorHelper::findTableWithParam(p, iTables);
+			mergedTable = EvaluatorHelper::mergeIntermediateTables(tableWithParam, mergedTable);
 		}
 
 		stringstream tupleRowString;
+		// Iterate through all rows
 		for (size_t i = 0; i < mergedTable.resultsTable.size(); i++) {
 			vector<int> tableRow = mergedTable.resultsTable[i];
 			tupleRowString.str("");
 
-			for (size_t j = 0; j < paramIndexes.size(); j++) {
-				int indexOfParam = paramIndexes[j];
+			// Iterate through each value of row
+			for (size_t j = 0; j < selectedParams.size(); j++) {
+				int indexOfParam = mergedTable.getParamIndex(selectedParams[j]);
 				int paramValue = tableRow[indexOfParam];
 
 				string value;
@@ -842,11 +859,12 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 					value = to_string(tableRow[indexOfParam]);
 				}
 
-				if (j == paramIndexes.size() - 1) tupleRowString << value;
+				if (j == selectedParams.size() - 1) tupleRowString << value;
 				else tupleRowString << value << " ";
 			}
 			tupleResultSet.insert(tupleRowString.str());
-	}
+		}
+
 		for (string ans : tupleResultSet) {
 			tupleResult.push_back(ans);
 		}
@@ -881,8 +899,10 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 		}
 		return paramValues;
 	}
-	else { // Selected param not in table
+	else if (iTable.tableHasResults()) { // Selected param not in table
 		return getAllParamsOfType(p);
+	} else {
+		return{}; // Results table is empty
 	}
 };
 
