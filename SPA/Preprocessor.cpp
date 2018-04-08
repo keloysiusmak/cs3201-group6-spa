@@ -78,7 +78,7 @@ const unordered_map<string, ParamType> REL_MAPPING_RIGHT_IDENT = { { "Modifies",
 
 const unordered_map<bool, string> WITH_RELTABLE = { { true, "withString" }, { false, "withNumber" } };
 const unordered_map<char, OPERATORS> MAP_OPERATORS = { { '*', AND }, { '+', OR } };
-const unordered_map<string, char> MAP_SYMBOL_OPERATORS = { { "and", '*' }, { "or", '+' }, { "not", '~' } };
+const unordered_map<string, char> MAP_SYMBOL_OPERATORS = { { "and", '*' }, { "or", '+' } };
 
 const regex synonymRegex("(^[a-zA-Z]([a-zA-Z]|[0-9]|[#])*$)");
 const regex identRegex("(^(\"([a-zA-Z]([a-zA-Z]|[0-9]|[#])*)\"$))");
