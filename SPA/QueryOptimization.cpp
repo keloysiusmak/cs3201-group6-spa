@@ -476,5 +476,6 @@ void QueryOptimization::unionParams(Param &p1, Param &p2, map<Param, Node> &para
 Node* QueryOptimization::findSet(Node &n, map<Param, Node> &paramsHash) {
 	if (!n.hasParent) return &n;
 	Node* parent = findSet(*n.parent, paramsHash);
+	n.setParent(parent); // Recursively set parent to root node
 	return n.parent;
 }
