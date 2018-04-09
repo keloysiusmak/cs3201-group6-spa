@@ -1724,7 +1724,7 @@ namespace PKBEvaluatorIntegrationTesting
 		{
 			QueryObject q;
 			q.insertSelectStmt(PROCEDURE, "p", NONE);
-			q.insertClause(Calls, PROCEDURE, "p", PROC_IDENT, "b", false);
+			q.insertClause(CallsT, PROCEDURE, "p", PROC_IDENT, "b", false);
 
 			evaluator.setQueryObject(q);
 
@@ -1739,7 +1739,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			QueryObject q1;
 			q1.insertSelectStmt(PROCEDURE, "p", NONE);
-			q1.insertClause(Calls, PROCEDURE, "p", PROC_IDENT, "a", false);
+			q1.insertClause(CallsT, PROCEDURE, "p", PROC_IDENT, "a", false);
 
 			evaluator.setQueryObject(q1);
 
@@ -1853,6 +1853,202 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q1;
 			q1.insertSelectStmt(BOOLEAN, "", NONE);
 			q1.insertClause(CallsT, PROC_IDENT, "b", PROC_IDENT, "a", false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			Assert::AreEqual(true, (result.front() == "false"));
+		}
+
+		TEST_METHOD(PKBEvaluatorAffectsBefore)
+		{
+			QueryObject q;
+			q.insertSelectStmt(STMT, "s", NONE);
+			q.insertClause(Affects, STMT, "s", INTEGER, "3", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			std::vector<std::vector<int>> expect = pkb.getAffectsBefore(3);
+			for (std::vector<int> r : expect) {
+				expected.push_back(to_string(r[0]));
+			}
+			expected.sort();
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+			q1.insertSelectStmt(STMT, "s", NONE);
+			q1.insertClause(Affects, STMT, "s", INTEGER, "1", false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorAffectsAfterStar)
+		{
+			QueryObject q;
+			q.insertSelectStmt(STMT, "s", NONE);
+			q.insertClause(AffectsT, INTEGER, "1", STMT, "s", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			std::vector<std::vector<int>> expect = pkb.getAffectsAfterStar(1);
+			for (std::vector<int> r : expect) {
+				expected.push_back(to_string(r[0]));
+			}
+			expected.sort();
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+			q1.insertSelectStmt(STMT, "s", NONE);
+			q1.insertClause(AffectsT, INTEGER, "13", STMT, "s", false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorAffectsBeforeStar)
+		{
+			QueryObject q;
+			q.insertSelectStmt(STMT, "s", NONE);
+			q.insertClause(AffectsT, STMT, "s", INTEGER, "3", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			std::vector<std::vector<int>> expect = pkb.getAffectsBeforeStar(1);
+			for (std::vector<int> r : expect) {
+				expected.push_back(to_string(r[0]));
+			}
+			expected.sort();
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+			q1.insertSelectStmt(STMT, "s", NONE);
+			q1.insertClause(AffectsT, STMT, "s", INTEGER, "1", false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorAffectsAfter)
+		{
+			QueryObject q;
+			q.insertSelectStmt(STMT, "s", NONE);
+			q.insertClause(Affects, INTEGER, "1", STMT, "s", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			std::vector<std::vector<int>> expect = pkb.getAffectsAfter(3);
+			for (std::vector<int> r : expect) {
+				expected.push_back(to_string(r[0]));
+			}
+			expected.sort();
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+			q1.insertSelectStmt(STMT, "s", NONE);
+			q1.insertClause(Affects, INTEGER, "13", STMT, "s",  false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorGetAllAffects)
+		{
+			QueryObject q;
+			q.insertSelectStmt(STMT, "s1", NONE);
+			q.insertSelectStmt(STMT, "s2", NONE);
+			q.insertClause(Affects, STMT, "s1", STMT, "s2", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			std::vector<std::vector<int>> expect = pkb.getAllAffects();
+			for (std::vector<int> r : expect) {
+				string a = to_string(r[0]);
+				a += " ";
+				a += to_string(r[1]);
+				expected.push_back(a);
+			}
+			expected.sort();
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorGetAllAffectsStar)
+		{
+			QueryObject q;
+			q.insertSelectStmt(STMT, "s1", NONE);
+			q.insertSelectStmt(STMT, "s2", NONE);
+			q.insertClause(AffectsT, STMT, "s1", STMT, "s2", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			std::vector<std::vector<int>> expect = pkb.getAllAffectsStar();
+			for (std::vector<int> r : expect) {
+				string a = to_string(r[0]);
+				a += " ";
+				a += to_string(r[1]);
+				expected.push_back(a);
+			}
+			expected.sort();
+			Assert::AreEqual(true, (expected == result));
+		}
+		TEST_METHOD(PKBEvaluatorCheckAffects)
+		{
+			QueryObject q;
+			q.insertSelectStmt(BOOLEAN, "", NONE);
+			q.insertClause(Affects, INTEGER, "1", INTEGER, "3", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			Assert::AreEqual(true, (result.front() == "true"));
+
+			QueryObject q1;
+			q1.insertSelectStmt(BOOLEAN, "", NONE);
+			q1.insertClause(Affects, INTEGER, "2", INTEGER, "3", false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			Assert::AreEqual(true, (result.front() == "false"));
+		}
+		TEST_METHOD(PKBEvaluatorCheckAffectsStar)
+		{
+			QueryObject q;
+			q.insertSelectStmt(BOOLEAN, "", NONE);
+			q.insertClause(AffectsT, INTEGER, "1", INTEGER, "3", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			Assert::AreEqual(true, (result.front() == "true"));
+
+			QueryObject q1;
+			q1.insertSelectStmt(BOOLEAN, "", NONE);
+			q1.insertClause(AffectsT, INTEGER, "2", INTEGER, "3", false);
 
 			evaluator.setQueryObject(q1);
 
