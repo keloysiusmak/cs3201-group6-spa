@@ -446,7 +446,6 @@ list<string> QueryQueuer::evaluateQueries() {
 		}
 
 		//fill in results obtained into any parent query object
-		unordered_map<std::vector<int>, list<string>> innerDepTable;
 		dependencyTable.insert({ sortedInts[j], results});
 		output.insert(output.end(), results.begin(), results.end());
 	}
