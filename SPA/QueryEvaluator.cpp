@@ -115,11 +115,13 @@ void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clause
 			evaluatePattern(*pattern, clauseResults);
 		}
 		else { // Such That
+			clauseResults.instantiateClause(clause);
 			if (EvaluatorHelper::clauseInCache(clause, cache)) { // Exact clause cached
 				clauseResults.setResults(cache[clause]);;
 			} else {
 				if (EvaluatorHelper::unsanitizedClauseInCache(clause, cache)) { // General clause cached
-					clauseResults.setResults(cache[clause]);;
+					vector<vector<int>> cachedResults = cache[EvaluatorHelper::generalizeClause(clause)];
+					clauseResults.setResults(cachedResults);;
 				} else { // Uncached at all
 					evaluateClause(clause, clauseResults);
 					EvaluatorHelper::cacheUnsanitized(clause, clauseResults, cache);
@@ -137,7 +139,6 @@ void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clause
 /* Main evaluation method */
 void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResults)
 {
-	clauseResults.instantiateClause(clause);
 	RelRef relation = clause.getRelRef();
 	if (relation == Follows) {
 		evaluateFollows(clause, clauseResults);

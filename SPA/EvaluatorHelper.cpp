@@ -33,18 +33,18 @@ void EvaluatorHelper::cacheUnsanitized(Clause &clause, ClauseResults &clauseResu
 
 /* Store actual results of clause in cache */
 void EvaluatorHelper::cacheSanitized(Clause &clause, ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache) {
-	cache[clause] = clauseResults.results; // Store clause results into cache
+	cache[clause] = clauseResults.results;
 };
 
 /* Checks if actual clause is in cache */
 bool EvaluatorHelper::clauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache) {
-	Clause potentialCachedClause = generalizeClause(clause);
-	return cache.find(potentialCachedClause) != cache.end();
+	return cache.find(clause) != cache.end();
 };
 
 /* Checks if unsanitized clause is in cache */
 bool EvaluatorHelper::unsanitizedClauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache) {
-	return cache.find(clause) != cache.end();
+	Clause potentialCachedClause = generalizeClause(clause);
+	return cache.find(potentialCachedClause) != cache.end();
 };
 
 /* Merges the clauseResults into the intermediate table */

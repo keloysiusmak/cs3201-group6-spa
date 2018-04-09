@@ -14,5 +14,9 @@ struct Param {
 	bool operator<(const Param &other) const {
 		return value < other.value;
 	}
+
+	bool operator==(const Param &other) const {
+		return value == other.value;
+	}
 };
 
