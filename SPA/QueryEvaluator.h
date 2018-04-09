@@ -41,7 +41,7 @@ public:
 	void evaluateCalls(Clause &clause, ClauseResults &clauseResults);
 	void evaluateCallsStar(Clause &clause, ClauseResults &clauseResults);
 	void evaluateAffects(Clause &clause, ClauseResults &clauseResults);
-	//void evaluateAffectsStar(Clause &clause, ClauseResults &clauseResults);
+	void evaluateAffectsStar(Clause &clause, ClauseResults &clauseResults);
 	void evaluatePattern(Pattern &pattern, ClauseResults &patternResults);
 
 	// Evaluation Helpers
