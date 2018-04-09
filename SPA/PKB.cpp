@@ -78,6 +78,9 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 	case PATTERN_IF_VARIABLE_TABLE:
 		tableValuesCount = 1;
 		break;
+	case STATEMENT_LIST_INFO_TABLE:
+		tableValuesCount = 1;
+		break;
 	default:
 		return false;
 	}
@@ -386,6 +389,24 @@ bool PKB::checkStatementHasType(int stmt, int stmt_type) {
 		return (table[3][0] == stmt_type);
 	}
 
+}
+
+/* Statement List Operations */
+std::vector<std::vector<int>> PKB::getAllStatementLists() {
+	std::vector<int> result = PKB::getFromTable(STATEMENT_LIST_INFO_TABLE, 1)[0];
+	std::vector<std::vector<int>> output;
+	for (int a : result) {
+		output.push_back({ a });
+	}
+	return output;
+}
+std::vector<std::vector<int>> PKB::getAllStatementListsFirstStmt() {
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[STATEMENT_LIST_TABLE - 1];
+	std::vector<std::vector<int>> output;
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		output.push_back({it->second[1][0]});
+	}
+	return output;
 }
 
 /* Optimization Operations */
