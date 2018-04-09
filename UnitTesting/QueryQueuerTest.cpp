@@ -255,9 +255,9 @@ namespace QueryQueuerTesting
 			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc1, vqc[0]));
 
 			vqc.clear();
-			qc1.setChildren(&qc2);
-			qc1.setChildren(&qc3);
-			qc3.setChildren(&qc4);
+			qc1.setChildren(1);
+			qc1.setChildren(2);
+			qc3.setChildren(3);
 			vqc.push_back(qc1);
 			vqc.push_back(qc2);
 			vqc.push_back(qc3);
@@ -265,9 +265,9 @@ namespace QueryQueuerTesting
 
 			qq.setQueryContent(vqc);
 			vqc = qq.convertSortedToQC(qq.sortQueryContent());
-			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc4, vqc[0]));
-			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc3, vqc[1]));
-			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc2, vqc[2]));
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc2, vqc[0]));
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc4, vqc[1]));
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc3, vqc[2]));
 			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc1, vqc[3]));
 
 		}
