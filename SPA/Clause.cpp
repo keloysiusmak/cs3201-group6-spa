@@ -50,6 +50,18 @@ bool Clause::hasSynonymsNotALL() {
 	return false;
 }
 
+void Clause::setRelRef(RelRef rel) {
+	_relRef = rel;
+};
+
+void Clause::setLHS(Param lhs) {
+	_leftParam = lhs;
+};
+
+void Clause::setRHS(Param rhs) {
+	_rightParam = rhs;
+};
+
 void Clause::setInverted() {
 	isInverted = !isInverted;
 }

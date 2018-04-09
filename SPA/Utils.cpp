@@ -214,7 +214,7 @@ bool Utils::compareWithClause(Clause w1, Clause w2) {
 		w1.getLeftParam().attribute != w2.getLeftParam().attribute ||
 		w1.getRightParam().type != w2.getRightParam().type ||
 		w1.getRightParam().value.compare(w2.getRightParam().value) != 0 ||
-		w1.getRightParam().attribute != w2.getRightParam().attribute || 
+		w1.getRightParam().attribute != w2.getRightParam().attribute ||
 		w1.getIsInverted() != w2.getIsInverted()) {
 		return false;
 	}
@@ -292,4 +292,12 @@ bool Utils::compareClauseNode(ClauseNode cn1, ClauseNode cn2) {
 	if (!Utils::compareClause(cn1.getWithClause(), cn2.getWithClause())) return false;
 
 	return true;
-}
+};
+
+Param Utils::createParam(ParamType type, string value, AttrType attr) {
+	Param param;
+	param.type = type;
+	param.value = value;
+	param.attribute = attr;
+	return param;
+};
