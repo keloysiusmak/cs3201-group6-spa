@@ -200,6 +200,12 @@ namespace DesignExtractorTest
 			newResult = { { 1,2,3,4,6,7,8,9,11 },{ 1,3 } };
 			Assert::AreEqual(true, (newResult == pkb.getFromTable(MODIFIES_TABLE, 6)));
 		}
+		TEST_METHOD(DesignExtractorPrecomputeStatementLists)
+		{
+			de.extract(pkb);
+			std::vector<std::vector<int>> data = { { 1, 4,5,6,7,10,11 } };
+			Assert::AreEqual(true, (pkb.getFromTable(STATEMENT_LIST_INFO_TABLE, 1) == data));
+		}
 		TEST_METHOD(DesignExtractorPrecomputeWithProcNameVarName)
 		{
 			de.extract(pkb);

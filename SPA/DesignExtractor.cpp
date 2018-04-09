@@ -318,7 +318,7 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 }
 
 void DesignExtractor::precomputeStatementLists(PKB& pkb) {
-	std::vector<std::vector<int>> firstStmts = pkb.getAllStatementListsFirstStmt();
+	std::vector<std::vector<int>> firstStmts = pkb.getAllStatementLists();
 	std::vector<int> output;
 	for (int i = 0; i < firstStmts.size(); i++) {
 		output.push_back(firstStmts[i][0]);
