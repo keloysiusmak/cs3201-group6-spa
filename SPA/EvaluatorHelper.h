@@ -8,10 +8,11 @@
 class EvaluatorHelper {
 
 public:
-	static void cacheUnsanitized(ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache);
-	static void cacheSanitized(ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache);
-	static void clauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache);
-	static void unsanitizedClauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache);
+	static Clause generalizeClause(Clause &clause);
+	static void cacheUnsanitized(Clause &clause, ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache);
+	static void cacheSanitized(Clause &clause, ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache);
+	static bool unsanitizedClauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache);
+	static bool clauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache);
 
 	static void mergeClauseTable(ClauseResults &clauseResults, IntermediateTable &iTable);
 	static void mergeWithoutOverlap(ClauseResults &clauseResults, IntermediateTable &iTable);

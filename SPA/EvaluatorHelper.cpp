@@ -2,26 +2,50 @@
 
 using namespace std;
 
-/* Store the unsanitized results of the clause, i.e. replacing syn with ALL */
-void EvaluatorHelper::cacheUnsanitized(ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache) {
+/* Generalize clause by making all synonyms ALL */
+Clause EvaluatorHelper::generalizeClause(Clause &clause) {
+	Param lhs = clause.getLeftParam();
+	Param rhs = clause.getRightParam();
 
+	Clause generalizedClause;
+	generalizedClause.setRelRef(clause.getRelRef());
+
+	if (Utils::isSynonym(lhs)) {
+		Param cachedLHS = Utils::createParam(ALL, "_", NONE);
+		generalizedClause.setLHS(cachedLHS);
+	}
+	else generalizedClause.setLHS(lhs);
+
+	if (Utils::isSynonym(rhs)) {
+		Param cachedRHS = Utils::createParam(ALL, "_", NONE);
+		generalizedClause.setRHS(cachedRHS);
+	}
+	else generalizedClause.setRHS(rhs);
+
+	return generalizedClause;
+};
+
+/* Store the unsanitized results of the clause, i.e. replacing syn with ALL*/
+void EvaluatorHelper::cacheUnsanitized(Clause &clause, ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache) {
+	Clause cachedClause = generalizeClause(clause);
+	cache[cachedClause] = clauseResults.results;
 };
 
 /* Store actual results of clause in cache */
-void EvaluatorHelper::cacheSanitized(ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache) {
-
+void EvaluatorHelper::cacheSanitized(Clause &clause, ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache) {
+	cache[clause] = clauseResults.results; // Store clause results into cache
 };
 
 /* Checks if actual clause is in cache */
-void EvaluatorHelper::clauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache) {
-	// Check ParamType
+bool EvaluatorHelper::clauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache) {
+	Clause potentialCachedClause = generalizeClause(clause);
+	return cache.find(potentialCachedClause) != cache.end();
 };
 
 /* Checks if unsanitized clause is in cache */
-void EvaluatorHelper::unsanitizedClauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache) {
-	// Check ParamType
-
-}
+bool EvaluatorHelper::unsanitizedClauseInCache(Clause &clause, map<Clause, vector<vector<int>>> &cache) {
+	return cache.find(clause) != cache.end();
+};
 
 /* Merges the clauseResults into the intermediate table */
 void EvaluatorHelper::mergeClauseTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
