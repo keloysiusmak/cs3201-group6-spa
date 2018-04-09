@@ -115,11 +115,20 @@ void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clause
 			evaluatePattern(*pattern, clauseResults);
 		}
 		else { // Such That
-			evaluateClause(clause, clauseResults);
-			// EvaluatorHelper::storeUnsanitized();
+			if (EvaluatorHelper::clauseInCache(clause, cache)) { // Exact clause cached
+				clauseResults.setResults(cache[clause]);;
+			} else {
+				if (EvaluatorHelper::unsanitizedClauseInCache(clause, cache)) { // General clause cached
+					clauseResults.setResults(cache[clause]);;
+				} else { // Uncached at all
+					evaluateClause(clause, clauseResults);
+					EvaluatorHelper::cacheUnsanitized(clause, clauseResults, cache);
+				}
+				clauseResults.removeALLSyns(); // Sanitization
+				filterStmts(clauseResults); // Filter while/if/assign
+				EvaluatorHelper::cacheSanitized(clause, clauseResults, cache);
+			}
 		}
-		clauseResults.removeALLSyns(); // Sanitization
-		filterStmts(clauseResults);
 		// EvaluatorHelper::storeSanitized();
 		EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
 	}
@@ -401,8 +410,7 @@ void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
-			int variableId = pkb.getVariableId(rightParam.value);
-			vector<vector<int>> results = pkb.getNextBefore(variableId); //check PKB API
+			vector<vector<int>> results = pkb.getNextBefore(stoi(rightParam.value)); //check PKB API
 			clauseResults.setResults(results);
 		}
 	}

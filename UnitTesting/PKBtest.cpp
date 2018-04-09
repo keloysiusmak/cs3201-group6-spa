@@ -101,6 +101,9 @@ namespace PKBTest
 				case PATTERN_IF_VARIABLE_TABLE:
 					tableValuesCount = 1;
 					break;
+				case STATEMENT_LIST_INFO_TABLE:
+					tableValuesCount = 1;
+					break;
 				}
 				data.clear();
 				for (int j = 0; j < tableValuesCount; j++) {
@@ -189,6 +192,9 @@ namespace PKBTest
 					tableValuesCount = 1;
 					break;
 				case PATTERN_IF_VARIABLE_TABLE:
+					tableValuesCount = 1;
+					break;
+				case STATEMENT_LIST_INFO_TABLE:
 					tableValuesCount = 1;
 					break;
 				}
@@ -510,6 +516,47 @@ namespace PKBTest
 			Assert::AreEqual(false, pkb.checkStatementHasType(5, 1));
 			Assert::AreEqual(false, pkb.checkStatementHasType(2, 1));
 		}
+
+
+		TEST_METHOD(PKBGetAllStatementLists)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { { 0 },{ 1,2 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 2 },{ 3 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 3 },{ 4,5,6,7 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 4, { { 3 },{ 8 },{} });
+
+			std::vector<std::vector<int>> data;
+			std::vector<std::vector<int>> expected;
+			data = pkb.getAllStatementLists();
+			expected.push_back({ 1 });
+			expected.push_back({ 3 });
+			expected.push_back({ 4 });
+			expected.push_back({ 8 });
+
+			Assert::AreEqual(true, (data == expected));
+		}
+
+
+		TEST_METHOD(PKBGetAllStatementListsFirstStmt)
+		{
+			PKB pkb;
+
+			pkb.insertToTable(STATEMENT_LIST_INFO_TABLE, 1, { { 1,3,4,8 } });
+
+			std::vector<std::vector<int>> data;
+			std::vector<std::vector<int>> expected;
+			data = pkb.getAllStatementListsFirstStmt();
+			expected.push_back({ 1 });
+			expected.push_back({ 3 });
+			expected.push_back({ 4 });
+			expected.push_back({ 8 });
+
+			Assert::AreEqual(true, (data == expected));
+
+		}
+
 
 		TEST_METHOD(PKBGetWithProcNameVarName)
 		{
@@ -1958,7 +2005,7 @@ namespace PKBTest
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "a";
 			lp.attribute = NONE;
 
@@ -2009,7 +2056,7 @@ namespace PKBTest
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "a";
 			lp.attribute = NONE;
 
@@ -2026,7 +2073,7 @@ namespace PKBTest
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "a";
 			lp.attribute = NONE;
 
@@ -2060,7 +2107,7 @@ namespace PKBTest
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "y";
 			lp.attribute = NONE;
 
@@ -2111,7 +2158,7 @@ namespace PKBTest
 			ep.value = "ifs";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "j";
 			lp.attribute = NONE;
 
@@ -2128,7 +2175,7 @@ namespace PKBTest
 			ep.value = "ifs";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "k";
 			lp.attribute = NONE;
 
@@ -2145,7 +2192,7 @@ namespace PKBTest
 			ep.value = "ifs";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "l";
 			lp.attribute = NONE;
 
@@ -2196,7 +2243,7 @@ namespace PKBTest
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "l";
 			lp.attribute = NONE;
 
@@ -2213,7 +2260,7 @@ namespace PKBTest
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "m";
 			lp.attribute = NONE;
 
@@ -2230,7 +2277,7 @@ namespace PKBTest
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "n";
 			lp.attribute = NONE;
 

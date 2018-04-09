@@ -78,6 +78,9 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 	case PATTERN_IF_VARIABLE_TABLE:
 		tableValuesCount = 1;
 		break;
+	case STATEMENT_LIST_INFO_TABLE:
+		tableValuesCount = 1;
+		break;
 	default:
 		return false;
 	}
@@ -388,6 +391,24 @@ bool PKB::checkStatementHasType(int stmt, int stmt_type) {
 
 }
 
+/* Statement List Operations */
+std::vector<std::vector<int>> PKB::getAllStatementLists() {
+	unordered_map<int, std::vector<std::vector<int>>> table = tables[STATEMENT_LIST_TABLE - 1];
+	std::vector<std::vector<int>> output;
+	for (auto it = table.begin(); it != table.end(); ++it) {
+		output.push_back({it->second[1][0]});
+	}
+	return output;
+}
+std::vector<std::vector<int>> PKB::getAllStatementListsFirstStmt() {
+	std::vector<int> result = PKB::getFromTable(STATEMENT_LIST_INFO_TABLE, 1)[0];
+	std::vector<std::vector<int>> output;
+	for (int a : result) {
+		output.push_back({ a });
+	}
+	return output;
+}
+
 /* Optimization Operations */
 std::vector<std::vector<int>> PKB::getWithProcNameVarName() {
 	std::vector<std::vector<int>> data = PKB::getFromTable(PROC_NAME_VAR_NAME_TABLE, 1);
@@ -416,7 +437,10 @@ std::vector<std::vector<int>> PKB::getWithStmtNoConstValue(int type) {
 	return data;
 }
 std::vector<std::vector<int>> PKB::getPatternOneSyn(TYPES t) {
-	std::vector<std::vector<int>> data = PKB::getAllStatementsWithType(t);
+	std::vector<std::vector<int>> data;
+	if (t == ASSIGNMENT_TYPE || t == WHILE_TYPE || t == IF_TYPE) {
+		data = PKB::getAllStatementsWithType(t);
+	}
 	return data;
 }
 std::vector<std::vector<int>> PKB::getPatternTwoSyn(TYPES t) {
@@ -1487,7 +1511,7 @@ std::vector<std::vector<int>> PKB::getStatementsWithPattern(Pattern p) {
 				result.push_back({ intermediate[i] });
 			}
 		} 
-		else if (p.getLeftParam().type == IDENT) {
+		else if (p.getLeftParam().type == VAR_IDENT) {
 			for (int i = 0; i < intermediate.size(); i++) {
 				string modifies = PKB::getFromNameTable(PATTERN_TABLE, intermediate[i])[0];
 				if (modifies == p.getLeftParam().value) {
@@ -1510,13 +1534,13 @@ std::vector<std::vector<int>> PKB::getStatementsWithPattern(Pattern p) {
 			output = PKB::getAllStatementsWithType(2);
 		}
 			
-		if (p.getLeftParam().type == VARIABLE || p.getLeftParam().type == IDENT) {
+		if (p.getLeftParam().type == VARIABLE || p.getLeftParam().type == VAR_IDENT) {
 			for (int i = 0; i < output.size(); i++) {
 				string modifies = PKB::getFromNameTable(PATTERN_TABLE, output[i][0])[0];
 				if (p.getLeftParam().type == VARIABLE){
 					output[i].push_back(PKB::getVariableId(modifies));
 				}
-				else if (p.getLeftParam().type == IDENT && p.getLeftParam().value != modifies) {
+				else if (p.getLeftParam().type == VAR_IDENT && p.getLeftParam().value != modifies) {
 					output.erase(output.begin() + i, output.begin() + i + 1);
 					i--;
 				}

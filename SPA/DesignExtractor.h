@@ -15,6 +15,7 @@ private:
 	void extractCallStatements(PKB &);
 	void extractUsesModifies(PKB &);
 
+	void precomputeStatementLists(PKB&);
 	void precomputeWithProcNameVarName(PKB&);
 	void precomputeWithProcNameCallProcName(PKB&);
 	void precomputeWithVarNameCallProcName(PKB&);
