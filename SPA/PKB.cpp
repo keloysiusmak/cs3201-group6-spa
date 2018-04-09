@@ -1487,7 +1487,7 @@ std::vector<std::vector<int>> PKB::getStatementsWithPattern(Pattern p) {
 				result.push_back({ intermediate[i] });
 			}
 		} 
-		else if (p.getLeftParam().type == IDENT) {
+		else if (p.getLeftParam().type == VAR_IDENT) {
 			for (int i = 0; i < intermediate.size(); i++) {
 				string modifies = PKB::getFromNameTable(PATTERN_TABLE, intermediate[i])[0];
 				if (modifies == p.getLeftParam().value) {
@@ -1510,13 +1510,13 @@ std::vector<std::vector<int>> PKB::getStatementsWithPattern(Pattern p) {
 			output = PKB::getAllStatementsWithType(2);
 		}
 			
-		if (p.getLeftParam().type == VARIABLE || p.getLeftParam().type == IDENT) {
+		if (p.getLeftParam().type == VARIABLE || p.getLeftParam().type == VAR_IDENT) {
 			for (int i = 0; i < output.size(); i++) {
 				string modifies = PKB::getFromNameTable(PATTERN_TABLE, output[i][0])[0];
 				if (p.getLeftParam().type == VARIABLE){
 					output[i].push_back(PKB::getVariableId(modifies));
 				}
-				else if (p.getLeftParam().type == IDENT && p.getLeftParam().value != modifies) {
+				else if (p.getLeftParam().type == VAR_IDENT && p.getLeftParam().value != modifies) {
 					output.erase(output.begin() + i, output.begin() + i + 1);
 					i--;
 				}
