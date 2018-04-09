@@ -1376,7 +1376,7 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q;
 
 			q.insertSelectStmt(ASSIGN, "a", NONE);
-			q.insertPattern(ASSIGN, "a", EXPR, "a", ALL, "_", false);
+			q.insertPattern(ASSIGN, "a", VAR_IDENT, "a", ALL, "_", false);
 
 			evaluator.setQueryObject(q);
 
@@ -1390,7 +1390,7 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q1;
 
 			q1.insertSelectStmt(ASSIGN, "a", NONE);
-			q1.insertPattern(ASSIGN, "a", EXPR, "f", ALL, "_", false);
+			q1.insertPattern(ASSIGN, "a", VAR_IDENT, "f", ALL, "_", false);
 
 			evaluator.setQueryObject(q1);
 
@@ -1404,7 +1404,7 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q;
 
 			q.insertSelectStmt(ASSIGN, "a", NONE);
-			q.insertPattern(ASSIGN, "a", EXPR, "a", EXPR, "b", false);
+			q.insertPattern(ASSIGN, "a", VAR_IDENT, "a", EXPR, "b", false);
 
 			evaluator.setQueryObject(q);
 
@@ -1417,7 +1417,7 @@ namespace PKBEvaluatorIntegrationTesting
 			QueryObject q1;
 
 			q1.insertSelectStmt(ASSIGN, "a", NONE);
-			q1.insertPattern(ASSIGN, "a", EXPR, "f", EXPR, "b", false);
+			q1.insertPattern(ASSIGN, "a", VAR_IDENT, "f", EXPR, "b", false);
 
 			evaluator.setQueryObject(q1);
 
