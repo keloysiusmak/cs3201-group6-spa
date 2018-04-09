@@ -279,6 +279,39 @@ vector<Clause> QueryOptimization::numResultsGroupClauses(vector<Clause> groupedC
 			}
 		}
 
+		if (relation == NONE) {
+			if (leftParam.type == ASSIGNMENT_TYPE) {
+				if (rightParam.type == VARIABLE) {
+					size.push_back(pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, VARIABLE));
+					newSize.push_back(pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, VARIABLE));
+				}
+				else {
+					size.push_back(pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, 0));
+				}
+			}
+			else if (leftParam.type == WHILE_TYPE) {
+				if (rightParam.type == VARIABLE) {
+					size.push_back(pkb.getFromResultTable(RelationPattern, WHILE_TYPE, VARIABLE));
+					newSize.push_back(pkb.getFromResultTable(RelationPattern, WHILE_TYPE, VARIABLE));
+				}
+				else {
+					size.push_back(pkb.getFromResultTable(RelationPattern, WHILE_TYPE, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationPattern, WHILE_TYPE, 0));
+				}
+			}
+			else if (leftParam.type == IF_TYPE) {
+				if (rightParam.type == VARIABLE) {
+					size.push_back(pkb.getFromResultTable(RelationPattern, IF_TYPE, VARIABLE));
+					newSize.push_back(pkb.getFromResultTable(RelationPattern, IF_TYPE, VARIABLE));
+				}
+				else {
+					size.push_back(pkb.getFromResultTable(RelationPattern, IF_TYPE, 0));
+					newSize.push_back(pkb.getFromResultTable(RelationPattern, IF_TYPE, 0));
+				}
+			}
+		}
+
 		reGroupedClauses.push_back(clause);
 		newReGroupedClauses.push_back(clause);
 	}
