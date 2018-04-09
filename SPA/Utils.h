@@ -13,6 +13,7 @@ using namespace std;
 
 class Utils {
 public:
+	static Param createParam(ParamType type, string value, AttrType attr);
 	static string sanitise(string str);
 	static vector<string> explode(const string&, const string, const vector<char>);
 	static bool isValidName(string);

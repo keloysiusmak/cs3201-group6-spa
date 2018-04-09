@@ -156,6 +156,11 @@ public:
 		string query65 = "Select a such that not (Affects*(5,5) or Next*(8,1) and Parent(5,6))";
 		string query66 = "Select a such that not (((Affects*(5,5) and Next*(8,1)) or Parent(5,6)) or Calls(p, \"first\"))";
 		string query67 = "Select a such that not (( not (Affects*(5,5) and Next*(8,1)) or Parent(5,6)) or Calls(p, \"first\"))";
+		
+		//Query with SubQuery
+		string query68 = "Select a such that Uses((Select s such that Parent(5,6)), \"x\")";
+		string query69 = "Select a such that Uses(3, (Select v such that Parent(5,6)))";
+		string query70 = "Select a such that Uses((Select s such that Parent(5,6)), (Select v such that Parent(5,6)))";
 
 		string invalidQuery1 = "Selecta"; //Must have space in between select and a
 		string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
@@ -174,8 +179,6 @@ public:
 		string invalidQuery14 = "Select a with prog_line.stmt# = 3";
 		string invalidQuery15 = "Select a with c1.procName = n";
 		string invalidQuery16 = "Select a such that Parent*(a, 2) and a(v, _)";
-		string invalidQuery17 = "Select a such that Parent*(s, s)";
-		string invalidQuery18 = "Select a such that Parent*(1, 1)";
 
 		//Valid
 		Assert::AreEqual(true, preprocessor.isValidQuery(query1));
@@ -217,7 +220,7 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query37));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query38));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query39));
-		Assert::AreEqual(false, preprocessor.isValidQuery(query40));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query40));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query41));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query42));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query43));
@@ -245,6 +248,9 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query65));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query66));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query67));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query68));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query69));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query70));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
@@ -263,8 +269,6 @@ public:
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery14));
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery15));
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery16));
-		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery17));
-		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery18));
 	}
 
 	TEST_METHOD(PreprocessorIsValidSynonym) {
@@ -424,7 +428,6 @@ public:
 
 		string underScore = "_";
 		string integerZero = "0";
-		string invalidSameStmtRef = "s";
 
 		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1Empty, arg2, false));
 		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRef1, arg2, false));
@@ -437,8 +440,6 @@ public:
 		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2StmtRef2, false));
 		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRefNotExist, false));
 		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, integerZero, false));
-
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidSameStmtRef, invalidSameStmtRef, false));
 	}
 
 	TEST_METHOD(PreprocessorParsePattern) {
@@ -617,18 +618,6 @@ public:
 		Assert::AreEqual(static_cast<int>(CALL), static_cast<int>(qc.getWithClauses().at(3).getWithClause().getRightParam().type));
 		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qc.getWithClauses().at(3).getWithClause().getRightParam().attribute));
 		Assert::AreEqual(secondParamValue, qc.getWithClauses().at(3).getWithClause().getRightParam().value);
-
-		arg1 = "5";
-		arg2 = "5";
-
-		//Valid
-		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2, false));
-
-		arg1 = "\"x\"";
-		arg2 = "\"y\"";
-
-		//Valid
-		Assert::AreEqual(false, preprocessor.parseWithClause(qc, arg1, arg2, false));
 	}
 
 	TEST_METHOD(PreprocessorIsValidSuchThatKeyword) {

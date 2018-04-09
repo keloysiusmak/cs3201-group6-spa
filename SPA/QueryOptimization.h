@@ -28,14 +28,17 @@ struct Node {
 };
 class QueryOptimization {
 
+private:
+	PKB pkb;
+
 public:
 	static void consolidateClauses(vector<Clause> const &clauses, vector<Clause> &consolidated);
 	static void consolidateClauses(vector<Pattern> const &clauses, vector<Clause> &consolidated);
-	static void setPKB(PKB generatedPKB);
+	void setPKB(PKB generatedPKB);
 	static map<int, vector<Clause>> sortIntoGroups(vector<Clause> &clauses);
 	static map<int, vector<Clause>> groupClauses(vector<Clause> &clauses, map<Param, Node> &paramsHash);
-	//static map<int, vector<Clause>> numConstantsGroupClauses(vector<Clause> groupedClauses);
-	//static vector<Clause> numResultsGroupClauses(vector<Clause> groupedClauses);
+	map<int, vector<Clause>> numConstantsGroupClauses(vector<Clause> groupedClauses);
+	vector<Clause> numResultsGroupClauses(vector<Clause> groupedClauses);
 	static map<Param, Node> ufdsParams(vector<Clause> &clauses);
 	static void unionParams(Param &p1, Param &p2, map<Param, Node> &paramsHash);
 	static Node* findSet(Node &n, map<Param, Node> &paramsHash);
