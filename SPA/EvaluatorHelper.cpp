@@ -34,6 +34,7 @@ void EvaluatorHelper::cacheUnsanitized(Clause &clause, ClauseResults &clauseResu
 /* Store actual results of clause in cache */
 void EvaluatorHelper::cacheSanitized(Clause &clause, ClauseResults &clauseResults, map<Clause, vector<vector<int>>> &cache) {
 	cache[clause] = clauseResults.results; // Store clause results into cache
+	cache[clause] = clauseResults.results;
 };
 
 /* Checks if actual clause is in cache */
