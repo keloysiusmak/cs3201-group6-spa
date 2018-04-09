@@ -18,7 +18,7 @@ private:
 	RelationshipTable relTable;
 	string errorMessage;
 	bool isErrorExist;
-	std::vector<QueryContent> vqc;
+	vector<QueryContent> vqc;
 	unordered_map<int, vector<int>> subQueryMapping;
 
 	int retrieveClauseArgType(string arg);
@@ -31,13 +31,19 @@ private:
 	int higherPrecedenceValidate(char operator1, char operator2);
 	int getPrecedence(char op);
 	bool checkBoolStmt(string query);
+	string mapParamTypeToValue(ParamType);
+	string getArgValue(vector<string> queryArr, int &queryLength, int pos, 
+		string relationshipKey, CLAUSE_NODE_TYPE nodeType, CLAUSE_LEFT_OR_RIGHT paramPos, 
+		string endPoint, QueryContent &qc);
 public:
 	Preprocessor();
 	void insertDeclarationToMap(string synonym, string declaration);
+	void insertSubQueryMap(int queryIndex, CLAUSE_NODE_TYPE nodeType, int nodeIndex, CLAUSE_LEFT_OR_RIGHT paramPos);
 	unordered_map<string, string> getDeclarationMap();
 	void preprocessQuery(string query);
 	bool isValidDeclaration(string declaration);
 	bool isValidQuery(string query);
+	bool isValidSubQuery(vector<string> queryArr, int pos, int &queryLength, QueryContent &qc);
 	bool isValidSynonym(string synonym);
 	bool isValidIdent(string ident);
 	bool isValidStmtRef(string stmtRef);
@@ -56,7 +62,7 @@ public:
 	bool parseWithClause(QueryContent &qc, string leftRef, string rightRef, bool invert);
 	bool isValidSuchThatKeyword(string query);
 	string getErrorMessage();
-	std::vector<QueryContent> getQueryContent();
+	vector<QueryContent> getQueryContent();
 	unordered_map<int, vector<int>> getSubQueryMapping();
 	bool getIsErrorExist();
 };
