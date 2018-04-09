@@ -16,7 +16,7 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 	return groupedClauses;
 };
 
-/* vector<Clause> QueryOptimization::numResultsGroupClauses(vector<Clause> groupedClauses) {
+vector<Clause> QueryOptimization::numResultsGroupClauses(vector<Clause> groupedClauses) {
 
 	vector<int> size;
 	vector<int> newSize;
@@ -34,20 +34,14 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 			if (Utils::isSynonym(leftParam)) {
 				size.push_back(pkb.getFromResultTable(RelationFollows, 0, stoi(rightParam.value)));
 				newSize.push_back(pkb.getFromResultTable(RelationFollows, 0, stoi(rightParam.value)));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else if (Utils::isSynonym(rightParam)) {
 				size.push_back(pkb.getFromResultTable(RelationFollows, stoi(leftParam.value), 0));
 				newSize.push_back(pkb.getFromResultTable(RelationFollows, stoi(leftParam.value), 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else {
 				size.push_back(pkb.getFromResultTable(RelationFollows, 0, 0));
 				newSize.push_back(pkb.getFromResultTable(RelationFollows, 0, 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 		}
 
@@ -55,20 +49,14 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 			if (Utils::isSynonym(leftParam)) {
 				size.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, stoi(rightParam.value)));
 				newSize.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, stoi(rightParam.value)));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else if (Utils::isSynonym(rightParam)) {
 				size.push_back(pkb.getFromResultTable(RelationFollowsStar, stoi(leftParam.value), 0));
 				newSize.push_back(pkb.getFromResultTable(RelationFollowsStar, stoi(leftParam.value), 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else {
 				size.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, 0));
 				newSize.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 		}
 
@@ -76,20 +64,14 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 			if (Utils::isSynonym(leftParam)) {
 				size.push_back(pkb.getFromResultTable(RelationCalls, 0, stoi(rightParam.value)));
 				newSize.push_back(pkb.getFromResultTable(RelationCalls, 0, stoi(rightParam.value)));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else if (Utils::isSynonym(rightParam)) {
 				size.push_back(pkb.getFromResultTable(RelationCalls, stoi(leftParam.value), 0));
 				newSize.push_back(pkb.getFromResultTable(RelationCalls, stoi(leftParam.value), 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else {
 				size.push_back(pkb.getFromResultTable(RelationCalls, 0, 0));
 				newSize.push_back(pkb.getFromResultTable(RelationCalls, stoi(leftParam.value), 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 		}
 
@@ -97,20 +79,14 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 			if (Utils::isSynonym(leftParam)) {
 				size.push_back(pkb.getFromResultTable(RelationCallsStar, 0, stoi(rightParam.value)));
 				newSize.push_back(pkb.getFromResultTable(RelationCallsStar, 0, stoi(rightParam.value)));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else if (Utils::isSynonym(rightParam)) {
 				size.push_back(pkb.getFromResultTable(RelationCallsStar, stoi(leftParam.value), 0));
 				newSize.push_back(pkb.getFromResultTable(RelationCallsStar, stoi(leftParam.value), 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else {
 				size.push_back(pkb.getFromResultTable(RelationCallsStar, 0, 0));
 				newSize.push_back(pkb.getFromResultTable(RelationCallsStar, 0, 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 		}
 
@@ -119,40 +95,28 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 				if (Utils::isSynonym(leftParam)) {
 					size.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (Utils::isSynonym(rightParam)) {
 					size.push_back(pkb.getFromResultTable(RelationUsesProcedure, stoi(leftParam.value), 0));
 					newSize.push_back(pkb.getFromResultTable(RelationUsesProcedure, stoi(leftParam.value), 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else {
 					size.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, 0));
 					newSize.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 			}
 			else if (leftParam.type == STMT) {
 				if (Utils::isSynonym(leftParam)) {
 					size.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (Utils::isSynonym(rightParam)) {
 					size.push_back(pkb.getFromResultTable(RelationUsesStatement, stoi(leftParam.value), 0));
 					newSize.push_back(pkb.getFromResultTable(RelationUsesStatement, stoi(leftParam.value), 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else {
 					size.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, 0));
 					newSize.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 			}
 		}
@@ -162,40 +126,28 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 				if (Utils::isSynonym(leftParam)) {
 					size.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (Utils::isSynonym(rightParam)) {
 					size.push_back(pkb.getFromResultTable(RelationModifiesProcedure, stoi(leftParam.value), 0));
 					newSize.push_back(pkb.getFromResultTable(RelationModifiesProcedure, stoi(leftParam.value), 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else {
 					size.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, 0));
 					newSize.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 			}
 			else if (leftParam.type == STMT) {
 				if (Utils::isSynonym(leftParam)) {
 					size.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (Utils::isSynonym(rightParam)) {
 					size.push_back(pkb.getFromResultTable(RelationModifiesStatement, stoi(leftParam.value), 0));
 					newSize.push_back(pkb.getFromResultTable(RelationModifiesStatement, stoi(leftParam.value), 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else {
 					size.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, 0));
 					newSize.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 			}
 		}
@@ -204,20 +156,14 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 			if (Utils::isSynonym(leftParam)) {
 				size.push_back(pkb.getFromResultTable(RelationAffects, 0, stoi(rightParam.value)));
 				newSize.push_back(pkb.getFromResultTable(RelationAffects, 0, stoi(rightParam.value)));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else if (Utils::isSynonym(rightParam)) {
 				size.push_back(pkb.getFromResultTable(RelationAffects, stoi(leftParam.value), 0));
 				newSize.push_back(pkb.getFromResultTable(RelationAffects, stoi(leftParam.value), 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else {
 				size.push_back(pkb.getFromResultTable(RelationAffects, 0, 0));
 				newSize.push_back(pkb.getFromResultTable(RelationAffects, 0, 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 		}
 
@@ -225,20 +171,14 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 			if (Utils::isSynonym(leftParam)) {
 				size.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, stoi(rightParam.value)));
 				newSize.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, stoi(rightParam.value)));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else if (Utils::isSynonym(rightParam)) {
 				size.push_back(pkb.getFromResultTable(RelationAffectsStar, stoi(leftParam.value), 0));
-				newSize.push_back(pkb.getFromResultTable(RelationAffectsStar, stoi(leftParam.value), 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
+				newSize.push_back(pkb.getFromResultTable(RelationAffectsStar, stoi(leftParam.value), 0));;
 			}
 			else {
 				size.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, 0));
 				newSize.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 		}
 
@@ -246,20 +186,14 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 			if (Utils::isSynonym(leftParam)) {
 				size.push_back(pkb.getFromResultTable(RelationNext, 0, stoi(rightParam.value)));
 				newSize.push_back(pkb.getFromResultTable(RelationNext, 0, stoi(rightParam.value)));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else if (Utils::isSynonym(rightParam)) {
 				size.push_back(pkb.getFromResultTable(RelationNext, stoi(leftParam.value), 0));
 				newSize.push_back(pkb.getFromResultTable(RelationNext, stoi(leftParam.value), 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else {
 				size.push_back(pkb.getFromResultTable(RelationNext, 0, 0));
 				newSize.push_back(pkb.getFromResultTable(RelationNext, 0, 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 		}
 
@@ -267,20 +201,14 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 			if (Utils::isSynonym(leftParam)) {
 				size.push_back(pkb.getFromResultTable(RelationNextStar, 0, stoi(rightParam.value)));
 				newSize.push_back(pkb.getFromResultTable(RelationNextStar, 0, stoi(rightParam.value)));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else if (Utils::isSynonym(rightParam)) {
 				size.push_back(pkb.getFromResultTable(RelationNextStar, stoi(leftParam.value), 0));
 				newSize.push_back(pkb.getFromResultTable(RelationNextStar, stoi(leftParam.value), 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 			else {
 				size.push_back(pkb.getFromResultTable(RelationNextStar, 0, 0));
 				newSize.push_back(pkb.getFromResultTable(RelationNextStar, 0, 0));
-				reGroupedClauses.push_back(clause);
-				newReGroupedClauses.push_back(clause);
 			}
 		}
 
@@ -289,100 +217,75 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 				if (rightParam.type == CALL) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (rightParam.type == VARIABLE) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (rightParam.type == PROCEDURE) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 			}
 			else if (leftParam.type == VARIABLE) {
 				if (rightParam.type == CALL) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (rightParam.type == VARIABLE) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (rightParam.type == PROCEDURE) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 			}
 			else if (leftParam.type == CALL) {
 				if (rightParam.type == CALL) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (rightParam.type == VARIABLE) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (rightParam.type == PROCEDURE) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 			}
 			else if (Utils::isSynonym(leftParam)) {
 				if (leftParam.type == STMT) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, 0, 0));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, 0, 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (leftParam.type == ASSIGN) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, ASSIGNMENT_TYPE, 0));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, ASSIGNMENT_TYPE, 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (leftParam.type == WHILE) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, WHILE_TYPE, 0));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, WHILE_TYPE, 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (leftParam.type == IF) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, IF_TYPE, 0));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, IF_TYPE, 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 				else if (leftParam.type == CALL) {
 					size.push_back(pkb.getFromResultTable(RelationWithName, CALL_TYPE, 0));
 					newSize.push_back(pkb.getFromResultTable(RelationWithName, CALL_TYPE, 0));
-					reGroupedClauses.push_back(clause);
-					newReGroupedClauses.push_back(clause);
 				}
 			}
 		}
+
+		reGroupedClauses.push_back(clause);
+		newReGroupedClauses.push_back(clause);
 	}
 
 	sort(size.begin(), size.end());
-	for (int i = 0; i < size.size; i++) {
-		for (int j = 0; j < size.size; j++) {
+	for (int i = 0; i < size.size(); i++) {
+		for (int j = 0; j < size.size(); j++) {
 			if (size[j] == newSize[i]) {
 				newReGroupedClauses[j] = reGroupedClauses[i];
 				continue;
@@ -391,9 +294,9 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 	}
 
 	return newReGroupedClauses;
-} */
+}
 
-/* map<int, vector<Clause>> QueryOptimization::numConstantsGroupClauses(vector<Clause> groupedClauses) {
+map<int, vector<Clause>> QueryOptimization::numConstantsGroupClauses(vector<Clause> groupedClauses) {
 
 	map<int, vector<Clause>> finalGroupedClauses; 
 
@@ -401,7 +304,7 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 		Param leftParam = clause.getLeftParam();
 		Param rightParam = clause.getRightParam();
 
-		if (Utils::isSynonym(leftParam)) { 
+		if (Utils::isSynonym(leftParam)) {
 			if (Utils::isSynonym(rightParam)) { //2 synonyms
 				finalGroupedClauses[1].push_back(clause);
 				continue;
@@ -419,8 +322,9 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 				finalGroupedClauses[0].push_back(clause);
 			}
 		}
+	}
 		return finalGroupedClauses;
-} */
+}
 
 // Sort clauses into groups according to grouped syns
 map<int, vector<Clause>> QueryOptimization::groupClauses(vector<Clause> &clauses, map<Param, Node> &paramsHash) {

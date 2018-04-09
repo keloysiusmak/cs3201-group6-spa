@@ -54,9 +54,11 @@ list<string> QueryEvaluator::evaluateQuery() {
 			sortedClausesVector.push_back(groupedClauses.second);
 		}
 
-		/* map<int, vector<Clause>> groupsAfterSortingByConstants;
+		QueryOptimization qo;
+
+		map<int, vector<Clause>> groupsAfterSortingByConstants;
 		for (vector<Clause> reGroupedClauses : sortedClausesVector) {
-			map<int, vector<Clause>> groupsAfterSortingByConstants = QueryOptimization::numConstantsGroupClauses(sortedClausesVector);
+			map<int, vector<Clause>> groupsAfterSortingByConstants = qo.numConstantsGroupClauses(reGroupedClauses);
 		}
 
 		vector<vector<Clause>> sortNumResults;
@@ -66,8 +68,8 @@ list<string> QueryEvaluator::evaluateQuery() {
 
 		map<int, vector<Clause>> groupsAfterSortingByNumResults;
 		for (vector<Clause> groupByConstants : sortNumResults) {
-			vector<Clause> groupsAfterSortingByNumResults = QueryOptimization::numResultsGroupClauses(sortNumResults);
-		} */
+			vector<Clause> groupsAfterSortingByNumResults = qo.numResultsGroupClauses(groupByConstants);
+		}
 
 		vector<Param> selectParams = queryObject.getSelectStatements(); // Selected Params
 		map<Clause, vector<vector<int>>> cache; // For cached results
@@ -170,9 +172,9 @@ void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResul
 	else if (relation == Affects) {
 		evaluateAffects(clause, clauseResults);
 	}
-	/* else if (relation == AffectsT) {
+	else if (relation == AffectsT) {
 		evaluateAffectsStar(clause, clauseResults);
-	} */
+	}
 	else { ; } // for bonus feature?
 }
 
@@ -408,8 +410,7 @@ void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
-			int variableId = pkb.getVariableId(rightParam.value);
-			vector<vector<int>> results = pkb.getNextBefore(variableId); //check PKB API
+			vector<vector<int>> results = pkb.getNextBefore(stoi(rightParam.value)); //check PKB API
 			clauseResults.setResults(results);
 		}
 	}
@@ -551,13 +552,13 @@ void QueryEvaluator::evaluateAffects(Clause & clause, ClauseResults & clauseResu
 
 /* Right param: assignment syn or assignment no or _ */
 /* Left param: assignment syn or assignment no or _ */
-/* void QueryEvaluator::evaluateAffectsStar(Clause & clause, ClauseResults & clauseResults)
+void QueryEvaluator::evaluateAffectsStar(Clause & clause, ClauseResults & clauseResults)
 {
-	Param leftParam = clause.getFirstParam();
-	Param rightParam = clause.getSecondParam();
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam.type)) {
-		if (Utils::isSynonym(rightParam.type)) { // (syn, syn)
+	if (Utils::isSynonym(leftParam)){
+		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results = pkb.getAllAffectsStar();
 			clauseResults.setResults(results);
 		}
@@ -567,7 +568,7 @@ void QueryEvaluator::evaluateAffects(Clause & clause, ClauseResults & clauseResu
 		}
 	}
 	else {
-		if (Utils::isSynonym(rightParam.type)) { // (concrete, syn)
+		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getAffectsAfterStar(pkb.getProcedureId(leftParam.value));
 			clauseResults.setResults(results);
 		}
@@ -576,7 +577,7 @@ void QueryEvaluator::evaluateAffects(Clause & clause, ClauseResults & clauseResu
 			clauseResults.setValid(result);
 		}
 	}
-} */
+}
 
 /* right Param: _ or IDENT or SYN */
 /* left Param: _ or exprSpec */

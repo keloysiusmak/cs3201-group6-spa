@@ -14,7 +14,8 @@ bool DesignExtractor::extract(PKB &pkb) {
 	extractCallStatements(pkb);
 	extractCallsStar(pkb);
 	extractUsesModifies(pkb);
-
+	
+	precomputeStatementLists(pkb);
 	precomputeWithProcNameVarName(pkb);
 	precomputeWithProcNameCallProcName(pkb);
 	precomputeWithVarNameCallProcName(pkb);
@@ -314,6 +315,15 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 			}
 		}
 	}
+}
+
+void DesignExtractor::precomputeStatementLists(PKB& pkb) {
+	std::vector<std::vector<int>> firstStmts = pkb.getAllStatementLists();
+	std::vector<int> output;
+	for (int i = 0; i < firstStmts.size(); i++) {
+		output.push_back(firstStmts[i][0]);
+	}
+	pkb.insertToTable(STATEMENT_LIST_INFO_TABLE, 1, {output});
 }
 
 void DesignExtractor::precomputeWithProcNameVarName(PKB &pkb) {

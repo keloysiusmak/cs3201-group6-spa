@@ -51,6 +51,167 @@ namespace PKBDEParserIntegrationTesting
 			de.extract(pkb);
 		}
 
+		TEST_METHOD(PKBDEParserGetAllVariables)
+		{
+			std::vector<std::vector<int>> data = { { 9 },{ 1 },{ 2 },{ 3 },{ 4 } ,{ 5 },{ 6 },{ 7 },{ 8 },{ 10 } };
+			Assert::AreEqual(true, (data == pkb.getAllVariables()));
+		}
+		TEST_METHOD(PKBDEParserGetAllStatements)
+		{
+			std::vector<std::vector<int>> data = { { 1 },{ 3 } ,{ 6 },{ 7 } ,{ 5 },{ 8 },{ 9 },{ 10 },{ 12 },{ 11 },{ 13 },{ 4 },{ 2 } };
+			Assert::AreEqual(true, (data == pkb.getAllStatements()));
+		}
+		TEST_METHOD(PKBDEParserGetAllStatementsWithType)
+		{
+			std::vector<std::vector<int>> data = { { 1 },{ 3 },{ 7 },{ 8 },{ 9 },{ 10 },{ 13 } };
+			std::vector<std::vector<int>> a = pkb.getAllStatementsWithType(1);
+			std::vector<std::vector<int>> b = pkb.getAllStatementsWithType(2);
+			Assert::AreEqual(true, (data == pkb.getAllStatementsWithType(1)));
+
+			data = {{ 6 }, {12},{ 11 },{ 2 } };
+			Assert::AreEqual(true, (data == pkb.getAllStatementsWithType(2)));
+
+			data = { { 5 } };
+			Assert::AreEqual(true, (data == pkb.getAllStatementsWithType(3)));
+
+			data = { { 4 } };
+			Assert::AreEqual(true, (data == pkb.getAllStatementsWithType(4)));
+		}
+		TEST_METHOD(PKBDEParserGetAllProcedures)
+		{
+			std::vector<std::vector<int>> data = { { 1 },{ 2 } };
+			Assert::AreEqual(true, (data == pkb.getAllProcedures()));
+		}
+		TEST_METHOD(PKBDEParserGetAllStatementsFromProcedure)
+		{
+			std::vector<std::vector<int>> data = { { 1 },{ 2 },{ 5 },{ 9 },{ 3 },{ 4 },{ 6 },{ 8 },{ 7 } };
+			Assert::AreEqual(true, (data == pkb.getAllStatementsFromProcedure(1)));
+
+			data = { { 10 },{ 11 },{ 12 },{ 13 } };
+			Assert::AreEqual(true, (data == pkb.getAllStatementsFromProcedure(2)));
+		}
+		TEST_METHOD(PKBDEParserGetProcedureFromStatement)
+		{
+			std::vector<std::vector<int>> data = { { 1 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(1)));
+			data = { { 1 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(2)));
+			data = { { 1 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(3)));
+			data = { { 1 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(4)));
+			data = { { 1 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(5)));
+			data = { { 1 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(6)));
+			data = { { 1 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(7)));
+			data = { { 1 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(8)));
+			data = { { 1 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(9)));
+			data = { { 2 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(10)));
+			data = { { 2 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(11)));
+			data = { { 2 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(12)));
+			data = { { 2 } };
+			Assert::AreEqual(true, (data == pkb.getProcedureFromStatement(13)));
+		}
+		TEST_METHOD(PKBDEParserCheckStatementHasType)
+		{
+			Assert::AreEqual(true, pkb.checkStatementHasType(1, 1));
+			Assert::AreEqual(true, pkb.checkStatementHasType(2, 2));
+			Assert::AreEqual(true, pkb.checkStatementHasType(3, 1));
+			Assert::AreEqual(true, pkb.checkStatementHasType(4, 4));
+			Assert::AreEqual(true, pkb.checkStatementHasType(5, 3));
+			Assert::AreEqual(true, pkb.checkStatementHasType(6, 2));
+			Assert::AreEqual(true, pkb.checkStatementHasType(7, 1));
+			Assert::AreEqual(true, pkb.checkStatementHasType(8, 1));
+			Assert::AreEqual(true, pkb.checkStatementHasType(9, 1));
+			Assert::AreEqual(true, pkb.checkStatementHasType(10, 1));
+			Assert::AreEqual(true, pkb.checkStatementHasType(11, 2));
+			Assert::AreEqual(true, pkb.checkStatementHasType(12, 2));
+			Assert::AreEqual(true, pkb.checkStatementHasType(13, 1));
+			Assert::AreEqual(false, pkb.checkStatementHasType(1, 4));
+			Assert::AreEqual(false, pkb.checkStatementHasType(2, 4));
+			Assert::AreEqual(false, pkb.checkStatementHasType(3, 4));
+			Assert::AreEqual(false, pkb.checkStatementHasType(4, 1));
+			Assert::AreEqual(false, pkb.checkStatementHasType(5, 4));
+			Assert::AreEqual(false, pkb.checkStatementHasType(6, 4));
+			Assert::AreEqual(false, pkb.checkStatementHasType(7, 4));
+			Assert::AreEqual(false, pkb.checkStatementHasType(8, 4));
+			Assert::AreEqual(false, pkb.checkStatementHasType(9, 4));
+			Assert::AreEqual(false, pkb.checkStatementHasType(10, 4));
+			Assert::AreEqual(false, pkb.checkStatementHasType(11, 4));
+			Assert::AreEqual(false, pkb.checkStatementHasType(12, 4));
+			Assert::AreEqual(false, pkb.checkStatementHasType(13, 4));
+		}
+
+		TEST_METHOD(PKBDEParserGetAllStatementLists)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 3 },{ 6 },{ 7 },{ 8 },{ 1 },{ 10 },{ 12 },{ 13 } };
+			std::vector<std::vector<int>> a = pkb.getAllStatementLists();
+			Assert::AreEqual(true, (data == pkb.getAllStatementLists()));
+		}
+		TEST_METHOD(PKBDEParserGetAllStatementListsFirstStmt)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 3 },{ 6 },{ 7 },{ 8 },{ 1 },{ 10 },{ 12 },{ 13 } };
+			Assert::AreEqual(true, (data == pkb.getAllStatementListsFirstStmt()));
+		}
+
+		TEST_METHOD(PKBDEParserGetWithProcNameVarName)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 1, 1 }, {2, 2} };
+			Assert::AreEqual(true, (data == pkb.getWithProcNameVarName()));
+		}
+		TEST_METHOD(PKBDEParserGetWithProcNameCallProcName)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 2, 4 } };
+			Assert::AreEqual(true, (data == pkb.getWithProcNameCallProcName()));
+		}
+		TEST_METHOD(PKBDEParserGetWithVarNameCallProcName)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 2,4 } };
+			Assert::AreEqual(true, (data == pkb.getWithVarNameCallProcName()));
+		}
+		TEST_METHOD(PKBDEParserGetWithStmtNoConstValue)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 1, 1 }, {4,4} };
+			Assert::AreEqual(true, (data == pkb.getWithStmtNoConstValue(0)));
+		}
+		TEST_METHOD(PKBDEParserGetPatternOneSyn)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 1 },{ 3 },{ 7 },{ 8 },{ 9 },{ 10 },{ 13 } };
+			Assert::AreEqual(true, (data == pkb.getPatternOneSyn(ASSIGNMENT_TYPE)));
+
+			data = { { 6 },{ 12 },{ 11 },{ 2 } };
+			Assert::AreEqual(true, (data == pkb.getPatternOneSyn(WHILE_TYPE)));
+
+			data = { { 5 } };
+			Assert::AreEqual(true, (data == pkb.getPatternOneSyn(IF_TYPE)));
+		}
+		TEST_METHOD(PKBDEParserGetPatternTwoSyn)
+		{
+			std::vector<std::vector<int>> data;
+			data = { { 1,1 },{ 9,4 },{ 3,2 },{ 7,3 },{ 8,5 },{ 10,6 },{ 13,10 } };
+			Assert::AreEqual(true, (data == pkb.getPatternTwoSyn(ASSIGNMENT_TYPE)));
+
+			data = { { 6,4 },{ 12,9 },{ 11,8 },{ 2,3 } };
+			Assert::AreEqual(true, (data == pkb.getPatternTwoSyn(WHILE_TYPE)));
+
+			data = { { 5,1 } };
+			Assert::AreEqual(true, (data == pkb.getPatternTwoSyn(IF_TYPE)));
+		}
+
 		TEST_METHOD(PKBDEParserGetFollowsBeforeInvalid)
 		{
 			std::vector<std::vector<int>> data;
@@ -743,7 +904,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "a";
 			lp.attribute = NONE;
 
@@ -794,7 +955,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "b";
 			lp.attribute = NONE;
 
@@ -811,7 +972,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "A";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "B";
 			lp.attribute = NONE;
 
@@ -845,7 +1006,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "y";
 			lp.attribute = NONE;
 
@@ -896,7 +1057,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "ifs";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "a";
 			lp.attribute = NONE;
 
@@ -913,7 +1074,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "ifs";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "k";
 			lp.attribute = NONE;
 
@@ -964,7 +1125,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "h";
 			lp.attribute = NONE;
 
@@ -981,7 +1142,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "i";
 			lp.attribute = NONE;
 
@@ -998,7 +1159,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "n";
 			lp.attribute = NONE;
 
