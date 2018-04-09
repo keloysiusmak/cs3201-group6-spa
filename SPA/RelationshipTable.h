@@ -9,11 +9,11 @@ using namespace std;
 class RelationshipTable {
 private:
 	unordered_map<string, Relationship> relTable;
-	bool isValidLeftArg(string relRef, ParamType leftArgType);
-	bool isValidRightArg(string relRef, ParamType rightArgType);
 public:
 	RelationshipTable();
 	bool isValidRelationship(string relRef);
 	bool isValidNumOfArgs(string relRef, int num);
+	bool isValidLeftArg(string relRef, ParamType leftArgType);
+	bool isValidRightArg(string relRef, ParamType rightArgType);
 	bool isValidArg(string relRef, ParamType leftArgType, ParamType rightArgType);
 };
