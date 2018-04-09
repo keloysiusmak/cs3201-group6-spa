@@ -16,7 +16,7 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 	return groupedClauses;
 };
 
-/* vector<Clause> QueryOptimization::numResultsGroupClauses(vector<Clause> groupedClauses) {
+vector<Clause> QueryOptimization::numResultsGroupClauses(vector<Clause> groupedClauses) {
 
 	vector<int> size;
 	vector<int> newSize;
@@ -381,8 +381,8 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 	}
 
 	sort(size.begin(), size.end());
-	for (int i = 0; i < size.size; i++) {
-		for (int j = 0; j < size.size; j++) {
+	for (int i = 0; i < size.size(); i++) {
+		for (int j = 0; j < size.size(); j++) {
 			if (size[j] == newSize[i]) {
 				newReGroupedClauses[j] = reGroupedClauses[i];
 				continue;
@@ -391,9 +391,9 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 	}
 
 	return newReGroupedClauses;
-} */
+}
 
-/* map<int, vector<Clause>> QueryOptimization::numConstantsGroupClauses(vector<Clause> groupedClauses) {
+map<int, vector<Clause>> QueryOptimization::numConstantsGroupClauses(vector<Clause> groupedClauses) {
 
 	map<int, vector<Clause>> finalGroupedClauses; 
 
@@ -401,7 +401,7 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 		Param leftParam = clause.getLeftParam();
 		Param rightParam = clause.getRightParam();
 
-		if (Utils::isSynonym(leftParam)) { 
+		if (Utils::isSynonym(leftParam)) {
 			if (Utils::isSynonym(rightParam)) { //2 synonyms
 				finalGroupedClauses[1].push_back(clause);
 				continue;
@@ -419,8 +419,9 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 				finalGroupedClauses[0].push_back(clause);
 			}
 		}
+	}
 		return finalGroupedClauses;
-} */
+}
 
 // Sort clauses into groups according to grouped syns
 map<int, vector<Clause>> QueryOptimization::groupClauses(vector<Clause> &clauses, map<Param, Node> &paramsHash) {
