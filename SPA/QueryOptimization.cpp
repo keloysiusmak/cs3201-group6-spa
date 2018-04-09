@@ -340,7 +340,6 @@ map<int, vector<Clause>> QueryOptimization::numConstantsGroupClauses(vector<Clau
 		if (Utils::isSynonym(leftParam)) {
 			if (Utils::isSynonym(rightParam)) { //2 synonyms
 				finalGroupedClauses[1].push_back(clause);
-				continue;
 			}
 			else { //only leftParam is synonym
 				finalGroupedClauses[0].push_back(clause);
@@ -349,7 +348,6 @@ map<int, vector<Clause>> QueryOptimization::numConstantsGroupClauses(vector<Clau
 		else if (Utils::isSynonym(rightParam)) {
 			if (Utils::isSynonym(leftParam)) { //2 synonyms
 				finalGroupedClauses[1].push_back(clause);
-				continue;
 			}
 			else { //only rightParam is synonym
 				finalGroupedClauses[0].push_back(clause);
