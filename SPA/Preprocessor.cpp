@@ -2071,7 +2071,6 @@ bool Preprocessor::checkBoolStmt(string query) {
 	}
 	return false;
 }
-
-unordered_map<int, Param *> Preprocessor::getSubQueryMapping() {
+unordered_map<int, vector<int>> Preprocessor::getSubQueryMapping() {
 	return subQueryMapping;
 }

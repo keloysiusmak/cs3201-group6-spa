@@ -331,53 +331,149 @@ std::vector<Pattern> QueryQueuer::parsePatternTree(ClauseNode c) {
 
 	return patterns;
 }
+QueryContent QueryQueuer::replaceClauseNode(QueryContent qcr, CLAUSE_SELECTOR clauseOrWithClauseOrPattern, int clauseNo, CLAUSE_LEFT_OR_RIGHT leftOrRight, string val) {
+	ClauseNode cn;
+	if (clauseOrWithClauseOrPattern == REPLACE_CLAUSE) {
+		cn = qcr.getClauses()[clauseNo];
+	}
+	else if (clauseOrWithClauseOrPattern == REPLACE_WITH_CLAUSE) {
+		cn = qcr.getWithClauses()[clauseNo];
+	}
+	else if (clauseOrWithClauseOrPattern == REPLACE_PATTERN) {
+		cn = qcr.getPattern()[clauseNo];
+	}
+	Clause c = cn.getClause();
+	Param pl, pr;
+	pl = c.getLeftParam();
+	pr = c.getRightParam();
+	if (leftOrRight == LEFT_PARAM) {
+		pl.value = val;
+	}
+	else {
+		pr.value = val;
+	}
+	c = Clause(c.getRelRef(), pl, pr, c.getIsInverted());
+	cn.setClauseNode(c);
+
+	std::vector<ClauseNode> clauseNodes;
+	if (clauseOrWithClauseOrPattern == REPLACE_CLAUSE) {
+		clauseNodes = qcr.getClauses();
+		clauseNodes[clauseNo] = cn;
+		qcr.setClause(clauseNodes);
+	}
+	else if (clauseOrWithClauseOrPattern == REPLACE_WITH_CLAUSE) {
+		clauseNodes = qcr.getWithClauses();
+		clauseNodes[clauseNo] = cn;
+		qcr.setWithClause(clauseNodes);
+	}
+	else if (clauseOrWithClauseOrPattern == REPLACE_PATTERN) {
+		clauseNodes = qcr.getPattern();
+		clauseNodes[clauseNo] = cn;
+		qcr.setPattern(clauseNodes);
+	}
+	return qcr;
+}
 
 list<string> QueryQueuer::evaluateQueries() {
-
-	std::vector<QueryContent> sortedQc = QueryQueuer::sortQueryContent();
-
+	
+	std::vector<int> sortedInts = QueryQueuer::sortQueryContent();
+	std::vector<QueryContent> sortedQc = QueryQueuer::convertSortedToQC(sortedInts);
+	unordered_map<int, std::vector<int>> subQueryMapping = QueryQueuer::getSubQueryMapping();
 	list<string> output;
+
+	//indexed by qcId, then indexed by mapping params that need to be updated, and the results obtained from subquery
+	unordered_map<int, list<string>> dependencyTable;
+
+	//sort the QueryContent, run it in reverse topological sort
 	for (int j = 0; j < sortedQc.size(); j++) {
-		std::vector<QueryObject> q = parseQueryContent(sortedQc[j]);
-		for (int i = 0; i < q.size(); i++) {
-			list<string> results;
 
-			QueryObject qo;
+		int dependencies = sortedQc[j].getChildren().size();
+		QueryContent thisQc = sortedQc[j];
+		int thisQcId = sortedInts[j];
 
-			if (validQuery) {
-				_evaluator.setQueryObject(q[i]);
-				results = _evaluator.evaluateQuery();
-				output.insert(output.end(), results.begin(), results.end());
-			}
-			else {
-				results = invalidQueryMessage;
-				output.insert(output.end(), results.begin(), results.end());
+		int loops;
+		std::vector<list<string>> resultList;
+		std::vector<std::vector<int>> paramList;
+		if (dependencies == 0) loops = 1;
+		else {
+			std::vector<int> children = thisQc.getChildren();
+
+			loops = 1;
+			for (int j = 0; j < children.size(); j++) {
+
+				list<string> result = dependencyTable[children[j]];
+				resultList.push_back(result);
+				std::vector<int> param = subQueryMapping[children[j]];
+				paramList.push_back(param);
+				loops *= result.size();
 			}
 		}
+		list<string> results;
+		results.clear();
+		for (int r = 0; r < loops; r++) {
+			for (int d = 0; d < dependencies; d++) {
+				int p = r;
+				for (int dx = 0; dx < d; dx++) {
+					p = p / resultList[dx].size();
+				}
+				p = p % resultList[d].size();
+				list<string>::iterator it = resultList[d].begin();
+				std::advance(it, p);
+				string value = *it;
+				thisQc = QueryQueuer::replaceClauseNode(thisQc, (CLAUSE_SELECTOR)paramList[d][1], paramList[d][2], (CLAUSE_LEFT_OR_RIGHT)paramList[d][3], value);
+			}
+
+			std::vector<QueryObject> q = parseQueryContent(thisQc);
+
+			//split into query objects and run
+			for (int i = 0; i < q.size(); i++) {
+
+				QueryObject qo;
+
+				if (validQuery) {
+					_evaluator.setQueryObject(q[i]);
+					list<string> tempResult = _evaluator.evaluateQuery();
+					std::copy(results.begin(), results.end(), std::back_insert_iterator<std::list<string>> (tempResult));
+				}
+				else {
+					output.clear();
+					results = invalidQueryMessage;
+					break;
+				}
+			}
+		}
+
+		//fill in results obtained into any parent query object
+		dependencyTable.insert({ sortedInts[j], results});
+		output.insert(output.end(), results.begin(), results.end());
 	}
+
+	output.unique();
 
 	return output;
 }
-void QueryQueuer::setSubQueryMapping(unordered_map<int, Param *> sqm) {
+void QueryQueuer::setSubQueryMapping(unordered_map<int, vector<int>> sqm) {
 	subQueryMapping = sqm;
 }
-unordered_map<int, Param *> QueryQueuer::getSubQueryMapping() {
+unordered_map<int, vector<int>> QueryQueuer::getSubQueryMapping() {
 	return subQueryMapping;
 }
-std::vector<QueryContent> QueryQueuer::sortQueryContent() {
+std::vector<int> QueryQueuer::sortQueryContent() {
 	Graph g(qc.size());
 
 	for (int i = 0; i < qc.size(); i++) {
-		std::vector<QueryContent *> children = qc[i].getChildren();
+		std::vector<int> children = qc[i].getChildren();
 
 		for (int j = 0; j < children.size(); j++) {
-			auto it = std::find(children.begin(), children.begin(), children[j]);
-			auto index = std::distance(children.begin(), it);
-			g.addEdge(i, index);
+			g.addEdge(i, children[j]);
 		}
 	}
 
 	std::vector<int> sorted = g.topologicalSort();
+	std::reverse(sorted.begin(), sorted.end());
+	return sorted;
+}
+std::vector<QueryContent> QueryQueuer::convertSortedToQC(std::vector<int> sorted) {
 	std::vector<QueryContent> output;
 	for (int i = 0; i < sorted.size(); i++) {
 		output.push_back(qc[sorted[i]]);
