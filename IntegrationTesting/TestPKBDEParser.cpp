@@ -743,7 +743,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "a";
 			lp.attribute = NONE;
 
@@ -794,7 +794,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "b";
 			lp.attribute = NONE;
 
@@ -811,7 +811,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "A";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "B";
 			lp.attribute = NONE;
 
@@ -845,7 +845,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "y";
 			lp.attribute = NONE;
 
@@ -896,7 +896,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "ifs";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "a";
 			lp.attribute = NONE;
 
@@ -913,7 +913,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "ifs";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "k";
 			lp.attribute = NONE;
 
@@ -964,7 +964,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "h";
 			lp.attribute = NONE;
 
@@ -981,7 +981,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "i";
 			lp.attribute = NONE;
 
@@ -998,7 +998,7 @@ namespace PKBDEParserIntegrationTesting
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "n";
 			lp.attribute = NONE;
 

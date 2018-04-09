@@ -1958,7 +1958,7 @@ namespace PKBTest
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "a";
 			lp.attribute = NONE;
 
@@ -2009,7 +2009,7 @@ namespace PKBTest
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "a";
 			lp.attribute = NONE;
 
@@ -2026,7 +2026,7 @@ namespace PKBTest
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "a";
 			lp.attribute = NONE;
 
@@ -2060,7 +2060,7 @@ namespace PKBTest
 			ep.value = "a";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "y";
 			lp.attribute = NONE;
 
@@ -2111,7 +2111,7 @@ namespace PKBTest
 			ep.value = "ifs";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "j";
 			lp.attribute = NONE;
 
@@ -2128,7 +2128,7 @@ namespace PKBTest
 			ep.value = "ifs";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "k";
 			lp.attribute = NONE;
 
@@ -2145,7 +2145,7 @@ namespace PKBTest
 			ep.value = "ifs";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "l";
 			lp.attribute = NONE;
 
@@ -2196,7 +2196,7 @@ namespace PKBTest
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "l";
 			lp.attribute = NONE;
 
@@ -2213,7 +2213,7 @@ namespace PKBTest
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "m";
 			lp.attribute = NONE;
 
@@ -2230,7 +2230,7 @@ namespace PKBTest
 			ep.value = "w";
 			ep.attribute = NONE;
 
-			lp.type = IDENT;
+			lp.type = VAR_IDENT;
 			lp.value = "n";
 			lp.attribute = NONE;
 

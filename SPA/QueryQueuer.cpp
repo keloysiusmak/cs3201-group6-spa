@@ -379,13 +379,14 @@ list<string> QueryQueuer::evaluateQueries() {
 	std::vector<int> sortedInts = QueryQueuer::sortQueryContent();
 	std::vector<QueryContent> sortedQc = QueryQueuer::convertSortedToQC(sortedInts);
 	unordered_map<int, std::vector<int>> subQueryMapping = QueryQueuer::getSubQueryMapping();
-	list<string> output;
-
+	
 	//indexed by qcId, then indexed by mapping params that need to be updated, and the results obtained from subquery
 	unordered_map<int, list<string>> dependencyTable;
 
+	list<string> output;
 	//sort the QueryContent, run it in reverse topological sort
 	for (int j = 0; j < sortedQc.size(); j++) {
+		output.clear();
 
 		int dependencies = sortedQc[j].getChildren().size();
 		QueryContent thisQc = sortedQc[j];
@@ -420,7 +421,7 @@ list<string> QueryQueuer::evaluateQueries() {
 				list<string>::iterator it = resultList[d].begin();
 				std::advance(it, p);
 				string value = *it;
-				thisQc = QueryQueuer::replaceClauseNode(thisQc, (CLAUSE_SELECTOR)paramList[d][1], paramList[d][2], (CLAUSE_LEFT_OR_RIGHT)paramList[d][3], value);
+				thisQc = QueryQueuer::replaceClauseNode(thisQc, (CLAUSE_SELECTOR) paramList[d][0], paramList[d][1], (CLAUSE_LEFT_OR_RIGHT)paramList[d][2], value);
 			}
 
 			std::vector<QueryObject> q = parseQueryContent(thisQc);
@@ -433,7 +434,10 @@ list<string> QueryQueuer::evaluateQueries() {
 				if (validQuery) {
 					_evaluator.setQueryObject(q[i]);
 					list<string> tempResult = _evaluator.evaluateQuery();
-					std::copy(results.begin(), results.end(), std::back_insert_iterator<std::list<string>> (tempResult));
+					list<string>::iterator i;
+					for (i = tempResult.begin(); i != tempResult.end(); ++i) {
+						results.push_back(*i);
+					}
 				}
 				else {
 					output.clear();
@@ -448,6 +452,7 @@ list<string> QueryQueuer::evaluateQueries() {
 		output.insert(output.end(), results.begin(), results.end());
 	}
 
+	output.sort();
 	output.unique();
 
 	return output;
