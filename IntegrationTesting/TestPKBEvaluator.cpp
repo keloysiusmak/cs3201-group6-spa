@@ -1120,6 +1120,46 @@ namespace PKBEvaluatorIntegrationTesting
 		}
 
 
+		TEST_METHOD(PKBEvaluatorProcedureUsesVariable)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(PROCEDURE, "p", NONE);
+			q.insertClause(Uses, PROCEDURE, "p", VARIABLE, "v", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("a");
+			expected.push_back("b");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(PROCEDURE, "p", NONE);
+			q1.insertClause(Uses, PROCEDURE, "p", VAR_IDENT, "e", false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("a");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(PROCEDURE, "p", NONE);
+			q2.insertClause(Uses, PROCEDURE, "p", VAR_IDENT, "f", false);
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+
+			Assert::AreEqual(true, (expected == result));
+		}
+
 		TEST_METHOD(PKBEvaluatorStatementNumberModifiesVariable)
 		{
 			QueryObject q;
@@ -1316,12 +1356,127 @@ namespace PKBEvaluatorIntegrationTesting
 			Assert::AreEqual(true, (expected == result));
 		}
 
+		TEST_METHOD(PKBEvaluatorProcedureModifiesVariable)
+		{
+			QueryObject q;
+
+			q.insertSelectStmt(PROCEDURE, "p", NONE);
+			q.insertClause(Modifies, PROCEDURE, "p", VARIABLE, "v", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("a");
+			expected.push_back("b");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(PROCEDURE, "p", NONE);
+			q1.insertClause(Modifies, PROCEDURE, "p", VAR_IDENT, "e", false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("a");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(PROCEDURE, "p", NONE);
+			q2.insertClause(Modifies, PROCEDURE, "p", VAR_IDENT, "f", false);
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorNextBefore)
+		{
+			QueryObject q;
+			q.insertSelectStmt(STMT, "s", NONE);
+			q.insertClause(Next, STMT, "s", INTEGER, "4", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("3");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(STMT, "s", NONE);
+			q1.insertClause(Next, STMT, "s", INTEGER, "2", false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("1");
+			expected.push_back("4");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(STMT, "s", NONE);
+			q2.insertClause(Next, STMT, "s", INTEGER, "1", false);
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+		}
+
+		TEST_METHOD(PKBEvaluatorNextAfter)
+		{
+			QueryObject q;
+			q.insertSelectStmt(STMT, "s", NONE);
+			q.insertClause(Next, INTEGER, "1", STMT, "s", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("2");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+			q1.insertSelectStmt(STMT, "s", NONE);
+			q1.insertClause(Next, INTEGER, "2", STMT, "s", false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("3");
+			expected.push_back("5");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(STMT, "s", NONE);
+			q2.insertClause(Next, INTEGER, "9", STMT, "s", false);
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+		}
+
 		TEST_METHOD(PKBEvaluatorPatternAllVarName)
 		{
 			QueryObject q;
 
 			q.insertSelectStmt(ASSIGN, "a", NONE);
-			q.insertPattern(ASSIGN, "a", ALL, "_", EXPR, "b", NONE);
+			q.insertPattern(ASSIGN, "a", ALL, "_", EXPR, "b", false);
 
 			evaluator.setQueryObject(q);
 
@@ -1472,6 +1627,7 @@ namespace PKBEvaluatorIntegrationTesting
 			expected.clear();
 			Assert::AreEqual(true, (expected == result));
 		}
+
 
 	};
 }
