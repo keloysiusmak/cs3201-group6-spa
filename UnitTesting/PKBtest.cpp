@@ -522,7 +522,10 @@ namespace PKBTest
 		{
 			PKB pkb;
 
-			pkb.insertToTable(STATEMENT_LIST_INFO_TABLE, 1, { { 1,3,4,8 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { { 0 },{ 1,2 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 2 },{ 3 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 3 },{ 4,5,6,7 },{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 4, { { 3 },{ 8 },{} });
 
 			std::vector<std::vector<int>> data;
 			std::vector<std::vector<int>> expected;
@@ -540,10 +543,7 @@ namespace PKBTest
 		{
 			PKB pkb;
 
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { { 0 },{ 1,2 },{} });
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 2 },{ 3 },{} });
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 3 },{ 4,5,6,7 },{} });
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 4, { { 3 },{ 8 },{} });
+			pkb.insertToTable(STATEMENT_LIST_INFO_TABLE, 1, { { 1,3,4,8 } });
 
 			std::vector<std::vector<int>> data;
 			std::vector<std::vector<int>> expected;
