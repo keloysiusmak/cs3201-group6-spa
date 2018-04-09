@@ -534,18 +534,18 @@ void QueryEvaluator::evaluateAffects(Clause & clause, ClauseResults & clauseResu
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
-			vector<vector<int>> results = pkb.getAffectsBefore(pkb.getProcedureId(rightParam.value));
+			vector<vector<int>> results = pkb.getAffectsBefore(stoi(rightParam.value));
 			clauseResults.setResults(results);
 		}
 	}
 	else {
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
-			vector<vector<int>> results = pkb.getAffectsAfter(pkb.getProcedureId(leftParam.value));
+			vector<vector<int>> results = pkb.getAffectsAfter(stoi(leftParam.value));
 			clauseResults.setResults(results);
 
 		}
 		else { // (concrete, conrete)
-			bool result = pkb.checkAffects(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
+			bool result = pkb.checkAffects(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
 	}
@@ -558,27 +558,27 @@ void QueryEvaluator::evaluateAffectsStar(Clause & clause, ClauseResults & clause
 	Param leftParam = clause.getLeftParam();
 	Param rightParam = clause.getRightParam();
 
-	if (Utils::isSynonym(leftParam)){
+	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results = pkb.getAllAffectsStar();
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
-			vector<vector<int>> results = pkb.getAffectsBeforeStar(pkb.getProcedureId(rightParam.value));
+			vector<vector<int>> results = pkb.getAffectsBeforeStar(stoi(rightParam.value));
 			clauseResults.setResults(results);
 		}
 	}
 	else {
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
-			vector<vector<int>> results = pkb.getAffectsAfterStar(pkb.getProcedureId(leftParam.value));
+			vector<vector<int>> results = pkb.getAffectsAfterStar(stoi(leftParam.value));
 			clauseResults.setResults(results);
 		}
 		else { // (concrete, concrete)
-			bool result = pkb.checkAffectsStar(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
+			bool result = pkb.checkAffectsStar(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
 	}
-}
+} 
 
 /* right Param: _ or IDENT or SYN */
 /* left Param: _ or exprSpec */
