@@ -845,10 +845,6 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 
 	//Add Select word
 	queryLength++;
-	
-	if (!isValidElem(queryArr, pos + queryLength, subQueryContent)) {
-		return false;
-	}
 
 	string elem = Utils::sanitise(queryArr.at(pos + queryLength));
 
@@ -1394,6 +1390,7 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 
 	vqc.push_back(subQueryContent);
 	qc.setChildren(vqc.size() - 1);
+	queryLength += 2;
 	return true;
 }
 
@@ -2602,14 +2599,21 @@ string Preprocessor::getArgValue(vector<string> queryArr, int &queryLength, int 
 		queryLength++;
 
 		if (!isValidSubQuery(queryArr, pos, queryLength, qc)) {
-			return false;
+			return EMPTY_STRING;
 		}
 
 		QueryContent tempQueryContent = vqc.at(vqc.size() - 1);
 		Param tempSelectStmt = tempQueryContent.getSelect().at(0);
 
-		if (!relTable.isValidLeftArg(relationshipKey, tempSelectStmt.type)) {
-			return false;
+		if (paramPos == LEFT_PARAM) {
+			if (!relTable.isValidLeftArg(relationshipKey, tempSelectStmt.type)) {
+				return EMPTY_STRING;
+			}
+		}
+		else {
+			if (!relTable.isValidRightArg(relationshipKey, tempSelectStmt.type)) {
+				return EMPTY_STRING;
+			}
 		}
 
 		insertSubQueryMap(vqc.size() - 1, nodeType,
