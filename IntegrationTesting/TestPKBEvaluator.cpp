@@ -116,6 +116,8 @@ namespace PKBEvaluatorIntegrationTesting
 			pkb.insertToTable(CALLS_STAR_TABLE, 1, { { 2 } });
 			pkb.insertToTable(CALLS_STAR_INVERSE_TABLE, 2, { { 1 } });
 
+			pkb.insertToTable(CALL_STATEMENT_TABLE, 4, { {2} });
+
 			pkb.insertToNameTable(PATTERN_TABLE, { "a", "b|" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "a" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "b", "a|" });
@@ -1760,7 +1762,7 @@ namespace PKBEvaluatorIntegrationTesting
 			list<string> expected;
 			std::vector<std::vector<int>> expect = pkb.getCallsAfter(1);
 			for (std::vector<int> r : expect) {
-				expected.push_back(pkb.getProcedureName(r[0]));
+expected.push_back(pkb.getProcedureName(r[0]));
 			}
 			expected.sort();
 			Assert::AreEqual(true, (expected == result));
@@ -1860,6 +1862,64 @@ namespace PKBEvaluatorIntegrationTesting
 			Assert::AreEqual(true, (result.front() == "false"));
 		}
 
+		TEST_METHOD(PKBEvaluatorGetCallStatementsCallingProcedure){
+			QueryObject q;
+			q.insertSelectStmt(CALL, "c", NONE);
+			q.insertWithClause(CALL, "c", PROCNAME, PROC_IDENT, "b", NONE, false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+
+			result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back({ "2" });
+			Assert::AreEqual(true, (result == expected));
+		}
+		TEST_METHOD(PKBEvaluatorGetProcedureCalledByCallStatement) {
+			QueryObject q;
+			q.insertSelectStmt(PROCEDURE, "p", NONE);
+			q.insertWithClause(CALL, "c", PROCNAME, PROCEDURE, "p", PROCNAME, false);
+			q.insertWithClause(CALL, "c", STMT_NO, INTEGER, "4", NONE, false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+
+			list<string> expected;
+			expected.push_back({ "b" });
+			Assert::AreEqual(true, (result == expected));
+
+		}
+		TEST_METHOD(PKBEvaluatorGetAllCallStatementsCallingProcedure) {
+			QueryObject q;
+			q.insertSelectStmt(CALL, "c", NONE);
+			q.insertSelectStmt(PROCEDURE, "p", NONE);
+			q.insertWithClause(CALL, "c", PROCNAME, PROCEDURE, "p", PROCNAME, false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+
+			list<string> expected;
+			expected.push_back({ "4 b" });
+			Assert::AreEqual(true, (result == expected));
+		}
+		TEST_METHOD(PKBEvaluatorGetAllProcedureCalledByCallStatement) {
+			QueryObject q;
+			q.insertSelectStmt(PROCEDURE, "p", NONE);
+			q.insertSelectStmt(CALL, "c", NONE);
+			q.insertWithClause(PROCEDURE, "p", PROCNAME, CALL, "c", PROCNAME, false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+
+			list<string> expected;
+			expected.push_back({ "b 4" });
+			Assert::AreEqual(true, (result == expected));
+		}
+
 		TEST_METHOD(PKBEvaluatorAffectsBefore)
 		{
 			QueryObject q;
@@ -1926,7 +1986,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			list<string> result = evaluator.evaluateQuery();
 			list<string> expected;
-			std::vector<std::vector<int>> expect = pkb.getAffectsBeforeStar(1);
+			std::vector<std::vector<int>> expect = pkb.getAffectsBeforeStar(3);
 			for (std::vector<int> r : expect) {
 				expected.push_back(to_string(r[0]));
 			}
@@ -1954,7 +2014,7 @@ namespace PKBEvaluatorIntegrationTesting
 
 			list<string> result = evaluator.evaluateQuery();
 			list<string> expected;
-			std::vector<std::vector<int>> expect = pkb.getAffectsAfter(3);
+			std::vector<std::vector<int>> expect = pkb.getAffectsAfter(1);
 			for (std::vector<int> r : expect) {
 				expected.push_back(to_string(r[0]));
 			}
