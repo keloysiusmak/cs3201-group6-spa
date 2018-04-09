@@ -399,8 +399,7 @@ void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
-			int variableId = pkb.getVariableId(rightParam.value);
-			vector<vector<int>> results = pkb.getNextBefore(variableId); //check PKB API
+			vector<vector<int>> results = pkb.getNextBefore(stoi(rightParam.value)); //check PKB API
 			clauseResults.setResults(results);
 		}
 	}
