@@ -827,6 +827,38 @@ bool Preprocessor::isValidQuery(string query) {
 	return true;
 };
 
+bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryLength, QueryContent &qc) {
+
+	QueryContent subQueryContent;
+
+	//Check for Select word
+	if (pos + queryLength >= queryArr.size() || queryArr.at(pos + queryLength).compare(SELECT_WORD) != 0) {
+		return false;
+	}
+
+	//Add Select word
+	queryLength++;
+
+	//Check for Synonym or Synonym.attribute
+	string elem = Utils::sanitise(queryArr.at(pos + queryLength));
+
+	if (isValidAttrRef(elem)) {
+		vector<string> attrRef = Utils::split(elem, SYMBOL_FULL_STOP);
+
+		if (!isDeclarationSynonymExist(attrRef.at(0))) {
+			return false;
+		}
+
+		auto searchSynonym = declarationMap.find(attrRef.at(0));
+		auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
+
+		if (!isValidAttrName(searchDeclareType->second, attrRef.at(1))) {
+			return false;
+		}
+	}
+	
+}
+
 bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, int &queryLength, int pos, QueryContent &qc) {
 	
 	stack<char> operators;
@@ -1169,6 +1201,12 @@ bool Preprocessor::isValidClause(vector<string> queryArr, int &clauseLength, int
 
 	//Add Open Bracket
 	clauseLength++;
+
+	//Check for subquery LHS, first check for open bracket
+	if ((pos + clauseLength) >= queryArr.size() && queryArr.at(pos + clauseLength).at(0) == SYMBOL_OPEN_BRACKET) {
+
+	}
+
 
 	//Add all the left Param
 	string leftArg = retrieveParamFromQuery(queryArr, clauseLength, pos, string(1, SYMBOL_COMMA));

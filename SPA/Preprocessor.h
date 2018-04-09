@@ -39,6 +39,7 @@ public:
 	void preprocessQuery(string query);
 	bool isValidDeclaration(string declaration);
 	bool isValidQuery(string query);
+	bool isValidSubQuery(vector<string> queryArr, int pos, int &queryLength, QueryContent &qc);
 	bool isValidSynonym(string synonym);
 	bool isValidIdent(string ident);
 	bool isValidStmtRef(string stmtRef);
