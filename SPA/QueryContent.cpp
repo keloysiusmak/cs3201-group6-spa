@@ -83,7 +83,7 @@ void QueryContent::insertOperator(CLAUSE_NODE_TYPE nodeRef, OPERATORS op) {
 	break;
 	}
 }
-void QueryContent::setChildren(QueryContent * vqc) {
+void QueryContent::setChildren(int vqc) {
 	children.push_back(vqc);
 }
 vector<Param> QueryContent::getSelect() {
@@ -152,7 +152,7 @@ void QueryContent::setNegation(CLAUSE_NODE_TYPE nodeRef, int nodePosition) {
 	}
 }
 
-vector<QueryContent *> QueryContent::getChildren() {
+vector<int> QueryContent::getChildren() {
 	return children;
 }
 void QueryContent::setClause(vector<ClauseNode> c) {

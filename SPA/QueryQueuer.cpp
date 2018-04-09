@@ -396,16 +396,14 @@ list<string> QueryQueuer::evaluateQueries() {
 		std::vector<std::vector<int>> paramList;
 		if (dependencies == 0) loops = 1;
 		else {
-			std::vector<QueryContent *> children = thisQc.getChildren();
+			std::vector<int> children = thisQc.getChildren();
 
 			loops = 1;
 			for (int j = 0; j < children.size(); j++) {
-				auto it = std::find(children.begin(), children.end(), children[j]);
-				auto index = std::distance(children.begin(), it);
 
-				list<string> result = dependencyTable[index];
+				list<string> result = dependencyTable[children[j]];
 				resultList.push_back(result);
-				std::vector<int> param = subQueryMapping[index];
+				std::vector<int> param = subQueryMapping[children[j]];
 				paramList.push_back(param);
 				loops *= result.size();
 			}
@@ -464,16 +462,15 @@ std::vector<int> QueryQueuer::sortQueryContent() {
 	Graph g(qc.size());
 
 	for (int i = 0; i < qc.size(); i++) {
-		std::vector<QueryContent *> children = qc[i].getChildren();
+		std::vector<int> children = qc[i].getChildren();
 
 		for (int j = 0; j < children.size(); j++) {
-			auto it = std::find(children.begin(), children.end(), children[j]);
-			auto index = std::distance(children.begin(), it);
-			g.addEdge(i, index);
+			g.addEdge(i, children[j]);
 		}
 	}
 
 	std::vector<int> sorted = g.topologicalSort();
+	std::reverse(sorted.begin(), sorted.end());
 	return sorted;
 }
 std::vector<QueryContent> QueryQueuer::convertSortedToQC(std::vector<int> sorted) {
