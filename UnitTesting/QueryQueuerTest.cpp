@@ -1,9 +1,8 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../SPA/PKB.h"
-#include "../SPA/Pattern.h"
 #include "../SPA/QueryQueuer.h";
-#include "../SPA/Constants.h";
+#include "../SPA/QueryEvaluator.h";
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
@@ -252,25 +251,47 @@ namespace QueryQueuerTesting
 
 			vqc.push_back(qc1);
 			qq.setQueryContent(vqc);
-			vqc = qq.sortQueryContent();
+			vqc = qq.convertSortedToQC(qq.sortQueryContent());
 			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc1, vqc[0]));
 
 			vqc.clear();
-			qc1.setChildren(&qc2);
-			qc1.setChildren(&qc3);
-			qc3.setChildren(&qc4);
+			qc1.setChildren(1);
+			qc1.setChildren(2);
+			qc3.setChildren(3);
 			vqc.push_back(qc1);
 			vqc.push_back(qc2);
 			vqc.push_back(qc3);
 			vqc.push_back(qc4);
 
 			qq.setQueryContent(vqc);
-			vqc = qq.sortQueryContent();
-			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc4, vqc[0]));
-			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc3, vqc[1]));
-			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc2, vqc[2]));
+			vqc = qq.convertSortedToQC(qq.sortQueryContent());
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc2, vqc[0]));
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc4, vqc[1]));
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc3, vqc[2]));
 			Assert::AreEqual(true, Utils::compareQueryContentProperties(qc1, vqc[3]));
 
+		}
+
+		TEST_METHOD(QueryQueuerReplaceClauseNode)
+		{
+			QueryQueuer qq;
+			QueryContent qc1;
+			qc1.insertClause(Modifies, VARIABLE, "x", VARIABLE, "y1", false);
+
+			QueryContent expectedQc1;
+			expectedQc1.insertClause(Modifies, VARIABLE, "x", VARIABLE, "y1", false);
+			Assert::AreEqual(true, Utils::compareClauseNode(qc1.getClauses()[0], expectedQc1.getClauses()[0]));
+
+			QueryContent outputQc2a = qq.replaceClauseNode(qc1, REPLACE_CLAUSE, 0, LEFT_PARAM, "z");
+			QueryContent outputQc2b = qq.replaceClauseNode(qc1, REPLACE_CLAUSE, 0, RIGHT_PARAM, "y2");
+
+			QueryContent expectedQc2a;
+			expectedQc2a.insertClause(Modifies, VARIABLE, "z", VARIABLE, "y1", false);
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(expectedQc2a, outputQc2a));
+
+			QueryContent expectedQc2b;
+			expectedQc2b.insertClause(Modifies, VARIABLE, "x", VARIABLE, "y2", false);
+			Assert::AreEqual(true, Utils::compareQueryContentProperties(expectedQc2b, outputQc2b));
 		}
 
 
