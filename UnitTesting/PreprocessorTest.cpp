@@ -157,10 +157,16 @@ public:
 		string query66 = "Select a such that not (((Affects*(5,5) and Next*(8,1)) or Parent(5,6)) or Calls(p, \"first\"))";
 		string query67 = "Select a such that not (( not (Affects*(5,5) and Next*(8,1)) or Parent(5,6)) or Calls(p, \"first\"))";
 		
+		//Query with pattern and or not
+		string query68 = "Select a pattern (a(v, \"x	+     y - z\") or w(v, _)) and not (a(v, \"x	+     y - z\") and w(v, _))";
+
 		//Query with SubQuery
-		string query68 = "Select a such that Uses((Select s such that Parent(5,6)), \"x\")";
-		string query69 = "Select a such that Uses(3, (Select v such that Parent(5,6)))";
-		string query70 = "Select a such that Uses((Select s such that Parent(5,6)), (Select v such that Parent(5,6)))";
+		string query69 = "Select a such that Uses((Select s such that Parent(5,6)), \"x\")";
+		string query70 = "Select a such that Uses(3, (Select v such that Parent(5,6)))";
+		string query71 = "Select a such that Uses((Select s such that Parent(5,6)), (Select v such that Parent(5,6)))";
+		string query72 = "Select a pattern a((Select v such that Parent(5,6)), \"x	+     y - z\")";
+		string query73 = "Select a pattern a(_, (Select v such that Parent(5,6)))";
+		string query74 = "Select a pattern a((Select v such that Parent(5,6)), (Select v such that Parent(5,6)))";
 
 		string invalidQuery1 = "Selecta"; //Must have space in between select and a
 		string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
@@ -251,6 +257,10 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query68));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query69));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query70));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query71));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query72));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query73));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query74));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
