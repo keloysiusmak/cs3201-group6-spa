@@ -18,8 +18,8 @@ public:
 
 		TEST_CLASS_INITIALIZE(setup) {
 			pkb.insertToTable(STATEMENT_TABLE, 1, { { 1 },{ 1,2,3,4,5 },{ 1,2 },{ 2 } });
-			pkb.insertToTable(STATEMENT_TABLE, 2, { { 2 },{ 1,2,3 },{ 1 },{ 1 } });
-			pkb.insertToTable(STATEMENT_TABLE, 3, { { 2 },{ 4,5 },{ 2 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 2 },{ 1,2,3 },{ 4 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 2 },{ 4,5 },{ 1 },{ 1 } });
 			pkb.insertToTable(STATEMENT_TABLE, 4, { { 2 },{  },{  },{ 4 } });
 
 			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { { 0 },{ 1 },{ 1 } });
@@ -33,7 +33,8 @@ public:
 
 			pkb.insertToTable(PROC_INFO_TABLE, 1, { {1}, {1,2,3,4,5}, {1} });
 
-			pkb.insertToTable(MODIFIES_TABLE, 1, { { 2,3 },{ 1 } });
+			pkb.insertToTable(MODIFIES_TABLE, 1, { { 3 },{ 1 } });
+			pkb.insertToTable(MODIFIES_TABLE, 4, { { 2 },{ 1 } });
 
 			pkb.insertToTable(CALLS_TABLE, 1, { { 2 },{  } });
 			pkb.insertToTable(CALLS_TABLE, 2, { {  },{4} });
@@ -91,7 +92,6 @@ public:
 			qq.setQueryContent(vqc);
 			result = qq.evaluateQueries();
 			expected.clear();
-			expected.push_back("2");
 			expected.push_back("3");
 			Assert::AreEqual(true, (result == expected));
 
@@ -222,7 +222,6 @@ public:
 			qq.setQueryContent(vqc);
 			result = qq.evaluateQueries();
 			expected.clear();
-			expected.push_back("2");
 			expected.push_back("3");
 			Assert::AreEqual(true, (result == expected));
 
@@ -239,15 +238,27 @@ public:
 			Assert::AreEqual(true, (result == expected));
 
 			QueryContent qc15;
-			qc15.insertSelect(ASSIGN, "a1", NONE);
-			qc15.insertSelect(ASSIGN, "a2", NONE);
-			qc15.insertClause(Next, ASSIGN, "a1", ASSIGN, "a2", false);
+			qc15.insertSelect(ASSIGN, "a", NONE);
+			qc15.insertClause(AffectsT, ASSIGN, "a", INTEGER, "2", false);
 			vqc.clear();
 			vqc.push_back(qc15);
 			qq.setQueryContent(vqc);
 			result = qq.evaluateQueries();
 			expected.clear();
-			expected.push_back("2 2");
+			expected.push_back("2");
+			expected.push_back("3");
+			Assert::AreEqual(true, (result == expected));
+
+			QueryContent qc16;
+			qc16.insertSelect(ASSIGN, "a1", NONE);
+			qc16.insertSelect(ASSIGN, "a2", NONE);
+			qc16.insertClause(Affects, ASSIGN, "a1", ASSIGN, "a2", false);
+			vqc.clear();
+			vqc.push_back(qc16);
+			qq.setQueryContent(vqc);
+			result = qq.evaluateQueries();
+			expected.clear();
+			expected.push_back("2 3");
 			expected.push_back("3 2");
 			Assert::AreEqual(true, (result == expected));
 		}
