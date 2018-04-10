@@ -1593,8 +1593,8 @@ std::vector<std::vector<int>> PKB::getAffectsBefore(int stmt) {
 			std::vector<std::vector<int>> thisStmtModifies = PKB::getModifiesVariablesFromStatement(nextStmt);
 			std::vector<int> newModifiableVariables;
 			if (modifiableVariables.size() > 0) {
-				if (thisStmtModifies.size() > 0) {
-					for (int i = 0; i < modifiableVariables.size(); i++) {
+				for (int i = 0; i < modifiableVariables.size(); i++) {
+					if (thisStmtModifies.size() > 0) {
 						if (thisStmtModifies[0][0] == modifiableVariables[i] && (!PKB::checkStatementHasType(nextStmt, 2)) && (!PKB::checkStatementHasType(nextStmt, 3))) {
 							if (PKB::checkStatementHasType(nextStmt, 1)) {
 								data.push_back({ nextStmt });
@@ -1603,6 +1603,9 @@ std::vector<std::vector<int>> PKB::getAffectsBefore(int stmt) {
 						else {
 							newModifiableVariables.push_back(modifiableVariables[i]);
 						}
+					}
+					else {
+						newModifiableVariables.push_back(modifiableVariables[i]);
 					}
 				}
 				std::vector<std::vector<int>> thisNext = PKB::getNextBefore(nextStmt);
@@ -1727,8 +1730,8 @@ std::vector<std::vector<int>> PKB::getAffectsBeforeStar(int stmt) {
 			std::vector<std::vector<int>> thisStmtModifies = PKB::getModifiesVariablesFromStatement(nextStmt);
 			std::vector<int> newModifiableVariables;
 			if (modifiableVariables.size() > 0) {
-				if (thisStmtModifies.size() > 0) {
-					for (int i = 0; i < modifiableVariables.size(); i++) {
+				for (int i = 0; i < modifiableVariables.size(); i++) {
+					if (thisStmtModifies.size() > 0) {
 						if (thisStmtModifies[0][0] == modifiableVariables[i] && (!PKB::checkStatementHasType(nextStmt, 2)) && (!PKB::checkStatementHasType(nextStmt, 3))) {
 							if (PKB::checkStatementHasType(nextStmt, 1)) {
 								data.push_back({ nextStmt });
@@ -1743,6 +1746,9 @@ std::vector<std::vector<int>> PKB::getAffectsBeforeStar(int stmt) {
 						else {
 							newModifiableVariables.push_back(modifiableVariables[i]);
 						}
+					}
+					else {
+						newModifiableVariables.push_back(modifiableVariables[i]);
 					}
 				}
 				std::vector<std::vector<int>> thisNext = PKB::getNextBefore(nextStmt);

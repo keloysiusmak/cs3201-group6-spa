@@ -171,5 +171,93 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 				queryQueuer.setInvalidQuery(preprocessor.getErrorMessage());
 				Assert::AreNotEqual(true, queryQueuer.isValidQuery());
 			}
+
+			//This test method will take in an actual test query
+			//and validate & deconstruct the query into a QueryObject.
+			//Once the QueryObject is ready, it will be passed to Evaluator
+			TEST_METHOD(PreprocessorEvaluatorValidPreprocessQuerySubQuery) {
+
+				std::vector<QueryContent> vqc;
+
+				string query1 = "assign a; if ifs; Select a such that Follows(a,(Select ifs such that Uses(ifs, \"x\"))";
+				
+				QueryObject expectedQo1a;
+				expectedQo1a.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo1a.insertClause(Follows, ASSIGN, "a", INTEGER, "1", false);
+
+				QueryObject expectedQo1b;
+				expectedQo1b.insertSelectStmt(IF, "ifs", NONE);
+				expectedQo1b.insertClause(Uses, IF, "ifs", VAR_IDENT, "x", false);
+
+				std::vector<QueryObject> vqo;
+				vqo.push_back(expectedQo1b);
+				vqo.push_back(expectedQo1a);
+
+				preprocessor.preprocessQuery(query1);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result1 = Utils::compareQueryObjectProperties(vqo[i], q[0]);
+					Assert::AreEqual(true, result1);
+				}
+
+				string query2 = "assign a; if ifs; Select a such that Follows((Select a such that Modifies(a, \"y\")),(Select ifs such that Uses(ifs, \"x\")))";
+
+				QueryObject expectedQo2a;
+				expectedQo2a.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo2a.insertClause(Follows, INTEGER, "1", INTEGER, "1", false);
+
+				QueryObject expectedQo2b;
+				expectedQo2b.insertSelectStmt(IF, "ifs", NONE);
+				expectedQo2b.insertClause(Uses, IF, "ifs", VAR_IDENT, "x", false);
+
+				QueryObject expectedQo2c;
+				expectedQo2c.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo2c.insertClause(Modifies, ASSIGN, "a", VAR_IDENT, "y", false);
+
+				vqo.clear();
+				vqo.push_back(expectedQo2c);
+				vqo.push_back(expectedQo2b);
+				vqo.push_back(expectedQo2a);
+
+				preprocessor.preprocessQuery(query2);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result2 = Utils::compareQueryObjectProperties(vqo[i], q[0]);
+					Assert::AreEqual(true, result2);
+				}
+
+				string query3 = "assign a; if ifs; Select a such that Follows(1,(Select ifs such that Uses((Select a such that Modifies(a, \"y\")), \"x\")))";
+
+				QueryObject expectedQo3a;
+				expectedQo3a.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo3a.insertClause(Follows, INTEGER, "1", INTEGER, "1", false);
+
+				QueryObject expectedQo3b;
+				expectedQo3b.insertSelectStmt(IF, "ifs", NONE);
+				expectedQo3b.insertClause(Uses, INTEGER, "1", VAR_IDENT, "x", false);
+
+				QueryObject expectedQo3c;
+				expectedQo3c.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo3c.insertClause(Modifies, ASSIGN, "a", VAR_IDENT, "y", false);
+
+				vqo.clear();
+				vqo.push_back(expectedQo3c);
+				vqo.push_back(expectedQo3b);
+				vqo.push_back(expectedQo3a);
+
+				preprocessor.preprocessQuery(query3);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result3 = Utils::compareQueryObjectProperties(vqo[i], q[0]);
+					Assert::AreEqual(true, result3);
+				}
+
+			}
 	};
 }
