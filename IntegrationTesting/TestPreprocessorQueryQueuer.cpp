@@ -171,5 +171,37 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 				queryQueuer.setInvalidQuery(preprocessor.getErrorMessage());
 				Assert::AreNotEqual(true, queryQueuer.isValidQuery());
 			}
+
+			//This test method will take in an actual test query
+			//and validate & deconstruct the query into a QueryObject.
+			//Once the QueryObject is ready, it will be passed to Evaluator
+			TEST_METHOD(PreprocessorEvaluatorValidPreprocessQuerySubQuery) {
+
+				std::vector<QueryContent> vqc;
+
+				string query1 = "assign a; if ifs; Select a such that Follows(a,(Select ifs such that Uses(ifs, \"x\"))";
+				
+				QueryObject expectedQo1a;
+				expectedQo1a.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo1a.insertClause(Follows, ASSIGN, "a", INTEGER, "1", false);
+
+				QueryObject expectedQo1b;
+				expectedQo1b.insertSelectStmt(IF, "ifs", NONE);
+				expectedQo1b.insertClause(Uses, IF, "ifs", VAR_IDENT, "x", false);
+
+				std::vector<QueryObject> vqo;
+				vqo.push_back(expectedQo1b);
+				vqo.push_back(expectedQo1a);
+
+				preprocessor.preprocessQuery(query1);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result1 = Utils::compareQueryObjectProperties(vqo[i], q[0]);
+					Assert::AreEqual(true, result1);
+				}
+
+			}
 	};
 }
