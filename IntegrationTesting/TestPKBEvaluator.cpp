@@ -121,10 +121,10 @@ namespace PKBEvaluatorIntegrationTesting
 			pkb.insertToNameTable(PATTERN_TABLE, { "a", "b|" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "a" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "b", "a|" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "d", "7|" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "a" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "e" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "c", "4|" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "c", "4|b|+|x|a|*|+" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "d", "1|" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "e", "1|" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "a", "b|" });
@@ -2129,6 +2129,7 @@ expected.push_back(pkb.getProcedureName(r[0]));
 			list<string> expected;
 			expected.push_back("1");
 			expected.push_back("10");
+			expected.push_back("7");
 			Assert::AreEqual(true, (expected == result));
 
 			QueryObject q1;
@@ -2267,6 +2268,55 @@ expected.push_back(pkb.getProcedureName(r[0]));
 			q2.insertPattern(ASSIGN, "a", VAR_IDENT, "a", EXPR_EXACT, "13|", false);
 
 			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+		}
+
+
+		TEST_METHOD(PKBEvaluatorPatternString)
+		{
+			QueryObject q;
+			q.insertSelectStmt(ASSIGN, "a", NONE);
+			q.insertPattern(ASSIGN, "a", VAR_IDENT, "c", EXPR, "4|b|+|", false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+			list<string> expected;
+			expected.push_back("7");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q1;
+
+			q1.insertSelectStmt(ASSIGN, "a", NONE);
+			q1.insertPattern(ASSIGN, "a", ALL, "_", EXPR, "x|a|*|", false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			expected.push_back("7");
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q2;
+
+			q2.insertSelectStmt(ASSIGN, "a", NONE);
+			q2.insertPattern(ASSIGN, "a", VAR_IDENT, "c", EXPR, "b|4|+|", false);
+
+			evaluator.setQueryObject(q2);
+
+			result = evaluator.evaluateQuery();
+			expected.clear();
+			Assert::AreEqual(true, (expected == result));
+
+			QueryObject q3;
+
+			q3.insertSelectStmt(ASSIGN, "a", NONE);
+			q3.insertPattern(ASSIGN, "a", VAR_IDENT, "c", EXPR_EXACT, "4|b|+|x|+|", false);
+
+			evaluator.setQueryObject(q3);
 
 			result = evaluator.evaluateQuery();
 			expected.clear();
