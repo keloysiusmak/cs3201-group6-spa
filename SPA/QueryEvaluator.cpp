@@ -475,18 +475,18 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
-			vector<vector<int>> results = pkb.getCallsBefore(pkb.getProcedureId(rightParam.value));
+			vector<vector<int>> results = pkb.getCallsBefore(stoi(rightParam.value));
 			clauseResults.setResults(results);
 		}
 	}
 	else {
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
-			vector<vector<int>> results = pkb.getCallsAfter(pkb.getProcedureId(leftParam.value));
+			vector<vector<int>> results = pkb.getCallsAfter(stoi(leftParam.value));
 			clauseResults.setResults(results);
 
 		}
 		else { // (concrete, conrete)
-			bool result = pkb.checkCalls(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
+			bool result = pkb.checkCalls(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
 	}
@@ -505,17 +505,17 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
-			vector<vector<int>> results = pkb.getCallsBeforeStar(pkb.getProcedureId(rightParam.value));
+			vector<vector<int>> results = pkb.getCallsBeforeStar(stoi(rightParam.value));
 			clauseResults.setResults(results);
 		}
 	}
 	else {
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
-			vector<vector<int>> results = pkb.getCallsAfterStar(pkb.getProcedureId(leftParam.value));
+			vector<vector<int>> results = pkb.getCallsAfterStar(stoi(leftParam.value));
 			clauseResults.setResults(results);
 		}
 		else { // (concrete, concrete)
-			bool result = pkb.checkCallsStar(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
+			bool result = pkb.checkCallsStar(stoi(leftParam.value), stoi(rightParam.value));
 			clauseResults.setValid(result);
 		}
 	}
