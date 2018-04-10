@@ -133,6 +133,7 @@ namespace PKBOptimizationIntegrationTesting {
 			Param param;
 			param.type = type;
 			param.value = value;
+			param.attribute = NONE;
 			return param;
 		};
 
@@ -161,7 +162,9 @@ namespace PKBOptimizationIntegrationTesting {
 			vector<Clause> expected;
 			expected.push_back(clause2);
 			expected.push_back(clause1);
-			Assert::AreEqual(true, (expected == result));
+			for (int i = 0; i < result.size(); i++) {
+				Assert::AreEqual(true, Utils::compareClause(expected[i], result[i]));
+			}
 
 			QueryObject qo1;
 			vector<Clause> groupedClauses1;
@@ -186,7 +189,9 @@ namespace PKBOptimizationIntegrationTesting {
 			vector<Clause> expected1;
 			expected.push_back(clause3);
 			expected.push_back(clause4);
-			Assert::AreEqual(true, (expected1 == result1));
+			for (int i = 0; i < result1.size(); i++) {
+				Assert::AreEqual(true, Utils::compareClause(expected1[i], result1[i]));
+			}
 		}
 	};
 }
