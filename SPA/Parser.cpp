@@ -83,10 +83,9 @@ queue<string> Parser::getRPN(queue<string> expr)
 			//operator follows a valid factor or close bracket
 			parseOperator();
 		}
-		/*
 		else {
-		throw InvalidExpressionException("Invalid Expression!");
-		}*/
+			throw InvalidExpressionException("Invalid Expression!");
+		}
 		previousWord = word;
 	}
 
@@ -115,7 +114,7 @@ void Parser::parseFactor()
 
 void Parser::parseOperator()
 {
-	//while there is an operator token, o2, at the top of the operator stack and the current operator o1 has precedence less than that of o2,
+	//while there is an operator token, o2, at the top of the operator stack and the current operator o1 has precedence less than or equal that of o2,
 	while (!operationStack.empty() && Utils::isValidOperator(operationStack.top()) && UtilsConstants::OPERATOR_PRIORITIES.at(word) <= UtilsConstants::OPERATOR_PRIORITIES.at(operationStack.top())) {
 		//then pop o2 off the operator stack, onto the output queue;
 		expressionQueue.push(operationStack.top() + "|");
