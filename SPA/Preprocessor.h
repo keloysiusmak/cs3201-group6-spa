@@ -35,6 +35,9 @@ private:
 	string getArgValue(vector<string> queryArr, int &queryLength, int pos, 
 		string relationshipKey, CLAUSE_NODE_TYPE nodeType, CLAUSE_LEFT_OR_RIGHT paramPos, 
 		string endPoint, QueryContent &qc);
+	string getExpressionValue(vector<string> queryArr, int &queryLength, int pos,
+		string relationshipKey, CLAUSE_NODE_TYPE nodeType, CLAUSE_LEFT_OR_RIGHT paramPos,
+		string endPoint, QueryContent &qc);
 public:
 	Preprocessor();
 	void insertDeclarationToMap(string synonym, string declaration);
