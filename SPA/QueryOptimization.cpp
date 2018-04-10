@@ -339,19 +339,22 @@ map<int, vector<Clause>> QueryOptimization::numConstantsGroupClauses(vector<Clau
 
 		if (Utils::isSynonym(leftParam)) {
 			if (Utils::isSynonym(rightParam)) { //2 synonyms
-				finalGroupedClauses[1].push_back(clause);
+				finalGroupedClauses[2].push_back(clause);
 			}
 			else { //only leftParam is synonym
-				finalGroupedClauses[0].push_back(clause);
+				finalGroupedClauses[1].push_back(clause);
 			}
 		}
 		else if (Utils::isSynonym(rightParam)) {
 			if (Utils::isSynonym(leftParam)) { //2 synonyms
-				finalGroupedClauses[1].push_back(clause);
+				finalGroupedClauses[2].push_back(clause);
 			}
 			else { //only rightParam is synonym
-				finalGroupedClauses[0].push_back(clause);
+				finalGroupedClauses[1].push_back(clause);
 			}
+		}
+		else {
+			finalGroupedClauses[0].push_back(clause);
 		}
 	}
 		return finalGroupedClauses;
