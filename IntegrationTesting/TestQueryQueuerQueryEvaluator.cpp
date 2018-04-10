@@ -21,9 +21,11 @@ public:
 			pkb.insertToTable(STATEMENT_TABLE, 2, { { 2 },{ 1,2,3 },{ 4 },{ 1 } });
 			pkb.insertToTable(STATEMENT_TABLE, 3, { { 2 },{ 4,5 },{ 1 },{ 1 } });
 			pkb.insertToTable(STATEMENT_TABLE, 4, { { 2 },{  },{  },{ 4 } });
+			pkb.insertToTable(STATEMENT_TABLE, 5, { { 3 },{},{},{ 1 } });
 
 			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { { 0 },{ 1 },{ 1 } });
 			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 1 },{ 2,3,4 },{ 1 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 0 },{ 5 },{ 2 } });
 
 			pkb.insertToTable(USES_TABLE, 1, { { 1,2 },{ 1 } });
 			pkb.insertToTable(USES_TABLE, 2, { { 2 },{ 1 } });
@@ -32,6 +34,7 @@ public:
 			pkb.insertToTable(USES_TABLE, 5, { { 3 },{ 1 } });
 
 			pkb.insertToTable(PROC_INFO_TABLE, 1, { {1}, {1,2,3,4,5}, {1} });
+			pkb.insertToTable(PROC_INFO_TABLE, 2, { { 3 },{ },{ } });
 
 			pkb.insertToTable(MODIFIES_TABLE, 1, { { 3 },{ 1 } });
 			pkb.insertToTable(MODIFIES_TABLE, 4, { { 2 },{ 1 } });
