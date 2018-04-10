@@ -1,0 +1,60 @@
+1 - 
+stmt s1; assign a1; if ifs1;
+Select s1 such that Follows(s1, a1) or Follows(s1, ifs1)
+
+5000
+2 - 
+stmt s1; assign a1; if ifs1;
+Select s1 such that Follows(s1, a1) or Parent(ifs1, s1) and Affects* (4,31)
+
+5000
+3 - 
+stmt s1; variable v;
+Select s1 such that (Follows(s1, 15) or Calls("First", "Second")) and (Next* (13,15) or Uses("First", v)
+
+5000
+3 - 
+stmt s1; variable v; assign a1, a2;
+Select s1 such that ((Parent*(s1, a1) or Modifies("Second", v)) and Calls("First", "Second")) and (Next* (13,15) or Uses("First", v) such that Next*(3,5) and Affects(a1, a2)
+
+5000
+4 - 
+if ifs; variable v; assign a;
+Select v pattern ifs(v, _, _) or a(v, _"x"_)
+
+5000
+5 - 
+if ifs; variable v; assign a; 
+Select v pattern ifs(v, _, _) and (a(v, _"x"_) or a(v,_"y"_))
+
+5000
+6 - 
+if ifs; variable v; assign a; while w;
+Select w pattern (w("a", _) or ifs(v, _, _)) and (a(v, _"x"_) or a(v,_"y"_))
+
+5000
+7 - 
+if ifs; variable v; assign a;
+Select v pattern (a(v, "x") or w("a", _) or ifs(v, _, _)) and (a(v, _"x"_) or a(v,_"y"_))
+
+5000
+8 - 
+if ifs; constant c; assign a;
+Select c with a.stmt# = c.value or if.stmt# = c.value
+
+5000
+9 - 
+if ifs; constant c; assign a; call cl; procedure p;
+Select c with a.stmt# = c.value and (if.stmt# = c.value or cl.procName = p.procName)
+
+5000
+10 - 
+if ifs; constant c; assign a; call cl; procedure p;
+Select c with (p.procName = v.varName or a.stmt# = c.value) and (if.stmt# = c.value or cl.procName = p.procName)
+
+5000
+11 - 
+if ifs; constant c; assign a; call cl;
+Select c with a.stmt# = c.value or if.stmt# = c.value and w.stmt# = c.value and cl.stmt# = c.value
+
+5000
