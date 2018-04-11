@@ -167,6 +167,9 @@ public:
 		string query72 = "Select a pattern a((Select v such that Parent(5,6)), \"x	+     y - z\")";
 		string query73 = "Select a pattern a(_, (Select v such that Parent(5,6)))";
 		string query74 = "Select a pattern a((Select v such that Parent(5,6)), (Select v such that Parent(5,6)))";
+		string query75 = "Select a with (Select v such that Parent(5,6)) = \"x\" ";
+		string query76 = "Select a with 3 = (Select c.value such that Parent(5,6)) ";
+		string query77 = "Select a with (Select v.varName such that Affects*(5,5)) = (Select c1.procName such that Parent(5,6)) ";
 
 		string invalidQuery1 = "Selecta"; //Must have space in between select and a
 		string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
@@ -261,6 +264,9 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query72));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query73));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query74));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query75));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query76));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query77));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
