@@ -3288,6 +3288,25 @@ namespace PKBTest
 
 		}
 
+		TEST_METHOD(PKBGetProceduresWithConstant)
+		{
+			PKB pkb;
+
+			std::vector<std::vector<int>> initial_data;
+
+			/* Null Tests */
+			Assert::AreEqual(true, (pkb.getProceduresWithConstant(1) == initial_data));
+
+			pkb.insertToTable(CONST_TABLE, 1, { { 1 } });
+			pkb.insertToTable(PROC_INFO_TABLE, 4, { { 1 },{},{} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { { 0 },{ 1, 2 },{ 4 } });
+			pkb.insertToTable(STATEMENT_TABLE, 1, { { 1 },{},{},{ 1 } });
+			std::vector<std::vector<int>> data = { { 4 } };
+			Assert::AreEqual(true, (pkb.getProceduresWithConstant(1) == data));
+			Assert::AreEqual(true, (pkb.getProceduresWithConstant(2) == initial_data));
+
+		}
+
 		TEST_METHOD(PKBGetAllConstants)
 		{
 			PKB pkb;
