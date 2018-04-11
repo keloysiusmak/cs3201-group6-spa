@@ -301,3 +301,14 @@ Param Utils::createParam(ParamType type, string value, AttrType attr) {
 	param.attribute = attr;
 	return param;
 };
+
+void Utils::intersectSets(set<int> &p1, set<int> &p2, vector<vector<int>> &results) {
+	for (int value : p1) {
+		vector<int> withTableRow;
+		if (p2.find(value) != p2.end()) {
+			withTableRow.push_back(value);
+			withTableRow.push_back(value);
+			results.push_back(withTableRow);
+		}
+	}
+};
