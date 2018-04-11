@@ -14,7 +14,8 @@ bool DesignExtractor::extract(PKB &pkb) {
 	extractCallStatements(pkb);
 	extractCallsStar(pkb);
 	extractUsesModifies(pkb);
-	
+
+	precomputeConstants(pkb);
 	precomputeStatementLists(pkb);
 	precomputeWithProcNameVarName(pkb);
 	precomputeWithProcNameCallProcName(pkb);
@@ -314,6 +315,15 @@ void DesignExtractor::extractUsesModifies(PKB &pkb) {
 				}
 			}
 		}
+	}
+}
+
+void DesignExtractor::precomputeConstants(PKB& pkb) {
+	std::vector<std::vector<int>> constants = pkb.getAllConstants();
+	std::vector<int> output;
+	for (int i = 0; i < constants.size(); i++) {
+		pkb.insertToTable(CONST_STMT_TABLE, 1, { {constants[i][0]} });
+		pkb.insertToTable(CONST_PROC_TABLE, 1, { { pkb.getProcedureFromStatement(constants[i][0]) } });
 	}
 }
 

@@ -36,6 +36,12 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 	case CONST_TABLE:
 		tableValuesCount = 1;
 		break;
+	case CONST_STMT_TABLE:
+		tableValuesCount = 1;
+		break;
+	case CONST_PROC_TABLE:
+		tableValuesCount = 1;
+		break;
 	case CALLS_TABLE:
 		tableValuesCount = 2;
 		break;
