@@ -36,6 +36,12 @@ bool PKB::insertToTable(int table_id, int key_id, std::vector<std::vector<int>> 
 	case CONST_TABLE:
 		tableValuesCount = 1;
 		break;
+	case CONST_STMT_TABLE:
+		tableValuesCount = 1;
+		break;
+	case CONST_PROC_TABLE:
+		tableValuesCount = 1;
+		break;
 	case CALLS_TABLE:
 		tableValuesCount = 2;
 		break;
@@ -2422,6 +2428,47 @@ std::vector<std::vector<int>> PKB::getStatementsWithConstant(int constant) {
 		for (int i = 0; i < table[0].size(); i++) {
 			data.push_back({table[0][i]});
 		}
+	}
+	return data;
+
+}
+std::vector<std::vector<int>> PKB::getAllConstantsFromProcedure(int constant) {
+
+	std::vector<std::vector<int>> data;
+	std::vector<std::vector<int>> table = PKB::getFromTable(CONST_PROC_TABLE, constant);
+
+	if (static_cast<int>(table.size()) > 0) {
+		for (int i = 0; i < table[0].size(); i++) {
+			data.push_back({ table[0][i] });
+		}
+	}
+	return data;
+
+}
+std::vector<std::vector<int>> PKB::getAllConstantsFromStatement(int constant) {
+
+	std::vector<std::vector<int>> data;
+	std::vector<std::vector<int>> table = PKB::getFromTable(CONST_STMT_TABLE, constant);
+
+	if (static_cast<int>(table.size()) > 0) {
+		for (int i = 0; i < table[0].size(); i++) {
+			data.push_back({ table[0][i] });
+		}
+	}
+	return data;
+
+}
+std::vector<std::vector<int>> PKB::getProceduresWithConstant(int constant) {
+
+	std::vector<std::vector<int>> data;
+	std::vector<std::vector<int>> table = PKB::getFromTable(CONST_TABLE, constant);
+
+	if (static_cast<int>(table.size()) > 0) {
+		for (int i = 0; i < table[0].size(); i++) {
+			data.push_back({ PKB::getProcedureFromStatement(table[0][i])[0][0] });
+		}
+		std::sort(data.begin(), data.end());
+		data.erase(unique(data.begin(), data.end()), data.end());
 	}
 	return data;
 

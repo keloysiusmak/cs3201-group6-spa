@@ -14,7 +14,7 @@ using namespace std::tr1;
 class PKB {
 private:
 	/*  PKB Structure*/
-	unordered_map<int, std::vector<std::vector<int>>> tables[21];
+	unordered_map<int, std::vector<std::vector<int>>> tables[23];
 	unordered_map<int, std::vector<std::string>> nameTables[3];
 	unordered_map<int, unordered_map<int, unordered_map<int, int>>> resultTables;
 
@@ -137,6 +137,9 @@ public:
 
 	/* Constant Operations */
 	std::vector<std::vector<int>> getStatementsWithConstant(int);
+	std::vector<std::vector<int>> getProceduresWithConstant(int);
+	std::vector<std::vector<int>> getAllConstantsFromProcedure(int);
+	std::vector<std::vector<int>> getAllConstantsFromStatement(int);
 	std::vector<std::vector<int>> getAllConstants();
 
 };

@@ -62,12 +62,12 @@ namespace DesignExtractorTest
 			pkb.insertToTable(CONST_TABLE, 4, { { 1 } });
 			pkb.insertToTable(CONST_TABLE, 5, { { 1 } });
 			pkb.insertToTable(CONST_TABLE, 6, { { 1 } });
-			pkb.insertToTable(CONST_TABLE, 7, { { 1 } });
-			pkb.insertToTable(CONST_TABLE, 8, { { 1 } });
-			pkb.insertToTable(CONST_TABLE, 9, { { 1 } });
-			pkb.insertToTable(CONST_TABLE, 10, { { 1 } });
-			pkb.insertToTable(CONST_TABLE, 11, { { 1 } });
-			pkb.insertToTable(CONST_TABLE, 12, { { 1 } });
+			pkb.insertToTable(CONST_TABLE, 7, { { 10 } });
+			pkb.insertToTable(CONST_TABLE, 8, { { 10 } });
+			pkb.insertToTable(CONST_TABLE, 9, { { 10 } });
+			pkb.insertToTable(CONST_TABLE, 10, { { 10 } });
+			pkb.insertToTable(CONST_TABLE, 11, { { 10 } });
+			pkb.insertToTable(CONST_TABLE, 12, { { 10 } });
 			pkb.insertToTable(USES_TABLE, 1, { {10},{2} });
 			pkb.insertToTable(USES_TABLE, 2, { { 10 },{ 2 } });
 			pkb.insertToTable(USES_TABLE, 4, { { 11 },{ 3 } });
@@ -199,6 +199,18 @@ namespace DesignExtractorTest
 			Assert::AreEqual(true, (newResult == pkb.getFromTable(MODIFIES_TABLE, 3)));
 			newResult = { { 1,2,3,4,6,7,8,9,11 },{ 1,3 } };
 			Assert::AreEqual(true, (newResult == pkb.getFromTable(MODIFIES_TABLE, 6)));
+		}
+		TEST_METHOD(DesignExtractorPrecomputeConstants)
+		{
+			de.extract(pkb);
+			std::vector<std::vector<int>> data = { { 1,2,3,4,5,6 } };
+			Assert::AreEqual(true, (pkb.getFromTable(CONST_STMT_TABLE, 1) == data));
+			data = { { 7,8,9,10,11,12 } };
+			Assert::AreEqual(true, (pkb.getFromTable(CONST_STMT_TABLE, 10) == data));
+			data = { { 1,2,3,4,5,6 } };
+			Assert::AreEqual(true, (pkb.getFromTable(CONST_PROC_TABLE, 1) == data));
+			data = { { 7,8,9,10,11,12 } };
+			Assert::AreEqual(true, (pkb.getFromTable(CONST_PROC_TABLE, 2) == data));
 		}
 		TEST_METHOD(DesignExtractorPrecomputeStatementLists)
 		{

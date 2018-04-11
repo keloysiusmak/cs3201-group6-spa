@@ -1188,6 +1188,23 @@ namespace PKBDEParserIntegrationTesting
 			Assert::AreEqual(true, (pkb.getProceduresWithConstant(4) == data));
 		}
 
+
+		TEST_METHOD(PKBDEParserGetAllConstantsFromProcedure)
+		{
+			std::vector<std::vector<int>> data = { { 1 }, {4} };
+			Assert::AreEqual(true, (pkb.getAllConstantsFromProcedure(1) == data));
+			data = { { 1 } };
+			Assert::AreEqual(true, (pkb.getAllConstantsFromProcedure(2) == data));
+		}
+
+		TEST_METHOD(PKBDEParserGetAllConstantsFromStatement)
+		{
+			std::vector<std::vector<int>> data = { { 1 },{ 4 } };
+			Assert::AreEqual(true, (pkb.getAllConstantsFromStatement(3) == data));
+			data = { { 4 } };
+			Assert::AreEqual(true, (pkb.getAllConstantsFromStatement(7) == data));
+		}
+
 		TEST_METHOD(PKBDEParserGetAllConstants)
 		{
 			std::vector<std::vector<int>> data = { { 4 }, {1} };
