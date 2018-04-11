@@ -311,9 +311,7 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 			vector<vector<int>> results;
 			if (rightParam.type == INTEGER) { // RHS is integer constant
 				if (leftParam.type == PROCEDURE) {
-					// results = pkb.getProceduresWithConstant(stoi(rightParam.value));
-					// Wrong answer placeholder awaiting pkb implementation
-					results = pkb.getStatementsWithConstant(stoi(rightParam.value));
+					results = pkb.getProceduresWithConstant(stoi(rightParam.value));
 				} else {
 					results = pkb.getStatementsWithConstant(stoi(rightParam.value));
 				}
@@ -905,20 +903,26 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 					if (currentParam.attribute == PROCNAME) { // Get procname
 						if (mergedTable.getParamAttr(currentParam) == PROCNAME) { // Same attr in table
 							value = pkb.getProcedureName(paramValue);
-						} else { // Different attr
-							value = "To be implemented";
+						} else { // Calls line num in table, get procname from line
+							int procId = pkb.getProcedureCalledByCallStatement(paramValue)[0][0];
+							value = pkb.getProcedureName(procId);
 						}
 					} else { // Get line number
 						if (mergedTable.getParamAttr(currentParam) != PROCNAME) { // Same attr in table
 							value = to_string(paramValue);
-						} else { // Different attr
-							value = "To be implemented";
+						} else { // Calls.procname in table, get calls line number
+							vector<vector<int>> lineNums = pkb.getCallStatementsCallingProcedure(paramValue);
+							for (vector<int> lineNum : lineNums) {
+								value = to_string(lineNum[0]);
+								if (j == selectedParams.size() - 1) tupleRowString << value;
+								else tupleRowString << value << " ";
+							}
+							continue;
 						} 
 					}
-				} else {
+				} else { // Default case just convert int to string
 					value = to_string(paramValue);
 				}
-
 				if (j == selectedParams.size() - 1) tupleRowString << value;
 				else tupleRowString << value << " ";
 			}
