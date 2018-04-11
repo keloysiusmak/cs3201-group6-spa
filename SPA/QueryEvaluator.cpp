@@ -393,10 +393,10 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 			int lineId;
 			try { 
 				lineId = stoi(leftParam.value);
-				lineId = pkb.getProcedureId(leftParam.value);
+				results = pkb.getModifiesVariablesFromStatement(lineId);
 			}
 			catch (exception&) {
-				results = pkb.getModifiesVariablesFromProcedure(lineId);
+				lineId = pkb.getProcedureId(leftParam.value);
 				results = pkb.getModifiesVariablesFromStatement(lineId);
 			}
 			clauseResults.setResults(results);
