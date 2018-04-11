@@ -249,15 +249,15 @@ bool Preprocessor::isValidQuery(string query) {
 	if (queryArr.at(endOfSelectStatement).at(0) == SYMBOL_ANGLE_OPEN_BRACKETS) {
 
 		endOfSelectStatement++;
-
+		bool isComma = false;
 		//iterate through the tuple
 		while (queryArr.at(endOfSelectStatement).at(0) != SYMBOL_ANGLE_CLOSE_BRACKETS) {
 
-			//even position must be elem
-			if (endOfSelectStatement % 2 == 0) {
+			if (!isComma) {
 				if (!isValidElem(queryArr, endOfSelectStatement, queryContent)) {
 					return false;
 				}
+				isComma = true;
 			}
 			//odd position must be comma
 			else {
@@ -265,6 +265,7 @@ bool Preprocessor::isValidQuery(string query) {
 				if (queryArr.at(endOfSelectStatement).at(0) != SYMBOL_COMMA) {
 					return false;
 				}
+				isComma = false;
 			}
 			endOfSelectStatement++;
 		}
