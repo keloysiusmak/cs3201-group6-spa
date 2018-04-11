@@ -136,3 +136,31 @@ Node* QueryOptimization::findSet(Node &n, map<Param, Node> &paramsHash) {
 	n.setParent(parent); // Recursively set parent to root node
 	return n.parent;
 }
+
+/* Sorts clauses within group to optimize order of evaluation */
+vector<Clause> QueryOptimization::sortWithinGroup(vector<Clause> &clauseGroup) {
+	
+};
+
+/* Gets the total weight of a clause with respective input weights */
+int QueryOptimization::getTotalWeight(Clause &clause, int resultsWeight, int synsWeight, int relationWeight) {
+};
+
+/* Gets number of results from evaluation of clause */
+int QueryOptimization::getNumResultsOfClause(Clause &clause) {
+
+};
+
+/* Get number of synonyms within clause */
+int QueryOptimization::getNumSynsOfClause(Clause &clause) {
+};
+
+/* Get weight of each relation */
+int QueryOptimization::getRelationWeightOfClause(Clause &clause) {
+
+};
+
+/* Sorts according to total weight of each group */
+static vector<vector<Clause>> sortGroupsEvalOrder(map<int, vector<Clause>> &clauseGroups) {
+
+};
