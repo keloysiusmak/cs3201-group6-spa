@@ -59,6 +59,12 @@ namespace PKBTest
 				case CONST_TABLE:
 					tableValuesCount = 1;
 					break;
+				case CONST_STMT_TABLE:
+					tableValuesCount = 1;
+					break;
+				case CONST_PROC_TABLE:
+					tableValuesCount = 1;
+					break;
 				case CALLS_TABLE:
 					tableValuesCount = 2;
 					break;
@@ -150,6 +156,12 @@ namespace PKBTest
 					tableValuesCount = 2;
 					break;
 				case CONST_TABLE:
+					tableValuesCount = 1;
+					break;
+				case CONST_STMT_TABLE:
+					tableValuesCount = 1;
+					break;
+				case CONST_PROC_TABLE:
 					tableValuesCount = 1;
 					break;
 				case CALLS_TABLE:
