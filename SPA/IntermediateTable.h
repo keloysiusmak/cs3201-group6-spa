@@ -15,6 +15,7 @@ struct IntermediateTable {
 	void setResultsTable(vector<vector<int>> &table);
 	bool tableHasResults();
 
+	AttrType getParamAttr(Param p);
 	int getParamIndex(Param p);
 	Param getParamFromIndex(int index);
 };
