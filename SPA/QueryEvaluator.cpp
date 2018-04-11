@@ -722,11 +722,23 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 	}
 
 	vector<vector<int>> updatedTable;
-	for (vector<int> tableRow : iTable.resultsTable) {
-		if (tableRow[paramIndex] == valueOfParam) updatedTable.push_back(tableRow);
+	if (paramInTable.type != CALL) { // Normal filtering
+		for (vector<int> tableRow : iTable.resultsTable) {
+			if (tableRow[paramIndex] == valueOfParam) updatedTable.push_back(tableRow);
+		}
+		iTable.setResultsTable(updatedTable);
+	} else { // CALL case,
+		Param clauseCallParam;
+		set<string> clauseCallValues;
+		if (Utils::isSynonym(clause.getLeftParam())) { // Left param is CALL
+			clauseCallParam = clause.getLeftParam();
+			clauseCallValues.insert(clause.getRightParam().value);
+		} else { // Right param is CALL
+			clauseCallParam = clause.getRightParam();
+			clauseCallValues.insert(clause.getLeftParam().value);
+		}
+		handleCallInWithClause(clauseCallParam, clauseCallValues, iTable);
 	}
-	iTable.setResultsTable(updatedTable);
-
 };
 
 /* Filters table for with equating two variables */
@@ -736,24 +748,29 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 	int firstParamTableIndex = iTable.getParamIndex(lhs);
 	int secondParamTableIndex = iTable.getParamIndex(rhs);
 
-	vector<vector<int>> updatedTable;
-	for (vector<int> tableRow : iTable.resultsTable) {
-		int lhsIntValue = tableRow[firstParamTableIndex];
-		int rhsIntValue = tableRow[secondParamTableIndex];
+	if (lhs.type != CALL && rhs.type != CALL) {
+		vector<vector<int>> updatedTable;
+		for (vector<int> tableRow : iTable.resultsTable) {
+			int lhsIntValue = tableRow[firstParamTableIndex];
+			int rhsIntValue = tableRow[secondParamTableIndex];
 
-		if (lhs.attribute == PROCNAME || lhs.attribute == VARNAME) { // Compare string value
-			if (getProcOrVarName(lhs.attribute, lhsIntValue) ==
-				getProcOrVarName(rhs.attribute, rhsIntValue)) {
+			if (lhs.attribute == PROCNAME || lhs.attribute == VARNAME) { // Compare string value
+				if (getProcOrVarName(lhs.attribute, lhsIntValue) ==
+					getProcOrVarName(rhs.attribute, rhsIntValue)) {
+					updatedTable.push_back(tableRow);
+				}
+			}
+			else if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
 				updatedTable.push_back(tableRow);
 			}
-		}
-		else if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
-			updatedTable.push_back(tableRow);
-		}
-		else { ; }
+			else { ; }
 
+		}
+		iTable.setResultsTable(updatedTable);
 	}
-	iTable.setResultsTable(updatedTable);
+	else { // CALL
+		// TO BE IMPLEMENTED
+	}
 };
 
 /* Handles with evaluation when not found in table */
