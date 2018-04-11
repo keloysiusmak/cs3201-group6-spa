@@ -32,6 +32,15 @@ bool IntermediateTable::tableHasResults() {
 	else return hasResults;
 }
 
+AttrType IntermediateTable::getParamAttr(Param p) {
+	for (pair<Param, int> tableParamIndex : tableParams) {
+		Param tableParam = tableParamIndex.first;
+		if (tableParam.type == p.type && tableParam.value == p.value) {
+			return tableParam.attribute;
+		}
+	}
+};
+
 int IntermediateTable::getParamIndex(Param p) {
 	if (tableParams.find(p) != tableParams.end()) return tableParams[p];
 	else return -1;

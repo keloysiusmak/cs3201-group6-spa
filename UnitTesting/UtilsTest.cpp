@@ -23,7 +23,7 @@ namespace UtilsTest
 		}
 
 		TEST_METHOD(UtilsExplode) {
-			string testString = "procedure Test { a = b; c = d; }";
+			string testString = "procedure Test { a = b; c = d+2; }";
 			string sanitised = Utils::sanitise(testString);
 			vector<string> tokens = Utils::explode(sanitised, ParserConstants::DELIM_STRING, ParserConstants::DELIMITERS);
 			Assert::AreEqual(tokens[0], string("procedure"));
@@ -36,8 +36,10 @@ namespace UtilsTest
 			Assert::AreEqual(tokens[7], string("c"));
 			Assert::AreEqual(tokens[8], string("="));
 			Assert::AreEqual(tokens[9], string("d"));
-			Assert::AreEqual(tokens[10], string(";"));
-			Assert::AreEqual(tokens[11], string("}"));
+			Assert::AreEqual(tokens[10], string("+"));
+			Assert::AreEqual(tokens[11], string("2"));
+			Assert::AreEqual(tokens[12], string(";"));
+			Assert::AreEqual(tokens[13], string("}"));
 		}
 	};
 }

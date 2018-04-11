@@ -94,6 +94,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 				tables.push_back(iTable);
 			}
 		}
+		cache.clear();
 
 		// To be refactored...
 		return extractParams(selectParams, tables);
@@ -299,20 +300,33 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results;
-			if (leftParam.type == PROCEDURE) { results = pkb.getAllProcedureUsesVariables();
-			} else { results = pkb.getAllStatementUsesVariables(); }
+			if (leftParam.type == PROCEDURE) {
+				results = pkb.getAllProcedureUsesVariables();
+			} else {
+				results = pkb.getAllStatementUsesVariables();
+			}
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
+			vector<vector<int>> results;
 			if (rightParam.type == INTEGER) { // RHS is integer constant
-				vector<vector<int>> results = pkb.getStatementsWithConstant(stoi(rightParam.value));
-				clauseResults.setResults(results);
+				if (leftParam.type == PROCEDURE) {
+					// results = pkb.getProceduresWithConstant(stoi(rightParam.value));
+					// Wrong answer placeholder awaiting pkb implementation
+					results = pkb.getStatementsWithConstant(stoi(rightParam.value));
+				} else {
+					results = pkb.getStatementsWithConstant(stoi(rightParam.value));
+				}
 			}
 			else { // LHS is var_name
 				int variableId = pkb.getVariableId(rightParam.value);
-				vector<vector<int>> results = pkb.getStatementsFromUsesVariable(variableId);
-				clauseResults.setResults(results);
+				if (leftParam.type == PROCEDURE) {
+					results = pkb.getProceduresFromUsesVariable(variableId);
+				} else {
+					results = pkb.getStatementsFromUsesVariable(variableId);
+				}
 			}
+			clauseResults.setResults(results);
 		}
 	}
 	else {
@@ -364,7 +378,12 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 		}
 		else { // (syn, concrete)
 			int variableId = pkb.getVariableId(rightParam.value);
-			vector<vector<int>> results = pkb.getStatementsFromModifiesVariable(variableId);
+			vector<vector<int>> results;
+			if (leftParam.type == PROCEDURE) {
+				results = pkb.getProceduresFromModifiesVariable(variableId);
+			} else {
+				results = pkb.getStatementsFromModifiesVariable(variableId);
+			}
 			clauseResults.setResults(results);
 		}
 	}
@@ -374,10 +393,10 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 			int lineId;
 			try { 
 				lineId = stoi(leftParam.value);
-				lineId = pkb.getProcedureId(leftParam.value);
+				results = pkb.getModifiesVariablesFromStatement(lineId);
 			}
 			catch (exception&) {
-				results = pkb.getModifiesVariablesFromProcedure(lineId);
+				lineId = pkb.getProcedureId(leftParam.value);
 				results = pkb.getModifiesVariablesFromStatement(lineId);
 			}
 			clauseResults.setResults(results);
@@ -877,12 +896,27 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 				int paramValue = tableRow[indexOfParam];
 
 				string value;
-				if (selectedParams[j].type == PROCEDURE) {
+				Param currentParam = selectedParams[j];
+				if (currentParam.type == PROCEDURE) {
 					value = pkb.getProcedureName(paramValue);
-				} else if (selectedParams[j].type == VARIABLE) {
+				} else if (currentParam.type == VARIABLE) {
 					value = pkb.getVariableName(paramValue);
+				} else if (currentParam.type == CALL) { // Special case with calls
+					if (currentParam.attribute == PROCNAME) { // Get procname
+						if (mergedTable.getParamAttr(currentParam) == PROCNAME) { // Same attr in table
+							value = pkb.getProcedureName(paramValue);
+						} else { // Different attr
+							value = "To be implemented";
+						}
+					} else { // Get line number
+						if (mergedTable.getParamAttr(currentParam) != PROCNAME) { // Same attr in table
+							value = to_string(paramValue);
+						} else { // Different attr
+							value = "To be implemented";
+						} 
+					}
 				} else {
-					value = to_string(tableRow[indexOfParam]);
+					value = to_string(paramValue);
 				}
 
 				if (j == selectedParams.size() - 1) tupleRowString << value;
