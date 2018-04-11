@@ -470,7 +470,7 @@ vector<Clause> QueryOptimization::numResultsGroupClauses(vector<Clause> groupedC
 		newReGroupedClauses.push_back(clause);
 	}
 
-	sort(size.begin(), size.end());
+	std::sort(size.begin(), size.end());
 	for (int i = 0; i < size.size(); i++) {
 		for (int j = 0; j < size.size(); j++) {
 			if (size[j] == newSize[i]) {
