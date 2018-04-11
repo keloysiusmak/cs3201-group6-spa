@@ -48,29 +48,6 @@ list<string> QueryEvaluator::evaluateQuery() {
 		// Grouping according to syns
 		map<int, vector<Clause>> sortedClauses = QueryOptimization::sortIntoGroups(consolidatedClauses);
 
-		/* Convert to vector<Clause> */
-		vector<vector<Clause>> sortedClausesVector;
-		for (pair<int, vector<Clause>> groupedClauses : sortedClauses) {
-			sortedClausesVector.push_back(groupedClauses.second);
-		}
-
-		QueryOptimization qo;
-
-		map<int, vector<Clause>> groupsAfterSortingByConstants;
-		for (vector<Clause> reGroupedClauses : sortedClausesVector) {
-			map<int, vector<Clause>> groupsAfterSortingByConstants = qo.numConstantsGroupClauses(reGroupedClauses);
-		}
-
-		vector<vector<Clause>> sortNumResults;
-		for (pair<int, vector<Clause>> constantGroupedClauses : groupsAfterSortingByConstants) {
-			sortNumResults.push_back(constantGroupedClauses.second);
-		}
-
-		map<int, vector<Clause>> groupsAfterSortingByNumResults;
-		for (vector<Clause> groupByConstants : sortNumResults) {
-			vector<Clause> groupsAfterSortingByNumResults = qo.numResultsGroupClauses(groupByConstants);
-		}
-
 		vector<Param> selectParams = queryObject.getSelectStatements(); // Selected Params
 		map<Clause, vector<vector<int>>> cache; // For cached results
 
