@@ -764,62 +764,95 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 	vector<vector<int>> withResults;
 
 	withClauseResults.instantiateClause(withClause);
-	if (Utils::isSynonym(lhs) && Utils::isSynonym(rhs)) { // Both are synonyms
-		set<int> lhsParamSet = getParamSet(lhs);
-		set<int> rhsParamSet = getParamSet(rhs);
+	if (Utils::isSynonym(lhs) || Utils::isSynonym(rhs)) {
+		// Both synonyms
+		if (Utils::isSynonym(lhs) && Utils::isSynonym(rhs)) {
+			set<int> lhsParamSet = getParamSet(lhs);
+			set<int> rhsParamSet = getParamSet(rhs);
+			Utils::intersectSets(lhsParamSet, rhsParamSet, withResults);
 
-		for (int value : lhsParamSet) {
-			vector<int> withTableRow;
-			if (rhsParamSet.find(value) != rhsParamSet.end()) {
-				withTableRow.push_back(value); withTableRow.push_back(value);
-				withResults.push_back(withTableRow);
+		} else if (Utils::isSynonym(lhs)) { // LHS syn
+			set<int> lhsParamSet = getParamSet(lhs);
+
+			for (int value : lhsParamSet) {
+				vector<int> withTableRow;
+				withTableRow.clear();
+				if (value == getId(rhs, lhs.type, lhs.attribute)) {
+					withTableRow.push_back(value);
+					withResults.push_back(withTableRow);
+				}
+			}
+
+		} else if (Utils::isSynonym(rhs)) { // RHS syn
+			set<int> rhsParamSet = getParamSet(rhs);
+
+			for (int value : rhsParamSet) {
+				vector<int> withTableRow;
+				if (value == getId(lhs, rhs.type, rhs.attribute)) {
+					withTableRow.push_back(value);
+					withResults.push_back(withTableRow);
+				}
 			}
 		}
+
+		// Merge directly (No consideration for calls since not in table)
 		if (withResults.size() > 0) {
 			withClauseResults.setResults(withResults);
 			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
 			return true;
 		}
-
-	} else if (Utils::isSynonym(lhs)) { // LHS syn
-		set<int> lhsParamSet = getParamSet(lhs);
-
-		for (int value : lhsParamSet) {
-			vector<int> withTableRow;
-			withTableRow.clear();
-			if (value == getId(rhs, lhs.type, lhs.attribute)) {
-				withTableRow.push_back(value);
-				withResults.push_back(withTableRow);
-			}
-		}
-
-		if (withResults.size() > 0) {
-			withClauseResults.setResults(withResults);
-			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-			return true;
-		}
-
-	} else if (Utils::isSynonym(rhs)) { // RHS syn
-		set<int> rhsParamSet = getParamSet(rhs);
-
-		for (int value : rhsParamSet) {
-			vector<int> withTableRow;
-			if (value == getId(lhs, rhs.type, rhs.attribute)) {
-				withTableRow.push_back(value);
-			}
-		}
-
-		if (withResults.size() > 0) {
-			withClauseResults.setResults(withResults);
-			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-			return true;
-		}
-	}
-	else {
+		return false;
+	} else {
 		return lhs.value == rhs.value;
 	}
-	return false;
-}
+};
+
+/* Handles Calls in With Clause */
+void QueryEvaluator::handleCallInWithClause(Param clauseCallParam, set<string> &clauseCallValues, IntermediateTable &iTable) {
+
+	int paramTableIndex = iTable.getParamIndex(clauseCallParam);
+	Param tableCallParam = iTable.getParamFromIndex(paramTableIndex);
+
+	vector<vector<int>> filteredResults;
+	// Iterate through possible assignment values
+	for (vector<int> tableRow : iTable.resultsTable) {
+		for (string callValue : clauseCallValues) {
+			int intCallValue = (clauseCallParam.attribute == PROCNAME) ?
+				pkb.getProcedureId(callValue) : stoi(callValue);
+			if (clauseCallParam.attribute == tableCallParam.attribute) { // Trivial merge
+				if (intCallValue == tableRow[paramTableIndex]) {
+					filteredResults.push_back(tableRow);
+				}
+			} else if (clauseCallParam.attribute != PROCNAME) { // clause PROG_LINE, table STMT_NO
+
+				/* Get all statements numbers from called procedure in row and check equality with clause
+				program line. Replaces p.procname with p.prog_line (more limiting) */
+				vector<vector<int>> progLines = pkb.getCallStatementsCallingProcedure(tableRow[paramTableIndex]);
+				for (vector<int> progLine : progLines) {
+					if (progLine[0] == intCallValue) {
+						tableRow[paramTableIndex] = intCallValue;
+						filteredResults.push_back(tableRow);
+					}
+				}
+
+			} else { // clause PROCNAME, table STMT_NO
+				vector<vector<int>> progLines = pkb.getCallStatementsCallingProcedure(intCallValue);
+				for (vector<int> progLine : progLines) {
+					if (progLine[0] == tableRow[paramTableIndex]) {
+						filteredResults.push_back(tableRow);
+					}
+				}
+			}
+		}
+	}
+
+	/* replace tables CALL.PROCNAME with CALL.PROG_LINE params */
+	if (clauseCallParam.attribute != PROCNAME && tableCallParam.attribute == PROCNAME) {
+		iTable.replaceTableParam(tableCallParam, clauseCallParam);
+	}
+	iTable.setResultsTable(filteredResults);
+
+};
 
 /* Returns id for string value */
 int QueryEvaluator::getId(Param p, ParamType type, AttrType attribute) {
