@@ -300,20 +300,33 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results;
-			if (leftParam.type == PROCEDURE) { results = pkb.getAllProcedureUsesVariables();
-			} else { results = pkb.getAllStatementUsesVariables(); }
+			if (leftParam.type == PROCEDURE) {
+				results = pkb.getAllProcedureUsesVariables();
+			} else {
+				results = pkb.getAllStatementUsesVariables();
+			}
 			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
+			vector<vector<int>> results;
 			if (rightParam.type == INTEGER) { // RHS is integer constant
-				vector<vector<int>> results = pkb.getStatementsWithConstant(stoi(rightParam.value));
-				clauseResults.setResults(results);
+				if (leftParam.type == PROCEDURE) {
+					// results = pkb.getProceduresWithConstant(stoi(rightParam.value));
+					// Wrong answer placeholder awaiting pkb implementation
+					results = pkb.getStatementsWithConstant(stoi(rightParam.value));
+				} else {
+					results = pkb.getStatementsWithConstant(stoi(rightParam.value));
+				}
 			}
 			else { // LHS is var_name
 				int variableId = pkb.getVariableId(rightParam.value);
-				vector<vector<int>> results = pkb.getStatementsFromUsesVariable(variableId);
-				clauseResults.setResults(results);
+				if (leftParam.type == PROCEDURE) {
+					results = pkb.getProceduresFromUsesVariable(variableId);
+				} else {
+					results = pkb.getStatementsFromUsesVariable(variableId);
+				}
 			}
+			clauseResults.setResults(results);
 		}
 	}
 	else {
@@ -365,7 +378,12 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 		}
 		else { // (syn, concrete)
 			int variableId = pkb.getVariableId(rightParam.value);
-			vector<vector<int>> results = pkb.getStatementsFromModifiesVariable(variableId);
+			vector<vector<int>> results;
+			if (leftParam.type == PROCEDURE) {
+				results = pkb.getProceduresFromModifiesVariable(variableId);
+			} else {
+				results = pkb.getStatementsFromModifiesVariable(variableId);
+			}
 			clauseResults.setResults(results);
 		}
 	}
