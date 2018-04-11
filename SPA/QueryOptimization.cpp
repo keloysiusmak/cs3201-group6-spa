@@ -144,23 +144,78 @@ vector<Clause> QueryOptimization::sortWithinGroup(vector<Clause> &clauseGroup) {
 
 /* Gets the total weight of a clause with respective input weights */
 int QueryOptimization::getTotalWeight(Clause &clause, int resultsWeight, int synsWeight, int relationWeight) {
+	int resultsTotal = resultsWeight * getNumResultsOfClause(clause);
+	int synsTotal = synsWeight * getNumSynsOfClause(clause);
+	int relationTotal = relationWeight * getRelationWeightOfClause(clause);
+	return resultsTotal + synsTotal + relationTotal;
 };
 
 /* Gets number of results from evaluation of clause */
 int QueryOptimization::getNumResultsOfClause(Clause &clause) {
+	if () {
+	} else if () {
+	} else if () {
+	} else if () {
+	} else if () {
+	} else if () {
+	} else if () {
+	} else if () {
+	} else if () {
+	} else if () {
+	} else if () {
+	} else if () {
+	} else if () {
+	}
 
+	Modifies, Uses, Parent, ParentT, Follows, FollowsT,
+	Next, NextT, Calls, CallsT, Affects, AffectsT, With, None
 };
 
 /* Get number of synonyms within clause */
 int QueryOptimization::getNumSynsOfClause(Clause &clause) {
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
+	int numParams = 0;
+	if (Utils::isSynonym(leftParam)) numParams++;
+	if (Utils::isSynonym(rightParam)) numParams++;
+	return numParams;
 };
 
 /* Get weight of each relation */
 int QueryOptimization::getRelationWeightOfClause(Clause &clause) {
-
+	RelRef clauseRelation = clause.getRelRef();
+	switch (clauseRelation) {
+	With:
+		return 0;
+	Follows:
+		return 5;
+	FollowsT:
+		return 8;
+	Parent:
+		return 5;
+	ParentT:
+		return 8;
+	Uses:
+		return 5;
+	Modifies:
+		return 5;
+	Calls:
+		return 5;
+	CallsT:
+		return 8;
+	None: // Pattern
+		return 10;
+	Next:
+		return 20;
+	NextT:
+		return 50;
+	Affects:
+		return 100;
+	AffectsT:
+		return 500;
 };
 
 /* Sorts according to total weight of each group */
-static vector<vector<Clause>> sortGroupsEvalOrder(map<int, vector<Clause>> &clauseGroups) {
+vector<vector<Clause>> sortGroupsEvalOrder(map<int, vector<Clause>> &clauseGroups) {
 
 };
