@@ -300,6 +300,20 @@ public:
 		Assert::AreNotEqual(true, preprocessor.isValidSynonym("#a"));
 	}
 
+	TEST_METHOD(PreprocessorIsValidIdent) {
+
+		Assert::AreEqual(true, preprocessor.isValidIdent("\"a\""));
+		Assert::AreEqual(true, preprocessor.isValidIdent("\"ab\""));
+		Assert::AreEqual(true, preprocessor.isValidIdent("\"a1\""));
+		Assert::AreEqual(true, preprocessor.isValidIdent("\"a#\""));
+
+		Assert::AreNotEqual(true, preprocessor.isValidIdent(""));
+		Assert::AreNotEqual(true, preprocessor.isValidIdent("1"));
+		Assert::AreNotEqual(true, preprocessor.isValidIdent("1a"));
+		Assert::AreNotEqual(true, preprocessor.isValidIdent("#a"));
+		Assert::AreNotEqual(true, preprocessor.isValidIdent("\"1\""));
+	}
+
 	TEST_METHOD(PreprocessorIsValidStmtRef) {
 
 		Assert::AreEqual(true, preprocessor.isValidStmtRef("a"));
