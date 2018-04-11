@@ -94,6 +94,7 @@ list<string> QueryEvaluator::evaluateQuery() {
 				tables.push_back(iTable);
 			}
 		}
+		cache.clear();
 
 		// To be refactored...
 		return extractParams(selectParams, tables);
