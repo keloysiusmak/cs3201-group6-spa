@@ -31,13 +31,14 @@ private:
 	int higherPrecedenceValidate(char operator1, char operator2);
 	int getPrecedence(char op);
 	bool checkBoolStmt(string query);
-	string mapParamTypeToValue(ParamType);
+	string mapParamTypeToValue(ParamType, AttrType);
 	string getArgValue(vector<string> queryArr, int &queryLength, int pos, 
 		string relationshipKey, CLAUSE_NODE_TYPE nodeType, CLAUSE_LEFT_OR_RIGHT paramPos, 
 		string endPoint, QueryContent &qc);
 	string getExpressionValue(vector<string> queryArr, int &queryLength, int pos,
 		string relationshipKey, CLAUSE_NODE_TYPE nodeType, CLAUSE_LEFT_OR_RIGHT paramPos,
 		string endPoint, QueryContent &qc);
+	string getWithParam(vector<string> queryArr, int &queryLength, int pos, CLAUSE_LEFT_OR_RIGHT paramPos, QueryContent &qc);
 public:
 	Preprocessor();
 	void insertDeclarationToMap(string synonym, string declaration);

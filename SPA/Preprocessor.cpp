@@ -249,15 +249,15 @@ bool Preprocessor::isValidQuery(string query) {
 	if (queryArr.at(endOfSelectStatement).at(0) == SYMBOL_ANGLE_OPEN_BRACKETS) {
 
 		endOfSelectStatement++;
-
+		bool isComma = false;
 		//iterate through the tuple
 		while (queryArr.at(endOfSelectStatement).at(0) != SYMBOL_ANGLE_CLOSE_BRACKETS) {
 
-			//even position must be elem
-			if (endOfSelectStatement % 2 == 0) {
+			if (!isComma) {
 				if (!isValidElem(queryArr, endOfSelectStatement, queryContent)) {
 					return false;
 				}
+				isComma = true;
 			}
 			//odd position must be comma
 			else {
@@ -265,6 +265,7 @@ bool Preprocessor::isValidQuery(string query) {
 				if (queryArr.at(endOfSelectStatement).at(0) != SYMBOL_COMMA) {
 					return false;
 				}
+				isComma = false;
 			}
 			endOfSelectStatement++;
 		}
@@ -439,23 +440,27 @@ bool Preprocessor::isValidQuery(string query) {
 				withOperator.push(SYMBOL_MULTIPLICATION);
 			}
 
-			if (i + withLength < queryArr.size() && queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+			if (i + withLength < queryArr.size() &&
+				i + withLength + 1 < queryArr.size() &&
+				queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET &&
+				queryArr.at(i + withLength + 1).compare(SELECT_WORD) != 0) {
 				if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
 					return false;
 				}
-				withLength--;
 			}
 			else if (i + withLength < queryArr.size() && queryArr.at(i + withLength).compare(NOT_WORD) == 0) {
 
 				//Add "not"
 				withLength++;
 
-				if (i + withLength < queryArr.size() && queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+				if (i + withLength < queryArr.size() &&
+					i + withLength + 1 < queryArr.size() &&
+					queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET &&
+					queryArr.at(i + withLength + 1).compare(SELECT_WORD) != 0) {
 					int startPtrNegation = queryContent.getWithClauses().size() - 1;
 					if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
 						return false;
 					}
-					withLength--;
 					int endPtrNegation = queryContent.getWithClauses().size() - 1;
 
 					while (endPtrNegation != startPtrNegation) {
@@ -476,7 +481,7 @@ bool Preprocessor::isValidQuery(string query) {
 				}
 			}
 
-			i += withLength;		
+			i += (withLength - 1);		
 		}
 		else if (queryArr.at(i).compare(AND_WORD) == 0) {
 
@@ -593,30 +598,36 @@ bool Preprocessor::isValidQuery(string query) {
 				//Keep track of the length of with clause
 				int withLength = 1;
 
-				while (!withOperator.empty() && higherPrecedenceValidate(withOperator.top(), SYMBOL_MULTIPLICATION)) {
-					queryContent.insertOperator(WITH_CLAUSE, MAP_OPERATORS.find(withOperator.top())->second);
-					withOperator.pop();
+				if (queryContent.getWithClauses().size() != 0) {
+					while (!withOperator.empty() && higherPrecedenceValidate(withOperator.top(), SYMBOL_MULTIPLICATION)) {
+						queryContent.insertOperator(WITH_CLAUSE, MAP_OPERATORS.find(withOperator.top())->second);
+						withOperator.pop();
+					}
+
+					withOperator.push(SYMBOL_MULTIPLICATION);
 				}
 
-				withOperator.push(SYMBOL_MULTIPLICATION);
-
-				if (queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+				if (i + withLength < queryArr.size() &&
+					i + withLength + 1 < queryArr.size() &&
+					queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET &&
+					queryArr.at(i + withLength + 1).compare(SELECT_WORD) != 0) {
 					if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
 						return false;
 					}
-					withLength--;
 				}
 				else if (i + withLength < queryArr.size() && queryArr.at(i + withLength).compare(NOT_WORD) == 0) {
 
 					//Add "not"
 					withLength++;
 
-					if (i + withLength < queryArr.size() && queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+					if (i + withLength < queryArr.size() &&
+						i + withLength + 1 < queryArr.size() &&
+						queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET &&
+						queryArr.at(i + withLength + 1).compare(SELECT_WORD) != 0) {
 						int startPtrNegation = queryContent.getWithClauses().size() - 1;
 						if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
 							return false;
 						}
-						withLength--;
 						int endPtrNegation = queryContent.getWithClauses().size() - 1;
 
 						while (endPtrNegation != startPtrNegation) {
@@ -637,7 +648,7 @@ bool Preprocessor::isValidQuery(string query) {
 					}
 				}
 
-				i += withLength;
+				i += (withLength - 1);
 
 			}
 			else {
@@ -766,23 +777,27 @@ bool Preprocessor::isValidQuery(string query) {
 
 				withOperator.push(SYMBOL_PLUS);
 
-				if (queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+				if (i + withLength < queryArr.size() &&
+					i + withLength + 1 < queryArr.size() &&
+					queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET &&
+					queryArr.at(i + withLength + 1).compare(SELECT_WORD) != 0) {
 					if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
 						return false;
 					}
-					withLength--;
 				}
 				else if (i + withLength < queryArr.size() && queryArr.at(i + withLength).compare(NOT_WORD) == 0) {
 
 					//Add "not"
 					withLength++;
 
-					if (i + withLength < queryArr.size() && queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET) {
+					if (i + withLength < queryArr.size() &&
+						i + withLength + 1 < queryArr.size() &&
+						queryArr.at(i + withLength).at(0) == SYMBOL_OPEN_BRACKET &&
+						queryArr.at(i + withLength + 1).compare(SELECT_WORD) != 0) {
 						int startPtrNegation = queryContent.getWithClauses().size() - 1;
 						if (!convertToPostFix(queryArr, prevSelectedClause, withLength, i, queryContent)) {
 							return false;
 						}
-						withLength--;
 						int endPtrNegation = queryContent.getWithClauses().size() - 1;
 
 						while (endPtrNegation != startPtrNegation) {
@@ -803,7 +818,7 @@ bool Preprocessor::isValidQuery(string query) {
 					}
 				}
 
-				i += withLength;
+				i += (withLength - 1);
 
 			}
 			else {
@@ -846,15 +861,9 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 	//Add Select word
 	queryLength++;
 
-	string elem = Utils::sanitise(queryArr.at(pos + queryLength));
-
-	if (pos + queryLength >= queryArr.size() || !isValidSynonym(elem) || !isDeclarationSynonymExist(elem)) {
+	if (!isValidElem(queryArr, pos + queryLength, subQueryContent)) {
 		return false;
 	}
-
-	auto searchSynonym = declarationMap.find(elem);
-	auto searchDeclareType = KEYWORDS_DECLARATIONS.find(searchSynonym->second);
-	subQueryContent.insertSelect(searchDeclareType->second, searchSynonym->first, NONE);
 
 	queryLength++;
 
@@ -1011,7 +1020,6 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 				if (!convertToPostFix(queryArr, prevSelectedClause, queryLength, pos, subQueryContent)) {
 					return false;
 				}
-				queryLength--;
 			}
 			else if (pos + queryLength < queryArr.size() && queryArr.at(pos + queryLength).compare(NOT_WORD) == 0) {
 
@@ -1023,7 +1031,6 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 					if (!convertToPostFix(queryArr, prevSelectedClause, queryLength, pos, subQueryContent)) {
 						return false;
 					}
-					queryLength--;
 					int endPtrNegation = subQueryContent.getClauses().size() - 1;
 
 					while (endPtrNegation != startPtrNegation) {
@@ -1043,6 +1050,8 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 					return false;
 				}
 			}
+			//Finish processing this with clause
+			queryLength--;
 		}
 		else if (queryArr.at(pos + queryLength).compare(AND_WORD) == 0) {
 
@@ -1171,7 +1180,6 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 					if (!convertToPostFix(queryArr, prevSelectedClause, queryLength, pos, subQueryContent)) {
 						return false;
 					}
-					queryLength--;
 				}
 				else if (pos + queryLength < queryArr.size() && queryArr.at(pos + queryLength).compare(NOT_WORD) == 0) {
 
@@ -1183,7 +1191,6 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 						if (!convertToPostFix(queryArr, prevSelectedClause, queryLength, pos, subQueryContent)) {
 							return false;
 						}
-						queryLength--;
 						int endPtrNegation = subQueryContent.getClauses().size() - 1;
 
 						while (endPtrNegation != startPtrNegation) {
@@ -1203,6 +1210,8 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 						return false;
 					}
 				}
+				//Finish processing this with clause
+				queryLength--;
 			}
 		}
 		else if (queryArr.at(pos + queryLength).compare(OR_WORD) == 0) {
@@ -1332,7 +1341,6 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 					if (!convertToPostFix(queryArr, prevSelectedClause, queryLength, pos, subQueryContent)) {
 						return false;
 					}
-					queryLength--;
 				}
 				else if (pos + queryLength < queryArr.size() && queryArr.at(pos + queryLength).compare(NOT_WORD) == 0) {
 
@@ -1344,7 +1352,6 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 						if (!convertToPostFix(queryArr, prevSelectedClause, queryLength, pos, subQueryContent)) {
 							return false;
 						}
-						queryLength--;
 						int endPtrNegation = subQueryContent.getClauses().size() - 1;
 
 						while (endPtrNegation != startPtrNegation) {
@@ -1364,6 +1371,8 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 						return false;
 					}
 				}
+				//Finish processing this with clause
+				queryLength--;
 			}
 		}
 		else {
@@ -1390,7 +1399,7 @@ bool Preprocessor::isValidSubQuery(vector<string> queryArr, int pos, int &queryL
 
 	vqc.push_back(subQueryContent);
 	qc.setChildren(vqc.size() - 1);
-	queryLength += 2;
+	queryLength++;
 	return true;
 }
 
@@ -1478,14 +1487,12 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 			case 1:
 				if (!isValidClause(queryArr, queryLength, pos, qc, negateOperand)) {
 					return false;
-				}
-				queryLength--;
+				}			
 				break;
 			case 2:
 				if (!isValidPattern(queryArr, queryLength, pos, qc, negateOperand)) {
 					return false;
 				}
-				queryLength--;
 				break;
 			case 3:
 				if (!isValidWithClause(queryArr, queryLength, pos, qc, negateOperand)) {
@@ -1493,6 +1500,7 @@ bool Preprocessor::convertToPostFix(vector<string> queryArr, int conditionType, 
 				}
 				break;
 			}
+			queryLength--;
 
 			isMathOperatorRepeated = false;
 			isOperandRepeated = true;
@@ -1858,28 +1866,27 @@ bool Preprocessor::isValidPattern(vector<string> queryArr, int &patternLength, i
 	return true;
 }
 
-bool Preprocessor::isValidWithClause(vector<string> queryArr, int &withLength, int pos, QueryContent &qo, bool invert) {
-	
+bool Preprocessor::isValidWithClause(vector<string> queryArr, int &withLength, int pos, QueryContent &qc, bool invert) {
 
-	if ((pos + withLength) >= queryArr.size() ||
-		(pos + withLength + 1) >= queryArr.size() ||
-		(pos + withLength + 2) >= queryArr.size()) {
+	string leftParam = getWithParam(queryArr, withLength, pos, LEFT_PARAM, qc);
+
+	//Check for equal sign
+	if ((pos + withLength) >= queryArr.size()) {
 		return false;
 	}
 
-	string ref1 = Utils::sanitise(queryArr.at(pos + withLength));
-	char equalSign = Utils::sanitise(queryArr.at(pos + withLength + 1)).at(0);
-	string ref2 = Utils::sanitise(queryArr.at(pos + withLength + 2));
+	char equalSign = Utils::sanitise(queryArr.at(pos + withLength)).at(0);
 
-	withLength += 2;
-
-	if (!isValidRef(ref1) ||
-		equalSign != SYMBOL_EQUALS ||
-		!isValidRef(ref2)) {
+	if (equalSign != SYMBOL_EQUALS) {
 		return false;
 	}
 
-	if (!parseWithClause(qo, ref1, ref2, invert)) {
+	//Add equal sign
+	withLength++;
+
+	string rightParam = getWithParam(queryArr, withLength, pos, RIGHT_PARAM, qc);
+
+	if (!parseWithClause(qc, leftParam, rightParam, invert)) {
 		return false;
 	}
 	return true;
@@ -2582,16 +2589,29 @@ unordered_map<int, vector<int>> Preprocessor::getSubQueryMapping() {
 	return subQueryMapping;
 }
 
-string Preprocessor::mapParamTypeToValue(ParamType paramType) {
+string Preprocessor::mapParamTypeToValue(ParamType paramType, AttrType attrType) {
 	
-	switch (paramType) {
-	case STMT: case ASSIGN: case WHILE: case IF: case PROG_LINE: case CALL:
-		return DUMMY_INTEGER_VALUE;
-	break;
-	case VARIABLE: case PROCEDURE:
-		return DUMMY_IDENTITY_VALUE;
-	break;
+	if (attrType != NONE) {
+		switch (attrType) {
+		case PROCNAME: case VARNAME:
+			return DUMMY_IDENTITY_VALUE;
+			break;
+		case VALUE: case STMT_NO:
+			return DUMMY_INTEGER_VALUE;
+			break;
+		}
 	}
+	else {
+		switch (paramType) {
+		case STMT: case ASSIGN: case WHILE: case IF: case PROG_LINE: case CALL: case CONSTANT:
+			return DUMMY_INTEGER_VALUE;
+			break;
+		case VARIABLE: case PROCEDURE:
+			return DUMMY_IDENTITY_VALUE;
+			break;
+		}
+	}
+
 }
 
 string Preprocessor::getArgValue(vector<string> queryArr, int &queryLength, int pos, 
@@ -2612,19 +2632,13 @@ string Preprocessor::getArgValue(vector<string> queryArr, int &queryLength, int 
 			return EMPTY_STRING;
 		}
 
+		if (queryArr.at(pos + queryLength).compare(endPoint) != 0) {
+			return EMPTY_STRING;
+		}
+		queryLength++;
+
 		QueryContent tempQueryContent = vqc.at(vqc.size() - 1);
 		Param tempSelectStmt = tempQueryContent.getSelect().at(0);
-
-		if (paramPos == LEFT_PARAM) {
-			if (!relTable.isValidLeftArg(relationshipKey, tempSelectStmt.type)) {
-				return EMPTY_STRING;
-			}
-		}
-		else {
-			if (!relTable.isValidRightArg(relationshipKey, tempSelectStmt.type)) {
-				return EMPTY_STRING;
-			}
-		}
 
 		if (nodeType == CLAUSE) {
 			insertSubQueryMap(vqc.size() - 1, nodeType,
@@ -2638,7 +2652,7 @@ string Preprocessor::getArgValue(vector<string> queryArr, int &queryLength, int 
 		}
 
 		//assign random dummy value
-		return mapParamTypeToValue(tempSelectStmt.type);
+		return mapParamTypeToValue(tempSelectStmt.type, tempSelectStmt.attribute);
 	}
 	else {
 		//Add all the Param
@@ -2664,23 +2678,54 @@ string Preprocessor::getExpressionValue(vector<string> queryArr, int &queryLengt
 			return EMPTY_STRING;
 		}
 
-		QueryContent tempQueryContent = vqc.at(vqc.size() - 1);
-		Param tempSelectStmt = tempQueryContent.getSelect().at(0);
-
-		//Use left arg type for RHS as well (only for pattern)
-		if (!relTable.isValidLeftArg(relationshipKey, tempSelectStmt.type)) {
+		if (queryArr.at(pos + queryLength).compare(endPoint) != 0) {
 			return EMPTY_STRING;
 		}
+		queryLength++;
+
+		QueryContent tempQueryContent = vqc.at(vqc.size() - 1);
+		Param tempSelectStmt = tempQueryContent.getSelect().at(0);
 
 		insertSubQueryMap(vqc.size() - 1, nodeType,
 			qc.getPattern().size() != 0 ? qc.getPattern().size() - 1 : 0,
 			paramPos);
 
 		//assign random dummy value
-		return mapParamTypeToValue(tempSelectStmt.type);
+		return mapParamTypeToValue(tempSelectStmt.type, tempSelectStmt.attribute);
 	}
 	else {
 		//Add all the Param
 		return retrievePatternFromQuery(queryArr, queryLength, pos, endPoint);
+	}
+}
+
+string Preprocessor::getWithParam(vector<string> queryArr, int &queryLength, int pos, CLAUSE_LEFT_OR_RIGHT paramPos, QueryContent &qc) {
+	
+	if ((pos + queryLength) >= queryArr.size()) {
+		return EMPTY_STRING;
+	}
+
+	if ((Utils::sanitise(queryArr.at(pos + queryLength))).at(0) == SYMBOL_OPEN_BRACKET) {
+		//Add Open Bracket
+		queryLength++;
+
+		if (!isValidSubQuery(queryArr, pos, queryLength, qc)) {
+			return EMPTY_STRING;
+		}
+
+		QueryContent tempQueryContent = vqc.at(vqc.size() - 1);
+		Param tempSelectStmt = tempQueryContent.getSelect().at(0);
+
+		insertSubQueryMap(vqc.size() - 1, WITH_CLAUSE,
+			qc.getWithClauses().size() != 0 ? qc.getWithClauses().size() - 1 : 0,
+			paramPos);
+
+		//assign random dummy value
+		return mapParamTypeToValue(tempSelectStmt.type, tempSelectStmt.attribute);
+	}
+	else {
+		string ref = Utils::sanitise(queryArr.at(pos + queryLength));
+		queryLength++;
+		return ref;
 	}
 }
