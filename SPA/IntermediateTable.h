@@ -12,6 +12,7 @@ struct IntermediateTable {
 	void setTableParams(vector<Param> params);
 	void setTableParams(map<Param, int> params);
 	void addTableParams(Param p);
+	void replaceTableParam(Param original, Param replacement);
 	void setResultsTable(vector<vector<int>> &table);
 	bool tableHasResults();
 
