@@ -2432,6 +2432,32 @@ std::vector<std::vector<int>> PKB::getStatementsWithConstant(int constant) {
 	return data;
 
 }
+std::vector<std::vector<int>> PKB::getAllConstantsFromProcedure(int constant) {
+
+	std::vector<std::vector<int>> data;
+	std::vector<std::vector<int>> table = PKB::getFromTable(CONST_PROC_TABLE, constant);
+
+	if (static_cast<int>(table.size()) > 0) {
+		for (int i = 0; i < table[0].size(); i++) {
+			data.push_back({ table[0][i] });
+		}
+	}
+	return data;
+
+}
+std::vector<std::vector<int>> PKB::getAllConstantsFromStatement(int constant) {
+
+	std::vector<std::vector<int>> data;
+	std::vector<std::vector<int>> table = PKB::getFromTable(CONST_STMT_TABLE, constant);
+
+	if (static_cast<int>(table.size()) > 0) {
+		for (int i = 0; i < table[0].size(); i++) {
+			data.push_back({ table[0][i] });
+		}
+	}
+	return data;
+
+}
 std::vector<std::vector<int>> PKB::getProceduresWithConstant(int constant) {
 
 	std::vector<std::vector<int>> data;
