@@ -152,23 +152,129 @@ int QueryOptimization::getTotalWeight(Clause &clause, int resultsWeight, int syn
 
 /* Gets number of results from evaluation of clause */
 int QueryOptimization::getNumResultsOfClause(Clause &clause) {
-	if () {
-	} else if () {
-	} else if () {
-	} else if () {
-	} else if () {
-	} else if () {
-	} else if () {
-	} else if () {
-	} else if () {
-	} else if () {
-	} else if () {
-	} else if () {
-	} else if () {
-	}
 
-	Modifies, Uses, Parent, ParentT, Follows, FollowsT,
-	Next, NextT, Calls, CallsT, Affects, AffectsT, With, None
+	RelRef clauseRelation = clause.getRelRef();
+	int synConstCase = getSynConstCase(clause);
+
+	if (clauseRelation == Parent) {
+		if (synConstCase = 1) { // Syn, Syn
+		}
+		if (synConstCase = 2) { // Syn, Concrete
+		}
+		if (synConstCase = 3) { // Concrete, Syn
+		}
+		if (synConstCase = 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == ParentT) {
+		if (synConstCase = 1) { // Syn, Syn
+		}
+		if (synConstCase = 2) { // Syn, Concrete
+		}
+		if (synConstCase = 3) { // Concrete, Syn
+		}
+		if (synConstCase = 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == Follows) {
+		if (synConstCase = 1) { // Syn, Syn
+		}
+		if (synConstCase = 2) { // Syn, Concrete
+		}
+		if (synConstCase = 3) { // Concrete, Syn
+		}
+		if (synConstCase = 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == FollowsT) {
+		if (synConstCase = 1) { // Syn, Syn
+		}
+		if (synConstCase = 2) { // Syn, Concrete
+		}
+		if (synConstCase = 3) { // Concrete, Syn
+		}
+		if (synConstCase = 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == Uses) {
+		if (synConstCase = 1) { // Syn, Syn
+		}
+		if (synConstCase = 2) { // Syn, Concrete
+		}
+		if (synConstCase = 3) { // Concrete, Syn
+		}
+		if (synConstCase = 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == Modifies) {
+		if (synConstCase = 1) { // Syn, Syn
+		}
+		if (synConstCase = 2) { // Syn, Concrete
+		}
+		if (synConstCase = 3) { // Concrete, Syn
+		}
+		if (synConstCase = 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == Calls) {
+		if (synConstCase = 1) { // Syn, Syn
+		}
+		if (synConstCase = 2) { // Syn, Concrete
+		}
+		if (synConstCase = 3) { // Concrete, Syn
+		}
+		if (synConstCase = 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == CallsT) {
+		if (synConstCase = 1) { // Syn, Syn
+		}
+		if (synConstCase = 2) { // Syn, Concrete
+		}
+		if (synConstCase = 3) { // Concrete, Syn
+		}
+		if (synConstCase = 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == Affects) {
+		if (synConstCase = 1) { // Syn, Syn
+		}
+		if (synConstCase = 2) { // Syn, Concrete
+		}
+		if (synConstCase = 3) { // Concrete, Syn
+		}
+		if (synConstCase = 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == AffectsT) {
+		if (synConstCase = 1) { // Syn, Syn
+		}
+		if (synConstCase = 2) { // Syn, Concrete
+		}
+		if (synConstCase = 3) { // Concrete, Syn
+		}
+		if (synConstCase = 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == With) {
+		if (synConstCase = 1) { // Syn, Syn
+		}
+		if (synConstCase = 2) { // Syn, Concrete
+		}
+		if (synConstCase = 3) { // Concrete, Syn
+		}
+		if (synConstCase = 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == None) { // Pattern
+	}
+};
+
+/* Gets case of parameters
+Case 1: syn, syn
+Case 2: syn, concrete
+Case 3: concrete, syn
+Case 4: concrete, concrete
+*/
+int QueryOptimization::getSynConstCase(Clause &clause) {
+	Param lhs = clause.getLeftParam();
+	Param rhs = clause.getRightParam();
+	if (Utils::isSynonym(lhs)) {
+		if (Utils::isSynonym(rhs)) return 1;
+		else return 2;
+	} else {
+		if (Utils::isSynonym(rhs)) return 3;
+		else return 4;
+	}
 };
 
 /* Get number of synonyms within clause */
@@ -179,43 +285,45 @@ int QueryOptimization::getNumSynsOfClause(Clause &clause) {
 	if (Utils::isSynonym(leftParam)) numParams++;
 	if (Utils::isSynonym(rightParam)) numParams++;
 	return numParams;
-};
+}
 
 /* Get weight of each relation */
 int QueryOptimization::getRelationWeightOfClause(Clause &clause) {
 	RelRef clauseRelation = clause.getRelRef();
 	switch (clauseRelation) {
-	With:
+	case With:
 		return 0;
-	Follows:
+	case Follows:
 		return 5;
-	FollowsT:
+	case FollowsT:
 		return 8;
-	Parent:
+	case Parent:
 		return 5;
-	ParentT:
+	case ParentT:
 		return 8;
-	Uses:
+	case Uses:
 		return 5;
-	Modifies:
+	case Modifies:
 		return 5;
-	Calls:
+	case Calls:
 		return 5;
-	CallsT:
+	case CallsT:
 		return 8;
-	None: // Pattern
+	case None: // Pattern
 		return 10;
-	Next:
+	case Next:
 		return 20;
-	NextT:
+	case NextT:
 		return 50;
-	Affects:
+	case Affects:
 		return 100;
-	AffectsT:
+	case AffectsT:
 		return 500;
+	}
 };
 
 /* Sorts according to total weight of each group */
-vector<vector<Clause>> sortGroupsEvalOrder(map<int, vector<Clause>> &clauseGroups) {
-
+vector<vector<Clause>> QueryOptimization::sortGroupsEvalOrder(map<int, vector<Clause>> &clauseGroups) {
+	vector<vector<Clause>> sortedEvalGroups;
+	return sortedEvalGroups;
 };

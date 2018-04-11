@@ -45,6 +45,7 @@ public:
 	static vector<Clause> sortWithinGroup(vector<Clause> &clauseGroup);
 	static int getTotalWeight(Clause &clause, int resultsWeight, int synsWeight, int relationWeight);
 	static int getNumResultsOfClause(Clause &clause);
+	static int getSynConstCase(Clause &clause);
 	static int getNumSynsOfClause(Clause &clause);
 	static int getRelationWeightOfClause(Clause &clause);
 
