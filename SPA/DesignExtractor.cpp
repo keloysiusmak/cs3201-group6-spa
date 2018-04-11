@@ -322,8 +322,11 @@ void DesignExtractor::precomputeConstants(PKB& pkb) {
 	std::vector<std::vector<int>> constants = pkb.getAllConstants();
 	std::vector<int> output;
 	for (int i = 0; i < constants.size(); i++) {
-		pkb.insertToTable(CONST_STMT_TABLE, 1, { {constants[i][0]} });
-		pkb.insertToTable(CONST_PROC_TABLE, 1, { { pkb.getProcedureFromStatement(constants[i][0]) } });
+		std::vector<int> stmts = pkb.getFromTable(CONST_TABLE, constants[i][0])[0];
+		for (int stmt : stmts) {
+			pkb.insertToTable(CONST_STMT_TABLE, stmt, { {constants[i][0]} });
+			pkb.insertToTable(CONST_PROC_TABLE, pkb.getProcedureFromStatement(stmt)[0][0], { {constants[i][0] } });
+		}
 	}
 }
 
