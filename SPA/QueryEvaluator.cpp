@@ -878,12 +878,27 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 				int paramValue = tableRow[indexOfParam];
 
 				string value;
-				if (selectedParams[j].type == PROCEDURE) {
+				Param currentParam = selectedParams[j];
+				if (currentParam.type == PROCEDURE) {
 					value = pkb.getProcedureName(paramValue);
-				} else if (selectedParams[j].type == VARIABLE) {
+				} else if (currentParam.type == VARIABLE) {
 					value = pkb.getVariableName(paramValue);
+				} else if (currentParam.type == CALL) { // Special case with calls
+					if (currentParam.attribute == PROCNAME) { // Get procname
+						if (mergedTable.getParamAttr(currentParam) == PROCNAME) { // Same attr in table
+							value = pkb.getProcedureName(paramValue);
+						} else { // Different attr
+							value = "To be implemented";
+						}
+					} else { // Get line number
+						if (mergedTable.getParamAttr(currentParam) != PROCNAME) { // Same attr in table
+							value = to_string(paramValue);
+						} else { // Different attr
+							value = "To be implemented";
+						} 
+					}
 				} else {
-					value = to_string(tableRow[indexOfParam]);
+					value = to_string(paramValue);
 				}
 
 				if (j == selectedParams.size() - 1) tupleRowString << value;
