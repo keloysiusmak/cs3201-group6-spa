@@ -311,9 +311,7 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 			vector<vector<int>> results;
 			if (rightParam.type == INTEGER) { // RHS is integer constant
 				if (leftParam.type == PROCEDURE) {
-					// results = pkb.getProceduresWithConstant(stoi(rightParam.value));
-					// Wrong answer placeholder awaiting pkb implementation
-					results = pkb.getStatementsWithConstant(stoi(rightParam.value));
+					results = pkb.getProceduresWithConstant(stoi(rightParam.value));
 				} else {
 					results = pkb.getStatementsWithConstant(stoi(rightParam.value));
 				}
@@ -724,11 +722,23 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 	}
 
 	vector<vector<int>> updatedTable;
-	for (vector<int> tableRow : iTable.resultsTable) {
-		if (tableRow[paramIndex] == valueOfParam) updatedTable.push_back(tableRow);
+	if (paramInTable.type != CALL) { // Normal filtering
+		for (vector<int> tableRow : iTable.resultsTable) {
+			if (tableRow[paramIndex] == valueOfParam) updatedTable.push_back(tableRow);
+		}
+		iTable.setResultsTable(updatedTable);
+	} else { // CALL case,
+		Param clauseCallParam;
+		set<string> clauseCallValues;
+		if (Utils::isSynonym(clause.getLeftParam())) { // Left param is CALL
+			clauseCallParam = clause.getLeftParam();
+			clauseCallValues.insert(clause.getRightParam().value);
+		} else { // Right param is CALL
+			clauseCallParam = clause.getRightParam();
+			clauseCallValues.insert(clause.getLeftParam().value);
+		}
+		handleCallInWithClause(clauseCallParam, clauseCallValues, iTable);
 	}
-	iTable.setResultsTable(updatedTable);
-
 };
 
 /* Filters table for with equating two variables */
@@ -738,24 +748,29 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 	int firstParamTableIndex = iTable.getParamIndex(lhs);
 	int secondParamTableIndex = iTable.getParamIndex(rhs);
 
-	vector<vector<int>> updatedTable;
-	for (vector<int> tableRow : iTable.resultsTable) {
-		int lhsIntValue = tableRow[firstParamTableIndex];
-		int rhsIntValue = tableRow[secondParamTableIndex];
+	if (lhs.type != CALL && rhs.type != CALL) {
+		vector<vector<int>> updatedTable;
+		for (vector<int> tableRow : iTable.resultsTable) {
+			int lhsIntValue = tableRow[firstParamTableIndex];
+			int rhsIntValue = tableRow[secondParamTableIndex];
 
-		if (lhs.attribute == PROCNAME || lhs.attribute == VARNAME) { // Compare string value
-			if (getProcOrVarName(lhs.attribute, lhsIntValue) ==
-				getProcOrVarName(rhs.attribute, rhsIntValue)) {
+			if (lhs.attribute == PROCNAME || lhs.attribute == VARNAME) { // Compare string value
+				if (getProcOrVarName(lhs.attribute, lhsIntValue) ==
+					getProcOrVarName(rhs.attribute, rhsIntValue)) {
+					updatedTable.push_back(tableRow);
+				}
+			}
+			else if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
 				updatedTable.push_back(tableRow);
 			}
-		}
-		else if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
-			updatedTable.push_back(tableRow);
-		}
-		else { ; }
+			else { ; }
 
+		}
+		iTable.setResultsTable(updatedTable);
 	}
-	iTable.setResultsTable(updatedTable);
+	else { // CALL
+		// TO BE IMPLEMENTED
+	}
 };
 
 /* Handles with evaluation when not found in table */
@@ -766,62 +781,95 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 	vector<vector<int>> withResults;
 
 	withClauseResults.instantiateClause(withClause);
-	if (Utils::isSynonym(lhs) && Utils::isSynonym(rhs)) { // Both are synonyms
-		set<int> lhsParamSet = getParamSet(lhs);
-		set<int> rhsParamSet = getParamSet(rhs);
+	if (Utils::isSynonym(lhs) || Utils::isSynonym(rhs)) {
+		// Both synonyms
+		if (Utils::isSynonym(lhs) && Utils::isSynonym(rhs)) {
+			set<int> lhsParamSet = getParamSet(lhs);
+			set<int> rhsParamSet = getParamSet(rhs);
+			Utils::intersectSets(lhsParamSet, rhsParamSet, withResults);
 
-		for (int value : lhsParamSet) {
-			vector<int> withTableRow;
-			if (rhsParamSet.find(value) != rhsParamSet.end()) {
-				withTableRow.push_back(value); withTableRow.push_back(value);
-				withResults.push_back(withTableRow);
+		} else if (Utils::isSynonym(lhs)) { // LHS syn
+			set<int> lhsParamSet = getParamSet(lhs);
+
+			for (int value : lhsParamSet) {
+				vector<int> withTableRow;
+				withTableRow.clear();
+				if (value == getId(rhs, lhs.type, lhs.attribute)) {
+					withTableRow.push_back(value);
+					withResults.push_back(withTableRow);
+				}
+			}
+
+		} else if (Utils::isSynonym(rhs)) { // RHS syn
+			set<int> rhsParamSet = getParamSet(rhs);
+
+			for (int value : rhsParamSet) {
+				vector<int> withTableRow;
+				if (value == getId(lhs, rhs.type, rhs.attribute)) {
+					withTableRow.push_back(value);
+					withResults.push_back(withTableRow);
+				}
 			}
 		}
+
+		// Merge directly (No consideration for calls since not in table)
 		if (withResults.size() > 0) {
 			withClauseResults.setResults(withResults);
 			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
 			return true;
 		}
-
-	} else if (Utils::isSynonym(lhs)) { // LHS syn
-		set<int> lhsParamSet = getParamSet(lhs);
-
-		for (int value : lhsParamSet) {
-			vector<int> withTableRow;
-			withTableRow.clear();
-			if (value == getId(rhs, lhs.type, lhs.attribute)) {
-				withTableRow.push_back(value);
-				withResults.push_back(withTableRow);
-			}
-		}
-
-		if (withResults.size() > 0) {
-			withClauseResults.setResults(withResults);
-			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-			return true;
-		}
-
-	} else if (Utils::isSynonym(rhs)) { // RHS syn
-		set<int> rhsParamSet = getParamSet(rhs);
-
-		for (int value : rhsParamSet) {
-			vector<int> withTableRow;
-			if (value == getId(lhs, rhs.type, rhs.attribute)) {
-				withTableRow.push_back(value);
-			}
-		}
-
-		if (withResults.size() > 0) {
-			withClauseResults.setResults(withResults);
-			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-			return true;
-		}
-	}
-	else {
+		return false;
+	} else {
 		return lhs.value == rhs.value;
 	}
-	return false;
-}
+};
+
+/* Handles Calls in With Clause */
+void QueryEvaluator::handleCallInWithClause(Param clauseCallParam, set<string> &clauseCallValues, IntermediateTable &iTable) {
+
+	int paramTableIndex = iTable.getParamIndex(clauseCallParam);
+	Param tableCallParam = iTable.getParamFromIndex(paramTableIndex);
+
+	vector<vector<int>> filteredResults;
+	// Iterate through possible assignment values
+	for (vector<int> tableRow : iTable.resultsTable) {
+		for (string callValue : clauseCallValues) {
+			int intCallValue = (clauseCallParam.attribute == PROCNAME) ?
+				pkb.getProcedureId(callValue) : stoi(callValue);
+			if (clauseCallParam.attribute == tableCallParam.attribute) { // Trivial merge
+				if (intCallValue == tableRow[paramTableIndex]) {
+					filteredResults.push_back(tableRow);
+				}
+			} else if (clauseCallParam.attribute != PROCNAME) { // clause PROG_LINE, table STMT_NO
+
+				/* Get all statements numbers from called procedure in row and check equality with clause
+				program line. Replaces p.procname with p.prog_line (more limiting) */
+				vector<vector<int>> progLines = pkb.getCallStatementsCallingProcedure(tableRow[paramTableIndex]);
+				for (vector<int> progLine : progLines) {
+					if (progLine[0] == intCallValue) {
+						tableRow[paramTableIndex] = intCallValue;
+						filteredResults.push_back(tableRow);
+					}
+				}
+
+			} else { // clause PROCNAME, table STMT_NO
+				vector<vector<int>> progLines = pkb.getCallStatementsCallingProcedure(intCallValue);
+				for (vector<int> progLine : progLines) {
+					if (progLine[0] == tableRow[paramTableIndex]) {
+						filteredResults.push_back(tableRow);
+					}
+				}
+			}
+		}
+	}
+
+	/* replace tables CALL.PROCNAME with CALL.PROG_LINE params */
+	if (clauseCallParam.attribute != PROCNAME && tableCallParam.attribute == PROCNAME) {
+		iTable.replaceTableParam(tableCallParam, clauseCallParam);
+	}
+	iTable.setResultsTable(filteredResults);
+
+};
 
 /* Returns id for string value */
 int QueryEvaluator::getId(Param p, ParamType type, AttrType attribute) {
@@ -905,20 +953,26 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 					if (currentParam.attribute == PROCNAME) { // Get procname
 						if (mergedTable.getParamAttr(currentParam) == PROCNAME) { // Same attr in table
 							value = pkb.getProcedureName(paramValue);
-						} else { // Different attr
-							value = "To be implemented";
+						} else { // Calls line num in table, get procname from line
+							int procId = pkb.getProcedureCalledByCallStatement(paramValue)[0][0];
+							value = pkb.getProcedureName(procId);
 						}
 					} else { // Get line number
 						if (mergedTable.getParamAttr(currentParam) != PROCNAME) { // Same attr in table
 							value = to_string(paramValue);
-						} else { // Different attr
-							value = "To be implemented";
+						} else { // Calls.procname in table, get calls line number
+							vector<vector<int>> lineNums = pkb.getCallStatementsCallingProcedure(paramValue);
+							for (vector<int> lineNum : lineNums) {
+								value = to_string(lineNum[0]);
+								if (j == selectedParams.size() - 1) tupleRowString << value;
+								else tupleRowString << value << " ";
+							}
+							continue;
 						} 
 					}
-				} else {
+				} else { // Default case just convert int to string
 					value = to_string(paramValue);
 				}
-
 				if (j == selectedParams.size() - 1) tupleRowString << value;
 				else tupleRowString << value << " ";
 			}

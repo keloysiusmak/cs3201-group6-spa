@@ -21,6 +21,14 @@ void IntermediateTable::addTableParams(Param p) {
 	tableParams[p] = index;
 };
 
+void IntermediateTable::replaceTableParam(Param original, Param replacement) {
+	int paramIndex = getParamIndex(original);
+	Param* originalParamPointer = &(getParamFromIndex(paramIndex));
+	originalParamPointer->type = replacement.type;
+	originalParamPointer->value = replacement.value;
+	originalParamPointer->attribute = replacement.attribute;
+};
+
 void IntermediateTable::setResultsTable(vector<vector<int>> &table) {
 	resultsTable = table;
 };
