@@ -137,6 +137,7 @@ public:
 
 	/* Constant Operations */
 	std::vector<std::vector<int>> getStatementsWithConstant(int);
+	std::vector<std::vector<int>> getProceduresWithConstant(int);
 	std::vector<std::vector<int>> getAllConstants();
 
 };
