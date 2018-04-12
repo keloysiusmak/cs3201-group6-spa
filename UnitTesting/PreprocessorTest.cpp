@@ -457,8 +457,8 @@ public:
 		vector<string> clause1 = { "Uses", "(", "a", ",", "v", ")" };
 		vector<string> clause2 = { "Uses", "(", "a", ",", "(", "Select", "v", "such", "that", "Follows", "(", "1", ",", "2", ")", ")", ")" };
 
-		int clauseLength1 = 1;
-		int clauseLength2 = 1;
+		int clauseLength1 = 0;
+		int clauseLength2 = 0;
 
 		preprocessor.isValidClause(clause1, clauseLength1, 0, qc, false);
 		preprocessor.isValidClause(clause2, clauseLength2, 0, qc, false);
@@ -500,8 +500,8 @@ public:
 		vector<string> pattern1 = { "a", "(", "v", ",", "\"x + 3\"", ")" };
 		vector<string> pattern2 = { "a", "(", "v", ",", "(", "Select", "v", "such", "that", "Follows", "(", "1", ",", "2", ")", ")", ")" };
 
-		int patternLength1 = 1;
-		int patternLength2 = 1;
+		int patternLength1 = 0;
+		int patternLength2 = 0;
 
 		preprocessor.isValidPattern(pattern1, patternLength1, 0, qc, false);
 		preprocessor.isValidPattern(pattern2, patternLength2, 0, qc, false);
@@ -663,7 +663,7 @@ public:
 		arg2 = "\"x	+ y - 1\"";
 		preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false);
 
-		expectedRightParam.type = EXPR;
+		expectedRightParam.type = EXPR_EXACT;
 		expectedRightParam.value = "x|y|+|1|-|";
 		expectedRightParam.attribute = NONE;
 
@@ -675,6 +675,7 @@ public:
 
 		arg1 = "v";
 		arg2 = "_";
+		preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false);
 
 		expectedRightParam.type = ALL;
 		expectedRightParam.value = "_";
@@ -787,6 +788,7 @@ public:
 
 		arg1 = "p.procName";
 		arg2 = "c.procName";
+		preprocessor.parseWithClause(qc, arg1, arg2, false);
 
 		expectedRightParam.type = CALL;
 		expectedRightParam.value = "c";
