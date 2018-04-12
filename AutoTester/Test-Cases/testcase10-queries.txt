@@ -1,6 +1,6 @@
 1 - 
-stmt s1; while w1; prog_line n1; if ifs1; 
-Select <s1, w1, n1, ifs1> such that Follows(s1, w1) such that Follows(s1, n1) such that Follows(w1, ifs1)
+stmt s1; call c1, c2; if ifs1; 
+Select <s1, c1, c2, ifs1> such that Parent(s1, c1) with ifs1.stmt# = c1.procName such that Parent(s1, c2)
 
 5000
 2 - 
