@@ -86,9 +86,7 @@ void EvaluatorHelper::mergeWithoutOverlap(ClauseResults &clauseResults, Intermed
 	iTable.setResultsTable(newTable);
 };
 
-/* With overlapping synonyms
-Possible optimization: Hash results / Sort merge tables
-*/
+/* With overlapping synonyms */
 void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, IntermediateTable &iTable) {
 
 	if (clauseResults.numParamsInResult() == 2) { // Two synonyms

@@ -60,12 +60,12 @@ list<string> QueryEvaluator::evaluateQuery() {
 		map<Clause, vector<vector<int>>> cache; // For cached results
 
 		vector<IntermediateTable> tables;
-		for (pair<int, vector<Clause>> groupedClauses : sortedClauses) {
+		for (vector<Clause> groupedClauses : sortedGroupEvalOrder) {
 
 			IntermediateTable iTable; // Instantiate table for each group
 			iTable.instantiateTable();
 			// Evaluate each clause within group
-			for (Clause clause : groupedClauses.second) {
+			for (Clause clause : groupedClauses) {
 				ClauseResults clauseResults;
 				evaluateClauseGeneral(clause, clauseResults, iTable, cache);
 			}
@@ -81,7 +81,6 @@ list<string> QueryEvaluator::evaluateQuery() {
 		}
 		cache.clear();
 
-		// To be refactored...
 		return extractParams(selectParams, tables);
 
 	}
