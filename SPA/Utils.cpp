@@ -297,9 +297,15 @@ bool Utils::compareClauseNode(ClauseNode cn1, ClauseNode cn2) {
 		if (!Utils::compareClauseNode(cn1.getChildren()[i], cn2.getChildren()[i])) return false;
 	}
 	if (cn1.getClauseNodeType() != cn2.getClauseNodeType()) return false;
-	if (!Utils::compareClause(cn1.getClause(), cn2.getClause())) return false;
-	if (!Utils::compareClause(cn1.getPattern(), cn2.getPattern())) return false;
-	if (!Utils::compareClause(cn1.getWithClause(), cn2.getWithClause())) return false;
+	if (cn1.getClauseNodeType() == CLAUSE) {
+		if (!Utils::compareClause(cn1.getClause(), cn2.getClause())) return false;
+	} 
+	else if (cn1.getClauseNodeType() == PATTERN) {
+		if (!Utils::compareClause(cn1.getPattern(), cn2.getPattern())) return false;
+	}
+	else if (cn1.getClauseNodeType() == WITH_CLAUSE) {
+		if (!Utils::compareClause(cn1.getWithClause(), cn2.getWithClause())) return false;
+	}
 
 	return true;
 };
