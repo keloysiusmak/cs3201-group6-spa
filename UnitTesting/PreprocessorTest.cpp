@@ -445,6 +445,97 @@ public:
 		Assert::AreEqual(true, Utils::compareParam(retrieveFromQueryContent2, expectedSelect2));
 	}
 
+	TEST_METHOD(PreprocessorIsValidClause) {
+		Preprocessor preprocessor;
+
+		//Populate the declarationMap
+		preprocessor.insertDeclarationToMap("a", "assign");
+		preprocessor.insertDeclarationToMap("v", "variable");
+
+		QueryContent qc;
+
+		vector<string> clause1 = { "Uses", "(", "a", ",", "v", ")" };
+		vector<string> clause2 = { "Uses", "(", "a", ",", "(", "Select", "v", "such", "that", "Follows", "(", "1", ",", "2", ")", ")", ")" };
+
+		int clauseLength1 = 1;
+		int clauseLength2 = 1;
+
+		preprocessor.isValidClause(clause1, clauseLength1, 0, qc, false);
+		preprocessor.isValidClause(clause2, clauseLength2, 0, qc, false);
+
+		Param expectedLeftParam;
+		expectedLeftParam.type = ASSIGN;
+		expectedLeftParam.value = "a";
+		expectedLeftParam.attribute = NONE;
+
+		Param expectedRightParam;
+		expectedRightParam.type = VARIABLE;
+		expectedRightParam.value = "v";
+		expectedRightParam.attribute = NONE;
+		
+		Clause expectedClause1(Uses, expectedLeftParam, expectedRightParam, false);
+
+		expectedRightParam.type = VAR_IDENT;
+		expectedRightParam.value = "x";
+		expectedRightParam.attribute = NONE;
+
+		Clause expectedClause2(Uses, expectedLeftParam, expectedRightParam, false);
+
+		Clause retrieveFromQueryContent1 = qc.getClauses().at(0).getClause();
+		Clause retrievefromQueryContent2 = qc.getClauses().at(1).getClause();
+		
+		Assert::AreEqual(true, Utils::compareClause(retrieveFromQueryContent1, expectedClause1));
+		Assert::AreEqual(true, Utils::compareClause(retrievefromQueryContent2, expectedClause2));
+	}
+
+	TEST_METHOD(PreprocessorIsValidPattern) {
+		Preprocessor preprocessor;
+
+		//Populate the declarationMap
+		preprocessor.insertDeclarationToMap("a", "assign");
+		preprocessor.insertDeclarationToMap("v", "variable");
+
+		QueryContent qc;
+
+		vector<string> pattern1 = { "a", "(", "v", ",", "\"x + 3\"", ")" };
+		vector<string> pattern2 = { "a", "(", "v", ",", "(", "Select", "v", "such", "that", "Follows", "(", "1", ",", "2", ")", ")", ")" };
+
+		int patternLength1 = 1;
+		int patternLength2 = 1;
+
+		preprocessor.isValidPattern(pattern1, patternLength1, 0, qc, false);
+		preprocessor.isValidPattern(pattern2, patternLength2, 0, qc, false);
+
+		Param expectedEntity;
+		expectedEntity.type = ASSIGN;
+		expectedEntity.value = "a";
+		expectedEntity.attribute = NONE;
+
+		Param expectedLeftParam;
+		expectedLeftParam.type = VARIABLE;
+		expectedLeftParam.value = "v";
+		expectedLeftParam.attribute = NONE;
+
+		Param expectedRightParam;
+		expectedRightParam.type = EXPR_EXACT;
+		expectedRightParam.value = "x|3|+|";
+		expectedRightParam.attribute = NONE;
+
+		Pattern expectedPattern1(expectedEntity, expectedLeftParam, expectedRightParam, false);
+
+		expectedRightParam.type = EXPR_EXACT;
+		expectedRightParam.value = "x|";
+		expectedRightParam.attribute = NONE;
+
+		Pattern expectedPattern2(expectedEntity, expectedLeftParam, expectedRightParam, false);
+
+		Pattern retrieveFromQueryContent1 = qc.getPattern().at(0).getPattern();
+		Pattern retrieveFromQueryContent2 = qc.getPattern().at(1).getPattern();
+
+		Assert::AreEqual(true, Utils::comparePattern(retrieveFromQueryContent1, expectedPattern1));
+		Assert::AreEqual(true, Utils::comparePattern(retrieveFromQueryContent2, expectedPattern2));
+	}
+
 	TEST_METHOD(PreprocessorIsDeclarationSynonymExist) {
 
 		preprocessor.insertDeclarationToMap("a", "assign");
@@ -652,7 +743,7 @@ public:
 		expectedRightParam.attribute = NONE;
 
 		Clause expectedWithClause1(With, expectedLeftParam, expectedRightParam, false);
-		Clause retrieveFromQueryContent = qc.getClauses().at(0).getWithClause();
+		Clause retrieveFromQueryContent = qc.getWithClauses().at(0).getWithClause();
 
 		//Valid
 		Assert::AreEqual(true, Utils::compareWithClause(retrieveFromQueryContent, expectedWithClause1));
@@ -670,7 +761,7 @@ public:
 		expectedRightParam.attribute = STMT_NO;
 
 		Clause expectedWithClause2(With, expectedLeftParam, expectedRightParam, false);
-		retrieveFromQueryContent = qc.getClauses().at(1).getWithClause();
+		retrieveFromQueryContent = qc.getWithClauses().at(1).getWithClause();
 
 		//Valid
 		Assert::AreEqual(true, Utils::compareWithClause(retrieveFromQueryContent, expectedWithClause2));
@@ -688,7 +779,7 @@ public:
 		expectedRightParam.attribute = NONE;
 
 		Clause expectedWithClause3(With, expectedLeftParam, expectedRightParam, false);
-		retrieveFromQueryContent = qc.getClauses().at(2).getWithClause();
+		retrieveFromQueryContent = qc.getWithClauses().at(2).getWithClause();
 
 		//Valid
 		Assert::AreEqual(true, Utils::compareWithClause(retrieveFromQueryContent, expectedWithClause3));
@@ -702,7 +793,7 @@ public:
 		expectedRightParam.attribute = PROCNAME;
 
 		Clause expectedWithClause4(With, expectedLeftParam, expectedRightParam, false);
-		retrieveFromQueryContent = qc.getClauses().at(3).getWithClause();
+		retrieveFromQueryContent = qc.getWithClauses().at(3).getWithClause();
 
 		//Valid
 		Assert::AreEqual(true, Utils::compareWithClause(retrieveFromQueryContent, expectedWithClause4));
