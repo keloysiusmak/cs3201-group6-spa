@@ -135,7 +135,28 @@ Node* QueryOptimization::findSet(Node &n, map<Param, Node> &paramsHash) {
 
 /* Sorts clauses within group to optimize order of evaluation */
 vector<Clause> QueryOptimization::sortWithinGroup(vector<Clause> &clauseGroup, PKB &pkb) {
-	
+
+	map<Clause, int> clauseTotalWeight;
+	for (Clause clause : clauseGroup) {
+		int clauseWeight = getTotalWeight(clause, 1, 5, 2, pkb);
+		clauseTotalWeight[clause] = clauseWeight;
+	}
+
+	// Trivial selection sort
+	vector<Clause> sortedClauses;
+	int numClauses = clauseTotalWeight.size();
+	for (size_t i = 0; i < numClauses; i++) {
+		Clause currentMinWeightClause = (clauseTotalWeight.begin())->first; // Get first element
+		for (pair<Clause, int> clauseWeight : clauseTotalWeight) {
+			if (clauseWeight.second < clauseTotalWeight[currentMinWeightClause]) {
+				currentMinWeightClause = clauseWeight.first;
+			}
+		}
+		sortedClauses.push_back(currentMinWeightClause); // Add to sorted clauses
+		clauseTotalWeight.erase(currentMinWeightClause); // Delete from clauseTotalWeight map
+	}
+
+	return sortedClauses;
 };
 
 /* Gets the total weight of a clause with respective input weights */
