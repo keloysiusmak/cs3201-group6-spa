@@ -173,18 +173,42 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 				
 				if (tableRightParamValue == clauseRightParamValue) {
 
+					int clauseIndex = clauseResultsIndex;
 					int tableIndex = tableResultsIndex;
-					vector<int> tableRow;
-					while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][rightParamIndex] == clauseRightParamValue) {
-						tableRow = iTable.resultsTable[tableResultsIndex];
-						tableRow.push_back(clauseResults.results[clauseResultsIndex][0]);
-						tableIndex++;
-						mergedResults.push_back(tableRow);
-					}
-					tableResultsIndex++;
-					clauseResultsIndex++;
 
-				} else {
+					vector<int> rowToAdd;
+
+					if (clauseResultsIndex < clauseResults.results.size() - 1 &&
+						clauseResults.results[clauseResultsIndex + 1][1] == clauseRightParamValue) { // Clause next num is same
+
+						while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][rightParamIndex] == clauseRightParamValue) { // Iterate through iTable results and cross with clause results with same param value
+							rowToAdd = iTable.resultsTable[tableIndex];
+							rowToAdd.push_back(clauseResults.results[clauseResultsIndex][0]);
+							tableIndex++;
+							mergedResults.push_back(rowToAdd);
+						}
+						clauseResultsIndex++;
+					}
+					else if (tableResultsIndex < iTable.resultsTable.size() - 1 &&
+						iTable.resultsTable[tableResultsIndex + 1][rightParamIndex] == tableRightParamValue) { // iTable next num is same
+
+						while (clauseIndex < clauseResults.results.size() && clauseResults.results[clauseIndex][1] == clauseRightParamValue) { // Iterate through clause results and cross with iTable results with same param value
+							rowToAdd = iTable.resultsTable[tableResultsIndex];
+							rowToAdd.push_back(clauseResults.results[clauseIndex][0]);
+							clauseIndex++;
+							mergedResults.push_back(rowToAdd);
+						}
+						tableResultsIndex++;
+
+					} else { // Both next num diff, increment both
+						rowToAdd = iTable.resultsTable[tableResultsIndex];
+						rowToAdd.push_back(clauseResults.results[clauseResultsIndex][0]);
+						mergedResults.push_back(rowToAdd);
+						tableResultsIndex++;
+						clauseResultsIndex++;
+					}
+
+				} else { // Depending on which is bigger increment the pointer of the other
 					(tableRightParamValue < clauseRightParamValue) ?
 						tableResultsIndex++ : clauseResultsIndex++;
 				}
