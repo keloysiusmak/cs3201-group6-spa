@@ -53,6 +53,8 @@ list<string> QueryEvaluator::evaluateQuery() {
 			vector<Clause> groupSortedClass = QueryOptimization::sortWithinGroup(sortedClause.second, pkb);
 			sortedIntraGroupsClauses.push_back(groupSortedClass);
 		}
+		// Sort for evaluation order of groups by total weight
+		vector<vector<Clause>> sortedGroupEvalOrder = QueryOptimization::sortGroupsEvalOrder(sortedIntraGroupsClauses, pkb);
 
 		vector<Param> selectParams = queryObject.getSelectStatements(); // Selected Params
 		map<Clause, vector<vector<int>>> cache; // For cached results
