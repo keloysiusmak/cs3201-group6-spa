@@ -439,7 +439,48 @@ int QueryOptimization::getRelationWeightOfClause(Clause &clause) {
 };
 
 /* Sorts according to total weight of each group */
-vector<vector<Clause>> QueryOptimization::sortGroupsEvalOrder(map<int, vector<Clause>> &clauseGroups) {
+vector<vector<Clause>> QueryOptimization::sortGroupsEvalOrder(vector<vector<Clause>> &clauseGroups, PKB &pkb) {
+
+	int RESULTSWEIGHT = 1;
+	int SYNSWEIGHT = 5;
+	int RELATIONWEIGHT = 2;
+
+	vector<int> groupWeights(clauseGroups.size());
+
+	/* Insantiate weight for each group in group weight vector */
+	for (size_t i = 0; i < clauseGroups.size(); i++) {
+		int groupWeight = 0;
+		for (Clause c : clauseGroups[i]) {
+			groupWeight = groupWeight + getTotalWeight(c, RESULTSWEIGHT, SYNSWEIGHT, RELATIONWEIGHT, pkb);
+		}
+		groupWeights[i] = groupWeight;
+	}
+	
+	int numClauseGroups = clauseGroups.size();
 	vector<vector<Clause>> sortedEvalGroups;
+
+	/* Actual sorting */
+	for (size_t i = 0; i < numClauseGroups; i++) {
+
+		int clauseGroupsCurrentSize = clauseGroups.size();
+		int currentLowestWeight = groupWeights[0];
+		int indexOfLowest = 0;
+
+		/* Double iterators to check through both vectors */
+		for (size_t j = 0; j < clauseGroupsCurrentSize; j++) {
+			if (groupWeights[j] < currentLowestWeight) {
+				currentLowestWeight = groupWeights[j];
+				indexOfLowest = j;
+			}
+		}
+
+		sortedEvalGroups.push_back(clauseGroups[indexOfLowest]);
+		/* Deletion from both vectors */
+		vector<vector<Clause>>::iterator deletionClauseIt = clauseGroups.begin() + indexOfLowest;
+		clauseGroups.erase(deletionClauseIt);
+		vector<int>::iterator deletionWeightIt = groupWeights.begin() + indexOfLowest;
+		groupWeights.erase(deletionWeightIt);
+	}
+	
 	return sortedEvalGroups;
 };

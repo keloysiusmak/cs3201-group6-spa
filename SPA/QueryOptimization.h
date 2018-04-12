@@ -46,5 +46,5 @@ public:
 	static int getNumSynsOfClause(Clause &clause);
 	static int getRelationWeightOfClause(Clause &clause);
 
-	static vector<vector<Clause>> sortGroupsEvalOrder(map<int, vector<Clause>> &clauseGroups);
+	static vector<vector<Clause>> sortGroupsEvalOrder(vector<vector<Clause>> &clauseGroups, PKB &pkb);
 };
