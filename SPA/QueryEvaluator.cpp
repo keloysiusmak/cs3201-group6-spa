@@ -47,6 +47,12 @@ list<string> QueryEvaluator::evaluateQuery() {
 
 		// Grouping according to syns
 		map<int, vector<Clause>> sortedClauses = QueryOptimization::sortIntoGroups(consolidatedClauses);
+		// Sort intra-group
+		vector<vector<Clause>> sortedIntraGroupsClauses;
+		for (pair<int, vector<Clause>> sortedClause : sortedClauses) {
+			vector<Clause> groupSortedClass = QueryOptimization::sortWithinGroup(sortedClause.second, pkb);
+			sortedIntraGroupsClauses.push_back(groupSortedClass);
+		}
 
 		vector<Param> selectParams = queryObject.getSelectStatements(); // Selected Params
 		map<Clause, vector<vector<int>>> cache; // For cached results
