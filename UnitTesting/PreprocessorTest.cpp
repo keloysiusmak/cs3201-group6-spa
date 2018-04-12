@@ -302,6 +302,20 @@ public:
 		Assert::AreNotEqual(true, preprocessor.isValidSynonym("#a"));
 	}
 
+	TEST_METHOD(PreprocessorIsValidIdent) {
+
+		Assert::AreEqual(true, preprocessor.isValidIdent("\"a\""));
+		Assert::AreEqual(true, preprocessor.isValidIdent("\"ab\""));
+		Assert::AreEqual(true, preprocessor.isValidIdent("\"a1\""));
+		Assert::AreEqual(true, preprocessor.isValidIdent("\"a#\""));
+
+		Assert::AreNotEqual(true, preprocessor.isValidIdent(""));
+		Assert::AreNotEqual(true, preprocessor.isValidIdent("1"));
+		Assert::AreNotEqual(true, preprocessor.isValidIdent("1a"));
+		Assert::AreNotEqual(true, preprocessor.isValidIdent("#a"));
+		Assert::AreNotEqual(true, preprocessor.isValidIdent("\"1\""));
+	}
+
 	TEST_METHOD(PreprocessorIsValidStmtRef) {
 
 		Assert::AreEqual(true, preprocessor.isValidStmtRef("a"));
@@ -337,6 +351,64 @@ public:
 		Assert::AreNotEqual(true, preprocessor.isValidEntRef("\"321\""));
 		Assert::AreNotEqual(true, preprocessor.isValidEntRef("\"1x\""));
 		Assert::AreNotEqual(true, preprocessor.isValidEntRef("\"#x\""));
+	}
+
+	TEST_METHOD(PreprocssorIsValidAttrRef) {
+		Assert::AreEqual(true, preprocessor.isValidAttrRef("s.stmt#"));
+		Assert::AreEqual(true, preprocessor.isValidAttrRef("v.varName"));
+		Assert::AreEqual(true, preprocessor.isValidAttrRef("p.procName"));
+		Assert::AreEqual(true, preprocessor.isValidAttrRef("c.value"));
+
+		Assert::AreNotEqual(true, preprocessor.isValidAttrRef(""));
+		Assert::AreNotEqual(true, preprocessor.isValidAttrRef("1a"));
+		Assert::AreNotEqual(true, preprocessor.isValidAttrRef("#a"));
+		Assert::AreNotEqual(true, preprocessor.isValidAttrRef("\"\""));
+		Assert::AreNotEqual(true, preprocessor.isValidAttrRef("\"321\""));
+		Assert::AreNotEqual(true, preprocessor.isValidAttrRef("\"1x\""));
+		Assert::AreNotEqual(true, preprocessor.isValidAttrRef("\"#x\""));
+		Assert::AreNotEqual(true, preprocessor.isValidAttrRef("c.consta"));
+		Assert::AreNotEqual(true, preprocessor.isValidAttrRef("s.stmt"));
+	}
+
+	TEST_METHOD(PreprocssorIsValidAttrName) {
+		Assert::AreEqual(true, preprocessor.isValidAttrName(ASSIGN, "stmt#"));
+		Assert::AreEqual(true, preprocessor.isValidAttrName(CALL, "stmt#"));
+		Assert::AreEqual(true, preprocessor.isValidAttrName(CALL, "procName"));
+		Assert::AreEqual(true, preprocessor.isValidAttrName(CONSTANT, "value"));
+		Assert::AreEqual(true, preprocessor.isValidAttrName(VARIABLE, "varName"));
+
+		Assert::AreNotEqual(true, preprocessor.isValidAttrName(PROG_LINE, "stmt#"));
+		Assert::AreNotEqual(true, preprocessor.isValidAttrName(PROCEDURE, "value"));
+		Assert::AreNotEqual(true, preprocessor.isValidAttrName(CALL, "varName"));
+		Assert::AreNotEqual(true, preprocessor.isValidAttrName(ASSIGN, "procName"));
+	}
+
+	TEST_METHOD(PreprocessorIsValidRef) {
+
+		Assert::AreEqual(true, preprocessor.isValidRef("a"));
+		Assert::AreEqual(true, preprocessor.isValidRef("ab"));
+		Assert::AreEqual(true, preprocessor.isValidRef("a1"));
+		Assert::AreEqual(true, preprocessor.isValidRef("a#"));
+		Assert::AreEqual(true, preprocessor.isValidRef("1"));
+		Assert::AreEqual(true, preprocessor.isValidRef("123"));
+		Assert::AreEqual(true, preprocessor.isValidRef("\"x\""));
+		Assert::AreEqual(true, preprocessor.isValidRef("\"xy\""));
+		Assert::AreEqual(true, preprocessor.isValidRef("\"x1\""));
+		Assert::AreEqual(true, preprocessor.isValidRef("\"x#\""));
+		Assert::AreEqual(true, preprocessor.isValidRef("s.stmt#"));
+		Assert::AreEqual(true, preprocessor.isValidRef("v.varName"));
+		Assert::AreEqual(true, preprocessor.isValidRef("p.procName"));
+		Assert::AreEqual(true, preprocessor.isValidRef("c.value"));
+
+		Assert::AreNotEqual(true, preprocessor.isValidRef(""));
+		Assert::AreNotEqual(true, preprocessor.isValidRef("1a"));
+		Assert::AreNotEqual(true, preprocessor.isValidRef("#a"));
+		Assert::AreNotEqual(true, preprocessor.isValidRef("\"\""));
+		Assert::AreNotEqual(true, preprocessor.isValidRef("\"321\""));
+		Assert::AreNotEqual(true, preprocessor.isValidRef("\"1x\""));
+		Assert::AreNotEqual(true, preprocessor.isValidRef("\"#x\""));
+		Assert::AreNotEqual(true, preprocessor.isValidRef("c.consta"));
+		Assert::AreNotEqual(true, preprocessor.isValidRef("s.stmt"));
 	}
 
 	TEST_METHOD(PreprocessorIsDeclarationSynonymExist) {

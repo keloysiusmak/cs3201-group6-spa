@@ -150,6 +150,9 @@ bool Utils::compareClauses(QueryObject qo1, QueryObject qo2) {
 			Clause c2 = qo2.getClauses().at(i);
 
 			isSameClauses = Utils::compareClause(c1, c2);
+			if (!isSameClauses) {
+				break;
+			}
 		}
 	}
 	return isSameClauses;
@@ -176,6 +179,9 @@ bool Utils::comparePatterns(QueryObject qo1, QueryObject qo2) {
 			Pattern p2 = qo2.getPatterns().at(i);
 
 			isSamePatterns = Utils::comparePattern(p1, p2);
+			if (!isSamePatterns) {
+				break;
+			}
 		}
 	}
 	return isSamePatterns;
@@ -203,6 +209,9 @@ bool Utils::compareWithClauses(QueryObject qo1, QueryObject qo2) {
 			Clause w2 = qo2.getWithClauses().at(i);
 
 			isSameWithClauses = Utils::compareWithClause(w1, w2);
+			if (!isSameWithClauses) {
+				return false;
+			}
 		}
 	}
 	return isSameWithClauses;
@@ -229,6 +238,9 @@ bool Utils::compareParams(QueryObject qo1, QueryObject qo2) {
 			Param s2 = qo1.getSelectStatements().at(i);
 
 			isSameSelectStatement = Utils::compareParam(s1, s2);
+			if (!isSameSelectStatement) {
+				break;
+			}
 		}
 	}
 	return isSameSelectStatement;
