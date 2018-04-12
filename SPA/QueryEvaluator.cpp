@@ -187,6 +187,10 @@ void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResu
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
+			/* if (leftParam.value == rightParam.value) {
+				validQuery = false;
+				evaluateQuery();
+			} */
 			if (clause.getIsInverted()) {
 				//vector<vector<int>> universeResults = pkb.getAllStatements() cross product pkb.getAllStatements()
 				//subtract pkb.getAllFollows() from universeResults
@@ -249,6 +253,10 @@ void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseR
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
+			/* if (leftParam.value == rightParam.value) {
+				validQuery = false;
+				evaluateQuery();
+			} */
 			vector<vector<int>> results = pkb.getAllFollowsStar();
 			clauseResults.setResults(results);
 		}
@@ -277,6 +285,10 @@ void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResul
 
 	if (Utils::isSynonym(leftParam)) { // (syn, syn)
 		if (Utils::isSynonym(rightParam)) {
+			/* if (leftParam.value == rightParam.value) {
+			validQuery = false;
+			evaluateQuery();
+			} */
 			vector<vector<int>> results = pkb.getAllParent();
 			clauseResults.setResults(results);
 		}
@@ -306,6 +318,10 @@ void QueryEvaluator::evaluateParentStar(Clause & clause, ClauseResults & clauseR
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
+			/* if (leftParam.value == rightParam.value) {
+				validQuery = false;
+				evaluateQuery();
+			} */
 			vector<vector<int>> results = pkb.getAllParentStar();
 			clauseResults.setResults(results);
 		}
@@ -521,6 +537,10 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 
 	if (Utils::isSynonym(leftParam)) { // (syn, syn)
 		if (Utils::isSynonym(rightParam)) {
+			/* if (leftParam.value == rightParam.value) {
+			validQuery = false;
+			evaluateQuery();
+			} */
 			vector<vector<int>> results = pkb.getAllCalls();
 			clauseResults.setResults(results);
 		}
@@ -551,6 +571,10 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
+			/* if (leftParam.value == rightParam.value) {
+				validQuery = false;
+				evaluateQuery();
+			} */
 			vector<vector<int>> results = pkb.getAllCallsStar();
 			clauseResults.setResults(results);
 		}
