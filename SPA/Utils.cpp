@@ -246,8 +246,8 @@ bool Utils::compareParams(QueryObject qo1, QueryObject qo2) {
 bool Utils::compareParam(Param s1, Param s2) {
 	if (s1.type != s2.type ||
 		s1.value.compare(s2.value) != 0 ||
-		s1.attribute != s2.attribute) {
-		return false;
+s1.attribute != s2.attribute) {
+return false;
 	}
 	return true;
 }
@@ -299,7 +299,7 @@ bool Utils::compareClauseNode(ClauseNode cn1, ClauseNode cn2) {
 	if (cn1.getClauseNodeType() != cn2.getClauseNodeType()) return false;
 	if (cn1.getClauseNodeType() == CLAUSE) {
 		if (!Utils::compareClause(cn1.getClause(), cn2.getClause())) return false;
-	} 
+	}
 	else if (cn1.getClauseNodeType() == PATTERN) {
 		if (!Utils::compareClause(cn1.getPattern(), cn2.getPattern())) return false;
 	}
@@ -318,13 +318,64 @@ Param Utils::createParam(ParamType type, string value, AttrType attr) {
 	return param;
 };
 
-void Utils::intersectSets(set<int> &p1, set<int> &p2, vector<vector<int>> &results) {
-	for (int value : p1) {
-		vector<int> withTableRow;
-		if (p2.find(value) != p2.end()) {
-			withTableRow.push_back(value);
-			withTableRow.push_back(value);
-			results.push_back(withTableRow);
+void Utils::intersectSets(PKB &pkb, set<int> &p1set, set<int> &p2set, Param &p1, Param &p2, vector<vector<int>> &results) {
+	if (Utils::hasStringValues(p1) && Utils::hasStringValues(p2)) {
+		set<string> p1NewSet = Utils::convertStringValues(p1, p1set, pkb);
+		set<string> p2NewSet = Utils::convertStringValues(p2, p2set, pkb);
+		for (string value : p1NewSet) {
+			vector<int> withTableRow;
+			if (p2NewSet.find(value) != p2NewSet.end()) {
+				withTableRow.push_back(Utils::convertIntValues(p1, value, pkb));
+				withTableRow.push_back(Utils::convertIntValues(p2, value, pkb));
+				results.push_back(withTableRow);
+			}
+		}
+	}
+	else {
+		for (int value : p1set) {
+			vector<int> withTableRow;
+			if (p2set.find(value) != p2set.end()) {
+				withTableRow.push_back(value);
+				withTableRow.push_back(value);
+				results.push_back(withTableRow);
+			}
 		}
 	}
 };
+
+bool Utils::hasStringValues(Param &p1) {
+	if (p1.type == PROCEDURE || p1.type == VARIABLE || (p1.type == CALL && p1.attribute == PROCNAME)) return true;
+	return false;
+}
+
+set<string> Utils::convertStringValues(Param &p1, set<int> &oldSet, PKB &pkb) {
+	set<string> output;
+	if (p1.type == PROCEDURE) {
+		for (int item : oldSet) {
+			output.insert(pkb.getProcedureName(item));
+		}
+	}
+	else if (p1.type == VARIABLE) {
+		for (int item : oldSet) {
+			output.insert(pkb.getVariableName(item));
+		}
+	}
+	else if (p1.type == CALL && p1.attribute == PROCNAME) {
+		for (int item : oldSet) {
+			output.insert(pkb.getProcedureName(item));
+		}
+	}
+	return output;
+}
+
+int Utils::convertIntValues(Param &p1, string &oldItem, PKB &pkb) {
+	if (p1.type == PROCEDURE) {
+		return pkb.getProcedureId(oldItem);
+	}
+	else if (p1.type == VARIABLE) {
+		return pkb.getVariableId(oldItem);
+	}
+	else if (p1.type == CALL && p1.attribute == PROCNAME) {
+		return pkb.getProcedureId(oldItem);
+	}
+}
