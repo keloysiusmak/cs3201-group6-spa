@@ -156,7 +156,6 @@ void QueryEvaluator::evaluateClause(Clause & clause, ClauseResults & clauseResul
 	}
 	else { ; } // for bonus feature?
 }
-
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
 void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResults) {
@@ -165,25 +164,59 @@ void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResu
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
-			vector<vector<int>> results = pkb.getAllFollows();
-			clauseResults.setResults(results);
+			if (clause.getIsInverted()) {
+				//vector<vector<int>> universeResults = pkb.getAllStatements() cross product pkb.getAllStatements()
+				//subtract pkb.getAllFollows() from universeResults
+				//clauseResults.setResults(universeResults);
+			}
+			else {
+				vector<vector<int>> results = pkb.getAllFollows();
+				clauseResults.setResults(results);
+			}
 		}
 		else { // (syn, concrete)
-			vector<vector<int>> results = pkb.getFollowsBefore(stoi(rightParam.value));
-			clauseResults.setResults(results);
+			if (clause.getIsInverted()) {
+				//vector<vector<int>> universeResults = pkb.getAllStatements() cross product pkb.getFollowsBefore(stoi(rightParam.value));
+				//subtract pkb.getFollowsBefore(stoi(rightParam.value)) from universeResults
+				//clauseResults.setResults(universeResults);
+			}
+			else {
+				vector<vector<int>> results = pkb.getFollowsBefore(stoi(rightParam.value));
+				clauseResults.setResults(results);
+			}
 		}
 	}
-	else {
+	else { //concrete, 
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
-			vector<vector<int>> results = pkb.getFollowsAfter(stoi(leftParam.value));
-			clauseResults.setResults(results);
+			if (clause.getIsInverted()) {
+				//vector<vector<int>> universeResults = pkb.getFollowsAfter(stoi(leftParam.value)) cross product pkb.getAllStatements();
+				//subtract pkb.getFollowsAfter(stoi(leftParam.value)) from universeResults
+				//clauseResults.setResults(universeResults);
+			}
+			else {
+				vector<vector<int>> results = pkb.getFollowsAfter(stoi(leftParam.value));
+				clauseResults.setResults(results);
+			}
 		}
 		else { // (concrete, concrete)
-			bool results = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
-			clauseResults.setValid(results);
+			if (clause.getIsInverted()) {
+				bool results = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
+				if (results) {
+					bool results = false;
+				}
+				else {
+					bool results = true;
+				}
+				clauseResults.setValid(results);
+			}
+			else {
+				bool results = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
+				clauseResults.setValid(results);
+			}
 		}
 	}
 }
+
 
 /* Right param: stmt syn or stmt no or _ */
 /* Left param: stmt syn or stmt no or _ */
