@@ -483,13 +483,13 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 			bool isProcedure;
 
 			int lineId;
-			try { 
+			try {
+				lineId = stoi(leftParam.value);
+				isProcedure = false;
+			}
+			catch (exception&) {
 				lineId = pkb.getProcedureId(leftParam.value);
 				isProcedure = true;
-			}
-			catch (exception&) { 
-				lineId = stoi(leftParam.value); 
-				isProcedure = false;
 			}
 
 			int varId;
