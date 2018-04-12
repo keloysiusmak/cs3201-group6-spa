@@ -30,4 +30,8 @@ public:
 	static IntermediateTable findTableWithParam(Param p, vector<IntermediateTable> &iTables);
 
 	static int withClauseNumSyns(Clause &clause, IntermediateTable &iTable);
+
+	/* Extension Helpers */
+	static vector<vector<int>> crossVectors(vector<vector<int>> &set1, vector<vector<int>> &set2);
+	static void subtractSet(Param p, ClauseResults &clauseResults, vector<vector<int>> &setToSubtract);
 };

@@ -159,7 +159,7 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 					if (clauseResultsIndex < clauseResults.results.size() - 1 &&
 						clauseResults.results[clauseResultsIndex + 1][0] == clauseLeftParamValue) { // Clause next num is same
 
-						while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][rightParamIndex] == tableLeftParamValue) { // Iterate through iTable results and cross with clause results with same param value
+						while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][leftParamIndex] == tableLeftParamValue) { // Iterate through iTable results and cross with clause results with same param value
 							rowToAdd = iTable.resultsTable[tableIndex];
 							rowToAdd.push_back(clauseResults.results[clauseResultsIndex][1]); // Push back right param not in table
 							tableIndex++;
@@ -169,7 +169,7 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 					}
 
 					else if (tableResultsIndex < iTable.resultsTable.size() - 1 &&
-						iTable.resultsTable[tableResultsIndex + 1][rightParamIndex] == tableLeftParamValue) { // iTable next num is same
+						iTable.resultsTable[tableResultsIndex + 1][leftParamIndex] == tableLeftParamValue) { // iTable next num is same
 
 						while (clauseIndex < clauseResults.results.size() && clauseResults.results[clauseIndex][0] == clauseLeftParamValue) { // Iterate through clause results and cross with iTable results with same param value
 							rowToAdd = iTable.resultsTable[tableResultsIndex];
@@ -452,3 +452,40 @@ int EvaluatorHelper::withClauseNumSyns(Clause &clause, IntermediateTable &iTable
 	return numSyns;
 };
 
+/* Generates the cross product of two vector sets of ints for universe set */
+vector<vector<int>> EvaluatorHelper::crossVectors(vector<vector<int>> &set1, vector<vector<int>> &set2) {
+
+	vector<vector<int>> crossedResults;
+
+	// Assumes nested vectors of length 1
+	for (vector<int> set1Row : set1) {
+		for (vector<int> set2Row : set2) {
+			vector<int> mergedRow;
+			mergedRow.push_back(set1Row[0]);
+			mergedRow.push_back(set2Row[0]);
+			crossedResults.push_back(mergedRow);
+		}
+	}
+	
+	return crossedResults;
+};
+
+/* Subtract from clauseResults a set of vectors given param */
+void EvaluatorHelper::subtractSet(Param p, ClauseResults &clauseResults, vector<vector<int>> &setToSubtract) {
+
+	set<int> toSubtract;
+	// Add to set
+	for (vector<int> setRow : setToSubtract) {
+		toSubtract.insert(setRow[0]);
+	}
+
+	int paramIndex = Utils::isSameParam(p, clauseResults.tableParams[0]) ? 0 : 1;
+	vector<vector<int>> subtractedSetResults;
+	for (vector<int> resultRow : clauseResults.results) {
+		if (toSubtract.find(resultRow[paramIndex]) != toSubtract.end()) {
+			subtractedSetResults.push_back(resultRow);
+		}
+	}
+
+	clauseResults.setResults(subtractedSetResults);
+}
