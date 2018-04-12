@@ -191,39 +191,39 @@ void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResu
 				validQuery = false;
 				evaluateQuery();
 			} */
-			if (clause.getIsInverted()) {
+			//if (clause.getIsInverted()) {
 				//vector<vector<int>> universeResults = pkb.getAllStatements() cross product pkb.getAllStatements()
 				//subtract pkb.getAllFollows() from universeResults
 				//clauseResults.setResults(universeResults);
-			}
-			else {
+			//}
+			//else {
 				vector<vector<int>> results = pkb.getAllFollows();
 				clauseResults.setResults(results);
-			}
+			//}
 		}
 		else { // (syn, concrete)
-			if (clause.getIsInverted()) {
+			//if (clause.getIsInverted()) {
 				//vector<vector<int>> universeResults = pkb.getAllStatements() cross product pkb.getFollowsBefore(stoi(rightParam.value));
 				//subtract pkb.getFollowsBefore(stoi(rightParam.value)) from universeResults
 				//clauseResults.setResults(universeResults);
-			}
-			else {
+			//}
+			//else {
 				vector<vector<int>> results = pkb.getFollowsBefore(stoi(rightParam.value));
 				clauseResults.setResults(results);
-			}
+			///}
 		}
 	}
 	else { //concrete, 
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
-			if (clause.getIsInverted()) {
+			//if (clause.getIsInverted()) {
 				//vector<vector<int>> universeResults = pkb.getFollowsAfter(stoi(leftParam.value)) cross product pkb.getAllStatements();
 				//subtract pkb.getFollowsAfter(stoi(leftParam.value)) from universeResults
 				//clauseResults.setResults(universeResults);
-			}
-			else {
+			//}
+			//else {
 				vector<vector<int>> results = pkb.getFollowsAfter(stoi(leftParam.value));
 				clauseResults.setResults(results);
-			}
+			//}
 		}
 		else { // (concrete, concrete)
 			/* if (clause.getIsInverted()) {
@@ -588,7 +588,6 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getCallsAfter(pkb.getProcedureId(leftParam.value));
 			clauseResults.setResults(results);
-
 		}
 		else { // (concrete, conrete)
 			bool result = pkb.checkCalls(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
