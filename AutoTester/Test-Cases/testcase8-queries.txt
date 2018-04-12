@@ -1,3 +1,8 @@
+353 -
+call c1; procedure p1;
+Select <p1,c1> with p1.procName = c1.procName
+B 20
+5000
 1 -
 
 Select BOOLEAN such that Follows(1,2)
@@ -1396,7 +1401,7 @@ false
 280 -
 assign a1;
 Select a1 such that Affects(1,a1)
-8,14,28
+8,14
 5000
 281 -
 
@@ -1749,7 +1754,7 @@ Select <c1,c2> with c1.procName = c2.procName
 20 20
 5000
 351 -
-call c1; proc p1;
+call c1; procedure p1;
 Select <p1,c1> with c1.procName = p1.procName
 
 5000
@@ -1758,18 +1763,13 @@ variable v1; call c1;
 Select <c1,v1> with c1.procName = v1.varName
 
 5000
-353 -
-call c1; proc p1;
-Select <p1,c1> with p1.procName = c1.procName
-B 20
-5000
 354 -
-proc p1,p2;
+procedure p1,p2;
 Select <p1,p2> with p1.procName = p2.procName
 B B, A A
 5000
 355 -
-variable v1; proc p1;
+variable v1; procedure p1;
 Select <p1,v1> with p1.procName = v1.varName
 
 5000
@@ -1779,7 +1779,7 @@ Select <c1,v1> with v1.varName = c1.procName
 
 5000
 357 -
-variable v1; proc p1;
+variable v1; procedure p1;
 Select <p1,v1> with v1.varName = p1.procName
 
 5000
