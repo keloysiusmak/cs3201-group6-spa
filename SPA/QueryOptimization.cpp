@@ -305,6 +305,7 @@ int QueryOptimization::getNumResultsOfClause(Clause &clause, PKB &pkb) {
 			numResults = pkb.getFromResultTable(RelationAffectsStar, lhsIntValue, rhsIntValue);
 		}
 	} else if (clauseRelation == With) {
+		numResults = 0;
 		if (synConstCase = 1) { // Syn, Syn
 		}
 		if (synConstCase = 2) { // Syn, Concrete
@@ -314,7 +315,17 @@ int QueryOptimization::getNumResultsOfClause(Clause &clause, PKB &pkb) {
 		if (synConstCase = 4) { // Concrete, Concrete
 		}
 	} else if (clauseRelation == None) { // Pattern
+		Pattern* p = static_cast<Pattern*>(&clause);
+		Param patternEnt = p->getEntity();
+		if (patternEnt.type == ASSIGN) {
+			numResults = pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, 0);
+		} else if (patternEnt.type == WHILE) {
+			numResults = pkb.getFromResultTable(RelationPattern, WHILE_TYPE, 0);
+		} else {
+			numResults = pkb.getFromResultTable(RelationPattern, IF_TYPE, 0);
+		}
 	}
+	return numResults;
 };
 
 /* Gets case of parameters
