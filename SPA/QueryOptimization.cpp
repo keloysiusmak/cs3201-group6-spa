@@ -277,6 +277,17 @@ int QueryOptimization::getSynConstCase(Clause &clause) {
 	}
 };
 
+/* Maps param to corresponding int value or id */
+int QueryOptimization::getParamIntValue(Param &p, PKB &pkb) {
+	if (p.type == PROCEDURE) {
+		return pkb.getProcedureId(p.value);
+	} else if (p.type == VARIABLE) {
+		return pkb.getVariableId(p.value);
+	} else {
+		return stoi(p.value);
+	}
+};
+
 /* Get number of synonyms within clause */
 int QueryOptimization::getNumSynsOfClause(Clause &clause) {
 	Param leftParam = clause.getLeftParam();
