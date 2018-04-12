@@ -374,7 +374,12 @@ int QueryOptimization::getParamIntValue(Param &p, PKB &pkb) {
 	} else if (p.type == VAR_IDENT) {
 		return pkb.getVariableId(p.value);
 	} else {
-		return stoi(p.value);
+		try {
+			return stoi(p.value);
+		}
+		catch (exception){
+			return 0;
+		}
 	}
 };
 
