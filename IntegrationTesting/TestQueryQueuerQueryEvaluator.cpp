@@ -407,11 +407,7 @@ public:
 			qc1.insertSelect(VARIABLE, "v", NONE);
 			qc1.insertClause(Follows, INTEGER, "1", INTEGER, "1", false);
 
-			vqc.push_back(qc1);
-			qq.setQueryContent(vqc);
-			list<string> result = qq.evaluateQueries();
 			list<string> expected;
-			Assert::AreEqual(true, (result == expected));
 
 
 			qc1.setChildren(1);
@@ -424,6 +420,7 @@ public:
 			qc3.insertSelect(STMT, "s", NONE);
 			qc3.insertClause(Uses, STMT, "s", VAR_IDENT, "d", true);
 
+			vqc.push_back(qc1);
 			vqc.push_back(qc2);
 			vqc.push_back(qc3);
 			unordered_map<int, std::vector<int>> subQueryMapping;
@@ -433,8 +430,8 @@ public:
 			subQueryMapping.insert({ 2, mapping });
 			qq.setSubQueryMapping(subQueryMapping);
 			qq.setQueryContent(vqc);
-			result = qq.evaluateQueries();
-			expected;
+			list<string> result = qq.evaluateQueries();
+			expected.clear();
 			expected.push_back("a");
 			expected.push_back("b");
 			expected.push_back("c");

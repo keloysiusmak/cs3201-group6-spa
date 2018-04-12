@@ -20,7 +20,7 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 			//This test method will take in an actual test query
 			//and validate & deconstruct the query into a QueryObject.
 			//Once the QueryObject is ready, it will be passed to Evaluator
-			TEST_METHOD(PreprocessorEvaluatorValidPreprocessQuery) {		
+			TEST_METHOD(PreprocessorQueryQueuerValidPreprocessQuery) {		
 
 				string query1 = "assign a; Select a";
 				string query2 = "assign a; Select a pattern a(\"x\", _\"y + 1\"_)";
@@ -29,7 +29,8 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 				string query5 = "assign a; while w; Select a such that Follows(w, a) pattern a(\"x\", _)";
 				string query6 = "assign a; while w; if ifs; Select a such that Follows(w, a) and Follows(a, ifs)";
 				string query7 = "assign a; while w; if ifs; Select a such that Follows(w, a) or Follows(a, ifs)";
-				string query8 = "assign a; while w; if ifs; Select a such that (Follows(w, 1) or Follows(a, 5)) and (Follows(if, 2) or Follows(2, 3)";
+				string query8 = "assign a; while w; if ifs; Select a such that (Follows(w, 1) or Follows(a, 5)) and (Follows(ifs, 2) or Follows(2, 3)";
+				string query9 = "if ifs; variable v; assign a; while w; Select w pattern(w(\"g\", _) or ifs(v, _, _)) and (a(v, _\"x\"_) or a(v, _\"y\"_))";
 
 				QueryObject expectedQo1;
 				expectedQo1.insertSelectStmt(ASSIGN, "a", NONE);
@@ -66,8 +67,44 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 
 				QueryObject expectedQo8a;
 				expectedQo8a.insertSelectStmt(ASSIGN, "a", NONE);
-				expectedQo8a.insertClause(Follows, WHILE, "w", ASSIGN, "a", false);
-				expectedQo8a.insertClause(Follows, WHILE, "w", ASSIGN, "a", false);
+				expectedQo8a.insertClause(Follows, WHILE, "w", INTEGER, "1", false);
+				expectedQo8a.insertClause(Follows, IF, "ifs", INTEGER, "2", false);
+
+				QueryObject expectedQo8b;
+				expectedQo8b.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo8b.insertClause(Follows, WHILE, "w", INTEGER, "1", false);
+				expectedQo8b.insertClause(Follows, INTEGER, "2", INTEGER, "3", false);
+
+				QueryObject expectedQo8c;
+				expectedQo8c.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo8c.insertClause(Follows, ASSIGN, "a", INTEGER, "5", false);
+				expectedQo8c.insertClause(Follows, IF, "ifs", INTEGER, "2", false);
+
+				QueryObject expectedQo8d;
+				expectedQo8d.insertSelectStmt(ASSIGN, "a", NONE);
+				expectedQo8d.insertClause(Follows, ASSIGN, "a", INTEGER, "5", false);
+				expectedQo8d.insertClause(Follows, INTEGER, "2", INTEGER, "3", false);
+
+				//(w(\"g\", _) or ifs(v, _, _)) and (a(v, _\"x\"_) or a(v, _\"y\"_))
+				QueryObject expectedQo9a;
+				expectedQo9a.insertSelectStmt(WHILE, "w", NONE);
+				expectedQo9a.insertPattern(WHILE, "w", VAR_IDENT, "g", ALL, "_", false);
+				expectedQo9a.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "x", false);
+
+				QueryObject expectedQo9b;
+				expectedQo9b.insertSelectStmt(WHILE, "w", NONE);
+				expectedQo9b.insertPattern(WHILE, "w", VAR_IDENT, "g", ALL, "_", false);
+				expectedQo9b.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "y", false);
+
+				QueryObject expectedQo9c;
+				expectedQo9c.insertSelectStmt(WHILE, "w", NONE);
+				expectedQo9c.insertPattern(IF, "ifs", VARIABLE, "v", ALL, "_", false);
+				expectedQo9c.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "x", false);
+
+				QueryObject expectedQo9d;
+				expectedQo9d.insertSelectStmt(WHILE, "w", NONE);
+				expectedQo9d.insertPattern(IF, "ifs", VARIABLE, "v", ALL, "_", false);
+				expectedQo9d.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "y", false);
 
 				QueryContent qc;
 				std::vector<QueryContent> vqc;
@@ -134,11 +171,29 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 					bool result7 = Utils::compareQueryObjectProperties(expectedQo7a, q[0]) && Utils::compareQueryObjectProperties(expectedQo7b, q[1]);
 					Assert::AreEqual(true, result7);
 				}
+
+				preprocessor.preprocessQuery(query8);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result8 = Utils::compareQueryObjectProperties(expectedQo8a, q[0]) && Utils::compareQueryObjectProperties(expectedQo8b, q[1]) && Utils::compareQueryObjectProperties(expectedQo8c, q[2]) && Utils::compareQueryObjectProperties(expectedQo8d, q[3]);
+					Assert::AreEqual(true, result8);
+				}
+
+				preprocessor.preprocessQuery(query9);
+				vqc = preprocessor.getQueryContent();
+				queryQueuer.setQueryContent(vqc);
+				for (int i = 0; i < vqc.size(); i++) {
+					std::vector<QueryObject> q = queryQueuer.parseQueryContent(vqc[i]);
+					bool result9 = Utils::compareQueryObjectProperties(expectedQo9a, q[0]) && Utils::compareQueryObjectProperties(expectedQo9b, q[1]) && Utils::compareQueryObjectProperties(expectedQo9c, q[2]) && Utils::compareQueryObjectProperties(expectedQo9d, q[3]);
+					Assert::AreEqual(true, result9);
+				}
 			}
 
 			//This test method will take in an invalid test query
 			//and return invalid message
-			TEST_METHOD(PreprocessorEvaluatorInvalidPreprocessQuery) {
+			TEST_METHOD(PreprocessorQueryQueuerInvalidPreprocessQuery) {
 
 				string invalidQuery1 = "assign a; Select s"; //synonym not declared
 				string invalidQuery2 = "assign a; Select a pattern (_, _)"; //No pattern Type
@@ -175,11 +230,11 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 			//This test method will take in an actual test query
 			//and validate & deconstruct the query into a QueryObject.
 			//Once the QueryObject is ready, it will be passed to Evaluator
-			TEST_METHOD(PreprocessorEvaluatorValidPreprocessQuerySubQuery) {
+			TEST_METHOD(PreprocessorQueryQueuerValidPreprocessQuerySubQuery) {
 
 				std::vector<QueryContent> vqc;
 
-				string query1 = "assign a; if ifs; Select a such that Follows(a,(Select ifs such that Uses(ifs, \"x\"))";
+				string query1 = "assign a; if ifs; Select a such that Follows(a,(Select ifs such that Uses(ifs, \"x\")))";
 				
 				QueryObject expectedQo1a;
 				expectedQo1a.insertSelectStmt(ASSIGN, "a", NONE);
