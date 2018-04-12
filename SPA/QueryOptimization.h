@@ -28,11 +28,7 @@ struct Node {
 };
 class QueryOptimization {
 
-private:
-	PKB pkb;
-
 public:
-	void setPKB(PKB generatedPKB);
 	static void consolidateClauses(vector<Clause> const &clauses, vector<Clause> &consolidated);
 	static void consolidateClauses(vector<Pattern> const &clauses, vector<Clause> &consolidated);
 
@@ -42,10 +38,11 @@ public:
 	static void unionParams(Param &p1, Param &p2, map<Param, Node> &paramsHash);
 	static Node* findSet(Node &n, map<Param, Node> &paramsHash);
 	
-	static vector<Clause> sortWithinGroup(vector<Clause> &clauseGroup);
-	static int getTotalWeight(Clause &clause, int resultsWeight, int synsWeight, int relationWeight);
-	static int getNumResultsOfClause(Clause &clause);
+	static vector<Clause> sortWithinGroup(vector<Clause> &clauseGroup, PKB &pkb);
+	static int getTotalWeight(Clause &clause, int resultsWeight, int synsWeight, int relationWeight, PKB &pkb);
+	static int getNumResultsOfClause(Clause &clause, PKB &pkb);
 	static int getSynConstCase(Clause &clause);
+	static int getParamIntValue(Param & p, PKB &pkb);
 	static int getNumSynsOfClause(Clause &clause);
 	static int getRelationWeightOfClause(Clause &clause);
 
