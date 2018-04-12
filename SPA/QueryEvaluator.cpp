@@ -199,18 +199,10 @@ void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResu
 			}
 		}
 		else { // (concrete, concrete)
+			bool results = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
 			if (clause.getIsInverted()) {
-				bool results = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
-				if (results) {
-					bool results = false;
-				}
-				else {
-					bool results = true;
-				}
-				clauseResults.setValid(results);
-			}
-			else {
-				bool results = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
+				clauseResults.setValid(!results);
+			} else {
 				clauseResults.setValid(results);
 			}
 		}
