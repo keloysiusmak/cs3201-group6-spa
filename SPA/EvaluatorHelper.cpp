@@ -214,10 +214,12 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 			if (tableValue == clauseValue) { // Same value
 
 				// Get all vectors in iTable overlapping with clauseResult value
-				while (tableValue == clauseValue && tableResultsIndex < iTable.resultsTable.size() - 1) {
+				while (tableValue == clauseValue && tableResultsIndex < iTable.resultsTable.size()) {
 					mergedResults.push_back(iTable.resultsTable[tableResultsIndex]);
 					tableResultsIndex++;
-					tableValue = iTable.resultsTable[tableResultsIndex][paramIndex];
+					if (tableResultsIndex < iTable.resultsTable.size()) {
+						tableValue = iTable.resultsTable[tableResultsIndex][paramIndex];
+					}
 				}
 				clauseResultsIndex++;
 
