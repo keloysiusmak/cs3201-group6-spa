@@ -120,7 +120,7 @@ Select s such that Uses(_,1)
 5000
 25 - Uses('a', 'a')
 stmt s;
-Select s such that Uses("a", "a")
+Select s such that Uses("a", "j")
 
 5000
 26 - Uses(_, 'a')
