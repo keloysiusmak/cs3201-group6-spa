@@ -172,6 +172,7 @@ public:
 		string query76 = "Select a with 3 = (Select c.value such that Parent(5,6)) ";
 		string query77 = "Select a with (Select v.varName such that Affects*(5,5)) = (Select c1.procName such that Parent(5,6)) ";
 		string query78 = "Select s such that Follows(s, (Select a such that Uses(a, (Select v such that Modifies((Select s with s.stmt# = c.value), v)))))";
+		string query79 = "Select s such that Follows(s, (Select a))";
 
 		string invalidQuery1 = "Selecta"; //Must have space in between select and a
 		string invalidQuery2 = "Select a pattern (\"x\", _\"y\"_)"; //pattern must have pattern type
@@ -270,6 +271,7 @@ public:
 		Assert::AreEqual(true, preprocessor.isValidQuery(query76));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query77));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query78));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query79));
 
 		//Invalid
 		Assert::AreNotEqual(true, preprocessor.isValidQuery(invalidQuery1));
@@ -412,6 +414,128 @@ public:
 		Assert::AreNotEqual(true, preprocessor.isValidRef("s.stmt"));
 	}
 
+	TEST_METHOD(PreprocessorIsValidElem) {
+		Preprocessor preprocessor;
+
+		//Populate the declarationMap
+		preprocessor.insertDeclarationToMap("w", "while");
+		preprocessor.insertDeclarationToMap("v", "variable");
+
+		QueryContent qc;
+
+		vector<string> queryArr = { "w", "v.varName" };
+
+		preprocessor.isValidElem(queryArr, 0, qc);
+		preprocessor.isValidElem(queryArr, 1, qc);
+
+		Param expectedSelct1;
+		expectedSelct1.type = WHILE;
+		expectedSelct1.value = "w";
+		expectedSelct1.attribute = NONE;
+
+		Param expectedSelect2;
+		expectedSelect2.type = VARIABLE;
+		expectedSelect2.value = "v";
+		expectedSelect2.attribute = VARNAME;
+
+		Param retrieveFromQueryContent1 = qc.getSelect().at(0);
+		Param retrieveFromQueryContent2 = qc.getSelect().at(1);
+
+		Assert::AreEqual(true, Utils::compareParam(retrieveFromQueryContent1, expectedSelct1));
+		Assert::AreEqual(true, Utils::compareParam(retrieveFromQueryContent2, expectedSelect2));
+	}
+
+	TEST_METHOD(PreprocessorIsValidClause) {
+		Preprocessor preprocessor;
+
+		//Populate the declarationMap
+		preprocessor.insertDeclarationToMap("a", "assign");
+		preprocessor.insertDeclarationToMap("v", "variable");
+
+		QueryContent qc;
+
+		vector<string> clause1 = { "Uses", "(", "a", ",", "v", ")" };
+		vector<string> clause2 = { "Uses", "(", "a", ",", "(", "Select", "v", "such", "that", "Follows", "(", "1", ",", "2", ")", ")", ")" };
+
+		int clauseLength1 = 1;
+		int clauseLength2 = 1;
+
+		preprocessor.isValidClause(clause1, clauseLength1, 0, qc, false);
+		preprocessor.isValidClause(clause2, clauseLength2, 0, qc, false);
+
+		Param expectedLeftParam;
+		expectedLeftParam.type = ASSIGN;
+		expectedLeftParam.value = "a";
+		expectedLeftParam.attribute = NONE;
+
+		Param expectedRightParam;
+		expectedRightParam.type = VARIABLE;
+		expectedRightParam.value = "v";
+		expectedRightParam.attribute = NONE;
+		
+		Clause expectedClause1(Uses, expectedLeftParam, expectedRightParam, false);
+
+		expectedRightParam.type = VAR_IDENT;
+		expectedRightParam.value = "x";
+		expectedRightParam.attribute = NONE;
+
+		Clause expectedClause2(Uses, expectedLeftParam, expectedRightParam, false);
+
+		Clause retrieveFromQueryContent1 = qc.getClauses().at(0).getClause();
+		Clause retrievefromQueryContent2 = qc.getClauses().at(1).getClause();
+		
+		Assert::AreEqual(true, Utils::compareClause(retrieveFromQueryContent1, expectedClause1));
+		Assert::AreEqual(true, Utils::compareClause(retrievefromQueryContent2, expectedClause2));
+	}
+
+	TEST_METHOD(PreprocessorIsValidPattern) {
+		Preprocessor preprocessor;
+
+		//Populate the declarationMap
+		preprocessor.insertDeclarationToMap("a", "assign");
+		preprocessor.insertDeclarationToMap("v", "variable");
+
+		QueryContent qc;
+
+		vector<string> pattern1 = { "a", "(", "v", ",", "\"x + 3\"", ")" };
+		vector<string> pattern2 = { "a", "(", "v", ",", "(", "Select", "v", "such", "that", "Follows", "(", "1", ",", "2", ")", ")", ")" };
+
+		int patternLength1 = 1;
+		int patternLength2 = 1;
+
+		preprocessor.isValidPattern(pattern1, patternLength1, 0, qc, false);
+		preprocessor.isValidPattern(pattern2, patternLength2, 0, qc, false);
+
+		Param expectedEntity;
+		expectedEntity.type = ASSIGN;
+		expectedEntity.value = "a";
+		expectedEntity.attribute = NONE;
+
+		Param expectedLeftParam;
+		expectedLeftParam.type = VARIABLE;
+		expectedLeftParam.value = "v";
+		expectedLeftParam.attribute = NONE;
+
+		Param expectedRightParam;
+		expectedRightParam.type = EXPR_EXACT;
+		expectedRightParam.value = "x|3|+|";
+		expectedRightParam.attribute = NONE;
+
+		Pattern expectedPattern1(expectedEntity, expectedLeftParam, expectedRightParam, false);
+
+		expectedRightParam.type = EXPR_EXACT;
+		expectedRightParam.value = "x|";
+		expectedRightParam.attribute = NONE;
+
+		Pattern expectedPattern2(expectedEntity, expectedLeftParam, expectedRightParam, false);
+
+		Pattern retrieveFromQueryContent1 = qc.getPattern().at(0).getPattern();
+		Pattern retrieveFromQueryContent2 = qc.getPattern().at(1).getPattern();
+
+		Assert::AreEqual(true, Utils::comparePattern(retrieveFromQueryContent1, expectedPattern1));
+		Assert::AreEqual(true, Utils::comparePattern(retrieveFromQueryContent2, expectedPattern2));
+	}
+
 	TEST_METHOD(PreprocessorIsDeclarationSynonymExist) {
 
 		preprocessor.insertDeclarationToMap("a", "assign");
@@ -494,63 +618,73 @@ public:
 		string entity = "a";
 		string arg1 = "\"x\"";
 		string arg2 = "_\"3\"_";
+		preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false);
 
-		string firstParamValue = "x";
-		string secondParamValue = "3|";
+		Param expectedEntity;
+		expectedEntity.type = ASSIGN;
+		expectedEntity.value = "a";
+		expectedEntity.attribute = NONE;
+
+		Param expectedLeftParam;
+		expectedLeftParam.type = VAR_IDENT;
+		expectedLeftParam.value = "x";
+		expectedLeftParam.attribute = NONE;
+
+		Param expectedRightParam;
+		expectedRightParam.type = EXPR;
+		expectedRightParam.value = "3|";
+		expectedRightParam.attribute = NONE;
+
+		Pattern expectedPattern1(expectedEntity, expectedLeftParam, expectedRightParam, false);
+		Pattern retrieveFromQueryContent = qc.getPattern().at(0).getPattern();
 
 		//valid
-		Assert::AreEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false));
-		Assert::AreEqual(static_cast<int>(ASSIGN), static_cast<int>(qc.getPattern().at(0).getPattern().getEntity().type));
-		Assert::AreEqual(entity, qc.getPattern().at(0).getPattern().getEntity().value);
-		Assert::AreEqual(static_cast<int>(VAR_IDENT), static_cast<int>(qc.getPattern().at(0).getPattern().getLeftParam().type));
-		Assert::AreEqual(firstParamValue, qc.getPattern().at(0).getPattern().getLeftParam().value);
-		Assert::AreEqual(static_cast<int>(EXPR), static_cast<int>(qc.getPattern().at(0).getPattern().getRightParam().type));
-		Assert::AreEqual(secondParamValue, qc.getPattern().at(0).getPattern().getRightParam().value);
+		Assert::AreEqual(true, Utils::comparePattern(retrieveFromQueryContent, expectedPattern1));
 
 		arg1 = "v";
 		arg2 = "_\"(x+y)*z\"_";
+		preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false);
 
-		firstParamValue = "v";
-		secondParamValue = "x|y|+|z|*|";
+		expectedLeftParam.type = VARIABLE;
+		expectedLeftParam.value = "v";
+		expectedLeftParam.attribute = NONE;
+
+		expectedRightParam.type = EXPR;
+		expectedRightParam.value = "x|y|+|z|*|";
+		expectedRightParam.attribute = NONE;
+
+		Pattern expectedPattern2(expectedEntity, expectedLeftParam, expectedRightParam, false);
+		retrieveFromQueryContent = qc.getPattern().at(1).getPattern();
 
 		//valid
-		Assert::AreEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false));
-		Assert::AreEqual(static_cast<int>(ASSIGN), static_cast<int>(qc.getPattern().at(1).getPattern().getEntity().type));
-		Assert::AreEqual(entity, qc.getPattern().at(1).getPattern().getEntity().value);
-		Assert::AreEqual(static_cast<int>(VARIABLE), static_cast<int>(qc.getPattern().at(1).getPattern().getLeftParam().type));
-		Assert::AreEqual(firstParamValue, qc.getPattern().at(1).getPattern().getLeftParam().value);
-		Assert::AreEqual(static_cast<int>(EXPR), static_cast<int>(qc.getPattern().at(1).getPattern().getRightParam().type));
-		Assert::AreEqual(secondParamValue, qc.getPattern().at(1).getPattern().getRightParam().value);
+		Assert::AreEqual(true, Utils::comparePattern(retrieveFromQueryContent, expectedPattern2));
 
 		arg1 = "v";
 		arg2 = "\"x	+ y - 1\"";
+		preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false);
 
-		firstParamValue = "v";
-		secondParamValue = "x|y|+|1|-|";
+		expectedRightParam.type = EXPR;
+		expectedRightParam.value = "x|y|+|1|-|";
+		expectedRightParam.attribute = NONE;
+
+		Pattern expectedPattern3(expectedEntity, expectedLeftParam, expectedRightParam, false);
+		retrieveFromQueryContent = qc.getPattern().at(2).getPattern();
 
 		//valid
-		Assert::AreEqual(true, preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false));
-		Assert::AreEqual(static_cast<int>(ASSIGN), static_cast<int>(qc.getPattern().at(2).getPattern().getEntity().type));
-		Assert::AreEqual(entity, qc.getPattern().at(2).getPattern().getEntity().value);
-		Assert::AreEqual(static_cast<int>(VARIABLE), static_cast<int>(qc.getPattern().at(2).getPattern().getLeftParam().type));
-		Assert::AreEqual(firstParamValue, qc.getPattern().at(2).getPattern().getLeftParam().value);
-		Assert::AreEqual(static_cast<int>(EXPR_EXACT), static_cast<int>(qc.getPattern().at(2).getPattern().getRightParam().type));
-		Assert::AreEqual(secondParamValue, qc.getPattern().at(2).getPattern().getRightParam().value);
+		Assert::AreEqual(true, Utils::comparePattern(retrieveFromQueryContent, expectedPattern3));
 
 		arg1 = "v";
 		arg2 = "_";
 
-		firstParamValue = "v";
-		secondParamValue = "_";
+		expectedRightParam.type = ALL;
+		expectedRightParam.value = "_";
+		expectedRightParam.attribute = NONE;
+
+		Pattern expectedPattern4(expectedEntity, expectedLeftParam, expectedRightParam, false);
+		retrieveFromQueryContent = qc.getPattern().at(3).getPattern();
 
 		//valid
-		Assert::AreEqual(true, preprocessor.parsePattern(qc, WHILE, entity, arg1, arg2, false));
-		Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qc.getPattern().at(3).getPattern().getEntity().type));
-		Assert::AreEqual(entity, qc.getPattern().at(3).getPattern().getEntity().value);
-		Assert::AreEqual(static_cast<int>(VARIABLE), static_cast<int>(qc.getPattern().at(3).getPattern().getLeftParam().type));
-		Assert::AreEqual(firstParamValue, qc.getPattern().at(3).getPattern().getLeftParam().value);
-		Assert::AreEqual(static_cast<int>(ALL), static_cast<int>(qc.getPattern().at(3).getPattern().getRightParam().type));
-		Assert::AreEqual(secondParamValue, qc.getPattern().at(3).getPattern().getRightParam().value);
+		Assert::AreEqual(true, Utils::comparePattern(retrieveFromQueryContent, expectedPattern4));
 
 		//Invalid
 		string invalidArg1Empty = "";
@@ -596,67 +730,73 @@ public:
 
 		string arg1 = "w.stmt#";
 		string arg2 = "3";
+		preprocessor.parseWithClause(qc, arg1, arg2, false);
 
-		string firstParamValue = "w";
-		string secondParamValue = "3";
+		Param expectedLeftParam;
+		expectedLeftParam.type = WHILE;
+		expectedLeftParam.value = "w";
+		expectedLeftParam.attribute = STMT_NO;
+
+		Param expectedRightParam;
+		expectedRightParam.type = INTEGER;
+		expectedRightParam.value = "3";
+		expectedRightParam.attribute = NONE;
+
+		Clause expectedWithClause1(With, expectedLeftParam, expectedRightParam, false);
+		Clause retrieveFromQueryContent = qc.getWithClauses().at(0).getWithClause();
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2, false));
-		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qc.getWithClauses().at(0).getWithClause().getRelRef()));
-		Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qc.getWithClauses().at(0).getWithClause().getLeftParam().type));
-		Assert::AreEqual(static_cast<int>(STMT_NO), static_cast<int>(qc.getWithClauses().at(0).getWithClause().getLeftParam().attribute));
-		Assert::AreEqual(firstParamValue, qc.getWithClauses().at(0).getWithClause().getLeftParam().value);
-		Assert::AreEqual(static_cast<int>(INTEGER), static_cast<int>(qc.getWithClauses().at(0).getWithClause().getRightParam().type));
-		Assert::AreEqual(static_cast<int>(NONE), static_cast<int>(qc.getWithClauses().at(0).getWithClause().getRightParam().attribute));
-		Assert::AreEqual(secondParamValue, qc.getWithClauses().at(0).getWithClause().getRightParam().value);
+		Assert::AreEqual(true, Utils::compareWithClause(retrieveFromQueryContent, expectedWithClause1));
 
 		arg1 = "n";
 		arg2 = "c.stmt#";
+		preprocessor.parseWithClause(qc, arg1, arg2, false);
 
-		firstParamValue = "n";
-		secondParamValue = "c";
+		expectedLeftParam.type = PROG_LINE;
+		expectedLeftParam.value = "n";
+		expectedLeftParam.attribute = NONE;
+
+		expectedRightParam.type = CALL;
+		expectedRightParam.value = "c";
+		expectedRightParam.attribute = STMT_NO;
+
+		Clause expectedWithClause2(With, expectedLeftParam, expectedRightParam, false);
+		retrieveFromQueryContent = qc.getWithClauses().at(1).getWithClause();
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2, false));
-		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qc.getWithClauses().at(1).getWithClause().getRelRef()));
-		Assert::AreEqual(static_cast<int>(PROG_LINE), static_cast<int>(qc.getWithClauses().at(1).getWithClause().getLeftParam().type));
-		Assert::AreEqual(static_cast<int>(NONE), static_cast<int>(qc.getWithClauses().at(1).getWithClause().getLeftParam().attribute));
-		Assert::AreEqual(firstParamValue, qc.getWithClauses().at(1).getWithClause().getLeftParam().value);
-		Assert::AreEqual(static_cast<int>(CALL), static_cast<int>(qc.getWithClauses().at(1).getWithClause().getRightParam().type));
-		Assert::AreEqual(static_cast<int>(STMT_NO), static_cast<int>(qc.getWithClauses().at(1).getWithClause().getRightParam().attribute));
-		Assert::AreEqual(secondParamValue, qc.getWithClauses().at(1).getWithClause().getRightParam().value);
+		Assert::AreEqual(true, Utils::compareWithClause(retrieveFromQueryContent, expectedWithClause2));
 
 		arg1 = "p.procName";
 		arg2 = "\"first\"";
+		preprocessor.parseWithClause(qc, arg1, arg2, false);
 
-		firstParamValue = "p";
-		secondParamValue = "first";
+		expectedLeftParam.type = PROCEDURE;
+		expectedLeftParam.value = "p";
+		expectedLeftParam.attribute = PROCNAME;
+
+		expectedRightParam.type = PROC_IDENT;
+		expectedRightParam.value = "first";
+		expectedRightParam.attribute = NONE;
+
+		Clause expectedWithClause3(With, expectedLeftParam, expectedRightParam, false);
+		retrieveFromQueryContent = qc.getWithClauses().at(2).getWithClause();
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2, false));
-		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qc.getWithClauses().at(2).getWithClause().getRelRef()));
-		Assert::AreEqual(static_cast<int>(PROCEDURE), static_cast<int>(qc.getWithClauses().at(2).getWithClause().getLeftParam().type));
-		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qc.getWithClauses().at(2).getWithClause().getLeftParam().attribute));
-		Assert::AreEqual(firstParamValue, qc.getWithClauses().at(2).getWithClause().getLeftParam().value);
-		Assert::AreEqual(static_cast<int>(PROC_IDENT), static_cast<int>(qc.getWithClauses().at(2).getWithClause().getRightParam().type));
-		Assert::AreEqual(static_cast<int>(NONE), static_cast<int>(qc.getWithClauses().at(2).getWithClause().getRightParam().attribute));
-		Assert::AreEqual(secondParamValue, qc.getWithClauses().at(2).getWithClause().getRightParam().value);
+		Assert::AreEqual(true, Utils::compareWithClause(retrieveFromQueryContent, expectedWithClause3));
+
 
 		arg1 = "p.procName";
 		arg2 = "c.procName";
 
-		firstParamValue = "p";
-		secondParamValue = "c";
+		expectedRightParam.type = CALL;
+		expectedRightParam.value = "c";
+		expectedRightParam.attribute = PROCNAME;
+
+		Clause expectedWithClause4(With, expectedLeftParam, expectedRightParam, false);
+		retrieveFromQueryContent = qc.getWithClauses().at(3).getWithClause();
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseWithClause(qc, arg1, arg2, false));
-		Assert::AreEqual(static_cast<int>(With), static_cast<int>(qc.getWithClauses().at(3).getWithClause().getRelRef()));
-		Assert::AreEqual(static_cast<int>(PROCEDURE), static_cast<int>(qc.getWithClauses().at(3).getWithClause().getLeftParam().type));
-		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qc.getWithClauses().at(3).getWithClause().getLeftParam().attribute));
-		Assert::AreEqual(firstParamValue, qc.getWithClauses().at(3).getWithClause().getLeftParam().value);
-		Assert::AreEqual(static_cast<int>(CALL), static_cast<int>(qc.getWithClauses().at(3).getWithClause().getRightParam().type));
-		Assert::AreEqual(static_cast<int>(PROCNAME), static_cast<int>(qc.getWithClauses().at(3).getWithClause().getRightParam().attribute));
-		Assert::AreEqual(secondParamValue, qc.getWithClauses().at(3).getWithClause().getRightParam().value);
+		Assert::AreEqual(true, Utils::compareWithClause(retrieveFromQueryContent, expectedWithClause4));
 	}
 
 	TEST_METHOD(PreprocessorIsValidSuchThatKeyword) {

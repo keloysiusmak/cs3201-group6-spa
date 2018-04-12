@@ -126,7 +126,6 @@ namespace PKBOptimizationIntegrationTesting {
 			pkb.insertToNameTable(VAR_TABLE, { "d" });
 			pkb.insertToNameTable(VAR_TABLE, { "e" });
 
-			optimization.setPKB(pkb);
 		}
 
 		Param createParam(ParamType type, string value) {
@@ -136,62 +135,5 @@ namespace PKBOptimizationIntegrationTesting {
 			param.attribute = NONE;
 			return param;
 		};
-
-		TEST_METHOD(PKBOptimizationNumResults) {
-			
-			QueryObject qo;
-			vector<Clause> groupedClauses;
-			Clause clause1;
-			Clause clause2;
-
-			Param p1, p2, p3, p4;
-			p1 = createParam(STMT, "s"); 
-			p2 = createParam(INTEGER, "9");
-			p3 = createParam(INTEGER, "1"); 
-			p4 = createParam(STMT, "s");
-
-			qo.insertClause(FollowsT, STMT, "s", INTEGER, "9", false);
-			qo.insertClause(Follows, INTEGER, "1", STMT, "s", false);
-
-			clause1.setClause(FollowsT, p1, p2, 0);
-			clause2.setClause(Follows, p3, p4, 0);
-	
-			QueryOptimization::consolidateClauses(qo.getClauses(), groupedClauses);
-
-			vector<Clause> result = optimization.numResultsGroupClauses(groupedClauses);
-			vector<Clause> expected;
-			expected.push_back(clause2);
-			expected.push_back(clause1);
-			for (int i = 0; i < result.size(); i++) {
-				Assert::AreEqual(true, Utils::compareClause(expected[i], result[i]));
-			}
-
-			QueryObject qo1;
-			vector<Clause> groupedClauses1;
-			Clause clause3;
-			Clause clause4;
-
-			Param p5, p6, p7, p8;
-			p5 = createParam(INTEGER, "2");
-			p6 = createParam(STMT, "s");
-			p7 = createParam(ASSIGN, "s");
-			p8 = createParam(VAR_IDENT, "a");
-
-			qo1.insertClause(Next, INTEGER, "2", STMT, "s", false); //returns 2 results
-			qo1.insertClause(Modifies, ASSIGN, "a", VAR_IDENT, "a", false); //
-
-			clause3.setClause(Next, p5, p6, 0);
-			clause4.setClause(Modifies, p7, p8, 0);
-
-			QueryOptimization::consolidateClauses(qo1.getClauses(), groupedClauses1);
-
-			vector<Clause> result1 = optimization.numResultsGroupClauses(groupedClauses1);
-			vector<Clause> expected1;
-			expected.push_back(clause3);
-			expected.push_back(clause4);
-			for (int i = 0; i < result1.size(); i++) {
-				Assert::AreEqual(true, Utils::compareClause(expected1[i], result1[i]));
-			}
-		}
 	};
 }

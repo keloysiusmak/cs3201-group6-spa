@@ -73,12 +73,13 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 						temp.clear();
 						previousSizeC = clauses.size();
 					}
-					else if (temp.size() == 2) {
+					else if (temp.size() >= 2) {
 						ClauseNode newParent = ClauseNode(AND);
-						newParent.addChildren(temp[0]);
-						newParent.addChildren(temp[1]);
+						newParent.addChildren(temp[temp.size() - 2]);
+						newParent.addChildren(temp[temp.size() - 1]);
 						clauses.push_back(newParent);
-						temp.clear();
+						temp.pop_back();
+						temp.pop_back();
 						if (previousSizeC == 0) {
 							previousSizeC = clauses.size();
 						}
@@ -91,10 +92,11 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 						clauses.push_back(newClause);
 						previousSizeC = clauses.size();
 					}
-					else if (temp.size() == 2) {
-						ClauseNode newClause1 = temp[0];
-						ClauseNode newClause2 = temp[1];
-						temp.clear();
+					else if (temp.size() >= 2) {
+						ClauseNode newClause1 = temp[temp.size() - 2];
+						ClauseNode newClause2 = temp[temp.size() - 1];
+						temp.pop_back();
+						temp.pop_back();
 						clauses.push_back(newClause1);
 						clauses.push_back(newClause2);
 						if (previousSizeC == 0) {
@@ -150,12 +152,13 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 						}
 						temp.clear();
 					}
-					else if (temp.size() == 2) {
+					else if (temp.size() >= 2) {
 						ClauseNode newParent = ClauseNode(AND);
-						newParent.addChildren(temp[0]);
-						newParent.addChildren(temp[1]);
+						newParent.addChildren(temp[temp.size() - 2]);
+						newParent.addChildren(temp[temp.size() - 1]);
 						pattern.push_back(newParent);
-						temp.clear();
+						temp.pop_back();
+						temp.pop_back();
 					}
 				}
 				else if (clausesNodes[i].getOperators() == OR) {
@@ -164,10 +167,11 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 						temp.clear();
 						pattern.push_back(newClause);
 					}
-					else if (temp.size() == 2) {
-						ClauseNode newClause1 = temp[0];
-						ClauseNode newClause2 = temp[1];
-						temp.clear();
+					else if (temp.size() >= 2) {
+						ClauseNode newClause1 = temp[temp.size() - 2];
+						ClauseNode newClause2 = temp[temp.size() - 1];
+						temp.pop_back();
+						temp.pop_back();
 						pattern.push_back(newClause1);
 						pattern.push_back(newClause2);
 					}
@@ -220,12 +224,13 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 						}
 						temp.clear();
 					}
-					else if (temp.size() == 2) {
+					else if (temp.size() >= 2) {
 						ClauseNode newParent = ClauseNode(AND);
-						newParent.addChildren(temp[0]);
-						newParent.addChildren(temp[1]);
+						newParent.addChildren(temp[temp.size() - 2]);
+						newParent.addChildren(temp[temp.size() - 1]);
 						withClauses.push_back(newParent);
-						temp.clear();
+						temp.pop_back();
+						temp.pop_back();
 					}
 				}
 				else if (clausesNodes[i].getOperators() == OR) {
@@ -234,10 +239,11 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 						temp.clear();
 						withClauses.push_back(newClause);
 					}
-					else if (temp.size() == 2) {
-						ClauseNode newClause1 = temp[0];
-						ClauseNode newClause2 = temp[1];
-						temp.clear();
+					else if (temp.size() >= 2) {
+						ClauseNode newClause1 = temp[temp.size() - 2];
+						ClauseNode newClause2 = temp[temp.size() - 1];
+						temp.pop_back();
+						temp.pop_back();
 						withClauses.push_back(newClause1);
 						withClauses.push_back(newClause2);
 					}
@@ -444,9 +450,9 @@ list<string> QueryQueuer::evaluateQueries() {
 				if (validQuery) {
 					_evaluator.setQueryObject(q[i]);
 					list<string> tempResult = _evaluator.evaluateQuery();
-					list<string>::iterator i;
-					for (i = tempResult.begin(); i != tempResult.end(); ++i) {
-						results.push_back(*i);
+					list<string>::iterator j;
+					for (j = tempResult.begin(); j != tempResult.end(); ++j) {
+						results.push_back(*j);
 					}
 				}
 				else {

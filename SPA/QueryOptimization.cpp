@@ -1,9 +1,5 @@
 #include "QueryOptimization.h"
 
-void QueryOptimization::setPKB(PKB generatedPKB) {
-	PKB pkb = generatedPKB;
-}
-
 void QueryOptimization::consolidateClauses(vector<Clause> const &clauses, vector<Clause> &consolidated) {
 	for (Clause clause : clauses) { consolidated.push_back(clause); } }
 void QueryOptimization::consolidateClauses(vector<Pattern> const &clauses, vector<Clause> &consolidated) {
@@ -15,504 +11,6 @@ map<int, vector<Clause>> QueryOptimization::sortIntoGroups(vector<Clause> &claus
 	map<int, vector<Clause>> groupedClauses = groupClauses(clauses, paramsHash);
 	return groupedClauses;
 };
-
-vector<Clause> QueryOptimization::numResultsGroupClauses(vector<Clause> groupedClauses) {
-
-	vector<int> size;
-	vector<int> newSize;
-	vector<Clause> reGroupedClauses;
-	vector<Clause> newReGroupedClauses;
-
-	for (Clause clause : groupedClauses) {
-		RelRef relation = clause.getRelRef();
-		Param leftParam = clause.getLeftParam();
-		Param rightParam = clause.getRightParam();
-		//vector<int> index;
-		//int i = 0;
-
-		if (relation == Follows) {
-			if (Utils::isSynonym(leftParam)) {
-				if (Utils::isSynonym(rightParam)) {
-					size.push_back(pkb.getFromResultTable(RelationFollows, 0, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationFollows, 0, 0));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationFollows, 0, stoi(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationFollows, 0, stoi(rightParam.value)));
-				}
-			}
-			else if (Utils::isSynonym(rightParam)) {
-				size.push_back(pkb.getFromResultTable(RelationFollows, stoi(leftParam.value), 0));
-				newSize.push_back(pkb.getFromResultTable(RelationFollows, stoi(leftParam.value), 0));
-			}
-			else {
-				size.push_back(pkb.getFromResultTable(RelationFollows, stoi(rightParam.value), stoi(leftParam.value)));
-				newSize.push_back(pkb.getFromResultTable(RelationFollows, stoi(rightParam.value), stoi(leftParam.value)));
-			}
-		}
-
-		if (relation == FollowsT) {
-			if (Utils::isSynonym(leftParam)) {
-				if (Utils::isSynonym(rightParam)) {
-					size.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, 0));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, stoi(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationFollowsStar, 0, stoi(rightParam.value)));
-				}
-			}
-			else if (Utils::isSynonym(rightParam)) {
-				size.push_back(pkb.getFromResultTable(RelationFollowsStar, stoi(leftParam.value), 0));
-				newSize.push_back(pkb.getFromResultTable(RelationFollowsStar, stoi(leftParam.value), 0));
-			}
-			else {
-				size.push_back(pkb.getFromResultTable(RelationFollowsStar, stoi(leftParam.value), stoi(rightParam.value)));
-				newSize.push_back(pkb.getFromResultTable(RelationFollowsStar, stoi(leftParam.value), stoi(rightParam.value)));
-			}
-		}
-
-		if (relation == Parent) {
-			if (Utils::isSynonym(leftParam)) {
-				if (Utils::isSynonym(rightParam)) {
-					size.push_back(pkb.getFromResultTable(RelationParent, 0, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationParent, 0, 0));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationParent, 0, stoi(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationParent, 0, stoi(rightParam.value)));
-				}
-			}
-			else if (Utils::isSynonym(rightParam)) {
-				size.push_back(pkb.getFromResultTable(RelationParent, stoi(leftParam.value), 0));
-				newSize.push_back(pkb.getFromResultTable(RelationParent, stoi(leftParam.value), 0));
-			}
-			else {
-				size.push_back(pkb.getFromResultTable(RelationParent, stoi(rightParam.value), stoi(leftParam.value)));
-				newSize.push_back(pkb.getFromResultTable(RelationParent, stoi(rightParam.value), stoi(leftParam.value)));
-			}
-		}
-
-		if (relation == ParentT) {
-			if (Utils::isSynonym(leftParam)) {
-				if (Utils::isSynonym(rightParam)) {
-					size.push_back(pkb.getFromResultTable(RelationParentStar, 0, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationParentStar, 0, 0));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationParentStar, 0, stoi(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationParentStar, 0, stoi(rightParam.value)));
-				}
-			}
-			else if (Utils::isSynonym(rightParam)) {
-				size.push_back(pkb.getFromResultTable(RelationParentStar, stoi(leftParam.value), 0));
-				newSize.push_back(pkb.getFromResultTable(RelationParentStar, stoi(leftParam.value), 0));
-			}
-			else {
-				size.push_back(pkb.getFromResultTable(RelationParentStar, stoi(leftParam.value), stoi(rightParam.value)));
-				newSize.push_back(pkb.getFromResultTable(RelationParentStar, stoi(leftParam.value), stoi(rightParam.value)));
-			}
-		}
-
-		if (relation == Calls) {
-			if (Utils::isSynonym(leftParam)) {
-				if (Utils::isSynonym(rightParam)) {
-					size.push_back(pkb.getFromResultTable(RelationCalls, 0, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationCalls, 0, 0));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationCalls, 0, pkb.getProcedureId(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationCalls, 0, pkb.getProcedureId(rightParam.value)));
-				}
-			}
-			else if (Utils::isSynonym(rightParam)) {
-				size.push_back(pkb.getFromResultTable(RelationCalls, pkb.getProcedureId(leftParam.value), 0));
-				newSize.push_back(pkb.getFromResultTable(RelationCalls, pkb.getProcedureId(leftParam.value), 0));
-			}
-			else {
-				size.push_back(pkb.getFromResultTable(RelationCalls, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-				newSize.push_back(pkb.getFromResultTable(RelationCalls, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-			}
-		}
-
-		if (relation == CallsT) {
-			if (Utils::isSynonym(leftParam)) {
-				if (Utils::isSynonym(rightParam)) {
-					size.push_back(pkb.getFromResultTable(RelationCallsStar, 0, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationCallsStar, 0, 0));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationCallsStar, 0, pkb.getProcedureId(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationCallsStar, 0, pkb.getProcedureId(rightParam.value)));
-				}
-			}
-			else if (Utils::isSynonym(rightParam)) {
-				size.push_back(pkb.getFromResultTable(RelationCallsStar, pkb.getProcedureId(leftParam.value), 0));
-				newSize.push_back(pkb.getFromResultTable(RelationCallsStar, pkb.getProcedureId(leftParam.value), 0));
-			}
-			else {
-				size.push_back(pkb.getFromResultTable(RelationCallsStar, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-				newSize.push_back(pkb.getFromResultTable(RelationCallsStar, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-			}
-		}
-
-		if (relation == Uses) {
-			if (leftParam.type == PROCEDURE) {
-				if (Utils::isSynonym(leftParam)) {
-					if (Utils::isSynonym(rightParam)) { //both syn
-						size.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, 0));
-						newSize.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, 0));
-					}
-					else { //syn, concrete
-						size.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, pkb.getVariableId(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationUsesProcedure, 0, pkb.getVariableId(rightParam.value)));
-					}
-				}
-				else if (Utils::isSynonym(rightParam)) { //concrete, syn
-					size.push_back(pkb.getFromResultTable(RelationUsesProcedure, pkb.getProcedureId(leftParam.value), 0));
-					newSize.push_back(pkb.getFromResultTable(RelationUsesProcedure, pkb.getProcedureId(leftParam.value), 0));
-				}
-				else { //concrete, concrete
-					size.push_back(pkb.getFromResultTable(RelationUsesProcedure, pkb.getProcedureId(leftParam.value), pkb.getVariableId(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationUsesProcedure, pkb.getProcedureId(leftParam.value), pkb.getVariableId(rightParam.value)));
-				}
-			}
-			else if (leftParam.type == STMT) {
-				if (Utils::isSynonym(leftParam)) {
-					if (Utils::isSynonym(rightParam)) { //syn, syn
-						size.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, 0));
-						newSize.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, 0));
-					}
-					else { //syn, concrete
-						size.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, pkb.getVariableId(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationUsesStatement, 0, pkb.getVariableId(rightParam.value)));
-					}
-				}
-				else if (Utils::isSynonym(rightParam)) {
-					size.push_back(pkb.getFromResultTable(RelationUsesStatement, stoi(leftParam.value), 0));
-					newSize.push_back(pkb.getFromResultTable(RelationUsesStatement, stoi(leftParam.value), 0));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationUsesStatement, stoi(leftParam.value), pkb.getVariableId(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationUsesStatement, stoi(leftParam.value), pkb.getVariableId(rightParam.value)));
-				}
-			}
-		}
-
-		if (relation == Modifies) {
-			if (leftParam.type == PROCEDURE) {
-				if (Utils::isSynonym(leftParam)) {
-					if (Utils::isSynonym(rightParam)) { //syn, syn
-						size.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, 0));
-						newSize.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, 0));
-					}
-					else { //syn, concrete
-						size.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, pkb.getVariableId(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationModifiesProcedure, 0, pkb.getVariableId(rightParam.value)));
-					}
-				}
-				else if (Utils::isSynonym(rightParam)) { //concrete, syn
-					size.push_back(pkb.getFromResultTable(RelationModifiesProcedure, pkb.getProcedureId(leftParam.value), 0));
-					newSize.push_back(pkb.getFromResultTable(RelationModifiesProcedure, pkb.getProcedureId(leftParam.value), 0));
-				}
-				else { //concrete, concrete
-					size.push_back(pkb.getFromResultTable(RelationModifiesProcedure, pkb.getProcedureId(leftParam.value), pkb.getVariableId(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationModifiesProcedure, pkb.getProcedureId(leftParam.value), pkb.getVariableId(rightParam.value)));
-				}
-			}
-			else if (leftParam.type == STMT) {
-				if (Utils::isSynonym(leftParam)) {
-					if (Utils::isSynonym(rightParam)) { //syn, syn
-						size.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, 0));
-						newSize.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, 0));
-					}
-					else { //syn, concrete
-						size.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, pkb.getVariableId(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationModifiesStatement, 0, pkb.getVariableId(rightParam.value)));
-					}
-				}
-				else if (Utils::isSynonym(rightParam)) { //concrete, syn
-					size.push_back(pkb.getFromResultTable(RelationModifiesStatement, stoi(leftParam.value), 0));
-					newSize.push_back(pkb.getFromResultTable(RelationModifiesStatement, stoi(leftParam.value), 0));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationModifiesStatement, stoi(leftParam.value), pkb.getVariableId(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationModifiesStatement, stoi(leftParam.value), pkb.getVariableId(rightParam.value)));
-				}
-			}
-		}
-
-		if (relation == Affects) {
-			if (Utils::isSynonym(leftParam)) {
-				if (Utils::isSynonym(rightParam)) { //syn, syn
-					size.push_back(pkb.getFromResultTable(RelationAffects, 0, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationAffects, 0, 0));
-				}
-				else { //syn, concrete
-					size.push_back(pkb.getFromResultTable(RelationAffects, 0, stoi(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationAffects, 0, stoi(rightParam.value)));
-				}
-			}
-			else if (Utils::isSynonym(rightParam)) { //concrete, syn
-				size.push_back(pkb.getFromResultTable(RelationAffects, stoi(leftParam.value), 0));
-				newSize.push_back(pkb.getFromResultTable(RelationAffects, stoi(leftParam.value), 0));
-			}
-			else { //concrete, concrete
-				size.push_back(pkb.getFromResultTable(RelationAffects, stoi(leftParam.value), stoi(rightParam.value)));
-				newSize.push_back(pkb.getFromResultTable(RelationAffects, stoi(leftParam.value), stoi(rightParam.value)));
-			}
-		}
-
-		if (relation == AffectsT) {
-			if (Utils::isSynonym(leftParam)) {
-				if (Utils::isSynonym(rightParam)) {
-					size.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, 0));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, stoi(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationAffectsStar, 0, stoi(rightParam.value)));
-				}
-			}
-			else if (Utils::isSynonym(rightParam)) {
-				size.push_back(pkb.getFromResultTable(RelationAffectsStar, stoi(leftParam.value), 0));
-				newSize.push_back(pkb.getFromResultTable(RelationAffectsStar, stoi(leftParam.value), 0));;
-			}
-			else {
-				size.push_back(pkb.getFromResultTable(RelationAffectsStar, stoi(leftParam.value), stoi(rightParam.value)));
-				newSize.push_back(pkb.getFromResultTable(RelationAffectsStar, stoi(leftParam.value), stoi(rightParam.value)));
-			}
-		}
-
-		if (relation == Next) {
-			if (Utils::isSynonym(leftParam)) {
-				if (Utils::isSynonym(rightParam)) {
-					size.push_back(pkb.getFromResultTable(RelationNext, 0, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationNext, 0, 0));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationNext, 0, stoi(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationNext, 0, stoi(rightParam.value)));
-				}
-			}
-			else if (Utils::isSynonym(rightParam)) {
-				size.push_back(pkb.getFromResultTable(RelationNext, stoi(leftParam.value), 0));
-				newSize.push_back(pkb.getFromResultTable(RelationNext, stoi(leftParam.value), 0));
-			}
-			else {
-				size.push_back(pkb.getFromResultTable(RelationNext, stoi(leftParam.value), stoi(rightParam.value)));
-				newSize.push_back(pkb.getFromResultTable(RelationNext, stoi(leftParam.value), stoi(rightParam.value)));
-			}
-		}
-
-		if (relation == NextT) {
-			if (Utils::isSynonym(leftParam)) {
-				if (Utils::isSynonym(rightParam)) {
-					size.push_back(pkb.getFromResultTable(RelationNextStar, 0, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationNextStar, 0, 0));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationNextStar, 0, stoi(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationNextStar, 0, stoi(rightParam.value)));
-				}
-			}
-			else if (Utils::isSynonym(rightParam)) {
-				size.push_back(pkb.getFromResultTable(RelationNextStar, stoi(leftParam.value), 0));
-				newSize.push_back(pkb.getFromResultTable(RelationNextStar, stoi(leftParam.value), 0));
-			}
-			else {
-				size.push_back(pkb.getFromResultTable(RelationNextStar, stoi(leftParam.value), stoi(rightParam.value)));
-				newSize.push_back(pkb.getFromResultTable(RelationNextStar, stoi(leftParam.value), stoi(rightParam.value)));
-			}
-		}
-
-		if (relation == With) {
-			if (rightParam.type == CONSTANT) {
-				if (leftParam.type == STMT) {
-					size.push_back(pkb.getFromResultTable(RelationWithConst, 0, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationWithConst, 0, 0));
-				}
-				else if (leftParam.type == ASSIGN) {
-					size.push_back(pkb.getFromResultTable(RelationWithConst, ASSIGNMENT_TYPE, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationWithConst, ASSIGNMENT_TYPE, 0));
-				}
-				else if (leftParam.type == WHILE) {
-					size.push_back(pkb.getFromResultTable(RelationWithConst, WHILE_TYPE, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationWithConst, WHILE_TYPE, 0));
-				}
-				else if (leftParam.type == IF) {
-					size.push_back(pkb.getFromResultTable(RelationWithConst, IF_TYPE, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationWithConst, IF_TYPE, 0));
-				}
-				else if (leftParam.type == CALL) {
-					size.push_back(pkb.getFromResultTable(RelationWithConst, CALL_TYPE, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationWithConst, CALL_TYPE, 0));
-				}
-			}
-			else if (leftParam.type == PROCEDURE) {
-				if (rightParam.type == CALL) {
-					if (rightParam.attribute == PROCNAME) {
-						size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-					}
-					else { //proc, stmt
-						size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), stoi(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), stoi(rightParam.value)));
-					}
-				}
-				else if (rightParam.type == VARIABLE) {
-					size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getVariableId(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getVariableId(rightParam.value)));
-				}
-				else if (rightParam.type == PROCEDURE) {
-					size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-				}
-			}
-			else if (leftParam.type == VARIABLE) {
-				if (rightParam.type == CALL) {
-					if (rightParam.attribute == PROCNAME) {
-						size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getVariableId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getVariableId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-					}
-					else {
-						size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getVariableId(leftParam.value), stoi(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getVariableId(leftParam.value), stoi(rightParam.value)));
-					}
-				}
-				else if (rightParam.type == VARIABLE) {
-					size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getVariableId(leftParam.value), pkb.getVariableId(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getVariableId(leftParam.value), pkb.getVariableId(rightParam.value)));
-				}
-				else if (rightParam.type == PROCEDURE) {
-					size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getVariableId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-					newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getVariableId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-				}
-			}
-			else if (leftParam.type == CALL) {
-				if (leftParam.attribute == PROCNAME) { //call proc, 
-					if (rightParam.type == CALL) { //call proc, call
-						if (rightParam.attribute == PROCNAME) { //call proc, call proc
-							size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-							newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-						}
-						else { //call proc, call stmt
-							size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), stoi(rightParam.value)));
-							newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), stoi(rightParam.value)));
-						}
-					}
-					else if (rightParam.type == VARIABLE) {
-						size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getVariableId(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getVariableId(rightParam.value)));
-					}
-					else if (rightParam.type == PROCEDURE) {
-						size.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationWithName, pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value)));
-					}
-				}
-				else { //call stmt
-					if (rightParam.type == CALL) { //call stmt, call
-						if (rightParam.attribute == PROCNAME) { //call stmt, call proc
-							size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), pkb.getProcedureId(rightParam.value)));
-							newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), pkb.getProcedureId(rightParam.value)));
-						}
-						else { //call stmt, call stmt
-							size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
-							newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), stoi(rightParam.value)));
-						}
-					}
-					else if (rightParam.type == VARIABLE) { //call stmt, var
-						size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), pkb.getVariableId(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), pkb.getVariableId(rightParam.value)));
-					}
-					else if (rightParam.type == PROCEDURE) { //call stmt, proc
-						size.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), pkb.getProcedureId(rightParam.value)));
-						newSize.push_back(pkb.getFromResultTable(RelationWithName, stoi(leftParam.value), pkb.getProcedureId(rightParam.value)));
-					}
-				}
-			}
-		}
-
-		if (relation == NONE) {
-			if (leftParam.type == ASSIGNMENT_TYPE) {
-				if (rightParam.type == VARIABLE) {
-					size.push_back(pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, VARIABLE));
-					newSize.push_back(pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, VARIABLE));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, 0));
-				}
-			}
-			else if (leftParam.type == WHILE_TYPE) {
-				if (rightParam.type == VARIABLE) {
-					size.push_back(pkb.getFromResultTable(RelationPattern, WHILE_TYPE, VARIABLE));
-					newSize.push_back(pkb.getFromResultTable(RelationPattern, WHILE_TYPE, VARIABLE));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationPattern, WHILE_TYPE, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationPattern, WHILE_TYPE, 0));
-				}
-			}
-			else if (leftParam.type == IF_TYPE) {
-				if (rightParam.type == VARIABLE) {
-					size.push_back(pkb.getFromResultTable(RelationPattern, IF_TYPE, VARIABLE));
-					newSize.push_back(pkb.getFromResultTable(RelationPattern, IF_TYPE, VARIABLE));
-				}
-				else {
-					size.push_back(pkb.getFromResultTable(RelationPattern, IF_TYPE, 0));
-					newSize.push_back(pkb.getFromResultTable(RelationPattern, IF_TYPE, 0));
-				}
-			}
-		}
-
-		reGroupedClauses.push_back(clause);
-		newReGroupedClauses.push_back(clause);
-	}
-
-	sort(size.begin(), size.end());
-	for (int i = 0; i < size.size(); i++) {
-		for (int j = 0; j < size.size(); j++) {
-			if (size[j] == newSize[i]) {
-				newReGroupedClauses[j] = reGroupedClauses[i];
-				continue;
-			}
-		}
-	}
-
-	return newReGroupedClauses;
-}
-
-map<int, vector<Clause>> QueryOptimization::numConstantsGroupClauses(vector<Clause> groupedClauses) {
-
-	map<int, vector<Clause>> finalGroupedClauses; 
-
-	for (Clause clause : groupedClauses) {
-		Param leftParam = clause.getLeftParam();
-		Param rightParam = clause.getRightParam();
-
-		if (Utils::isSynonym(leftParam)) {
-			if (Utils::isSynonym(rightParam)) { //2 synonyms
-				finalGroupedClauses[2].push_back(clause);
-			}
-			else { //only leftParam is synonym
-				finalGroupedClauses[1].push_back(clause);
-			}
-		}
-		else if (Utils::isSynonym(rightParam)) {
-			if (Utils::isSynonym(leftParam)) { //2 synonyms
-				finalGroupedClauses[2].push_back(clause);
-			}
-			else { //only rightParam is synonym
-				finalGroupedClauses[1].push_back(clause);
-			}
-		}
-		else {
-			finalGroupedClauses[0].push_back(clause);
-		}
-	}
-		return finalGroupedClauses;
-}
 
 // Sort clauses into groups according to grouped syns
 map<int, vector<Clause>> QueryOptimization::groupClauses(vector<Clause> &clauses, map<Param, Node> &paramsHash) {
@@ -634,3 +132,304 @@ Node* QueryOptimization::findSet(Node &n, map<Param, Node> &paramsHash) {
 	n.setParent(parent); // Recursively set parent to root node
 	return n.parent;
 }
+
+/* Sorts clauses within group to optimize order of evaluation */
+vector<Clause> QueryOptimization::sortWithinGroup(vector<Clause> &clauseGroup, PKB &pkb) {
+
+	map<Clause, int> clauseTotalWeight;
+	for (Clause clause : clauseGroup) {
+		int clauseWeight = getTotalWeight(clause, 1, 5, 2, pkb);
+		clauseTotalWeight[clause] = clauseWeight;
+	}
+
+	// Trivial selection sort
+	vector<Clause> sortedClauses;
+	int numClauses = clauseTotalWeight.size();
+	for (size_t i = 0; i < numClauses; i++) {
+		Clause currentMinWeightClause = (clauseTotalWeight.begin())->first; // Get first element
+		for (pair<Clause, int> clauseWeight : clauseTotalWeight) {
+			if (clauseWeight.second < clauseTotalWeight[currentMinWeightClause]) {
+				currentMinWeightClause = clauseWeight.first;
+			}
+		}
+		sortedClauses.push_back(currentMinWeightClause); // Add to sorted clauses
+		clauseTotalWeight.erase(currentMinWeightClause); // Delete from clauseTotalWeight map
+	}
+
+	return sortedClauses;
+};
+
+/* Gets the total weight of a clause with respective input weights */
+int QueryOptimization::getTotalWeight(Clause &clause, int resultsWeight, int synsWeight, int relationWeight, PKB &pkb) {
+	int resultsTotal = resultsWeight * getNumResultsOfClause(clause, pkb);
+	int synsTotal = synsWeight * getNumSynsOfClause(clause);
+	int relationTotal = relationWeight * getRelationWeightOfClause(clause);
+	return resultsTotal + synsTotal + relationTotal;
+};
+
+/* Gets number of results from evaluation of clause */
+int QueryOptimization::getNumResultsOfClause(Clause &clause, PKB &pkb) {
+
+	int numResults;
+
+	RelRef clauseRelation = clause.getRelRef();
+	Param lhs = clause.getLeftParam();
+	Param rhs = clause.getRightParam();
+
+	int synConstCase = getSynConstCase(clause);
+	int lhsIntValue = getParamIntValue(lhs, pkb);
+	int rhsIntValue = getParamIntValue(rhs, pkb);
+
+	if (clauseRelation == Parent) {
+		if (synConstCase == 1) { // Syn, Syn
+			numResults = pkb.getFromResultTable(RelationParent, 0, 0);
+		}
+		if (synConstCase == 2) { // Syn, Concrete
+			numResults = pkb.getFromResultTable(RelationParent, 0, rhsIntValue);
+		}
+		if (synConstCase == 3) { // Concrete, Syn
+			numResults = pkb.getFromResultTable(RelationParent, lhsIntValue, 0);
+		}
+		if (synConstCase == 4) { // Concrete, Concrete
+			numResults = pkb.getFromResultTable(RelationParent, lhsIntValue, rhsIntValue);
+		}
+
+	} else if (clauseRelation == ParentT) {
+		if (synConstCase == 1) { // Syn, Syn
+			numResults = pkb.getFromResultTable(RelationParentStar, 0, 0);
+		}
+		if (synConstCase == 2) { // Syn, Concrete
+			numResults = pkb.getFromResultTable(RelationParent, 0, rhsIntValue);
+		}
+		if (synConstCase == 3) { // Concrete, Syn
+			numResults = pkb.getFromResultTable(RelationParent, lhsIntValue, 0);
+		}
+		if (synConstCase == 4) { // Concrete, Concrete
+			numResults = pkb.getFromResultTable(RelationParent, lhsIntValue, rhsIntValue);
+		}
+
+	} else if (clauseRelation == Follows) {
+		if (synConstCase == 1) { // Syn, Syn
+			numResults = pkb.getFromResultTable(RelationFollows, 0, 0);
+		}
+		if (synConstCase == 2) { // Syn, Concrete
+			numResults = pkb.getFromResultTable(RelationFollows, 0, rhsIntValue);
+		}
+		if (synConstCase == 3) { // Concrete, Syn
+			numResults = pkb.getFromResultTable(RelationFollows, lhsIntValue, 0);
+		}
+		if (synConstCase == 4) { // Concrete, Concrete
+			numResults = pkb.getFromResultTable(RelationFollows, lhsIntValue, rhsIntValue);
+		}
+
+	} else if (clauseRelation == FollowsT) {
+		if (synConstCase == 1) { // Syn, Syn
+			numResults = pkb.getFromResultTable(RelationFollowsStar, 0, 0);
+		}
+		if (synConstCase == 2) { // Syn, Concrete
+			numResults = pkb.getFromResultTable(RelationFollowsStar, 0, rhsIntValue);
+		}
+		if (synConstCase == 3) { // Concrete, Syn
+			numResults = pkb.getFromResultTable(RelationFollowsStar, lhsIntValue, 0);
+		}
+		if (synConstCase == 4) { // Concrete, Concrete
+			numResults = pkb.getFromResultTable(RelationFollowsStar, lhsIntValue, rhsIntValue);
+		}
+
+	} else if (clauseRelation == Uses) {
+		if (synConstCase == 1) { // Syn, Syn
+			if (lhs.type == PROCEDURE) numResults = pkb.getFromResultTable(RelationUsesProcedure, 0, 0);
+			else numResults = pkb.getFromResultTable(RelationUsesStatement, 0, 0);
+		}
+		if (synConstCase == 2) { // Syn, Concrete
+			if (lhs.type == PROCEDURE) numResults = pkb.getFromResultTable(RelationUsesProcedure, 0, rhsIntValue);
+			else numResults = pkb.getFromResultTable(RelationUsesStatement, 0, rhsIntValue);
+		}
+		if (synConstCase == 3) { // Concrete, Syn
+			if (lhs.type == PROC_IDENT) numResults = pkb.getFromResultTable(RelationUsesProcedure, lhsIntValue, 0);
+			else numResults = pkb.getFromResultTable(RelationUsesStatement, lhsIntValue, 0);
+		}
+		if (synConstCase == 4) { // Concrete, Concrete
+			if (lhs.type == PROC_IDENT)  numResults = pkb.getFromResultTable(RelationUsesProcedure, lhsIntValue, rhsIntValue);
+			else numResults = pkb.getFromResultTable(RelationUsesStatement, lhsIntValue, rhsIntValue);
+		}
+
+	} else if (clauseRelation == Modifies) {
+		if (synConstCase == 1) { // Syn, Syn
+			if (lhs.type == PROCEDURE) numResults = pkb.getFromResultTable(RelationModifiesProcedure, 0, 0);
+			else numResults = pkb.getFromResultTable(RelationModifiesStatement, 0, 0);
+		}
+		if (synConstCase == 2) { // Syn, Concrete
+			if (lhs.type == PROCEDURE) numResults = pkb.getFromResultTable(RelationModifiesProcedure, 0, rhsIntValue);
+			else numResults = pkb.getFromResultTable(RelationModifiesStatement, 0, rhsIntValue);
+		}
+		if (synConstCase == 3) { // Concrete, Syn
+			if (lhs.type == PROC_IDENT) numResults = pkb.getFromResultTable(RelationModifiesProcedure, lhsIntValue, 0);
+			else numResults = pkb.getFromResultTable(RelationModifiesStatement, lhsIntValue, 0);
+		}
+		if (synConstCase == 4) { // Concrete, Concrete
+			if (lhs.type == PROC_IDENT) numResults = pkb.getFromResultTable(RelationModifiesProcedure, lhsIntValue, rhsIntValue);
+			else numResults = pkb.getFromResultTable(RelationModifiesStatement, lhsIntValue, rhsIntValue);
+		}
+
+	} else if (clauseRelation == Calls) {
+		if (synConstCase == 1) { // Syn, Syn
+			numResults = pkb.getFromResultTable(RelationCalls, 0, 0);
+		}
+		if (synConstCase == 2) { // Syn, Concrete
+			numResults = pkb.getFromResultTable(RelationCalls, lhsIntValue, 0);
+		}
+		if (synConstCase == 3) { // Concrete, Syn
+			numResults = pkb.getFromResultTable(RelationCalls, 0, rhsIntValue);
+		}
+		if (synConstCase == 4) { // Concrete, Concrete
+			numResults = pkb.getFromResultTable(RelationCalls, lhsIntValue, rhsIntValue);
+		}
+
+	} else if (clauseRelation == CallsT) {
+		if (synConstCase == 1) { // Syn, Syn
+			numResults = pkb.getFromResultTable(RelationCalls, 0, 0);
+		}
+		if (synConstCase == 2) { // Syn, Concrete
+			numResults = pkb.getFromResultTable(RelationCalls, lhsIntValue, 0);
+		}
+		if (synConstCase == 3) { // Concrete, Syn
+			numResults = pkb.getFromResultTable(RelationCalls, 0, rhsIntValue);
+		}
+		if (synConstCase == 4) { // Concrete, Concrete
+			numResults = pkb.getFromResultTable(RelationCalls, lhsIntValue, rhsIntValue);
+		}
+	} else if (clauseRelation == Affects) {
+		if (synConstCase == 1) { // Syn, Syn
+			numResults = pkb.getFromResultTable(RelationAffects, 0, 0);
+		}
+		if (synConstCase == 2) { // Syn, Concrete
+			numResults = pkb.getFromResultTable(RelationAffects, lhsIntValue, 0);
+		}
+		if (synConstCase == 3) { // Concrete, Syn
+			numResults = pkb.getFromResultTable(RelationAffects, 0, rhsIntValue);
+		}
+		if (synConstCase == 4) { // Concrete, Concrete
+			numResults = pkb.getFromResultTable(RelationAffects, lhsIntValue, rhsIntValue);
+		}
+	} else if (clauseRelation == AffectsT) {
+		if (synConstCase == 1) { // Syn, Syn
+			numResults = pkb.getFromResultTable(RelationAffectsStar, 0, 0);
+		}
+		if (synConstCase == 2) { // Syn, Concrete
+			numResults = pkb.getFromResultTable(RelationAffectsStar, lhsIntValue, 0);
+		}
+		if (synConstCase == 3) { // Concrete, Syn
+			numResults = pkb.getFromResultTable(RelationAffectsStar, 0, rhsIntValue);
+		}
+		if (synConstCase == 4) { // Concrete, Concrete
+			numResults = pkb.getFromResultTable(RelationAffectsStar, lhsIntValue, rhsIntValue);
+		}
+	} else if (clauseRelation == With) {
+		numResults = 0;
+		if (synConstCase == 1) { // Syn, Syn
+		}
+		if (synConstCase == 2) { // Syn, Concrete
+		}
+		if (synConstCase == 3) { // Concrete, Syn
+		}
+		if (synConstCase == 4) { // Concrete, Concrete
+		}
+	} else if (clauseRelation == None) { // Pattern
+		Pattern* p = static_cast<Pattern*>(&clause);
+		Param patternEnt = p->getEntity();
+		if (patternEnt.type == ASSIGN) {
+			numResults = pkb.getFromResultTable(RelationPattern, ASSIGNMENT_TYPE, 0);
+		} else if (patternEnt.type == WHILE) {
+			numResults = pkb.getFromResultTable(RelationPattern, WHILE_TYPE, 0);
+		} else {
+			numResults = pkb.getFromResultTable(RelationPattern, IF_TYPE, 0);
+		}
+	}
+	return numResults;
+};
+
+/* Gets case of parameters
+Case 1: syn, syn
+Case 2: syn, concrete
+Case 3: concrete, syn
+Case 4: concrete, concrete
+*/
+int QueryOptimization::getSynConstCase(Clause &clause) {
+	Param lhs = clause.getLeftParam();
+	Param rhs = clause.getRightParam();
+	if (Utils::isSynonym(lhs)) {
+		if (Utils::isSynonym(rhs)) return 1;
+		else return 2;
+	} else {
+		if (Utils::isSynonym(rhs)) return 3;
+		else return 4;
+	}
+};
+
+/* Maps param to corresponding int value or id */
+int QueryOptimization::getParamIntValue(Param &p, PKB &pkb) {
+	if (p.type == PROC_IDENT) {
+		return pkb.getProcedureId(p.value);
+	} else if (p.type == VAR_IDENT) {
+		return pkb.getVariableId(p.value);
+	} else {
+		try {
+			return stoi(p.value);
+		}
+		catch (exception){
+			return 0;
+		}
+	}
+};
+
+/* Get number of synonyms within clause */
+int QueryOptimization::getNumSynsOfClause(Clause &clause) {
+	Param leftParam = clause.getLeftParam();
+	Param rightParam = clause.getRightParam();
+	int numParams = 0;
+	if (Utils::isSynonym(leftParam)) numParams++;
+	if (Utils::isSynonym(rightParam)) numParams++;
+	return numParams;
+}
+
+/* Get weight of each relation */
+int QueryOptimization::getRelationWeightOfClause(Clause &clause) {
+	RelRef clauseRelation = clause.getRelRef();
+	switch (clauseRelation) {
+	case With:
+		return 0;
+	case Follows:
+		return 5;
+	case FollowsT:
+		return 8;
+	case Parent:
+		return 5;
+	case ParentT:
+		return 8;
+	case Uses:
+		return 5;
+	case Modifies:
+		return 5;
+	case Calls:
+		return 5;
+	case CallsT:
+		return 8;
+	case None: // Pattern
+		return 10;
+	case Next:
+		return 20;
+	case NextT:
+		return 50;
+	case Affects:
+		return 100;
+	case AffectsT:
+		return 500;
+	}
+};
+
+/* Sorts according to total weight of each group */
+vector<vector<Clause>> QueryOptimization::sortGroupsEvalOrder(map<int, vector<Clause>> &clauseGroups) {
+	vector<vector<Clause>> sortedEvalGroups;
+	return sortedEvalGroups;
+};
