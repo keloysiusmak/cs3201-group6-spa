@@ -135,10 +135,13 @@ Node* QueryOptimization::findSet(Node &n, map<Param, Node> &paramsHash) {
 
 /* Sorts clauses within group to optimize order of evaluation */
 vector<Clause> QueryOptimization::sortWithinGroup(vector<Clause> &clauseGroup, PKB &pkb) {
+	int RESULTSWEIGHT = 1;
+	int SYNSWEIGHT = 5;
+	int RELATIONWEIGHT = 2;
 
 	map<Clause, int> clauseTotalWeight;
 	for (Clause clause : clauseGroup) {
-		int clauseWeight = getTotalWeight(clause, 1, 5, 2, pkb);
+		int clauseWeight = getTotalWeight(clause, RESULTSWEIGHT, SYNSWEIGHT, RELATIONWEIGHT, pkb);
 		clauseTotalWeight[clause] = clauseWeight;
 	}
 
@@ -327,13 +330,21 @@ int QueryOptimization::getNumResultsOfClause(Clause &clause, PKB &pkb) {
 		}
 	} else if (clauseRelation == With) {
 		numResults = 0;
-		if (synConstCase == 1) { // Syn, Syn
-		}
-		if (synConstCase == 2) { // Syn, Concrete
-		}
-		if (synConstCase == 3) { // Concrete, Syn
-		}
-		if (synConstCase == 4) { // Concrete, Concrete
+		if (synConstCase == 1) { // Both sides are synonyms
+			if (lhs.type == PROCEDURE && rhs.type == CALL ||
+				rhs.type == CALL && lhs.type == PROCEDURE) {
+				numResults = pkb.getFromResultTable(RelationWithName, PROCEDURE, CALL);
+			} else if (lhs.type == PROCEDURE && rhs.type == VARIABLE ||
+				lhs.type == VARIABLE && rhs.type == PROCEDURE) {
+				numResults = pkb.getFromResultTable(RelationWithName, PROCEDURE, VARIABLE);
+			} else if (lhs.type == VARIABLE && rhs.type == CALL ||
+				lhs.type == CALL && rhs.type == VARIABLE) {
+				numResults = pkb.getFromResultTable(RelationWithName, VARIABLE, CALL);
+			} else {
+				return 5; // Set as default for all other cases
+			}
+		} else { // Always prioritize with clause with synonym only on one side
+			return 0;
 		}
 	} else if (clauseRelation == None) { // Pattern
 		Pattern* p = static_cast<Pattern*>(&clause);
@@ -373,11 +384,10 @@ int QueryOptimization::getParamIntValue(Param &p, PKB &pkb) {
 		return pkb.getProcedureId(p.value);
 	} else if (p.type == VAR_IDENT) {
 		return pkb.getVariableId(p.value);
-	} else {
+	} else { // Either integer or synonym
 		try {
 			return stoi(p.value);
-		}
-		catch (exception){
+		} catch (exception) {
 			return 0;
 		}
 	}
@@ -395,8 +405,8 @@ int QueryOptimization::getNumSynsOfClause(Clause &clause) {
 
 /* Get weight of each relation */
 int QueryOptimization::getRelationWeightOfClause(Clause &clause) {
-	RelRef clauseRelation = clause.getRelRef();
-	switch (clauseRelation) {
+
+	switch (clause.getRelRef()) {
 	case With:
 		return 0;
 	case Follows:
