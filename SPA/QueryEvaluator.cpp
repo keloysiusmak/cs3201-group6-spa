@@ -411,16 +411,28 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 		}
 		else { // (concrete, concrete)
 			bool result;
+			bool isProcedure;
 
 			int lineId;
-			try { lineId = stoi(leftParam.value); }
-			catch (exception&) { lineId = pkb.getProcedureId(leftParam.value); }
+			try { 
+				lineId = stoi(leftParam.value); 
+				isProcedure = false;
+			}
+			catch (exception&) { 
+				lineId = pkb.getProcedureId(leftParam.value); 
+				isProcedure = true;
+			}
 
 			int varId;
 			try { varId = stoi(rightParam.value); }
-			catch (exception&) { varId = pkb.getProcedureId(rightParam.value); }
+			catch (exception&) { varId = pkb.getVariableId(rightParam.value); }
 
-			result = pkb.checkStatementUsesVariable(lineId, varId);
+			if (isProcedure) {
+				result = pkb.checkProcedureUsesVariable(lineId, varId);
+			}
+			else {
+				result = pkb.checkStatementUsesVariable(lineId, varId);
+			}
 			clauseResults.setValid(result);
 		}
 	}
@@ -469,16 +481,28 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 		}
 		else { // (concrete, concrete)
 			bool result;
+			bool isProcedure;
 
 			int lineId;
-			try { lineId = pkb.getProcedureId(leftParam.value); }
-			catch (exception&) { lineId = stoi(leftParam.value); }
+			try {
+				lineId = stoi(leftParam.value);
+				isProcedure = false;
+			}
+			catch (exception&) {
+				lineId = pkb.getProcedureId(leftParam.value);
+				isProcedure = true;
+			}
 
 			int varId;
 			try { varId = pkb.getVariableId(rightParam.value); }
 			catch (exception&) { varId = stoi(rightParam.value); }
 
-			result = pkb.checkStatementModifiesVariable(lineId, varId);
+			if (isProcedure) {
+				result = pkb.checkProcedureModifiesVariable(lineId, varId);
+			}
+			else {
+				result = pkb.checkStatementModifiesVariable(lineId, varId);
+			}
 			clauseResults.setValid(result);
 		}
 	}
