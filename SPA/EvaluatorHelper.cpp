@@ -143,7 +143,7 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 					}
 				} else {
 					(tableLeftParamValue < clauseLeftParamValue) ?
-						clauseResultsIndex++ : tableResultsIndex++;
+						tableResultsIndex++ : clauseResultsIndex++;
 				}
 				
 			} else if (paramsInTableCase == 1) { // Left param in table
@@ -175,19 +175,20 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 				
 				if (tableRightParamValue == clauseRightParamValue) {
 
-					int tableIndex = tableResultsIndex++;
+					int tableIndex = tableResultsIndex;
 					vector<int> tableRow;
-					while (iTable.resultsTable[tableIndex][rightParamIndex] == clauseRightParamValue) {
+					while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][rightParamIndex] == clauseRightParamValue) {
 						tableRow = iTable.resultsTable[tableResultsIndex];
 						tableRow.push_back(clauseResults.results[clauseResultsIndex][0]);
 						tableIndex++;
+						mergedResults.push_back(tableRow);
 					}
 					tableResultsIndex++;
 					clauseResultsIndex++;
 
 				} else {
 					(tableRightParamValue < clauseRightParamValue) ?
-						clauseResultsIndex++ : tableResultsIndex++;
+						tableResultsIndex++ : clauseResultsIndex++;
 				}
 
 			}
