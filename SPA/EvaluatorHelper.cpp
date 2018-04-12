@@ -165,7 +165,7 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 
 				} else {
 					(tableLeftParamValue < clauseLeftParamValue) ?
-						clauseResultsIndex++ : tableResultsIndex++;
+						tableResultsIndex++ : clauseResultsIndex++;
 				}
 
 			} else { // Right param in table
