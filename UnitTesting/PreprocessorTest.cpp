@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../SPA/Preprocessor.h"
+#include "../SPA/Utils.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
@@ -421,7 +422,7 @@ public:
 		Assert::AreEqual(false, preprocessor.isDeclarationSynonymExist("b"));
 	}
 
-	TEST_METHOD(PreprocessorParseClauseArg1) {
+	TEST_METHOD(PreprocessorParseClauseArg) {
 
 		Preprocessor preprocessor;
 
@@ -434,20 +435,23 @@ public:
 		string relType = "Modifies";
 		string arg1 = "w";
 		string arg2 = "\"x\"";
+		preprocessor.parseClauseArg(qc, relType, arg1, arg2, false);
 
-		string firstParamValue;
-		firstParamValue += arg1.at(0);
+		Param expectedLeftParam;
+		expectedLeftParam.type = WHILE;
+		expectedLeftParam.value = "w";
+		expectedLeftParam.attribute = NONE;
 
-		string secondParamValue;
-		secondParamValue += arg2.at(1);
+		Param expectedRightParam;
+		expectedRightParam.type = VAR_IDENT;
+		expectedRightParam.value = "x";
+		expectedRightParam.attribute = NONE;
+
+		Clause expectedClause(Modifies, expectedLeftParam, expectedRightParam, false);
+		Clause retrieveFromQueryContent = qc.getClauses().at(0).getClause();
 
 		//Valid
-		Assert::AreEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, arg2, false));
-		Assert::AreEqual(static_cast<int>(Modifies), static_cast<int>(qc.getClauses().at(0).getClause().getRelRef()));
-		Assert::AreEqual(static_cast<int>(WHILE), static_cast<int>(qc.getClauses().at(0).getClause().getLeftParam().type));
-		Assert::AreEqual(firstParamValue, qc.getClauses().at(0).getClause().getLeftParam().value);
-		Assert::AreEqual(static_cast<int>(VAR_IDENT), static_cast<int>(qc.getClauses().at(0).getClause().getRightParam().type));
-		Assert::AreEqual(secondParamValue, qc.getClauses().at(0).getClause().getRightParam().value);
+		Assert::AreEqual(true, Utils::compareClause(retrieveFromQueryContent, expectedClause));
 
 		//Invalid
 		string invalidArg1Empty = "";
@@ -473,61 +477,6 @@ public:
 		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRef2, false));
 		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRefNotExist, false));
 
-	}
-
-	TEST_METHOD(PreprocessorParseClauseArg2) {
-
-		Preprocessor preprocessor;
-
-		//Populate the declarationMap
-		preprocessor.insertDeclarationToMap("s", "stmt");
-		preprocessor.insertDeclarationToMap("v", "variable");
-
-		QueryContent qc;
-
-		string relType = "ParentT";
-		string arg1 = "5";
-		string arg2 = "s";
-
-		string firstParamValue;
-		firstParamValue += arg1.at(0);
-
-		string secondParamValue;
-		secondParamValue += arg2.at(0);
-
-		//Valid
-		Assert::AreEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, arg2, false));
-		Assert::AreEqual(static_cast<int>(ParentT), static_cast<int>(qc.getClauses().at(0).getClause().getRelRef()));
-		Assert::AreEqual(static_cast<int>(INTEGER), static_cast<int>(qc.getClauses().at(0).getClause().getLeftParam().type));
-		Assert::AreEqual(firstParamValue, qc.getClauses().at(0).getClause().getLeftParam().value);
-		Assert::AreEqual(static_cast<int>(STMT), static_cast<int>(qc.getClauses().at(0).getClause().getRightParam().type));
-		Assert::AreEqual(secondParamValue, qc.getClauses().at(0).getClause().getRightParam().value);
-
-		//Invalid
-		string invalidArg1Empty = "";
-		string invalidArg1StmtRef1 = "\"x\"";
-		string invalidArg1StmtRef2 = "v";
-		string invalidArg1StmtRefNotExist = "a";
-
-		string invalidArg2Empty = "";
-		string invalidArg2StmtRef1 = "\"x\"";
-		string invalidArg2StmtRef2 = "v";
-		string invalidArg2EntRefNotExist = "b";
-
-		string underScore = "_";
-		string integerZero = "0";
-
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1Empty, arg2, false));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRef1, arg2, false));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRef2, arg2, false));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, invalidArg1StmtRefNotExist, arg2, false));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, integerZero, arg2, false));
-
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2Empty, false));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2StmtRef1, false));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2StmtRef2, false));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, invalidArg2EntRefNotExist, false));
-		Assert::AreNotEqual(true, preprocessor.parseClauseArg(qc, relType, arg1, integerZero, false));
 	}
 
 	TEST_METHOD(PreprocessorParsePattern) {
