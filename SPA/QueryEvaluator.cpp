@@ -846,7 +846,123 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 	int firstParamTableIndex = iTable.getParamIndex(lhs);
 	int secondParamTableIndex = iTable.getParamIndex(rhs);
 
-	if (lhs.type != CALL && rhs.type != CALL) {
+	if (lhs.type == CONSTANT && rhs.type == CONSTANT) {
+		vector<vector<int>> updatedTable;
+		if (firstParamTableIndex > -1 && secondParamTableIndex > -1) {
+			//both exist in the table and need to be intersected
+			for (vector<int> tableRow : iTable.resultsTable) {
+				int lhsIntValue = tableRow[firstParamTableIndex];
+				int rhsIntValue = tableRow[secondParamTableIndex];
+
+				if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
+					updatedTable.push_back(tableRow);
+				}
+				else { ; }
+			}
+		}
+		else if (firstParamTableIndex == -1) {
+			//firstParam does not exist in table
+			lhs.attribute = NONE;
+			iTable.addTableParams(lhs);
+			for (vector<int> tableRow : iTable.resultsTable) {
+				int rhsIntValue = tableRow[secondParamTableIndex];
+				tableRow.push_back(rhsIntValue);
+				updatedTable.push_back(tableRow);
+			}
+		}
+		else if (secondParamTableIndex == -1) {
+			//secondParam does not exist in table
+			rhs.attribute = NONE;
+			iTable.addTableParams(rhs);
+			for (vector<int> tableRow : iTable.resultsTable) {
+				int lhsIntValue = tableRow[firstParamTableIndex];
+				tableRow.push_back(lhsIntValue);
+				updatedTable.push_back(tableRow);
+			}
+		}
+		iTable.setResultsTable(updatedTable);
+	}
+	else if (lhs.type == CONSTANT || rhs.type == CONSTANT) {
+		vector<vector<int>> updatedTable;
+		if (lhs.type == CONSTANT) {
+			if (firstParamTableIndex > -1) { // lhs is in params
+				rhs.attribute = NONE;
+				iTable.addTableParams(rhs);
+				for (vector<int> tableRow : iTable.resultsTable) {
+					int lhsIntValue = tableRow[firstParamTableIndex];
+					int type = 0;
+					if (rhs.type == STMT) type = 0;
+					else if (rhs.type == ASSIGN) type = 1;
+					else if (rhs.type == WHILE) type = 2;
+					else if (rhs.type == IF) type = 3;
+					else if (rhs.type == CALL) type = 4;
+					if (pkb.checkStatementHasType(lhsIntValue, type)) {
+						tableRow.push_back(lhsIntValue);
+						updatedTable.push_back(tableRow);
+					}
+				}
+			}
+			else if (secondParamTableIndex > -1) { // lhs is in params
+				lhs.attribute = NONE;
+				iTable.addTableParams(lhs);
+				for (vector<int> tableRow : iTable.resultsTable) {
+					int rhsIntValue = tableRow[secondParamTableIndex];
+					std::vector<std::vector<int>> consts = pkb.getAllConstants();
+					bool hasConst = false;
+					for (std::vector<int> c : consts) {
+						if (c[0] == rhsIntValue) {
+							hasConst = true;
+							break;
+						}
+					}
+					if (hasConst) {
+						tableRow.push_back(rhsIntValue);
+						updatedTable.push_back(tableRow);
+					}
+				}
+			}
+		}
+		else if (rhs.type == CONSTANT) {
+			if (secondParamTableIndex > -1) { // lhs is in params
+				lhs.attribute = NONE;
+				iTable.addTableParams(lhs);
+				for (vector<int> tableRow : iTable.resultsTable) {
+					int rhsIntValue = tableRow[secondParamTableIndex];
+					int type = 0;
+					if (lhs.type == STMT) type = 0;
+					else if (lhs.type == ASSIGN) type = 1;
+					else if (lhs.type == WHILE) type = 2;
+					else if (lhs.type == IF) type = 3;
+					else if (lhs.type == CALL) type = 4;
+					if (pkb.checkStatementHasType(rhsIntValue, type)) {
+						tableRow.push_back(rhsIntValue);
+						updatedTable.push_back(tableRow);
+					}
+				}
+			}
+			else if (firstParamTableIndex > -1) { // lhs is in params
+				rhs.attribute = NONE;
+				iTable.addTableParams(rhs);
+				for (vector<int> tableRow : iTable.resultsTable) {
+					int lhsIntValue = tableRow[firstParamTableIndex];
+					std::vector<std::vector<int>> consts = pkb.getAllConstants();
+					bool hasConst = false;
+					for (std::vector<int> c : consts) {
+						if (c[0] == lhsIntValue) {
+							hasConst = true;
+							break;
+						}
+					}
+					if (hasConst) {
+						tableRow.push_back(lhsIntValue);
+						updatedTable.push_back(tableRow);
+					}
+				}
+			}
+		}
+		iTable.setResultsTable(updatedTable);
+	}
+	else if (lhs.type != CALL && rhs.type != CALL) {
 		vector<vector<int>> updatedTable;
 		for (vector<int> tableRow : iTable.resultsTable) {
 			int lhsIntValue = tableRow[firstParamTableIndex];
