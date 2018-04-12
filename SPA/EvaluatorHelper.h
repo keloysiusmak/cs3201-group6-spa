@@ -23,7 +23,8 @@ public:
 
 	static IntermediateTable mergeIntermediateTables(IntermediateTable &iTable1, IntermediateTable &iTable2);
 
-	static bool clauseParamsInTable(ClauseResults &clauseResults, IntermediateTable &iTable);
+	static bool clauseParamsInTable(Clause &clause, IntermediateTable &iTable);
+	static bool clauseResultsParamsInTable(ClauseResults &clauseResults, IntermediateTable &iTable);
 	static void addClauseParamToTable(ClauseResults &clauseResults, IntermediateTable &iTable);
 
 	static IntermediateTable findTableWithParam(Param p, vector<IntermediateTable> &iTables);
