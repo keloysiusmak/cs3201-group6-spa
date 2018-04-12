@@ -450,9 +450,9 @@ list<string> QueryQueuer::evaluateQueries() {
 				if (validQuery) {
 					_evaluator.setQueryObject(q[i]);
 					list<string> tempResult = _evaluator.evaluateQuery();
-					list<string>::iterator i;
-					for (i = tempResult.begin(); i != tempResult.end(); ++i) {
-						results.push_back(*i);
+					list<string>::iterator j;
+					for (j = tempResult.begin(); j != tempResult.end(); ++j) {
+						results.push_back(*j);
 					}
 				}
 				else {
