@@ -20,7 +20,7 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 			//This test method will take in an actual test query
 			//and validate & deconstruct the query into a QueryObject.
 			//Once the QueryObject is ready, it will be passed to Evaluator
-			TEST_METHOD(PreprocessorEvaluatorValidPreprocessQuery) {		
+			TEST_METHOD(PreprocessorQueryQueuerValidPreprocessQuery) {		
 
 				string query1 = "assign a; Select a";
 				string query2 = "assign a; Select a pattern a(\"x\", _\"y + 1\"_)";
@@ -138,7 +138,7 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 
 			//This test method will take in an invalid test query
 			//and return invalid message
-			TEST_METHOD(PreprocessorEvaluatorInvalidPreprocessQuery) {
+			TEST_METHOD(PreprocessorQueryQueuerInvalidPreprocessQuery) {
 
 				string invalidQuery1 = "assign a; Select s"; //synonym not declared
 				string invalidQuery2 = "assign a; Select a pattern (_, _)"; //No pattern Type
@@ -175,11 +175,11 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 			//This test method will take in an actual test query
 			//and validate & deconstruct the query into a QueryObject.
 			//Once the QueryObject is ready, it will be passed to Evaluator
-			TEST_METHOD(PreprocessorEvaluatorValidPreprocessQuerySubQuery) {
+			TEST_METHOD(PreprocessorQueryQueuerValidPreprocessQuerySubQuery) {
 
 				std::vector<QueryContent> vqc;
 
-				string query1 = "assign a; if ifs; Select a such that Follows(a,(Select ifs such that Uses(ifs, \"x\"))";
+				string query1 = "assign a; if ifs; Select a such that Follows(a,(Select ifs such that Uses(ifs, \"x\")))";
 				
 				QueryObject expectedQo1a;
 				expectedQo1a.insertSelectStmt(ASSIGN, "a", NONE);
