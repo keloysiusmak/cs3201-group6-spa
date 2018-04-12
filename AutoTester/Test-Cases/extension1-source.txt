@@ -4,7 +4,7 @@ procedure First {
     a = 100 + x;
     if f then {
         if a then {
-            m = k - p - b;
+            m = k - p - b + First;
         }
         else {
             x = 82 * w * 152 + o * z - j;
@@ -12,7 +12,7 @@ procedure First {
         }
     }
     else {
-        g = k - q + z * n + 127 + f;
+        g = k - q + z * n + 4 + f;
     }
     while g {
         while z {
