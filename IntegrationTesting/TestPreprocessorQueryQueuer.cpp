@@ -29,7 +29,7 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 				string query5 = "assign a; while w; Select a such that Follows(w, a) pattern a(\"x\", _)";
 				string query6 = "assign a; while w; if ifs; Select a such that Follows(w, a) and Follows(a, ifs)";
 				string query7 = "assign a; while w; if ifs; Select a such that Follows(w, a) or Follows(a, ifs)";
-				string query8 = "assign a; while w; if ifs; Select a such that (Follows(w, 1) or Follows(a, 5)) and (Follows(ifs, 2) or Follows(2, 3)";
+				string query8 = "assign a; while w; if ifs; Select a such that (Follows(w, 1) or Follows(a, 5)) and (Follows(ifs, 2) or Follows(2, 3))";
 				string query9 = "if ifs; variable v; assign a; while w; Select w pattern(w(\"g\", _) or ifs(v, _, _)) and (a(v, _\"x\"_) or a(v, _\"y\"_))";
 
 				QueryObject expectedQo1;
@@ -85,7 +85,6 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 				expectedQo8d.insertClause(Follows, ASSIGN, "a", INTEGER, "5", false);
 				expectedQo8d.insertClause(Follows, INTEGER, "2", INTEGER, "3", false);
 
-				//(w(\"g\", _) or ifs(v, _, _)) and (a(v, _\"x\"_) or a(v, _\"y\"_))
 				QueryObject expectedQo9a;
 				expectedQo9a.insertSelectStmt(WHILE, "w", NONE);
 				expectedQo9a.insertPattern(WHILE, "w", VAR_IDENT, "g", ALL, "_", false);
