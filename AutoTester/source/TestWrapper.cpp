@@ -40,6 +40,7 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
 		std::vector<QueryContent> vqc;
 		vqc = preprocessor.getQueryContent();
 		queryQueuer.setQueryContent(vqc);
+		queryQueuer.setSubQueryMapping(preprocessor.getSubQueryMapping());
 		for (int i = 0; i < vqc.size(); i++) {
 			list<string> result = queryQueuer.evaluateQueries();
 			results.insert(results.end(), result.begin(), result.end());

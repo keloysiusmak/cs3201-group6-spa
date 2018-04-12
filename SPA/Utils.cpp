@@ -122,8 +122,6 @@ bool Utils::isSynonym(Param p) {
 	switch (type) {
 	case INTEGER:
 		return false;
-	case CONSTANT:
-		return false;
 	case EXPR:
 		return false;
 	case EXPR_EXACT:
