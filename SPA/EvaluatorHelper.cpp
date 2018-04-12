@@ -154,7 +154,7 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 				if (tableLeftParamValue == clauseLeftParamValue) {
 					int tableIndex = tableResultsIndex;
 					vector<int> tableRow;
-					while (iTable.resultsTable[tableIndex][leftParamIndex] == clauseLeftParamValue) {
+					while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][leftParamIndex] == clauseLeftParamValue) {
 						tableRow = iTable.resultsTable[tableResultsIndex];
 						tableRow.push_back(clauseResults.results[clauseResultsIndex][1]);
 						tableIndex++;

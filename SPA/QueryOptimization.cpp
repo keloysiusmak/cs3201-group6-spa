@@ -170,7 +170,7 @@ int QueryOptimization::getTotalWeight(Clause &clause, int resultsWeight, int syn
 /* Gets number of results from evaluation of clause */
 int QueryOptimization::getNumResultsOfClause(Clause &clause, PKB &pkb) {
 
-	int numResults;
+	int numResults = 0;
 
 	RelRef clauseRelation = clause.getRelRef();
 	Param lhs = clause.getLeftParam();
