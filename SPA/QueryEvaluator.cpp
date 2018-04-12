@@ -883,6 +883,7 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 		}
 		else if (firstParamTableIndex == -1) {
 			//firstParam does not exist in table
+			lhs.attribute = NONE;
 			iTable.addTableParams(lhs);
 			for (vector<int> tableRow : iTable.resultsTable) {
 				int rhsIntValue = tableRow[secondParamTableIndex];
@@ -892,6 +893,7 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 		}
 		else if (secondParamTableIndex == -1) {
 			//secondParam does not exist in table
+			rhs.attribute = NONE;
 			iTable.addTableParams(rhs);
 			for (vector<int> tableRow : iTable.resultsTable) {
 				int lhsIntValue = tableRow[firstParamTableIndex];
