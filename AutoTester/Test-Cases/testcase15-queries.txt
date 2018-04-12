@@ -1,0 +1,56 @@
+1 -
+stmt s;
+Select s such that Follows(s, s)
+
+5000
+2 -
+stmt s;
+Select s such that Parent(s, s)
+
+5000
+3 -
+stmt s;
+Select s such that Next(s,s)
+
+5000
+4 -
+stmt s;
+Select s such that Follows(1,1)
+
+5000
+5 -
+stmt s;
+Select s such that Follows(1,1)
+
+5000
+6 -
+stmt s;
+Select s such that Parent(1,1)
+
+5000
+7 -
+stmt s;
+Select s such that Next(1,1)
+
+5000
+8 -
+stmt s;
+Select s such that Follows(5, 2)
+
+5000
+9 -
+stmt s;
+Select s such that Parent(7, 4)
+
+5000
+10 -
+stmt s;
+Select s such that Next(8,3)
+
+5000
+11 -
+stmtLst sl;
+Select sl
+
+5000
+
