@@ -378,7 +378,7 @@ IntermediateTable EvaluatorHelper::mergeIntermediateTables(IntermediateTable &iT
 
 /* Returns true if any param in clause is in table */
 bool EvaluatorHelper::clauseParamsInTable(Clause &clause, IntermediateTable &iTable) {
-	if (clause.getRelRef == None) { // Pattern
+	if (clause.getRelRef() == None) { // Pattern
 		Pattern* pattern = static_cast<Pattern*>(&clause);
 		Param pEnt = pattern->getEntity();
 		Param lhs = pattern->getLeftParam();
