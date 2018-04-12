@@ -36,6 +36,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 	std::vector<ClauseNode> pattern;
 
 	std::vector<ClauseNode> clausesNodes = qc.getClauses();
+	int previousSizeC = 0;
 	if (clausesNodes.size() > 0) {
 		std::vector<ClauseNode> temp;
 		for (int i = 0; i < clausesNodes.size(); i++) {
@@ -45,10 +46,10 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 						int sizeC = clauses.size();
 						std::vector<ClauseNode> hold1;
 						std::vector<ClauseNode> hold2;
-						for (int j = 0; j < sizeC / 2; j++) {
+						for (int j = 0; j < previousSizeC; j++) {
 							hold1.push_back(clauses[j]);
 						}
-						for (int j = sizeC / 2; j < sizeC; j++) {
+						for (int j = previousSizeC; j < sizeC; j++) {
 							hold2.push_back(clauses[j]);
 						}
 						clauses.clear();
@@ -60,6 +61,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 								clauses.push_back(newParent);
 							}
 						}
+						previousSizeC = clauses.size();
 					}
 					else if (temp.size() == 1) {
 						for (int j = 0; j < clauses.size(); j++) {
@@ -69,6 +71,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 							clauses[j] = newParent;
 						}
 						temp.clear();
+						previousSizeC = clauses.size();
 					}
 					else if (temp.size() == 2) {
 						ClauseNode newParent = ClauseNode(AND);
@@ -76,6 +79,9 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 						newParent.addChildren(temp[1]);
 						clauses.push_back(newParent);
 						temp.clear();
+						if (previousSizeC == 0) {
+							previousSizeC = clauses.size();
+						}
 					}
 				}
 				else if (clausesNodes[i].getOperators() == OR) {
@@ -83,6 +89,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 						ClauseNode newClause = temp[0];
 						temp.clear();
 						clauses.push_back(newClause);
+						previousSizeC = clauses.size();
 					}
 					else if (temp.size() == 2) {
 						ClauseNode newClause1 = temp[0];
@@ -90,6 +97,9 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 						temp.clear();
 						clauses.push_back(newClause1);
 						clauses.push_back(newClause2);
+						if (previousSizeC == 0) {
+							previousSizeC = clauses.size();
+						}
 					}
 				}
 			}

@@ -5,6 +5,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <queue>
+#include <set>
 #include "Param.h"
 #include "QueryContent.h"
 #include "QueryObject.h"
@@ -40,6 +41,7 @@ public:
 	static bool compareQueryObjectProperties(QueryObject, QueryObject);
 	static bool compareQueryContentProperties(QueryContent, QueryContent);
 	static bool compareClauseNode(ClauseNode, ClauseNode);
+	static void intersectSets(set<int> &s1, set<int> &s2, vector<vector<int>> &results);
 };
 
 namespace UtilsConstants {
