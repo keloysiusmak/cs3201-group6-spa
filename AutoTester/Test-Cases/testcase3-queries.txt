@@ -1,3 +1,33 @@
+151 - Modifies(1, 7)
+stmt s;
+Select s such that Modifies(1, "x")
+1,2,3,4,5,6
+5000
+152 - Modifies(2, 7)
+stmt s;
+Select s such that Modifies(2, "x")
+1,2,3,4,5,6
+5000
+153 - Modifies(3, 7)
+stmt s;
+Select s such that Modifies(3, "x")
+1,2,3,4,5,6
+5000
+154 - Modifies(4, 7)
+stmt s;
+Select s such that Modifies(4, "x")
+1,2,3,4,5,6
+5000
+155 - Modifies(5, 7)
+stmt s;
+Select s such that Modifies(5, "x")
+1,2,3,4,5,6
+5000
+156 - Modifies(6, 7)
+stmt s;
+Select s such that Modifies(6, "x")
+1,2,3,4,5,6
+5000
 1 - Follows(1, 1)
 stmt s;
 Select s such that Follows(1, 1)
@@ -747,36 +777,6 @@ Select s such that Uses(5, "x")
 stmt s;
 Select s such that Uses(6, "x")
 
-5000
-151 - Modifies(1, 7)
-stmt s;
-Select s such that Modifies(1, "x")
-1,2,3,4,5,6
-5000
-152 - Modifies(2, 7)
-stmt s;
-Select s such that Modifies(2, "x")
-1,2,3,4,5,6
-5000
-153 - Modifies(3, 7)
-stmt s;
-Select s such that Modifies(3, "x")
-1,2,3,4,5,6
-5000
-154 - Modifies(4, 7)
-stmt s;
-Select s such that Modifies(4, "x")
-1,2,3,4,5,6
-5000
-155 - Modifies(5, 7)
-stmt s;
-Select s such that Modifies(5, "x")
-1,2,3,4,5,6
-5000
-156 - Modifies(6, 7)
-stmt s;
-Select s such that Modifies(6, "x")
-1,2,3,4,5,6
 5000
 157 - Uses(0, 7)
 assign a; variable v;
