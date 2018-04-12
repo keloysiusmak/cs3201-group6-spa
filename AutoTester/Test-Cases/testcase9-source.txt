@@ -7,7 +7,7 @@ procedure First {
     s = x;
     y = o - m - a * c * s;
     b = x - i;
-    s = h * 57 - 18 + j;
+    s = h * 58 - 18 + j;
     u = 24;
     g = f - b - u + v * w;
     if a then {

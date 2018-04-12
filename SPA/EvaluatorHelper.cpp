@@ -421,6 +421,15 @@ int EvaluatorHelper::withClauseNumSyns(Clause &clause, IntermediateTable &iTable
 		else if (iTable.getParamIndex(rhs) > -1) return 2;
 		else return 0;
 	}
+	else if (lhs.type == CONSTANT || rhs.type == CONSTANT) {
+		if (rhs.type == CONSTANT && iTable.getParamIndex(lhs) > -1) return 2;
+		else if (lhs.type == CONSTANT && iTable.getParamIndex(rhs) > -1) return 2;
+		else {
+			if (iTable.getParamIndex(lhs) > -1) numSyns++; 
+			if (iTable.getParamIndex(rhs) > -1) numSyns++; 
+			return numSyns;
+		}
+	}
 	if (iTable.getParamIndex(lhs) > -1) numSyns++; // Assume syn param in table
 	if (iTable.getParamIndex(rhs) > -1) numSyns++; // Assume syn param in table
 	return numSyns;
