@@ -181,159 +181,159 @@ int QueryOptimization::getNumResultsOfClause(Clause &clause, PKB &pkb) {
 	int rhsIntValue = getParamIntValue(rhs, pkb);
 
 	if (clauseRelation == Parent) {
-		if (synConstCase = 1) { // Syn, Syn
+		if (synConstCase == 1) { // Syn, Syn
 			numResults = pkb.getFromResultTable(RelationParent, 0, 0);
 		}
-		if (synConstCase = 2) { // Syn, Concrete
+		if (synConstCase == 2) { // Syn, Concrete
 			numResults = pkb.getFromResultTable(RelationParent, 0, rhsIntValue);
 		}
-		if (synConstCase = 3) { // Concrete, Syn
+		if (synConstCase == 3) { // Concrete, Syn
 			numResults = pkb.getFromResultTable(RelationParent, lhsIntValue, 0);
 		}
-		if (synConstCase = 4) { // Concrete, Concrete
+		if (synConstCase == 4) { // Concrete, Concrete
 			numResults = pkb.getFromResultTable(RelationParent, lhsIntValue, rhsIntValue);
 		}
 
 	} else if (clauseRelation == ParentT) {
-		if (synConstCase = 1) { // Syn, Syn
+		if (synConstCase == 1) { // Syn, Syn
 			numResults = pkb.getFromResultTable(RelationParentStar, 0, 0);
 		}
-		if (synConstCase = 2) { // Syn, Concrete
+		if (synConstCase == 2) { // Syn, Concrete
 			numResults = pkb.getFromResultTable(RelationParent, 0, rhsIntValue);
 		}
-		if (synConstCase = 3) { // Concrete, Syn
+		if (synConstCase == 3) { // Concrete, Syn
 			numResults = pkb.getFromResultTable(RelationParent, lhsIntValue, 0);
 		}
-		if (synConstCase = 4) { // Concrete, Concrete
+		if (synConstCase == 4) { // Concrete, Concrete
 			numResults = pkb.getFromResultTable(RelationParent, lhsIntValue, rhsIntValue);
 		}
 
 	} else if (clauseRelation == Follows) {
-		if (synConstCase = 1) { // Syn, Syn
+		if (synConstCase == 1) { // Syn, Syn
 			numResults = pkb.getFromResultTable(RelationFollows, 0, 0);
 		}
-		if (synConstCase = 2) { // Syn, Concrete
+		if (synConstCase == 2) { // Syn, Concrete
 			numResults = pkb.getFromResultTable(RelationFollows, 0, rhsIntValue);
 		}
-		if (synConstCase = 3) { // Concrete, Syn
+		if (synConstCase == 3) { // Concrete, Syn
 			numResults = pkb.getFromResultTable(RelationFollows, lhsIntValue, 0);
 		}
-		if (synConstCase = 4) { // Concrete, Concrete
+		if (synConstCase == 4) { // Concrete, Concrete
 			numResults = pkb.getFromResultTable(RelationFollows, lhsIntValue, rhsIntValue);
 		}
 
 	} else if (clauseRelation == FollowsT) {
-		if (synConstCase = 1) { // Syn, Syn
+		if (synConstCase == 1) { // Syn, Syn
 			numResults = pkb.getFromResultTable(RelationFollowsStar, 0, 0);
 		}
-		if (synConstCase = 2) { // Syn, Concrete
+		if (synConstCase == 2) { // Syn, Concrete
 			numResults = pkb.getFromResultTable(RelationFollowsStar, 0, rhsIntValue);
 		}
-		if (synConstCase = 3) { // Concrete, Syn
+		if (synConstCase == 3) { // Concrete, Syn
 			numResults = pkb.getFromResultTable(RelationFollowsStar, lhsIntValue, 0);
 		}
-		if (synConstCase = 4) { // Concrete, Concrete
+		if (synConstCase == 4) { // Concrete, Concrete
 			numResults = pkb.getFromResultTable(RelationFollowsStar, lhsIntValue, rhsIntValue);
 		}
 
 	} else if (clauseRelation == Uses) {
-		if (synConstCase = 1) { // Syn, Syn
+		if (synConstCase == 1) { // Syn, Syn
 			if (lhs.type == PROCEDURE) numResults = pkb.getFromResultTable(RelationUsesProcedure, 0, 0);
 			else numResults = pkb.getFromResultTable(RelationUsesStatement, 0, 0);
 		}
-		if (synConstCase = 2) { // Syn, Concrete
+		if (synConstCase == 2) { // Syn, Concrete
 			if (lhs.type == PROCEDURE) numResults = pkb.getFromResultTable(RelationUsesProcedure, 0, rhsIntValue);
 			else numResults = pkb.getFromResultTable(RelationUsesStatement, 0, rhsIntValue);
 		}
-		if (synConstCase = 3) { // Concrete, Syn
-			if (lhs.type == PROCEDURE) numResults = pkb.getFromResultTable(RelationUsesProcedure, lhsIntValue, 0);
+		if (synConstCase == 3) { // Concrete, Syn
+			if (lhs.type == PROC_IDENT) numResults = pkb.getFromResultTable(RelationUsesProcedure, lhsIntValue, 0);
 			else numResults = pkb.getFromResultTable(RelationUsesStatement, lhsIntValue, 0);
 		}
-		if (synConstCase = 4) { // Concrete, Concrete
-			if (lhs.type == PROCEDURE)  numResults = pkb.getFromResultTable(RelationUsesProcedure, lhsIntValue, rhsIntValue);
+		if (synConstCase == 4) { // Concrete, Concrete
+			if (lhs.type == PROC_IDENT)  numResults = pkb.getFromResultTable(RelationUsesProcedure, lhsIntValue, rhsIntValue);
 			else numResults = pkb.getFromResultTable(RelationUsesStatement, lhsIntValue, rhsIntValue);
 		}
 
 	} else if (clauseRelation == Modifies) {
-		if (synConstCase = 1) { // Syn, Syn
+		if (synConstCase == 1) { // Syn, Syn
 			if (lhs.type == PROCEDURE) numResults = pkb.getFromResultTable(RelationModifiesProcedure, 0, 0);
 			else numResults = pkb.getFromResultTable(RelationModifiesStatement, 0, 0);
 		}
-		if (synConstCase = 2) { // Syn, Concrete
+		if (synConstCase == 2) { // Syn, Concrete
 			if (lhs.type == PROCEDURE) numResults = pkb.getFromResultTable(RelationModifiesProcedure, 0, rhsIntValue);
 			else numResults = pkb.getFromResultTable(RelationModifiesStatement, 0, rhsIntValue);
 		}
-		if (synConstCase = 3) { // Concrete, Syn
-			if (lhs.type == PROCEDURE) numResults = pkb.getFromResultTable(RelationModifiesProcedure, lhsIntValue, 0);
+		if (synConstCase == 3) { // Concrete, Syn
+			if (lhs.type == PROC_IDENT) numResults = pkb.getFromResultTable(RelationModifiesProcedure, lhsIntValue, 0);
 			else numResults = pkb.getFromResultTable(RelationModifiesStatement, lhsIntValue, 0);
 		}
-		if (synConstCase = 4) { // Concrete, Concrete
-			if (lhs.type == PROCEDURE) numResults = pkb.getFromResultTable(RelationModifiesProcedure, lhsIntValue, rhsIntValue);
+		if (synConstCase == 4) { // Concrete, Concrete
+			if (lhs.type == PROC_IDENT) numResults = pkb.getFromResultTable(RelationModifiesProcedure, lhsIntValue, rhsIntValue);
 			else numResults = pkb.getFromResultTable(RelationModifiesStatement, lhsIntValue, rhsIntValue);
 		}
 
 	} else if (clauseRelation == Calls) {
-		if (synConstCase = 1) { // Syn, Syn
+		if (synConstCase == 1) { // Syn, Syn
 			numResults = pkb.getFromResultTable(RelationCalls, 0, 0);
 		}
-		if (synConstCase = 2) { // Syn, Concrete
+		if (synConstCase == 2) { // Syn, Concrete
 			numResults = pkb.getFromResultTable(RelationCalls, lhsIntValue, 0);
 		}
-		if (synConstCase = 3) { // Concrete, Syn
+		if (synConstCase == 3) { // Concrete, Syn
 			numResults = pkb.getFromResultTable(RelationCalls, 0, rhsIntValue);
 		}
-		if (synConstCase = 4) { // Concrete, Concrete
+		if (synConstCase == 4) { // Concrete, Concrete
 			numResults = pkb.getFromResultTable(RelationCalls, lhsIntValue, rhsIntValue);
 		}
 
 	} else if (clauseRelation == CallsT) {
-		if (synConstCase = 1) { // Syn, Syn
+		if (synConstCase == 1) { // Syn, Syn
 			numResults = pkb.getFromResultTable(RelationCalls, 0, 0);
 		}
-		if (synConstCase = 2) { // Syn, Concrete
+		if (synConstCase == 2) { // Syn, Concrete
 			numResults = pkb.getFromResultTable(RelationCalls, lhsIntValue, 0);
 		}
-		if (synConstCase = 3) { // Concrete, Syn
+		if (synConstCase == 3) { // Concrete, Syn
 			numResults = pkb.getFromResultTable(RelationCalls, 0, rhsIntValue);
 		}
-		if (synConstCase = 4) { // Concrete, Concrete
+		if (synConstCase == 4) { // Concrete, Concrete
 			numResults = pkb.getFromResultTable(RelationCalls, lhsIntValue, rhsIntValue);
 		}
 	} else if (clauseRelation == Affects) {
-		if (synConstCase = 1) { // Syn, Syn
+		if (synConstCase == 1) { // Syn, Syn
 			numResults = pkb.getFromResultTable(RelationAffects, 0, 0);
 		}
-		if (synConstCase = 2) { // Syn, Concrete
+		if (synConstCase == 2) { // Syn, Concrete
 			numResults = pkb.getFromResultTable(RelationAffects, lhsIntValue, 0);
 		}
-		if (synConstCase = 3) { // Concrete, Syn
+		if (synConstCase == 3) { // Concrete, Syn
 			numResults = pkb.getFromResultTable(RelationAffects, 0, rhsIntValue);
 		}
-		if (synConstCase = 4) { // Concrete, Concrete
+		if (synConstCase == 4) { // Concrete, Concrete
 			numResults = pkb.getFromResultTable(RelationAffects, lhsIntValue, rhsIntValue);
 		}
 	} else if (clauseRelation == AffectsT) {
-		if (synConstCase = 1) { // Syn, Syn
+		if (synConstCase == 1) { // Syn, Syn
 			numResults = pkb.getFromResultTable(RelationAffectsStar, 0, 0);
 		}
-		if (synConstCase = 2) { // Syn, Concrete
+		if (synConstCase == 2) { // Syn, Concrete
 			numResults = pkb.getFromResultTable(RelationAffectsStar, lhsIntValue, 0);
 		}
-		if (synConstCase = 3) { // Concrete, Syn
+		if (synConstCase == 3) { // Concrete, Syn
 			numResults = pkb.getFromResultTable(RelationAffectsStar, 0, rhsIntValue);
 		}
-		if (synConstCase = 4) { // Concrete, Concrete
+		if (synConstCase == 4) { // Concrete, Concrete
 			numResults = pkb.getFromResultTable(RelationAffectsStar, lhsIntValue, rhsIntValue);
 		}
 	} else if (clauseRelation == With) {
 		numResults = 0;
-		if (synConstCase = 1) { // Syn, Syn
+		if (synConstCase == 1) { // Syn, Syn
 		}
-		if (synConstCase = 2) { // Syn, Concrete
+		if (synConstCase == 2) { // Syn, Concrete
 		}
-		if (synConstCase = 3) { // Concrete, Syn
+		if (synConstCase == 3) { // Concrete, Syn
 		}
-		if (synConstCase = 4) { // Concrete, Concrete
+		if (synConstCase == 4) { // Concrete, Concrete
 		}
 	} else if (clauseRelation == None) { // Pattern
 		Pattern* p = static_cast<Pattern*>(&clause);
@@ -369,9 +369,9 @@ int QueryOptimization::getSynConstCase(Clause &clause) {
 
 /* Maps param to corresponding int value or id */
 int QueryOptimization::getParamIntValue(Param &p, PKB &pkb) {
-	if (p.type == PROCEDURE) {
+	if (p.type == PROC_IDENT) {
 		return pkb.getProcedureId(p.value);
-	} else if (p.type == VARIABLE) {
+	} else if (p.type == VAR_IDENT) {
 		return pkb.getVariableId(p.value);
 	} else {
 		return stoi(p.value);
