@@ -2155,8 +2155,25 @@ bool Preprocessor::parseWithClause(QueryContent &qc, string leftRef, string righ
 		rightArg = rightAttrRef.at(0);
 
 		switch (rightAttrType) {
-		case PROCNAME:
+		case VARNAME: {
+			if (!isWithString) {
+				return false;
+			}
+		}
+		case STMT_NO: case VALUE: {
+			if (isWithString) {
+				return false;
+			}
+		}
+
+		break;
+		case PROCNAME: {
+			if (!isWithString) {
+				return false;
+			}
 			isLeftProcIdent = true;
+		}
+		break;
 		}
 	}
 	// if is synonym, it must be prog_line
@@ -2169,17 +2186,27 @@ bool Preprocessor::parseWithClause(QueryContent &qc, string leftRef, string righ
 		auto searchSynonym = declarationMap.find(rightRef);
 		rightArgType = KEYWORDS_DECLARATIONS.find(searchSynonym->second)->second;
 
-		if (rightArgType != PROG_LINE) {
+		if (rightArgType != PROG_LINE || isWithString) {
 			return false;
 		}
 
 		rightArg = rightRef;
 	}
 	else if (Utils::isInteger(rightRef)) {
+
+		if (isWithString) {
+			return false;
+		}
+
 		rightArgType = INTEGER;
 		rightArg = rightRef;
 	}
 	else if (isValidIdent(rightRef)) {
+
+		if (!isWithString) {
+			return false;
+		}
+
 		rightArgType = IDENT;
 		rightArg = Utils::sanitise((Utils::split(rightRef, SYMBOL_DOUBLE_QUOTE)).at(1));
 	}

@@ -475,7 +475,7 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 			}
 			catch (exception&) {
 				lineId = pkb.getProcedureId(leftParam.value);
-				results = pkb.getModifiesVariablesFromStatement(lineId);
+				results = pkb.getModifiesVariablesFromProcedure(lineId);
 			}
 			clauseResults.setResults(results);
 		}
