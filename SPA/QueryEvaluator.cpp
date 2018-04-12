@@ -810,10 +810,10 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 
 	int valueOfParam;
 	if (paramInTable.attribute == PROCNAME) { // Constant is procedure name
-		valueOfParam = pkb.getVariableId(paramWithValue.value);
+		valueOfParam = pkb.getProcedureId(paramWithValue.value);
 	}
 	else if (paramInTable.attribute == VARNAME) { // Constant is variable name
-		valueOfParam = pkb.getProcedureId(paramWithValue.value);
+		valueOfParam = pkb.getVariableId(paramWithValue.value);
 	}
 	else { // Constant is integer
 		valueOfParam = stoi(paramWithValue.value);
