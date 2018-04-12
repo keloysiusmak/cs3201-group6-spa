@@ -192,85 +192,85 @@ public:
 		string invalidQuery15 = "Select a with c1.procName = n";
 		string invalidQuery16 = "Select a such that Parent*(a, 2) and a(v, _)";
 
-		////Valid
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query1));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query2));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query3));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query4));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query5));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query6));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query7));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query8));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query9));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query10));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query11));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query12));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query13));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query14));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query15));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query16));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query17));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query18));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query19));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query20));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query21));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query22));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query23));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query24));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query25));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query26));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query27));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query28));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query29));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query30));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query31));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query32));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query33));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query34));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query35));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query36));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query37));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query38));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query39));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query40));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query41));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query42));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query43));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query44));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query45));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query46));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query47));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query48));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query49));
-		//Assert::AreEqual(false, preprocessor.isValidQuery(query50));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query51));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query52));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query53));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query54));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query55));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query56));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query57));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query58));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query59));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query60));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query61));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query62));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query63));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query64));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query65));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query66));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query67));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query68));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query69));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query70));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query71));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query72));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query73));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query74));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query75));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query76));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query77));
-		//Assert::AreEqual(true, preprocessor.isValidQuery(query78));
+		//Valid
+		Assert::AreEqual(true, preprocessor.isValidQuery(query1));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query2));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query3));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query4));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query5));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query6));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query7));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query8));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query9));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query10));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query11));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query12));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query13));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query14));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query15));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query16));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query17));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query18));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query19));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query20));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query21));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query22));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query23));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query24));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query25));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query26));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query27));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query28));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query29));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query30));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query31));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query32));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query33));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query34));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query35));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query36));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query37));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query38));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query39));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query40));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query41));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query42));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query43));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query44));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query45));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query46));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query47));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query48));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query49));
+		Assert::AreEqual(false, preprocessor.isValidQuery(query50));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query51));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query52));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query53));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query54));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query55));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query56));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query57));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query58));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query59));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query60));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query61));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query62));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query63));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query64));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query65));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query66));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query67));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query68));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query69));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query70));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query71));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query72));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query73));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query74));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query75));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query76));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query77));
+		Assert::AreEqual(true, preprocessor.isValidQuery(query78));
 		Assert::AreEqual(true, preprocessor.isValidQuery(query79));
 
 		//Invalid
@@ -412,6 +412,37 @@ public:
 		Assert::AreNotEqual(true, preprocessor.isValidRef("\"#x\""));
 		Assert::AreNotEqual(true, preprocessor.isValidRef("c.consta"));
 		Assert::AreNotEqual(true, preprocessor.isValidRef("s.stmt"));
+	}
+
+	TEST_METHOD(PreprocessorIsValidElem) {
+		Preprocessor preprocessor;
+
+		//Populate the declarationMap
+		preprocessor.insertDeclarationToMap("w", "while");
+		preprocessor.insertDeclarationToMap("v", "variable");
+
+		QueryContent qc;
+
+		vector<string> queryArr = { "w", "v.varName" };
+
+		preprocessor.isValidElem(queryArr, 0, qc);
+		preprocessor.isValidElem(queryArr, 1, qc);
+
+		Param expectedSelct1;
+		expectedSelct1.type = WHILE;
+		expectedSelct1.value = "w";
+		expectedSelct1.attribute = NONE;
+
+		Param expectedSelect2;
+		expectedSelect2.type = VARIABLE;
+		expectedSelect2.value = "v";
+		expectedSelect2.attribute = VARNAME;
+
+		Param retrieveFromQueryContent1 = qc.getSelect().at(0);
+		Param retrieveFromQueryContent2 = qc.getSelect().at(1);
+
+		Assert::AreEqual(true, Utils::compareParam(retrieveFromQueryContent1, expectedSelct1));
+		Assert::AreEqual(true, Utils::compareParam(retrieveFromQueryContent2, expectedSelect2));
 	}
 
 	TEST_METHOD(PreprocessorIsDeclarationSynonymExist) {
