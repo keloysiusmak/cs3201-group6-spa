@@ -1,13 +1,13 @@
 procedure First {
     b = j;
     x = m - u * h * p;
-    l = z + l + z + 177 * t * w;
+    l = z + l + z + 4 * t * w;
     e = j + z + l;
     if a then {
         if a then {
             if a then {
                 if a then {
-                    c = 43 + l - g * e + j;
+                    c = 3 + l - g * e + j;
                 }
                 else {
                     u = a - t - z + f - j + o;
