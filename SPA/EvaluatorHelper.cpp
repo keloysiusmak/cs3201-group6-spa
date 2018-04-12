@@ -418,6 +418,7 @@ int EvaluatorHelper::withClauseNumSyns(Clause &clause, IntermediateTable &iTable
 	Param rhs = clause.getRightParam();
 	if (lhs.type == rhs.type && lhs.attribute == rhs.attribute) {
 		if (iTable.getParamIndex(lhs) > -1) return 2;
+		else if (iTable.getParamIndex(rhs) > -1) return 2;
 		else return 0;
 	}
 	if (iTable.getParamIndex(lhs) > -1) numSyns++; // Assume syn param in table

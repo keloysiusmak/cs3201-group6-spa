@@ -868,7 +868,38 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 		iTable.setResultsTable(updatedTable);
 	}
 	else { // CALL
-		// TO BE IMPLEMENTED
+		vector<vector<int>> updatedTable;
+		if (firstParamTableIndex > -1 && secondParamTableIndex > -1) {
+			//both exist in the table and need to be intersected
+			for (vector<int> tableRow : iTable.resultsTable) {
+				int lhsIntValue = tableRow[firstParamTableIndex];
+				int rhsIntValue = tableRow[secondParamTableIndex];
+
+				if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
+					updatedTable.push_back(tableRow);
+				}
+				else { ; }
+			}
+		}
+		else if (firstParamTableIndex == -1) {
+			//firstParam does not exist in table
+			iTable.addTableParams(lhs);
+			for (vector<int> tableRow : iTable.resultsTable) {
+				int rhsIntValue = tableRow[secondParamTableIndex];
+				tableRow.push_back(rhsIntValue);
+				updatedTable.push_back(tableRow);
+			}
+		}
+		else if (secondParamTableIndex == -1) {
+			//secondParam does not exist in table
+			iTable.addTableParams(rhs);
+			for (vector<int> tableRow : iTable.resultsTable) {
+				int lhsIntValue = tableRow[firstParamTableIndex];
+				tableRow.push_back(lhsIntValue);
+				updatedTable.push_back(tableRow);
+			}
+		}
+		iTable.setResultsTable(updatedTable);
 	}
 };
 
