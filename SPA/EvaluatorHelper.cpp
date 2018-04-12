@@ -159,7 +159,7 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 					if (clauseResultsIndex < clauseResults.results.size() - 1 &&
 						clauseResults.results[clauseResultsIndex + 1][0] == clauseLeftParamValue) { // Clause next num is same
 
-						while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][rightParamIndex] == tableLeftParamValue) { // Iterate through iTable results and cross with clause results with same param value
+						while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][leftParamIndex] == tableLeftParamValue) { // Iterate through iTable results and cross with clause results with same param value
 							rowToAdd = iTable.resultsTable[tableIndex];
 							rowToAdd.push_back(clauseResults.results[clauseResultsIndex][1]); // Push back right param not in table
 							tableIndex++;
@@ -169,7 +169,7 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 					}
 
 					else if (tableResultsIndex < iTable.resultsTable.size() - 1 &&
-						iTable.resultsTable[tableResultsIndex + 1][rightParamIndex] == tableLeftParamValue) { // iTable next num is same
+						iTable.resultsTable[tableResultsIndex + 1][leftParamIndex] == tableLeftParamValue) { // iTable next num is same
 
 						while (clauseIndex < clauseResults.results.size() && clauseResults.results[clauseIndex][0] == clauseLeftParamValue) { // Iterate through clause results and cross with iTable results with same param value
 							rowToAdd = iTable.resultsTable[tableResultsIndex];
