@@ -33,9 +33,7 @@ bool QueryEvaluator::isValidQuery() {
 	return validQuery;
 };
 
-/*
-  Possible Optimizations: Check if clauseresults or table is empty at any point of time, if yes, return null
-*/
+/* Main query evaluation method */
 list<string> QueryEvaluator::evaluateQuery() {
 	if (isValidQuery()) {
 
@@ -59,23 +57,57 @@ list<string> QueryEvaluator::evaluateQuery() {
 		vector<Param> selectParams = queryObject.getSelectStatements(); // Selected Params
 		map<Clause, vector<vector<int>>> cache; // For cached results
 
+		/* ACTUAL EVALUATION */
 		vector<IntermediateTable> tables;
 		for (vector<Clause> groupedClauses : sortedGroupEvalOrder) {
 
 			IntermediateTable iTable; // Instantiate table for each group
 			iTable.instantiateTable();
-			// Evaluate each clause within group
-			for (Clause clause : groupedClauses) {
+
+			// Evaluate each clause within group and merge
+			int numClauses = groupedClauses.size();
+			vector<Clause>::iterator clauseDeletedIt;
+			for (size_t i = 0; i < numClauses; i++) {
 				ClauseResults clauseResults;
-				evaluateClauseGeneral(clause, clauseResults, iTable, cache);
-			}
-			if (!iTable.tableHasResults()) {
-				if (selectParams[0].type == BOOLEAN) { // Short circuit if no results
-					return{ "false" };
+				if (groupedClauses.size() == numClauses) { // Evalute first clause
+					evaluateClauseGeneral(groupedClauses[0], clauseResults, iTable, cache);
+					clauseDeletedIt = groupedClauses.begin();
+					groupedClauses.erase(clauseDeletedIt);
 				} else {
-					return{};
+					int indexOfClauseEvaluated = 0;
+					for (size_t j = 0; j < groupedClauses.size(); j++) {
+						if (EvaluatorHelper::clauseParamsInTable(groupedClauses[j], iTable)) { // Next clause has overlapping syn
+							evaluateClauseGeneral(groupedClauses[j], clauseResults, iTable, cache);
+							indexOfClauseEvaluated = j;
+							break;
+						} else if (j == groupedClauses.size() - 1) { // Last clause to evaluate
+							evaluateClauseGeneral(groupedClauses[j], clauseResults, iTable, cache);
+							indexOfClauseEvaluated = j;
+							break;
+						} else { // No overlapping syn and more clauses at the back
+							if (groupedClauses[j + 1].getRelRef() == Affects ||
+								groupedClauses[j + 1].getRelRef() == AffectsT) { // Evaluate current if next is affects or affectsStar
+								evaluateClauseGeneral(groupedClauses[j], clauseResults, iTable, cache);
+								indexOfClauseEvaluated = j;
+								break;
+							}
+						}
+					}
+					clauseDeletedIt = groupedClauses.begin() + indexOfClauseEvaluated;
+					groupedClauses.erase(clauseDeletedIt);
 				}
-			} else {
+			}
+
+			//for (Clause clause : groupedClauses) {
+			//	ClauseResults clauseResults;
+			//	evaluateClauseGeneral(clause, clauseResults, iTable, cache);
+			//}
+
+			// Short circuit for no results
+			if (!iTable.tableHasResults()) {
+				if (selectParams[0].type == BOOLEAN) return{ "false" };
+				else return{};
+			} else { // Push back results
 				tables.push_back(iTable);
 			}
 		}
@@ -116,7 +148,6 @@ void QueryEvaluator::evaluateClauseGeneral(Clause &clause, ClauseResults &clause
 				EvaluatorHelper::cacheSanitized(clause, clauseResults, cache);
 			}
 		}
-		// EvaluatorHelper::storeSanitized();
 		EvaluatorHelper::mergeClauseTable(clauseResults, iTable);
 	}
 };

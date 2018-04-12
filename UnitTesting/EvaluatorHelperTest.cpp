@@ -27,15 +27,15 @@ namespace EvaluatorHelperTest {
 
 			/* 2 params in table */
 			ClauseResults clauseWithTwoParamsInTable = createClauseResult(Uses, ASSIGN, "a2", VARIABLE, "v");
-			Assert::AreEqual(true, EvaluatorHelper::clauseParamsInTable(clauseWithTwoParamsInTable, table));
+			Assert::AreEqual(true, EvaluatorHelper::clauseResultsParamsInTable(clauseWithTwoParamsInTable, table));
 
 			/* 1 params in table */
 			ClauseResults clauseWithOneParamInTable = createClauseResult(Follows, ASSIGN, "a2", STMT, "s3");
-			Assert::AreEqual(true, EvaluatorHelper::clauseParamsInTable(clauseWithOneParamInTable, table));
+			Assert::AreEqual(true, EvaluatorHelper::clauseResultsParamsInTable(clauseWithOneParamInTable, table));
 
 			/* No params in table */
 			ClauseResults clauseWithNoParamInTable = createClauseResult(Follows, ASSIGN, "a3", STMT, "s3");
-			Assert::AreEqual(false, EvaluatorHelper::clauseParamsInTable(clauseWithNoParamInTable, table));
+			Assert::AreEqual(false, EvaluatorHelper::clauseResultsParamsInTable(clauseWithNoParamInTable, table));
 		}
 
 		TEST_METHOD(EvaluatorHelperAddClauseParamToTableTest) {

@@ -49,7 +49,7 @@ bool EvaluatorHelper::unsanitizedClauseInCache(Clause &clause, map<Clause, vecto
 
 /* Merges the clauseResults into the intermediate table */
 void EvaluatorHelper::mergeClauseTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
-	if (clauseParamsInTable(clauseResults, iTable)) {
+	if (clauseResultsParamsInTable(clauseResults, iTable)) {
 		mergeWithOverlap(clauseResults, iTable);
 	}
 	else {
@@ -376,8 +376,25 @@ IntermediateTable EvaluatorHelper::mergeIntermediateTables(IntermediateTable &iT
 	return mergedTable;
 };
 
+/* Returns true if any param in clause is in table */
+bool EvaluatorHelper::clauseParamsInTable(Clause &clause, IntermediateTable &iTable) {
+	if (clause.getRelRef() == None) { // Pattern
+		Pattern* pattern = static_cast<Pattern*>(&clause);
+		Param pEnt = pattern->getEntity();
+		Param lhs = pattern->getLeftParam();
+		if (iTable.getParamIndex(pEnt) > -1) return true;
+		if (iTable.getParamIndex(lhs) > -1) return true;
+	} else { // Such That
+		Param lhs = clause.getLeftParam();
+		Param rhs = clause.getRightParam();
+		if (iTable.getParamIndex(lhs) > -1) return true;
+		if (iTable.getParamIndex(rhs) > -1) return true;
+	}
+	return false;
+};
+
 /* Returns true if param in clause result is in table */
-bool EvaluatorHelper::clauseParamsInTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
+bool EvaluatorHelper::clauseResultsParamsInTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
 	for (pair<Param, int> paramIndex : iTable.tableParams) {
 		if (Utils::isSameParam(paramIndex.first, clauseResults.entRef)) return true;
 		if (Utils::isSameParam(paramIndex.first, clauseResults.lhs)) return true;
