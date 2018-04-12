@@ -884,7 +884,8 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 		if (Utils::isSynonym(lhs) && Utils::isSynonym(rhs)) {
 			set<int> lhsParamSet = getParamSet(lhs);
 			set<int> rhsParamSet = getParamSet(rhs);
-			Utils::intersectSets(lhsParamSet, rhsParamSet, withResults);
+
+			Utils::intersectSets(pkb, lhsParamSet, rhsParamSet, lhs, rhs, withResults);
 
 		} else if (Utils::isSynonym(lhs)) { // LHS syn
 			set<int> lhsParamSet = getParamSet(lhs);
