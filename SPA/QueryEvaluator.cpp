@@ -53,17 +53,19 @@ list<string> QueryEvaluator::evaluateQuery() {
 			vector<Clause> groupSortedClass = QueryOptimization::sortWithinGroup(sortedClause.second, pkb);
 			sortedIntraGroupsClauses.push_back(groupSortedClass);
 		}
+		// Sort for evaluation order of groups by total weight
+		vector<vector<Clause>> sortedGroupEvalOrder = QueryOptimization::sortGroupsEvalOrder(sortedIntraGroupsClauses, pkb);
 
 		vector<Param> selectParams = queryObject.getSelectStatements(); // Selected Params
 		map<Clause, vector<vector<int>>> cache; // For cached results
 
 		vector<IntermediateTable> tables;
-		for (pair<int, vector<Clause>> groupedClauses : sortedClauses) {
+		for (vector<Clause> groupedClauses : sortedGroupEvalOrder) {
 
 			IntermediateTable iTable; // Instantiate table for each group
 			iTable.instantiateTable();
 			// Evaluate each clause within group
-			for (Clause clause : groupedClauses.second) {
+			for (Clause clause : groupedClauses) {
 				ClauseResults clauseResults;
 				evaluateClauseGeneral(clause, clauseResults, iTable, cache);
 			}
@@ -79,7 +81,6 @@ list<string> QueryEvaluator::evaluateQuery() {
 		}
 		cache.clear();
 
-		// To be refactored...
 		return extractParams(selectParams, tables);
 
 	}

@@ -86,9 +86,7 @@ void EvaluatorHelper::mergeWithoutOverlap(ClauseResults &clauseResults, Intermed
 	iTable.setResultsTable(newTable);
 };
 
-/* With overlapping synonyms
-Possible optimization: Hash results / Sort merge tables
-*/
+/* With overlapping synonyms */
 void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, IntermediateTable &iTable) {
 
 	if (clauseResults.numParamsInResult() == 2) { // Two synonyms
@@ -133,7 +131,7 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 
 				if (tableLeftParamValue == clauseLeftParamValue) { // left param equals
 
-					if (tableRightParamValue == clauseRightParamValue) {
+					if (tableRightParamValue == clauseRightParamValue) { // right param also equals
 						mergedResults.push_back(iTable.resultsTable[tableResultsIndex]);
 						tableResultsIndex++; clauseResultsIndex++;
 					} else if (tableRightParamValue > clauseRightParamValue) {
@@ -141,7 +139,8 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 					} else {
 						tableResultsIndex++;
 					}
-				} else {
+
+				} else { // Increment based on which one is smaller
 					(tableLeftParamValue < clauseLeftParamValue) ?
 						tableResultsIndex++ : clauseResultsIndex++;
 				}
@@ -152,18 +151,43 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 				int clauseLeftParamValue = clauseResults.results[clauseResultsIndex][0];
 				
 				if (tableLeftParamValue == clauseLeftParamValue) {
-					int tableIndex = tableResultsIndex;
-					vector<int> tableRow;
-					while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][leftParamIndex] == clauseLeftParamValue) {
-						tableRow = iTable.resultsTable[tableResultsIndex];
-						tableRow.push_back(clauseResults.results[clauseResultsIndex][1]);
-						tableIndex++;
-						mergedResults.push_back(tableRow);
-					}
-					tableResultsIndex++;
-					clauseResultsIndex++;
 
-				} else {
+					int tableIndex = tableResultsIndex;
+					int clauseIndex = clauseResultsIndex;
+					vector<int> rowToAdd;
+
+					if (clauseResultsIndex < clauseResults.results.size() - 1 &&
+						clauseResults.results[clauseResultsIndex + 1][0] == clauseLeftParamValue) { // Clause next num is same
+
+						while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][rightParamIndex] == tableLeftParamValue) { // Iterate through iTable results and cross with clause results with same param value
+							rowToAdd = iTable.resultsTable[tableIndex];
+							rowToAdd.push_back(clauseResults.results[clauseResultsIndex][1]); // Push back right param not in table
+							tableIndex++;
+							mergedResults.push_back(rowToAdd);
+						}
+						clauseResultsIndex++;
+					}
+
+					else if (tableResultsIndex < iTable.resultsTable.size() - 1 &&
+						iTable.resultsTable[tableResultsIndex + 1][rightParamIndex] == tableLeftParamValue) { // iTable next num is same
+
+						while (clauseIndex < clauseResults.results.size() && clauseResults.results[clauseIndex][0] == clauseLeftParamValue) { // Iterate through clause results and cross with iTable results with same param value
+							rowToAdd = iTable.resultsTable[tableResultsIndex];
+							rowToAdd.push_back(clauseResults.results[clauseIndex][1]); // Push back right param not in table
+							clauseIndex++;
+							mergedResults.push_back(rowToAdd);
+						}
+						tableResultsIndex++;
+
+					} else { // Both next num diff, increment both
+						rowToAdd = iTable.resultsTable[tableResultsIndex];
+						rowToAdd.push_back(clauseResults.results[clauseResultsIndex][1]); // Push back right param not in table
+						mergedResults.push_back(rowToAdd);
+						tableResultsIndex++;
+						clauseResultsIndex++;
+					}
+
+				} else { // Depending on which is bigger increment the pointer of the other
 					(tableLeftParamValue < clauseLeftParamValue) ?
 						tableResultsIndex++ : clauseResultsIndex++;
 				}
@@ -175,18 +199,41 @@ void EvaluatorHelper::mergeWithOverlap(ClauseResults &clauseResults, Intermediat
 				
 				if (tableRightParamValue == clauseRightParamValue) {
 
+					int clauseIndex = clauseResultsIndex;
 					int tableIndex = tableResultsIndex;
-					vector<int> tableRow;
-					while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][rightParamIndex] == clauseRightParamValue) {
-						tableRow = iTable.resultsTable[tableResultsIndex];
-						tableRow.push_back(clauseResults.results[clauseResultsIndex][0]);
-						tableIndex++;
-						mergedResults.push_back(tableRow);
-					}
-					tableResultsIndex++;
-					clauseResultsIndex++;
+					vector<int> rowToAdd;
 
-				} else {
+					if (clauseResultsIndex < clauseResults.results.size() - 1 &&
+						clauseResults.results[clauseResultsIndex + 1][1] == clauseRightParamValue) { // Clause next num is same
+
+						while (tableIndex < iTable.resultsTable.size() && iTable.resultsTable[tableIndex][rightParamIndex] == clauseRightParamValue) { // Iterate through iTable results and cross with clause results with same param value
+							rowToAdd = iTable.resultsTable[tableIndex];
+							rowToAdd.push_back(clauseResults.results[clauseResultsIndex][0]);
+							tableIndex++;
+							mergedResults.push_back(rowToAdd);
+						}
+						clauseResultsIndex++;
+					}
+					else if (tableResultsIndex < iTable.resultsTable.size() - 1 &&
+						iTable.resultsTable[tableResultsIndex + 1][rightParamIndex] == tableRightParamValue) { // iTable next num is same
+
+						while (clauseIndex < clauseResults.results.size() && clauseResults.results[clauseIndex][1] == clauseRightParamValue) { // Iterate through clause results and cross with iTable results with same param value
+							rowToAdd = iTable.resultsTable[tableResultsIndex];
+							rowToAdd.push_back(clauseResults.results[clauseIndex][0]);
+							clauseIndex++;
+							mergedResults.push_back(rowToAdd);
+						}
+						tableResultsIndex++;
+
+					} else { // Both next num diff, increment both
+						rowToAdd = iTable.resultsTable[tableResultsIndex];
+						rowToAdd.push_back(clauseResults.results[clauseResultsIndex][0]);
+						mergedResults.push_back(rowToAdd);
+						tableResultsIndex++;
+						clauseResultsIndex++;
+					}
+
+				} else { // Depending on which is bigger increment the pointer of the other
 					(tableRightParamValue < clauseRightParamValue) ?
 						tableResultsIndex++ : clauseResultsIndex++;
 				}
