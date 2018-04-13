@@ -1756,7 +1756,7 @@ B 20
 352 -
 variable v1; call c1;
 Select <c1,v1> with c1.procName = v1.varName
-
+20 B
 5000
 353 -
 call c1; procedure p1;
@@ -1776,7 +1776,7 @@ B B
 356 -
 variable v1; call c1;
 Select <c1,v1> with v1.varName = c1.procName
-B B
+20 B
 5000
 357 -
 variable v1; procedure p1;
