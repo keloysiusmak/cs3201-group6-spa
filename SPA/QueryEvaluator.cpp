@@ -1389,3 +1389,31 @@ list<string> QueryEvaluator::getAllParamsOfType(Param p) {
 
 	return allParams;
 };
+
+/* Obtains the universe set for cross of two params */
+vector<vector<int>> QueryEvaluator::universeSet(Param lhs, Param rhs) {
+	vector<vector<int>> lhsSet = setValuesforParam(lhs);
+	vector<vector<int>> rhsSet = setValuesforParam(rhs);
+	return EvaluatorHelper::crossVectors(lhsSet, rhsSet);
+};
+
+/* Obtains the universe set for a single param */
+vector<vector<int>> QueryEvaluator::setValuesforParam(Param p) {
+	if (p.type == STMT) {
+		return pkb.getAllStatements();
+	} else if (p.type == ASSIGN) {
+		return pkb.getAllStatementsWithType(1);
+	} else if (p.type == WHILE) {
+		return pkb.getAllStatementsWithType(2);
+	} else if (p.type == IF) {
+		return pkb.getAllStatementsWithType(3);
+	} else if (p.type == CALL) {
+		return pkb.getAllStatementsWithType(4);
+	} else if (p.type == VARIABLE) { // Variable IDs
+		return pkb.getAllVariables();
+	} else if (p.type == CONSTANT) {
+		return pkb.getAllConstants();
+	} else if (p.type == PROCEDURE) { // Procedure IDs
+		return pkb.getAllProcedures();
+	}
+};

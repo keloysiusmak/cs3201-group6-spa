@@ -471,7 +471,7 @@ vector<vector<int>> EvaluatorHelper::crossVectors(vector<vector<int>> &set1, vec
 };
 
 /* Subtract from clauseResults a set of vectors given param */
-void EvaluatorHelper::subtractSet(Param p, ClauseResults &clauseResults, vector<vector<int>> &setToSubtract) {
+void EvaluatorHelper::subtractSetSingle(Param p, ClauseResults &clauseResults, vector<vector<int>> &setToSubtract) {
 
 	set<int> toSubtract;
 	// Add to set
@@ -482,10 +482,30 @@ void EvaluatorHelper::subtractSet(Param p, ClauseResults &clauseResults, vector<
 	int paramIndex = Utils::isSameParam(p, clauseResults.tableParams[0]) ? 0 : 1;
 	vector<vector<int>> subtractedSetResults;
 	for (vector<int> resultRow : clauseResults.results) {
-		if (toSubtract.find(resultRow[paramIndex]) != toSubtract.end()) {
+		if (toSubtract.find(resultRow[paramIndex]) == toSubtract.end()) { // Did not find it in set
 			subtractedSetResults.push_back(resultRow);
 		}
 	}
 
 	clauseResults.setResults(subtractedSetResults);
-}
+};
+
+/* Subtract from clauseResults a set of vectors given a table of 2 params */
+void EvaluatorHelper::subtractSetDouble(ClauseResults &clauseResults, vector<vector<int>> &setToSubtract) {
+
+	// Push everything into map
+	map<vector<int>, int> toSubtract;
+	for (vector<int> setRow : setToSubtract) {
+		toSubtract[setRow] = 1;
+	}
+
+	vector<vector<int>> subtractedSetResults;
+	for (vector<int> resultRow : clauseResults.results) {
+		if (toSubtract.find(resultRow) == toSubtract.end()) { // Add in if not in set
+			subtractedSetResults.push_back(resultRow);
+		}
+	}
+
+	clauseResults.setResults(subtractedSetResults);
+
+};

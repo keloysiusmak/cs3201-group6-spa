@@ -61,7 +61,11 @@ public:
 	void handleWithEquateVariables(Clause &clause, IntermediateTable &iTable);
 	bool handleWithEvaluation(Clause &clause, IntermediateTable &iTable);
 	void handleCallInWithClause(Param clauseCallParam, set<string> &clauseCallValues, IntermediateTable &iTable);
-	
+
+	// Extension helpers
+	vector<vector<int>> universeSet(Param lhs, Param rhs);
+	vector<vector<int>> setValuesforParam(Param p);
+
 private:
 	QueryObject queryObject;
 	PKB pkb;
