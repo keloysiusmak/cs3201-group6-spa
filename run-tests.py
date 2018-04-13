@@ -4,8 +4,9 @@ import os
 i = 1
 print "\nStarting Test Cases\n---"
 while (i <= 23):
-    print "Running Test Case "+str(i)
-    os.system("Debug\\AutoTester AutoTester\\Test-Cases\\source\\testcase"+str(i)+"-source.txt AutoTester\\Test-Cases\\queries\\testcase"+str(i)+"-queries.txt AutoTester\\Test-Cases\\output\\testcase"+str(i)+"-out.xml")
+    if (i != 10)
+        print "Running Test Case "+str(i)
+        os.system("Debug\\AutoTester AutoTester\\Test-Cases\\source\\testcase"+str(i)+"-source.txt AutoTester\\Test-Cases\\queries\\testcase"+str(i)+"-queries.txt AutoTester\\Test-Cases\\output\\testcase"+str(i)+"-out.xml")
     i = i + 1
 
 i = 1
