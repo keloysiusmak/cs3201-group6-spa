@@ -166,7 +166,7 @@ Select a such that Uses(a, v);
 34 - Uses If2
 if a;
 Select a such that Uses(a, "z");
-23,31,50,86
+23,31,50
 5000
 35 - Uses while
 while a; variable v;
@@ -284,14 +284,14 @@ Select v with v.stmt#=s.stmt# and s.stmt# = w.stmt#
 
 5000
 48 - Multiple
-stmt s1, s2; assign a1, a2; if i1, i2; while w1, w2; call c1,c2; prog_line p1, p2; procedure proc1, proc2; variable v1, v2; constant c1, c2;
+stmt s1, s2; assign a1, a2; if i1, i2; while w1, w2; prog_line p1, p2; procedure proc1, proc2; variable v1, v2;
 Select <v1, a1> such that Modifies(a1, v1) and Modifies(a2, v2) and Follows(a1, a2)
 j 25, j 26, j 27, j 28, j 29,a 62,y 72,yolo 13,yolo 21,yolo 39,yolo 71
 5000
 49 - Multiple
-stmt s1, s2; assign a1, a2; if i1, i2; while w1, w2; call c1,c2; prog_line p1, p2; procedure proc1, proc2; variable v1, v2; constant con1, con2;
+procedure proc1; call c1; variable v1; assign a1; while w1;
 Select proc1 with c1.procName = proc1.procName such that Modifies(proc1, v1) and Follows(a1, w1) pattern a1(v1,_)
-One, Three, Four
+Three, Four
 5000
 50 - Multiple
 stmt s1, s2; assign a1, a2; if i1, i2; while w1, w2; call c1,c2; prog_line p1, p2; procedure proc1, proc2; variable v1, v2; constant con1, con2;
