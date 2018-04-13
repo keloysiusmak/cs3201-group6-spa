@@ -1,158 +1,130 @@
 procedure One {
-	x = a + b + c;					//1
-	while a {						//2
-		while b {					//3
-			if c then {				//4
-				a = a;				//5
+	x = a + b + c;					
+	while a {						
+		while b {					
+			if c then {				
+				a = a;				
 			} else {
-				call Two;			//6
+				call Two;			
 			}
-			Two = Three;			//7
-			call Three;				//8
-			while c {				//9
-				if First then {		//10
-					yolo = yodo;	//11
-					while a {					//12
-						yolo = yoho;			//13
-						yolo = yomo;			//14
-						while c {				//15
-							yolo = yogo;		//16
-							while One {			//17
-								One = 1 + 1;	//18
+			Two = Three;			
+			call Three;				
+			while c {				
+				if First then {		
+					yolo = yodo;	
+					while a {					
+						yolo = yoho;			
+						yolo = yomo;			
+						while c {			
+							yolo = yogo;		
+							while One {			
+								One = 1 + 1;	
 							}
-							yolo = yofo;		//19
+							yolo = yofo;		
 						}
 					}
 				} else {
-					call Two;	//20
+					call Two;	
 				}
 			}
 		}
 		
-		yolo = forever;				//21
-		forever = never;			//22
+		yolo = forever;				
+		forever = never;			
 
-		if x then {					//23
-			while y {				//24
-				j = j + j - j * j;	//25
-				j = j - j + j * j;	//26
-				j = j * j - j + j;	//27
-				j = j * j + j - j;	//28
-				j = j + j * j - j;	//29
-				j = j - j * j + j;	//30
+		if x then {					
+			while y {				
+				j = j + j - j * j;	
+				j = j - j + j * j;	
+				j = j * j - j + j;	
+				j = j * j + j - j;	
+				j = j + j * j - j;	
+				j = j - j * j + j;	
 			}
 
-			if a then {				//31
-				call Two;			//32
-				call Three;			//33
-				call Four;			//34
+			if a then {				
+				call Two;			
+				call Three;			
+				call Four;			
 			} else {
-				while j {			//35
-					call Two;		//36
+				while j {			
+					call Two;		
 				}
 			}
 		} else {
-			while z {				//37
-				yahoo = yoohoo;		//38
+			while z {				
+				yahoo = yoohoo;		
 			}
 		}
 	}
 
-	yolo = x * y * z;				//39
-	yoho = x + y + z;				//40
+	yolo = x * y * z;				
+	yoho = x + y + z;				
 }
 
 procedure Two {
-	while a {						//41
-		while b {					//42
-			while c {				//43
-				while x {			//44
-					while y {		//45
-						z = 0;		//46
+	while a {						
+		while b {					
+			while c {				
+				while x {			
+					while y {		
+						z = 0;		
 					}
 				}
 			}
-			if Four then {				//47
-				Five = Four + Three;	//48
+			if Four then {				
+				Five = Four + Three;	
 			} else {			
-				One = One;				//49
+				One = One;				
 			}
 		}
 	}
 }
 
 procedure Three {
-	if a then {							//50
-		if b then {						//51
-			if c then {					//52
-				x = 0;					//53
+	if a then {							
+		if b then {						
+			if c then {					
+				x = 0;					
 			} else {
-				y = 0;					//54
+				y = 0;					
 			}
 		} else {
-			call Four;					//55
+			call Four;					
 		}
 	} else {
-		a = b + c + d * x + y + z * 0;	//56
+		a = b + c + d * x + y + z * 0;	
 	}
 }
 
 procedure Four {	
-	if a then {							//57
-		while b {						//58
-			if c then {					//59
-				while x {				//60
-					call Two;			//61
-					a = x;				//62
-					a = b;				//63
+	if a then {							
+		while b {						
+			if c then {					
+				while x {				
+					call Two;			
+					a = x;				
+					a = b;				
 				}
 			} else {
-				b = x;					//64
+				b = x;					
 			}
 		}
 	} else {
-		x = x * y + x;					//65
-		call Two;						//66
-		call Two;						//67
-		x = x * y + x;					//68
-		while x {						//69
-			call Two;					//70
+		x = x * y + x;					
+		call Two;						
+		call Two;						
+		x = x * y + x;					
+		while x {						
+			call Two;					
 		}
-		yolo = y;						//71
-		y = yolo;						//72
-		y = yolo;						//73
-		if y then {						//74
-			hello = 5 + 1 + x;			//75
+		yolo = y;						
+		y = yolo;						
+		y = yolo;						
+		if y then {						
+			hello = 5 + 1 + x;			
 		} else {	
-			call Two;					//76
+			call Two;					
 		}
-	}
-}
-
-procedure Five {
-	call One;				//77
-	call Two;				//78
-	call Three;				//79
-	call Four;				//80
-	while a {				//81
-		call One;			//82
-		call Two;			//83
-		call Three;			//84
-		call Four;			//85
-	}
-	if x then {				//86
-		call One;			//87
-		call Two;			//88
-		call Three;			//89
-		call Four;			//90
-	} else {
-		call One;			//91
-		call One;			//92
-		call Two;			//93
-		call Two;			//94
-		call Three;			//95
-		call Three;			//96
-		call Four;			//97
-		call Four;			//98
 	}
 }

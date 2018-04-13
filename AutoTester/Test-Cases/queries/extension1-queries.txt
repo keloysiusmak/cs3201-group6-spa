@@ -58,3 +58,43 @@ if ifs; constant c; assign a; call cl;
 Select c with a.stmt# = c.value or if.stmt# = c.value and w.stmt# = c.value and cl.stmt# = c.value
 23
 5000
+13 -
+assign a; stmt s;
+Select s such that not Follows(s, a)
+
+5000
+14 -
+if ifs; stmt s;
+Select s such that not Parent(ifs, s) 
+
+5000
+15 -
+assign a;
+Select a such that not Uses(a, "w")
+
+5000
+16 -
+assign a;
+Select a such that not Modifies(a, "m")
+
+5000
+17 -
+assign a; stmt s; if ifs;
+Select s such that not Follows(s, a) such that not Parent(ifs, s)
+
+5000
+18 -
+assign a; stmt s; if ifs;
+Select s such that not (Follows(s, a) and Parent(ifs, s))
+
+5000
+19 -
+assign a; stmt s; if ifs;
+Select s such that not (Follows(s, a) and Parent(ifs, s) or Uses(a, "w"))
+
+5000
+20 -
+assign a; stmt s; if ifs;
+Select s such that not (((Follows(s, a) and Parent(ifs, s)) or Uses (a, "w")) or Modifies(a, "m"))
+
+5000
