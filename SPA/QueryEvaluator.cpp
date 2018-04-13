@@ -800,6 +800,7 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 	}
 	else if (pType == PROCEDURE) { results = pkb.getAllProcedures(); }
 	else if (pType == CONSTANT) { results = pkb.getAllConstants(); }
+	else if (pType == STMTLST) { results = pkb.getAllStatementListsFirstStmt(); }
 	else { ; }
 
 	for (vector<int> values : results) {
@@ -1060,6 +1061,7 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 	vector<vector<int>> withResults;
 
 	withClauseResults.instantiateClause(withClause);
+	EvaluatorHelper::addClauseParamToTable(withClauseResults, iTable);
 	if (Utils::isSynonym(lhs) || Utils::isSynonym(rhs)) {
 		// Both synonyms
 		if (Utils::isSynonym(lhs) && Utils::isSynonym(rhs)) {
