@@ -978,6 +978,49 @@ void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable)
 		withClauseResults.setResults(Utils::invertTwoValues(withResults));
 		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
 	}
+	else if (clause.getLeftParam().attribute == STMT_NO
+		&& clause.getRightParam().attribute == STMT_NO) {
+		if (clause.getLeftParam().type != STMT
+			&& clause.getRightParam().type != STMT) {
+			ClauseResults withClauseResults;
+			withClauseResults.instantiateClause(clause);
+			vector<vector<int>> withResults;
+			withClauseResults.setResults(withResults);
+			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+		}
+		else if (clause.getLeftParam().type == STMT) {
+			ClauseResults withClauseResults;
+			withClauseResults.instantiateClause(clause);
+			int type = 0;
+			if (clause.getRightParam().type == ASSIGN) type = 1;
+			else if (clause.getRightParam().type == WHILE) type = 2;
+			else if (clause.getRightParam().type == IF) type = 3;
+			else if (clause.getRightParam().type == CALL) type = 4;
+			vector<vector<int>> withResults = pkb.getAllStatementsWithType(type);
+			vector<vector<int>> newWithResults;
+			for (vector<int> i : withResults) {
+				newWithResults.push_back({ i[0], i[0] });
+			}
+			withClauseResults.setResults(newWithResults);
+			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+		}
+		else if (clause.getRightParam().type == STMT) {
+			ClauseResults withClauseResults;
+			withClauseResults.instantiateClause(clause);
+			int type = 0;
+			if (clause.getLeftParam().type == ASSIGN) type = 1;
+			else if (clause.getLeftParam().type == WHILE) type = 2;
+			else if (clause.getLeftParam().type == IF) type = 3;
+			else if (clause.getLeftParam().type == CALL) type = 4;
+			vector<vector<int>> withResults = pkb.getAllStatementsWithType(type);
+			vector<vector<int>> newWithResults;
+			for (vector<int> i : withResults) {
+				newWithResults.push_back({ i[0], i[0] });
+			}
+			withClauseResults.setResults(newWithResults);
+			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+		}
+	}
 	else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 1) {
 		handleWithValueAssignment(clause, iTable);
 	}
