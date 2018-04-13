@@ -586,7 +586,7 @@ Select <c1, p1, ifs1> with c1.procName = p1.procName such that Parent*(c1, ifs1)
 118 -
 variable v1; call c1, c2;
 Select <v1, c1, c2> with c1.procName = c2.procName such that Uses(c2, v1)
-
+a 19 19,a 58 58,b 19 19,b 58 58,c 19 19,c 58 58,d 19 19,d 58 58,e 19 19,e 58 58,f 19 19,f 58 58,g 19 19,g 58 58,h 19 19,h 58 58,i 19 19,i 58 58,j 19 19,j 58 58,k 19 19,k 58 58,l 19 19,l 58 58,m 19 19,m 58 58,n 19 19,n 58 58,o 19 19,o 58 58,p 19 19,p 58 58,q 19 19,q 58 58,r 19 19,r 58 58,s 19 19,s 58 58,t 19 19,t 58 58,u 19 19,u 58 58,v 19 19,v 58 58,w 19 19,w 58 58,x 19 19,y 19 19,y 58 58,z 19 19,z 58 58
 5000
 119 -
 variable v1; call c1; proc p1;
@@ -606,7 +606,7 @@ Select <c1, p1, p2> with p1.procName = c1.procName such that Calls*(p1, p2)
 122 -
 call c1, c2; prog_line n1;
 Select <c1, c2, n1> with c1.procName = c2.procName such that Next(c2, n1)
-
+19 19 20, 58 58 59
 5000
 123 -
 stmt s1; variable v1; call c1;
@@ -676,7 +676,7 @@ Select <w1, v1, ct1> with w1.stmt# = ct1.value pattern w1(v1, _)
 136 -
 call c1, c2; constant ct1;
 Select <c1, c2, ct1> with c1.stmt# = ct1.value with c1.procName = c2.procName
-
+58 58 58
 5000
 137 -
 while w1; constant ct1, ct2;
