@@ -166,7 +166,7 @@ Select a such that Uses(a, v);
 34 - Uses If2
 if a;
 Select a such that Uses(a, "z");
-23,31,50,86
+23,31,50
 5000
 35 - Uses while
 while a; variable v;
@@ -198,102 +198,102 @@ call a;
 Select a such that Uses(a, "z");
 8,33
 5000
-31 - Next
+41 - Next
 while a, b;
 Select a such that Next(a, b)
 2,9,12,15,35,37,41,42,43,44,45,60
 5000
-32 - Next
+42 - Next
 if a, b;
 Select a such that Next(a, b)
 50,51
 5000
-33 - Next
+43 - Next
 call a, b;
 Select a such that Next(a, b)
 32,33,66
 5000
-34 - Next - loop
+44 - Next - loop
 while a; prog_line b;
 Select <a,b> such that Next(a, b) and Next (b, a)
 35 36,17 18,69 70,41 42,42 41,44 43,45 44,43 44, 44 45, 45 46,37 38
 5000
-35 - Next
+45 - Next
 while a; if b; assign c;
 Select a such that Next(a, b) and Next(b,c)
 9,58,43, 3
 5000
-36 - NextStar
+46 - NextStar
 if a; while b;
 Select a such that Next*(a, b)
 10,23,31,47,57,59,4
 5000
-37 - NextStar
+47 - NextStar
 while a, b; if c;
 Select c such that Next*(a, b) and Next*(b, c)
 4,23,31,10,47,59,74
 5000
-38 - NextStar
+48 - NextStar
 if a,b,c;
 Select a such that Next*(a, b) and Next*(b, c)
 23, 31, 4, 10, 47, 57, 59, 50
 5000
-39 - NextStar
+49 - NextStar
 if a;
 Select a such that Next*(a, a)
 23,31,4,10,47,59
 5000
-40 - NextStar
+50 - NextStar
 while a,b,c,d;
 Select BOOLEAN such that Next*(c, 45) and Next*(b, c) and Next*(a, b) and Next*(a, c)
 TRUE
 5000
-41 - Affects
+51 - Affects
 stmt a, b;
 Select b such that Affects(a, b) and Modifies(a, "x") and Parent(b, a)
 
 5000
-42 - Pattern
+52 - Pattern
 variable v; assign a;
 Select v pattern a(v, _"v"_)
 
 5000
-43 - Pattern
+53 - Pattern
 variable v; if i;
 Select v pattern i("v", _, _)
 
 5000
-44 - Pattern
+54 - Pattern
 variable v; while w;
 Select v pattern w(v,_)
 a,x,b,c,y,j,z, One
 5000
-45 - With
+55 - With
 procedure p; call c;
 Select p with p.procName = c.procName and c.stmt#=8
 Three
 5000
-46 - With
+56 - With
 constant c; 
 Select c with c.value=1
 1
 5000
-47 - With
+57 - With
 call v; while w; stmt s;
 Select v with v.stmt#=s.stmt# and s.stmt# = w.stmt#
 
 5000
-48 - Multiple
-stmt s1, s2; assign a1, a2; if i1, i2; while w1, w2; call c1,c2; prog_line p1, p2; procedure proc1, proc2; variable v1, v2; constant c1, c2;
+58 - Multiple
+stmt s1, s2; assign a1, a2; if i1, i2; while w1, w2; prog_line p1, p2; procedure proc1, proc2; variable v1, v2;
 Select <v1, a1> such that Modifies(a1, v1) and Modifies(a2, v2) and Follows(a1, a2)
 j 25, j 26, j 27, j 28, j 29,a 62,y 72,yolo 13,yolo 21,yolo 39,yolo 71
 5000
-49 - Multiple
-stmt s1, s2; assign a1, a2; if i1, i2; while w1, w2; call c1,c2; prog_line p1, p2; procedure proc1, proc2; variable v1, v2; constant con1, con2;
+59 - Multiple
+procedure proc1; call c1; variable v1; assign a1; while w1;
 Select proc1 with c1.procName = proc1.procName such that Modifies(proc1, v1) and Follows(a1, w1) pattern a1(v1,_)
-One, Three, Four
+Three, Four
 5000
-50 - Multiple
+60 - Multiple
 stmt s1, s2; assign a1, a2; if i1, i2; while w1, w2; call c1,c2; prog_line p1, p2; procedure proc1, proc2; variable v1, v2; constant con1, con2;
 Select <v1, v2, c1> with v1.varName = proc1.procName and c1.procName = proc1.procName such that Follows*(c1, a1) and Modifies(a1, v2)
 Two a 61,Two x 66,Two x 67,Two y 66,Two y 67,Two yolo 66,Two yolo 67
