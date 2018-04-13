@@ -858,7 +858,7 @@ namespace PKBDEParserIntegrationTesting
 			lp.attribute = NONE;
 
 			rp.type = EXPR;
-			rp.value = "a|1|+|";
+			rp.value = "|a|1|+|";
 			rp.attribute = NONE;
 
 			Pattern p2(ep, lp, rp, false);
@@ -875,7 +875,7 @@ namespace PKBDEParserIntegrationTesting
 			lp.attribute = NONE;
 
 			rp.type = EXPR_EXACT;
-			rp.value = "a|1|+|";
+			rp.value = "|a|1|+|";
 			rp.attribute = NONE;
 
 			Pattern p3(ep, lp, rp, false);
@@ -926,7 +926,7 @@ namespace PKBDEParserIntegrationTesting
 			lp.attribute = NONE;
 
 			rp.type = EXPR;
-			rp.value = "a|1|+|";
+			rp.value = "|a|1|+|";
 			rp.attribute = NONE;
 
 			Pattern p6(ep, lp, rp, false);
@@ -943,7 +943,7 @@ namespace PKBDEParserIntegrationTesting
 			lp.attribute = NONE;
 
 			rp.type = EXPR_EXACT;
-			rp.value = "a|1|+|";
+			rp.value = "|a|1|+|";
 			rp.attribute = NONE;
 
 			Pattern p7(ep, lp, rp, false);
@@ -960,7 +960,7 @@ namespace PKBDEParserIntegrationTesting
 			lp.attribute = NONE;
 
 			rp.type = EXPR;
-			rp.value = "a|1|+|";
+			rp.value = "|a|1|+|";
 			rp.attribute = NONE;
 
 			Pattern p8(ep, lp, rp, false);
@@ -977,7 +977,7 @@ namespace PKBDEParserIntegrationTesting
 			lp.attribute = NONE;
 
 			rp.type = EXPR_EXACT;
-			rp.value = "a|1|+|";
+			rp.value = "|a|1|+|";
 			rp.attribute = NONE;
 
 			Pattern p9(ep, lp, rp, false);
@@ -994,7 +994,7 @@ namespace PKBDEParserIntegrationTesting
 			lp.attribute = NONE;
 
 			rp.type = EXPR;
-			rp.value = "a|1|+|";
+			rp.value = "|a|1|+|";
 			rp.attribute = NONE;
 
 			Pattern p10(ep, lp, rp, false);
@@ -1011,7 +1011,7 @@ namespace PKBDEParserIntegrationTesting
 			lp.attribute = NONE;
 
 			rp.type = EXPR;
-			rp.value = "a|1|+|";
+			rp.value = "|a|1|+|";
 			rp.attribute = NONE;
 
 			Pattern p11(ep, lp, rp, false);

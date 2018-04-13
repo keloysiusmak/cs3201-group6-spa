@@ -286,6 +286,9 @@ namespace PKBTest
 				}
 				else {
 					null = {"x", "x"};
+					if (i == PATTERN_TABLE) {
+						null = {"x", "|x"};
+					}
 					Assert::AreEqual(true, (null == pkb.getFromNameTable(i, pkb.insertToNameTable(i, { data, data }))));
 				}
 			}
@@ -1971,7 +1974,7 @@ namespace PKBTest
 			lp.attribute = NONE;
 
 			rp.type = EXPR;
-			rp.value = "e|f|*|";
+			rp.value = "|e|f|*|";
 			rp.attribute = NONE;
 
 			Pattern p2(ep, lp, rp, false);
@@ -1988,7 +1991,7 @@ namespace PKBTest
 			lp.attribute = NONE;
 
 			rp.type = EXPR_EXACT;
-			rp.value = "e|f|*|";
+			rp.value = "|e|f|*|";
 			rp.attribute = NONE;
 
 			Pattern p3(ep, lp, rp, false);
@@ -2039,7 +2042,7 @@ namespace PKBTest
 			lp.attribute = NONE;
 
 			rp.type = EXPR;
-			rp.value = "e|f|*|";
+			rp.value = "|e|f|*|";
 			rp.attribute = NONE;
 
 			Pattern p6(ep, lp, rp, false);
@@ -2056,7 +2059,7 @@ namespace PKBTest
 			lp.attribute = NONE;
 
 			rp.type = EXPR_EXACT;
-			rp.value = "e|f|*|";
+			rp.value = "|e|f|*|";
 			rp.attribute = NONE;
 
 			Pattern p7(ep, lp, rp, false);
@@ -2073,7 +2076,7 @@ namespace PKBTest
 			lp.attribute = NONE;
 
 			rp.type = EXPR;
-			rp.value = "e|f|*|";
+			rp.value = "|e|f|*|";
 			rp.attribute = NONE;
 
 			Pattern p8(ep, lp, rp, false);
@@ -2090,7 +2093,7 @@ namespace PKBTest
 			lp.attribute = NONE;
 
 			rp.type = EXPR_EXACT;
-			rp.value = "e|f|*|";
+			rp.value = "|e|f|*|";
 			rp.attribute = NONE;
 
 			Pattern p9(ep, lp, rp, false);
@@ -2107,7 +2110,7 @@ namespace PKBTest
 			lp.attribute = NONE;
 
 			rp.type = EXPR;
-			rp.value = "e|f|*|g|+|";
+			rp.value = "|e|f|*|g|+|";
 			rp.attribute = NONE;
 
 			Pattern p10(ep, lp, rp, false);
@@ -2124,7 +2127,7 @@ namespace PKBTest
 			lp.attribute = NONE;
 
 			rp.type = EXPR;
-			rp.value = "e|f|*|g|+|";
+			rp.value = "|e|f|*|g|+|";
 			rp.attribute = NONE;
 
 			Pattern p11(ep, lp, rp, false);
@@ -3174,6 +3177,7 @@ namespace PKBTest
 			pkb.insertToNameTable(PROC_TABLE, { "c" });
 
 			data = { {1,4}, {1,5}, {1,8}, {4,5}, {4,7},{ 5,4 },{ 5,5 },{ 5,7 },{ 5,8 },{7,8}, {8, 4}, {8,5}, {8,8}, {10, 13}, {10,14}, {10,15}, {11,13}, {11,14}, {11,15},{13,15}, {14,15}, {19,17}, {19,19},{ 19,21 },{21, 19},{ 21, 22 },{22, 17},{ 22, 19 },{ 22, 21 } };
+			std::vector<std::vector<int>> a = pkb.getAllAffects();
 			Assert::AreEqual(true, (pkb.getAllAffects() == data));
 		}
 
