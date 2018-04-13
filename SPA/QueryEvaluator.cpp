@@ -1061,6 +1061,7 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 	vector<vector<int>> withResults;
 
 	withClauseResults.instantiateClause(withClause);
+	EvaluatorHelper::addClauseParamToTable(withClauseResults, iTable);
 	if (Utils::isSynonym(lhs) || Utils::isSynonym(rhs)) {
 		// Both synonyms
 		if (Utils::isSynonym(lhs) && Utils::isSynonym(rhs)) {
