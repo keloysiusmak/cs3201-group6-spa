@@ -2630,7 +2630,8 @@ string Preprocessor::mapParamTypeToValue(ParamType paramType, AttrType attrType)
 	}
 	else {
 		switch (paramType) {
-		case STMT: case ASSIGN: case WHILE: case IF: case PROG_LINE: case CALL: case CONSTANT:
+		case STMT: case ASSIGN: case WHILE: case IF: case PROG_LINE: 
+		case CALL: case CONSTANT: case STMTLST:
 			return DUMMY_INTEGER_VALUE;
 			break;
 		case VARIABLE: case PROCEDURE:
