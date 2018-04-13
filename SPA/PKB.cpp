@@ -2204,6 +2204,10 @@ std::vector<std::vector<int>> PKB::getAllAffects() {
 
 					if (checkedStmts.size() > initSize) {
 						next.push_back({ newNext[j][0] });
+						if (whileStack.size() > 0 && whileStack.top() == newNext[j][0]) {
+							whileStack.pop();
+							completedWhiles.insert(newNext[j][0]);
+						}
 					}
 				//}
 			}
@@ -2239,6 +2243,7 @@ std::vector<std::vector<int>> PKB::getAllAffects() {
 					std::vector<std::vector<int>> children = PKB::getChildrenStar(returnWhile);
 					for (int i = 0; i < children.size(); i++) {
 						checkedStmts.erase(children[i][0]);
+						completedWhiles.erase(children[i][0]);
 					}
 					checkedStmts.erase(returnWhile);
 					next.push_back(returnWhile);
@@ -2384,6 +2389,10 @@ std::vector<std::vector<int>> PKB::getAllAffectsStar() {
 
 					if (checkedStmts.size() > initSize) {
 						next.push_back({ newNext[j][0] });
+						if (whileStack.size() > 0 && whileStack.top() == newNext[j][0]) {
+							whileStack.pop();
+							completedWhiles.insert(newNext[j][0]);
+						}
 					}
 				//}
 			}
@@ -2419,6 +2428,7 @@ std::vector<std::vector<int>> PKB::getAllAffectsStar() {
 					std::vector<std::vector<int>> children = PKB::getChildrenStar(returnWhile);
 					for (int i = 0; i < children.size(); i++) {
 						checkedStmts.erase(children[i][0]);
+						completedWhiles.erase(children[i][0]);
 					}
 					checkedStmts.erase(returnWhile);
 					next.push_back(returnWhile);
