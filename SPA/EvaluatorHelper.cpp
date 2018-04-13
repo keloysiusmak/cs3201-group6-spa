@@ -471,7 +471,7 @@ vector<vector<int>> EvaluatorHelper::crossVectors(vector<vector<int>> &set1, vec
 };
 
 /* Subtract from clauseResults a set of vectors given param */
-void EvaluatorHelper::subtractSetSingle(Param p, ClauseResults &clauseResults, vector<vector<int>> &setToSubtract) {
+void EvaluatorHelper::subtractSetSingle(ClauseResults &clauseResults, vector<vector<int>> &setToSubtract) {
 
 	set<int> toSubtract;
 	// Add to set
@@ -479,10 +479,9 @@ void EvaluatorHelper::subtractSetSingle(Param p, ClauseResults &clauseResults, v
 		toSubtract.insert(setRow[0]);
 	}
 
-	int paramIndex = Utils::isSameParam(p, clauseResults.tableParams[0]) ? 0 : 1;
 	vector<vector<int>> subtractedSetResults;
 	for (vector<int> resultRow : clauseResults.results) {
-		if (toSubtract.find(resultRow[paramIndex]) == toSubtract.end()) { // Did not find it in set
+		if (toSubtract.find(resultRow[0]) == toSubtract.end()) { // Did not find it in set
 			subtractedSetResults.push_back(resultRow);
 		}
 	}

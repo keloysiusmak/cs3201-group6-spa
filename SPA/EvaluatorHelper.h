@@ -33,6 +33,6 @@ public:
 
 	/* Extension Helpers */
 	static vector<vector<int>> crossVectors(vector<vector<int>> &set1, vector<vector<int>> &set2);
-	static void subtractSetSingle(Param p, ClauseResults &clauseResults, vector<vector<int>> &setToSubtract);
+	static void subtractSetSingle(ClauseResults &clauseResults, vector<vector<int>> &setToSubtract);
 	static void subtractSetDouble(ClauseResults &clauseResults, vector<vector<int>> &setToSubtract);
 };
