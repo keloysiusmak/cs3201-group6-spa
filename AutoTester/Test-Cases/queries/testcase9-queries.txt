@@ -676,7 +676,7 @@ Select <w1, v1, ct1> with w1.stmt# = ct1.value pattern w1(v1, _)
 136 -
 call c1, c2; constant ct1;
 Select <c1, c2, ct1> with c1.stmt# = ct1.value with c1.procName = c2.procName
-58, 58, 58
+58 58 58
 5000
 137 -
 while w1; constant ct1, ct2;
