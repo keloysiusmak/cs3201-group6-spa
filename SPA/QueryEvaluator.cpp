@@ -800,6 +800,7 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 	}
 	else if (pType == PROCEDURE) { results = pkb.getAllProcedures(); }
 	else if (pType == CONSTANT) { results = pkb.getAllConstants(); }
+	else if (pType == STMTLST) { results = pkb.getAllStatementListsFirstStmt(); }
 	else { ; }
 
 	for (vector<int> values : results) {
