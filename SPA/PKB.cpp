@@ -1809,6 +1809,7 @@ std::vector<std::vector<int>> PKB::getAffectsAfterStar(int stmt) {
 	firstStmt = stmt;
 	stack<int> tempWhileStack;
 	std::vector<std::vector<int>> parent = PKB::getParent(firstStmt);
+	/*
 	while (parent.size() > 0) {
 		if (PKB::checkStatementHasType(parent[0][0], 2)) {
 			tempWhileStack.push(parent[0][0]);
@@ -1818,7 +1819,7 @@ std::vector<std::vector<int>> PKB::getAffectsAfterStar(int stmt) {
 	while (tempWhileStack.size() > 0) {
 		whileStack.push(tempWhileStack.top());
 		tempWhileStack.pop();
-	}
+	}*/
 
 	vector<int> variableAffect;
 	allStmtsId = PKB::getNextAfterStar(firstStmt);
@@ -1891,7 +1892,7 @@ std::vector<std::vector<int>> PKB::getAffectsAfterStar(int stmt) {
 
 		newNext = PKB::getNextAfter(currStmt);
 		for (int j = 0; j < newNext.size(); j++) {
-			if (!(PKB::checkStatementHasType(currStmt, 2) && PKB::checkStatementHasType(newNext[j][0], 2))) {
+			if (!(PKB::checkStatementHasType(currStmt, 2) && whileStack.size() == 0)) {
 				int initSize = checkedStmts.size();
 				checkedStmts.insert(newNext[j][0]);
 
@@ -1907,6 +1908,19 @@ std::vector<std::vector<int>> PKB::getAffectsAfterStar(int stmt) {
 
 				if (checkedStmts.size() > initSize) {
 					next.push({ newNext[j][0] });
+				}
+				else {
+					bool needed = false;
+					std::queue<int> tempNext = next;
+					while (tempNext.size() > 0) {
+						int item = tempNext.front();
+						tempNext.pop();
+						needed = needed || PKB::checkNextStar(item, whileStack.top());
+					}
+					if (!needed) {
+						whileStack.pop();
+					}
+
 				}
 			}
 		}
@@ -1933,6 +1947,7 @@ std::vector<std::vector<int>> PKB::getAffectsAfterStar(int stmt) {
 				std::vector<std::vector<int>> children = PKB::getChildrenStar(returnWhile);
 				for (int i = 0; i < children.size(); i++) {
 					checkedStmts.erase(children[i][0]);
+					completedWhiles.erase(children[i][0]);
 				}
 				checkedStmts.erase(returnWhile);
 				next.push(returnWhile);
