@@ -398,72 +398,67 @@ void QueryEvaluator::evaluateUses(Clause & clause, ClauseResults & clauseResults
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results;
-			if (leftParam.type == PROCEDURE) {
-				results = pkb.getAllProcedureUsesVariables();
+			results = (leftParam.type == PROCEDURE) ? pkb.getAllProcedureUsesVariables() : 
+				pkb.getAllStatementUsesVariables();
+
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
 			} else {
-				results = pkb.getAllStatementUsesVariables();
+				vector<vector<int>> universeResults = universeSet(leftParam, rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetDouble(clauseResults, results);
 			}
-			clauseResults.setResults(results);
-		}
-		else { // (syn, concrete)
+		} else { // (syn, concrete)
 			vector<vector<int>> results;
 			if (rightParam.type == INTEGER) { // RHS is integer constant
-				if (leftParam.type == PROCEDURE) {
-					results = pkb.getProceduresWithConstant(stoi(rightParam.value));
-				} else {
-					results = pkb.getStatementsWithConstant(stoi(rightParam.value));
-				}
-			}
-			else { // LHS is var_name
+				results = (leftParam.type == PROCEDURE) ?
+					pkb.getProceduresWithConstant(stoi(rightParam.value)) :
+					pkb.getStatementsWithConstant(stoi(rightParam.value));
+			} else { // LHS is var_name
 				int variableId = pkb.getVariableId(rightParam.value);
-				if (leftParam.type == PROCEDURE) {
-					results = pkb.getProceduresFromUsesVariable(variableId);
-				} else {
-					results = pkb.getStatementsFromUsesVariable(variableId);
-				}
+				results = (leftParam.type == PROCEDURE) ?
+					pkb.getProceduresFromUsesVariable(variableId) : 
+					pkb.getStatementsFromUsesVariable(variableId);
 			}
-			clauseResults.setResults(results);
+
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(leftParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
 		}
-	}
-	else {
+	} else {
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results;
 			int lineId;
-			try { 
+			if (leftParam.type == PROCEDURE) {
+				lineId = pkb.getProcedureId(leftParam.value);
+				results = pkb.getUsesVariablesFromProcedure(lineId);
+			} else {
 				lineId = stoi(leftParam.value);
 				results = pkb.getUsesVariablesFromStatement(lineId);
 			}
-			catch (exception&) {
-				lineId = pkb.getProcedureId(leftParam.value);
-				results = pkb.getUsesVariablesFromProcedure(lineId);
+			
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
 			}
-			clauseResults.setResults(results);
 		}
 		else { // (concrete, concrete)
 			bool result;
-			bool isProcedure;
-
+			int varId = pkb.getVariableId(rightParam.value);
 			int lineId;
-			try { 
+
+			(leftParam.type == PROCEDURE) ? lineId = pkb.getProcedureId(leftParam.value) :
 				lineId = stoi(leftParam.value); 
-				isProcedure = false;
-			}
-			catch (exception&) { 
-				lineId = pkb.getProcedureId(leftParam.value); 
-				isProcedure = true;
-			}
+			result = pkb.checkProcedureUsesVariable(lineId, varId);
 
-			int varId;
-			try { varId = stoi(rightParam.value); }
-			catch (exception&) { varId = pkb.getVariableId(rightParam.value); }
-
-			if (isProcedure) {
-				result = pkb.checkProcedureUsesVariable(lineId, varId);
-			}
-			else {
-				result = pkb.checkStatementUsesVariable(lineId, varId);
-			}
-			clauseResults.setValid(result);
+			clause.getIsInverted() ? clauseResults.setValid(!result) : clauseResults.setValid(result);
 		}
 	}
 }
@@ -477,63 +472,63 @@ void QueryEvaluator::evaluateModifies(Clause & clause, ClauseResults & clauseRes
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results;
-			if (leftParam.type == PROCEDURE) {
-				results = pkb.getAllProcedureModifiesVariables();
+			results = (leftParam.type == PROCEDURE) ? pkb.getAllProcedureModifiesVariables() :
+				pkb.getAllStatementModifiesVariables();
+
+			if (clause.getIsInverted()) {
+				clauseResults.setResults(results);
 			} else {
-				results = pkb.getAllStatementModifiesVariables();
+				vector<vector<int>> universeResults = universeSet(leftParam, rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetDouble(clauseResults, results);
 			}
-			clauseResults.setResults(results);
 		}
 		else { // (syn, concrete)
 			int variableId = pkb.getVariableId(rightParam.value);
 			vector<vector<int>> results;
-			if (leftParam.type == PROCEDURE) {
-				results = pkb.getProceduresFromModifiesVariable(variableId);
+			results = (leftParam.type == PROCEDURE) ?
+				pkb.getProceduresFromModifiesVariable(variableId):
+				pkb.getStatementsFromModifiesVariable(variableId);
+
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
 			} else {
-				results = pkb.getStatementsFromModifiesVariable(variableId);
+				vector<vector<int>> universeResults = setValuesforParam(leftParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
 			}
-			clauseResults.setResults(results);
 		}
 	}
 	else {
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results;
 			int lineId;
-			try { 
+			if (leftParam.type == PROCEDURE) {
+				lineId = pkb.getProcedureId(leftParam.value);
+				results = pkb.getModifiesVariablesFromProcedure(lineId);
+			} else {
 				lineId = stoi(leftParam.value);
 				results = pkb.getModifiesVariablesFromStatement(lineId);
 			}
-			catch (exception&) {
-				lineId = pkb.getProcedureId(leftParam.value);
-				results = pkb.getModifiesVariablesFromProcedure(lineId);
+
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
 			}
-			clauseResults.setResults(results);
 		}
 		else { // (concrete, concrete)
 			bool result;
-			bool isProcedure;
-
+			int varId = pkb.getVariableId(rightParam.value);
 			int lineId;
-			try {
-				lineId = stoi(leftParam.value);
-				isProcedure = false;
-			}
-			catch (exception&) {
-				lineId = pkb.getProcedureId(leftParam.value);
-				isProcedure = true;
-			}
 
-			int varId;
-			try { varId = pkb.getVariableId(rightParam.value); }
-			catch (exception&) { varId = stoi(rightParam.value); }
+			lineId = (leftParam.type == PROCEDURE) ? pkb.getProcedureId(leftParam.value) :
+				stoi(leftParam.value);
+			result = pkb.checkProcedureModifiesVariable(lineId, varId);
 
-			if (isProcedure) {
-				result = pkb.checkProcedureModifiesVariable(lineId, varId);
-			}
-			else {
-				result = pkb.checkStatementModifiesVariable(lineId, varId);
-			}
-			clauseResults.setValid(result);
+			clause.getIsInverted() ? clauseResults.setValid(!result) : clauseResults.setValid(result);
 		}
 	}
 }
@@ -547,28 +542,37 @@ void QueryEvaluator::evaluateNext(Clause & clause, ClauseResults & clauseResults
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results = pkb.getAllNext(); //check PKB API
-			clauseResults.setResults(results);
-		}
-		else { // (syn, concrete)
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = universeSet(leftParam, rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetDouble(clauseResults, results);
+			}
+
+		} else { // (syn, concrete)
 			vector<vector<int>> results = pkb.getNextBefore(stoi(rightParam.value)); //check PKB API
-			clauseResults.setResults(results);
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(leftParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
 		}
-	}
-	else {
+	} else {
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getNextAfter(stoi(leftParam.value));
-			clauseResults.setResults(results);
-		}
-		else { // (concrete, concrete)
-		  bool result;
-			if (rightParam.type == IDENT) {
-				int varId = pkb.getVariableId(rightParam.value);
-				result = pkb.checkNext(stoi(leftParam.value), varId);
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
 			}
-			else {
-				result = pkb.checkNext(stoi(leftParam.value), stoi(rightParam.value));
-			}
-			clauseResults.setValid(result);
+		} else { // (concrete, concrete)
+			bool result = pkb.checkNext(stoi(leftParam.value), stoi(rightParam.value));
+			clause.getIsInverted() ? clauseResults.setValid(!result) : clauseResults.setValid(result);
 		}
 	}
 }
@@ -582,21 +586,36 @@ void QueryEvaluator::evaluateNextStar(Clause & clause, ClauseResults & clauseRes
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
 			vector<vector<int>> results = pkb.getAllNextStar();
-			clauseResults.setResults(results);
-		}
-		else { // (syn, concrete)
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = universeSet(leftParam, rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetDouble(clauseResults, results);
+			}
+		} else { // (syn, concrete)
 			vector<vector<int>> results = pkb.getNextBeforeStar(stoi(rightParam.value));
-			clauseResults.setResults(results);
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(leftParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
 		}
-	}
-	else {
+	} else {
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getNextAfterStar(stoi(leftParam.value));
-			clauseResults.setResults(results);
-		}
-		else { // (concrete, concrete)
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
+		} else { // (concrete, concrete)
 			bool result = pkb.checkNextStar(stoi(leftParam.value), stoi(rightParam.value));
-			clauseResults.setValid(result);
+			clause.getIsInverted() ? clauseResults.setValid(!result) : clauseResults.setValid(result);
 		}
 	}
 }
@@ -610,26 +629,37 @@ void QueryEvaluator::evaluateCalls(Clause & clause, ClauseResults & clauseResult
 
 	if (Utils::isSynonym(leftParam)) { // (syn, syn)
 		if (Utils::isSynonym(rightParam)) {
-			/* if (leftParam.value == rightParam.value) {
-			validQuery = false;
-			evaluateQuery();
-			} */
 			vector<vector<int>> results = pkb.getAllCalls();
-			clauseResults.setResults(results);
-		}
-		else { // (syn, concrete)
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = universeSet(leftParam, rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetDouble(clauseResults, results);
+			}
+		} else { // (syn, concrete)
 			vector<vector<int>> results = pkb.getCallsBefore(pkb.getProcedureId(rightParam.value));
-			clauseResults.setResults(results);
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(leftParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
 		}
-	}
-	else {
+	} else {
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getCallsAfter(pkb.getProcedureId(leftParam.value));
-			clauseResults.setResults(results);
-		}
-		else { // (concrete, conrete)
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
+		} else { // (concrete, conrete)
 			bool result = pkb.checkCalls(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
-			clauseResults.setValid(result);
+			clause.getIsInverted() ? clauseResults.setValid(!result) : clauseResults.setValid(result);
 		}
 	}
 }
@@ -643,26 +673,37 @@ void QueryEvaluator::evaluateCallsStar(Clause & clause, ClauseResults & clauseRe
 
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
-			/* if (leftParam.value == rightParam.value) {
-				validQuery = false;
-				evaluateQuery();
-			} */
 			vector<vector<int>> results = pkb.getAllCallsStar();
-			clauseResults.setResults(results);
-		}
-		else { // (syn, concrete)
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = universeSet(leftParam, rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetDouble(clauseResults, results);
+			}
+		} else { // (syn, concrete)
 			vector<vector<int>> results = pkb.getCallsBeforeStar(pkb.getProcedureId(rightParam.value));
-			clauseResults.setResults(results);
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(leftParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
 		}
-	}
-	else {
+	} else {
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
 			vector<vector<int>> results = pkb.getCallsAfterStar(pkb.getProcedureId(leftParam.value));
-			clauseResults.setResults(results);
-		}
-		else { // (concrete, concrete)
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
+		} else { // (concrete, concrete)
 			bool result = pkb.checkCallsStar(pkb.getProcedureId(leftParam.value), pkb.getProcedureId(rightParam.value));
-			clauseResults.setValid(result);
+			clause.getIsInverted() ? clauseResults.setValid(!result) : clauseResults.setValid(result);
 		}
 	}
 }
