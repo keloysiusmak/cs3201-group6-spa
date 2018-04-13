@@ -1,79 +1,101 @@
-procedure Main {
-while one {
-	one = two + three * four * five * six;
-	seven = eight + 3;
-	nine = ten - eleven * ( twelve + thirteen);
-	fourteen = fifteen + 1; }
-one = 5;
-two = one;
-call Third;
-three = two + 2;
-four = 1;
-call Second;
-one = two + one + three + five +5; 
-while eight {
-	one = three + 3 + 2+two;
-	four = four + 7;
-	if eight then{
-		ten = five + 10; } 
-	else {
-		three = one + 1; 
-		while three {
-			two = three + one * ten - two;
-			if eight then {
-				if five then {
-					eleven = five + 1;
-					twelve = thirteen * five * five;
-					while ten {
-						call Second;
-					}
-					fourteen = 2 * thirteen * five - seven + eight;
-				}
-				else{
-					twelve = nine * ten;
-					fifteen = 2 * nine + ten;
-				}
-	        }
-			else{
-				three = one + 3 * ( two - nine);     
-			}
-		}
-		while two{
-			ten = five - 500;
-			nine = two + three * ( three * three - ( three + three ) );
-		}
-		six = fourteen * 3;       	
-		one = one + two + three; 
-    }
-	one = one + two + three + seven * five; 
-	while eight {
-	 	eight = eight + 1 * five * fifteen; 
-    }
-}
-one = one + sixteen ;
-}
-
-procedure Second {
-	thirteen = 2;
-	eleven = twelve - thirteen;
-	while one {
-		call Third;
-	}
-	if two then {
-		one = two + three * ten;
-	}
-	else {
-		call Third;
-		one = two;
-		while three {
-			one = two;
-		}
-	}
-}
-
-procedure Third {
-	if seven then {
-		fifteen = sixteen - six + six;} 
-	else {
-		seven = three * ten; }
+procedure one { a = a + b;
+	while a {
+		a = a + b;
+		while b {
+			b = c + d + e;
+			while c {
+				call two;}}}
+	call two;
+	a = x - 11;
+	call two;
+	while b {
+		call two;
+		while a {
+			if c then {
+				c = d;
+				call three;
+			} else {a = 0 + b - d;}}}
+	while a {
+		if a then {
+			d = b + c + d + e;
+			while c {
+			c = d + 10 - e + a;}
+		} else {call three;}}
+	a = 3 * c * d;
+	e = 11;
+	if a then{
+		call three;
+		a = 3 * y * 3 * a;
+		if b then {
+			two = x * y;
+			call two;
+			two = x - y;
+			call two;
+		} else { d = a * x - a + a;
+			one = a * b * c - e;
+			a = b + 11 + c - one;}
+		x = y - 3 + x;
+	} else {call four;}}
+procedure two { a = a * b - c;
+	if x then {
+		while a {
+			call three;
+			while one {
+				one = three + x * c + 1;
+				two = one - x + three * 1;}}
+		call three;
+	} else { while true {
+			if x then {	
+				x = true + false * bool;
+			} else { x = true * false + bool;}
+			call four;
+			while true {
+				call three;}}}}
+procedure three { while true {
+		x = 0 - 0 - 0 - 0;
+		y = x - 3 * y - 3;
+		if false then {
+			while bool {
+				d = e - 11 + 2 + true;
+			} call four;
+		} else { call four;
+			e = x - y - w + z;
+			x = x * x * 11 + y;
+			while z {
+				call four;
+			z = 3 - c + z - 9;}}}
+	true = false * x - bool * 11;
+	if bool then {
+		if false then {
+			bool = a + c * x * d;
+			x = 3 * 11 + 12 * 13;
+			if true then {
+				call four;
+				c = 3 + d + e * four;
+			} else {y = 10 - 3 * x;}
+		} else {while four {
+				call four;}}
+	} else {while one {
+			if x then {
+				x = 3 * x - 11 - a;
+			} else {four = five - four - 0;}}}}
+procedure four { spa = source + query * pkb - evaluator;
+	spa = source + query + pkb * evaluator;
+	while spa {
+		x = x + query - query * source;
+		if x then {
+			while source {
+				c = e + 3 + d * four;}
+			c = 3 + d + e * four;
+			if y then {
+				x = 3 * x - 11 - a;
+				x = 3 * x - 11 - a;
+			} else {x = x * x * 11;}
+			one = two + three + four;
+			while query {
+				one = 1;}
+		} else { if z then {
+			one = one * one;
+			} else {query = spa;}}}
+	spa = source + query - pkb - evaluator;
 }

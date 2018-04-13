@@ -1,0 +1,74 @@
+procedure proc1 {
+	a = (b + c) * d * 5;
+	b = a * d + 3 * c;
+	call proc2;
+	while c {
+		d = c * c + c;
+		if b then {
+			e = f + g - h;
+			while f {
+				g = h * (a - d);
+			}	
+		}
+		else {
+			e = f - g - h;
+			
+			while f {
+				g = h * (b - a);
+			}
+			call proc3;
+		}
+		while a {
+			b = (c + d) * 2;
+			c = (d - e) * 69;
+			d = e * f;
+			f = (a + e) * 55;	
+			if a then {
+				b = c * a * (d + e);
+				while b {
+					c = d * e;
+				}
+			}
+			else {
+				b = (c - a) * (h + g);
+			}
+		}
+	}
+}
+
+procedure proc2 {
+	what = (how + why) * 9001;
+	how = (why - what) * 69;
+	why = how * what;
+	while how {
+		if why then {
+			call proc3;
+		}
+		else {
+			how = (how + how) * (why + why) * (what + what);
+		}
+	}
+}
+
+procedure proc3 {
+	mouse = (keyboard - button) * speakers;
+	ram = cpu - gpu;
+	if mouse then {
+		if keyboard then {
+			if speakers then {
+				while ram {
+					cpu = money * (parts + gpu);
+				}
+			}
+			else {
+				keyboard = parts - (money - gpu);
+			}
+		}
+		else {
+			mouse = (money - cpu) * gpu;
+		}
+	}
+	else {
+		iranoutofnames = mouse * (keyboard + gpu) * cpu;
+	}
+}

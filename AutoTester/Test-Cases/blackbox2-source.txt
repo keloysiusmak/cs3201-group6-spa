@@ -1,0 +1,133 @@
+procedure First {
+    k = 30;
+    h = j;
+    a = o + p - y + t - v;
+    y = 23 * a * r - m * 28;
+    g = t * k;
+    while a {
+        r = f * e + 6 + w * e;
+        while a {
+            x = s;
+            y = c * g;
+            call Second;
+        }
+        call Second;
+        b = d * c * f * m;
+        p = x - a - t * a * h;
+        e = s - p;
+        f = r + l * q;
+        while a {
+            g = 28 - h + z * o;
+        }
+        h = 13;
+    }
+    e = s - e - s * l - m - u;
+}
+procedure Second {
+    if a then {
+        s = h - r - u - z;
+        a = t - j - d;
+        while a {
+            while a {
+                if a then {
+                    i = h;
+                    while a {
+                        a = l * j;
+                        if a then {
+                            h = j + d * l - d;
+                            while a {
+                                s = q * 16 - j - e;
+                                r = z - a + v * 23 - i;
+                                i = p - n * y + n - u * c;
+                                k = m - p * e * n;
+                                p = n;
+                                q = u - h - k;
+                                d = b * r - x * d + x * m;
+                                r = h + z * p;
+                                w = 28;
+                                a = k - y * g * h;
+                                z = e - e * o - o + j + x;
+                                k = 26;
+                            }
+                            q = i;
+                            d = a - u * s * p;
+                            h = v * s + k + k;
+                            b = l * j - p;
+                            y = p - e + 23 + u + n;
+                            v = t * p * y * n + v;
+                            t = o + w;
+                            n = x * 3 - n + n - 3 * e;
+                            z = a;
+                        }
+                        else {
+                            u = p - a * 26 - l;
+                            h = p * d + i * y * f;
+                            x = p - b * a + q;
+                        }
+                        a = 4 + e - y + g * i;
+                        r = p + e * r;
+                        u = 29 - m + 25;
+                        a = p - t * g;
+                        n = r;
+                        b = l;
+                        p = m + n * v - p;
+                        h = t;
+                        n = p - i - x * g - x * d;
+                    }
+                    n = p * b;
+                    u = v * d + b * v - f + v;
+                    t = 6 * g - w + p + b * 10;
+                    e = t + 16 + r;
+                    w = w + 24;
+                    j = s * d - x * u + s + s;
+                    f = n + x * n - n;
+                    d = l * l - k * r - r;
+                }
+                else {
+                    b = q * 6 + x - w - s * f;
+                    s = q * e - f;
+                    c = c - t + o;
+                    v = n;
+                    e = m * n;
+                    d = m - p + s;
+                    m = y + f * u * e - t;
+                    l = x * j;
+                    p = 11 + w + e * w - i;
+                    i = h * y * q - r * e;
+                    v = g;
+                    f = s + c - j - s - w + z;
+                    u = g - 20;
+                }
+                d = 12 * d;
+                y = w - n * x - w;
+                n = b + s + e + g - y;
+                l = e * 23 + r - a + f;
+                e = 12 * h - a + f;
+            }
+            e = d - m * k;
+            h = u * u - g - e;
+            p = 8 * g - m - q - k;
+            u = v * h;
+            v = a * z - a - e;
+        }
+        e = h;
+        h = n + s * k + e + g;
+        r = j - o + o + 27 - q;
+        u = b * t - k + n * u;
+        k = 5 * x - o + c * 20;
+        t = 1 + c + s;
+        s = j - e - i * r;
+        j = w * n * j - d;
+        d = v + u - h * s + v;
+        m = n * t + u * 10 + g + 24;
+    }
+    else {
+        k = k - e;
+        o = b + i * 6 + c - n * m;
+        b = p - y - 3;
+        h = p - c * q - l;
+        i = d - 2 + n + 27 - 10 - 24;
+        u = m * f - f - m + f;
+        u = j;
+    }
+}

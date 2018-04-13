@@ -1,0 +1,740 @@
+1 - all statements
+stmt s;
+Select s
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+5000
+2 - all assign statements, IDENT format
+assign a1;
+Select a1
+1, 2, 3, 5, 7, 8, 9, 10
+5000
+3 - all while statements, IDENT format
+while w#2;
+Select w#2
+4, 6
+5000
+4 - all variables
+variable v;
+Select v
+d, end, one, two, z
+5000
+5 - all constants
+constant c;
+Select c
+1, 6
+5000
+6 - all program lines
+prog_line l;
+Select l;
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+5000
+7 - modifiesS synonym and synonym, stmt, prog_line used as stmt arg, select v, true
+prog_line n; variable v;
+Select v such that Modifies(n, v)
+d, end, one, two, z
+5000
+8- modifiesS synonym and synonym, stmt, select s, true (cannot be false)
+stmt s; variable v;
+Select s such that Modifies(s, v)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+5000
+9 - modifiesS synonym and synonym, while stmt, true (can test false + select w later on - no while stmts)
+while w; variable v;
+Select v such that Modifies(w, v)
+one, two, z
+5000
+10 - modifiesS synonym and synonym, assign stmt, select a, true (can't be false)
+assign a; variable v;
+Select a such that Modifies(a, v)
+1, 2, 3, 5, 7, 8, 9, 10
+5000
+11 - modifiesS synonym and synonym, assign stmt, select v, true (can't be false)
+assign a; variable v;
+Select v such that Modifies(a, v)
+d, end, one, two, z
+5000
+12 - modifiesS synonym and _, assign stmt, true (can't be false, add stmt s + while later on)
+assign a;
+Select a such that Modifies(a, _)
+1, 2, 3, 5, 7, 8, 9, 10
+5000
+13 - modifiesS synonym and IDENT, while stmt, true (tests nested while modifies)(can test false in other source - no while stmts)
+while w;
+Select w such that Modifies(w, "two")
+4, 6
+5000
+14 - modifiesS synonym and IDENT, stmt, true (can only be false if IDENT var doesn't exist?)
+stmt s;
+Select s such that Modifies(s, "one")
+1, 4, 5
+5000
+15 - modifiesS synonym and IDENT, stmt, false (IDENT var doesn't exist)
+stmt s;
+Select s such that Modifies(s, "blank")
+none
+5000
+16 - modifiesS synonym and IDENT, assign a, true (can only be false if IDENT var doesn't exist?)
+assign a;
+Select a such that Modifies(a, "z")
+3, 8
+5000
+17 - modifiesS INTEGER and synonym, true (tests nested while modifies)(can't be false)
+variable v;
+Select v such that Modifies(4, v)
+one, two, z
+5000
+18 - modifiesS INTEGER and _, all unused declarations, boolean, false (stmt doesn't exist)
+stmt s, s1; variable v, v1;
+Select BOOLEAN such that Modifies(15, _)
+False
+5000
+19 - modifiesS INTEGER and _, some unused declarations, diff select synonym, true
+constant c; while w; variable v;
+Select c such that Modifies(9, _)
+1, 6
+5000
+20 - modifiesS INTEGER and IDENT, all unused declarations, boolean, true (tests nested while modifies)
+constant c; assign a; while w;
+Select BOOLEAN such that Modifies(4, "z")
+True
+5000
+21 - modifiesS INTEGER and IDENT, some unused declarations, diff select synonym, false
+assign a; stmt s, s1;
+Select s such that Modifies(3, "d")
+none
+5000
+22 - usesS synonym and synonym, assign stmt, some unused declarations, select a, true (can test false in other source (all a = const))
+assign a; variable x, v;
+Select a such that Uses(a, v)
+2, 3, 5, 7, 8, 9, 10
+5000
+23 - usesS synonym and synonym, assign stmt, select v, true
+assign a; variable v;
+Select v such that Uses(a, v)
+d, one, two, z
+5000
+24 - usesS synonym and synonym, while stmt, true (can't be false)
+while w; variable v;
+Select v such that Uses(w, v)
+one, two, z
+5000
+25 - usesS synonym and synonym, stmt, true (can test selct v in other source, for both assign stmt and stmt s - used in while but not in assign)
+stmt s; variable v;
+Select s such that Uses(s, v)
+2, 3, 4, 5, 6, 7, 8, 9, 10
+5000
+26 - usesS synonym and _, while stmt, true (can't be false)
+while w;
+Select w such that Uses(w, _)
+4, 6
+5000
+27 - usesS synonym and IDENT, stmt, true
+stmt s;
+Select s such that Uses(s, "one")
+2, 3, 4, 5, 6, 7
+5000
+28 - usesS synonym and IDENT, stmt, true (tests var used in while condition and not container)
+stmt s;
+Select s such that Uses(s, "z")
+4, 9
+5000
+29 - usesS synonym and IDENT, stmt, true (tests var used in while container and not condition) (tests nested while uses)
+stmt s;
+Select s such that Uses(s, "two")
+3, 4, 6, 8, 9
+5000
+30 - usesS synonym and IDENT, stmt, false
+stmt s;
+Select s such that Uses(s, "end")
+none
+5000
+31 - usesS synonym and IDENT, assign stmt, true
+assign a;
+Select a such that Uses(a, "one")
+2, 3, 5, 7
+5000
+32 - usesS synonym and IDENT, assign stmt, false (IDENT var doesn't exist)
+assign a;
+Select a such that Uses(a, "bluff")
+none
+5000
+33 - usesS synonym and IDENT, while stmt, true
+while w;
+Select w such that Uses(w, "z")
+4
+5000
+34 - usesS synonym and IDENT, while stmt, false
+while w;
+Select w such that Uses(w, "d")
+none
+5000
+35 - usesS synonym and IDENT, prog_line as stmt arg, true
+prog_line n;
+Select n such that Uses(n, "two")
+3, 4, 6, 8, 9
+5000
+36 - usesS INTEGER and synonym, true
+variable v;
+Select v such that Uses(9, v)
+two, z
+5000
+37 - usesS INTEGER and synonym, false
+variable v;
+Select v such that Uses(1, v)
+none
+5000
+38 - usesS INTEGER and _, all unused declarations, boolean, true (18)
+prog_line n, n1;
+Select BOOLEAN such that Uses(5, _)
+True
+5000
+39 - usesS INTEGER and _, some unused declarations, diff select synonym, false (19)
+constant c, c1; while w;
+Select w such that Uses(1, _)
+none
+5000
+40 - usesS INTEGER and IDENT, all unused declarations, boolean, false (stmt doesn't exist) (20)
+assign a; constant c, s, e;
+Select BOOLEAN such that Uses(0, "two")
+False
+5000
+41 - usesS INTEGER and IDENT, some unused declarations, diff select synonym, true (21)
+constant r, p1; while w;
+Select w such that Uses(10, "d")
+4, 6
+5000
+42 - parent synonym and synonym, stmt, select s1, true (can test false in other source - no container stmt)
+stmt s1, s2;
+Select s1 such that Parent(s1, s2)
+4, 6
+5000
+43 - parent synonym and synonym, stmt, select s2, true
+stmt s1, s2;
+Select s2 such that Parent(s1, s2)
+5, 6, 7, 8
+5000
+44 - parent synonym and synonym, w a, select a, true
+while w; assign a;
+Select a such that Parent(w, a)
+5, 7, 8
+5000
+45 - parent synonym and synonym, assign stmt, select a1, false (can't be true)
+assign a1, a2;
+Select a1 such that Parent(a1, a2)
+none
+5000
+46 - parent synonym and synonym, assign stmt, select a2, false (can't be true)
+assign a1, a2;
+Select a2 such that Parent(a1, a2)
+none
+5000
+47 - parent synonym and synonym, while stmt, select w1, true (tests while parent while) (can test false in other source - no nested whiles)
+while w1, w2;
+Select w1 such that Parent(w1, w2)
+4
+5000
+48 - parent synonym and synonym, while stmt, select w2, true (tests while parent while) (can test false in other source - no nested whiles)
+while w1, w2;
+Select w2 such that Parent(w1, w2)
+6
+5000
+49 - parent synonym and _, while stmt, true (can test false in other source - no while stmt)
+while w;
+Select w such that Parent(w, _)
+4, 6
+5000
+50 - parent synonym and _, assign stmt, false (can't be true)
+assign a;
+Select a such that Parent(a, _)
+none
+5000
+51 - parent synonym and INTEGER, stmt, true
+stmt s;
+Select s such that Parent(s, 8)
+6
+5000
+52 - parent synonym and INTEGER, while stmt, true
+while w;
+Select w such that Parent(w, 5)
+4
+5000
+53 - parent synonym and INTEGER, stmt, false
+stmt s;
+Select s such that Parent(s, 2)
+none
+5000
+54 - parent synonym and INTEGER, while stmt, false
+while w;
+Select w such that Parent(w, 9)
+none
+5000
+55 - parent _ and synonym, stmt, true (can test false in other source - no container stmts)
+stmt s;
+Select s such that Parent(_, s)
+5, 6, 7, 8
+5000
+56 - parent _ and synonym, while stmt, true (can test false in other source - no nested whiles)
+while w;
+Select w such that Parent(_, w)
+6
+5000
+57 - parent _ and synonym, assign stmt, true (can test false in other source - no container stmts)
+assign a;
+Select a such that Parent(_, a)
+5, 7, 8
+5000
+58 - parent _ and _, some unused declarations, diff select synonym, true (can test false in other source - no container stmts)
+prog_line n, n1; constant c, cc, c1, c2;
+Select c1 such that Parent(_, _)
+1, 6
+5000
+59 - parent _ and _, all unused declarations, boolean, true (can test false in other source - no container stmts)
+stmt s, v; while w3;
+Select BOOLEAN such that Parent(_, _)
+True
+5000
+60 - parent _ and INTEGER, some unused declarations, diff select synonym, true
+variable v; stmt s; prog_line n;
+Select n such that Parent(_, 8)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+5000
+61 - parent _ and INTEGER, all unused declarations, boolean, false
+prog_line n, n1;
+Select BOOLEAN such that Parent(_, 3)
+False
+5000
+62 - parent INTEGER and _, all unused declarations, boolean, true
+while w; assign a, b, c, d; prog_line n;
+Select BOOLEAN such that Parent(4, _)
+True
+5000
+63 - parent INTEGER and _, some unused declarations, diff select synonym, false
+prog_line n, n1; assign a;
+Select n1 such that Parent(5, _)
+none
+5000
+64 - parent INTEGER and synonym, stmt, true
+stmt s;
+Select s such that Parent(4, s)
+5, 6
+5000
+65 - parent INTEGER and synonym, while stmt, true
+while w;
+Select w such that Parent(4, w)
+6
+5000
+66 - parent INTEGER and synonym, assign stmt, true
+assign a;
+Select a such that Parent(4, a)
+5
+5000
+67 - parent INTEGER and synonym, stmt, false
+stmt s;
+Select s such that Parent(1, s)
+none
+5000
+68 - parent INTEGER and synonym, while stmt, false
+while w;
+Select w such that Parent(6, w)
+none
+5000
+69 - parent INTEGER and synonym, assign stmt, false
+assign a;
+Select a such that Parent(9, a)
+none
+5000
+70 - parent INTEGER and INTEGER, all unused decalarations, boolean, true
+prog_line n, t; constant c;
+Select BOOLEAN such that Parent(6, 8)
+True
+5000
+71 - parent INTEGER and INTEGER, all unused declarations, boolean, false
+variable v, f; stmt x, y, z;
+Select BOOLEAN such that Parent(8, 9)
+False
+5000
+72 - parent INTEGER and INTEGER, some unused declarations, diff select synonym, true (tests while parent while) (T, nested?)
+assign a, z, c, b; while k;
+Select b such that Parent(4, 6)
+1, 2, 3, 5, 7, 8, 9, 10
+5000
+73 - parent INTEGER and INTEGER, some unused declarations, diff select synonym, false
+assign y; constant r, c;
+Select r such that Parent(1, 2)
+none
+5000
+74 - parentT synonym and synonym, stmt, select s1, true (can test false in other source - no container stmt)
+stmt s1, s2;
+Select s1 such that Parent*(s1, s2)
+4, 6
+5000
+75 - parentT synonym and synonym, stmt, select s2, true
+stmt s1, s2;
+Select s2 such that Parent*(s1, s2)
+5, 6, 7, 8
+5000
+76 - parentT synonym and synonym, assign stmt, select a1, false (can't be true)
+assign a1, a2;
+Select a1 such that Parent*(a1, a2)
+none
+5000
+77 - parentT synonym and synonym, assign stmt, select a2, false (can't be true)
+assign a1, a2;
+Select a2 such that Parent*(a1, a2)
+none
+5000
+78 - parentT synonym and synonym, while stmt, select w1, true (tests while parent while) (can test false in other source - no nested whiles)
+while w1, w2;
+Select w1 such that Parent*(w1, w2)
+4
+5000
+79 - parentT synonym and synonym, while stmt, select w2, true (tests while parent while) (can test false/more w2 in other sources - no nested whiles)
+while w1, w2;
+Select w2 such that Parent*(w1, w2)
+6
+5000
+80 - parentT synonym and _, while stmt, true (can test false in other source - no while stmt)
+while w;
+Select w such that Parent*(w, _)
+4, 6
+5000
+81 - parentT synonym and _, assign stmt, false (can't be true)
+assign a;
+Select a such that Parent*(a, _)
+none
+5000
+82 - parentT synonym and INTEGER, stmt, true (tests while parentT s)
+stmt s;
+Select s such that Parent*(s, 8)
+4, 6
+5000
+83 - parentT synonym and INTEGER, while stmt, true (tests while parentT s)
+while w;
+Select w such that Parent*(w, 7)
+4, 6
+5000
+84 - parentT synonym and INTEGER, stmt, false
+stmt s;
+Select s such that Parent*(s, 2)
+none
+5000
+85 - parentT synonym and INTEGER, while stmt, false
+while w;
+Select w such that Parent*(w, 9)
+none
+5000
+86 - parentT _ and synonym, stmt, true (can test false in other source - no container stmts)
+stmt s;
+Select s such that Parent*(_, s)
+5, 6, 7, 8
+5000
+87 - parentT _ and synonym, while stmt, true (can test false/more w in other sources - no nested whiles)
+while w;
+Select w such that Parent*(_, w)
+6
+5000
+88 - parentT _ and synonym, assign stmt, true (can test false in other source - no container stmts)
+assign a;
+Select a such that Parent*(_, a)
+5, 7, 8
+5000
+89 - parentT _ and _, some unused declarations, diff select synonym, true (can test false in other source - no container stmts)
+prog_line n, n1; constant c, cc, c1, c2;
+Select c1 such that Parent*(_, _)
+1, 6
+5000
+90 - parentT _ and _, all unused declarations, boolean, true (can test false in other source - no container stmts)
+stmt s, v; while w3;
+Select BOOLEAN such that Parent*(_, _)
+True
+5000
+91 - parentT _ and INTEGER, some unused declarations, diff select synonym, true
+variable v; stmt s; prog_line n;
+Select n such that Parent*(_, 8)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+5000
+92 - parentT _ and INTEGER, all unused declarations, boolean, false
+prog_line n, n1;
+Select BOOLEAN such that Parent*(_, 3)
+False
+5000
+93 - parentT INTEGER and _, all unused declarations, boolean, true
+while w; assign a, b, c, d; prog_line n;
+Select BOOLEAN such that Parent*(4, _)
+True
+5000
+94 - parentT INTEGER and _, some unused declarations, diff select synonym, false
+prog_line n, n1; assign a;
+Select n1 such that Parent*(5, _)
+none
+5000
+95 - parentT INTEGER and synonym, stmt, true (tests while parentT s)
+stmt s;
+Select s such that Parent*(4, s)
+5, 6, 7, 8
+5000
+96 - parentT INTEGER and synonym, while stmt, true (can test more w in other source)
+while w;
+Select w such that Parent*(4, w)
+6
+5000
+97 - parentT INTEGER and synonym, assign stmt, true (tests while parentT a) (can test more nested in other source)
+assign a;
+Select a such that Parent*(4, a)
+5, 7, 8
+5000
+98 - parentT INTEGER and synonym, stmt, false
+stmt s;
+Select s such that Parent*(1, s)
+none
+5000
+99 - parentT INTEGER and synonym, while stmt, false
+while w;
+Select w such that Parent*(6, w)
+none
+5000
+100 - parentT INTEGER and synonym, assign stmt, false
+assign a;
+Select a such that Parent*(9, a)
+none
+5000
+101 - parentT INTEGER and INTEGER, all unused decalarations, boolean, true (tests while parentT a)
+prog_line n, t; constant c;
+Select BOOLEAN such that Parent*(4, 8)
+True
+5000
+102 - parentT INTEGER and INTEGER, all unused declarations, boolean, false
+variable v, f; stmt x, y, z;
+Select BOOLEAN such that Parent*(8, 9)
+False
+5000
+103 - parentT INTEGER and INTEGER, some unused declarations, diff select synonym, true (tests while parent while) (T, nested?)
+assign a, z, c, b; while k;
+Select b such that Parent*(4, 6)
+1, 2, 3, 5, 7, 8, 9, 10
+5000
+104 - parentT INTEGER and INTEGER, some unused declarations, diff select synonym, false
+assign y; constant r, c;
+Select r such that Parent*(1, 2)
+none
+5000
+105 - follows synonym and synonym, a w, select a, true
+assign a; while w;
+Select a such that Follows(a, w)
+5
+5000
+106 - follows synonym and _, while stmt, true
+while w;
+Select w such that Follows(w, _)
+4
+5000
+107 - follows synonym and _, assign stmt, true
+assign a;
+Select a such that Follows(a, _)
+1, 2, 3, 5, 7, 9
+5000
+108 - follows synonym and INTEGER, stmt, true
+stmt s;
+Select s such that Follows(s, 10)
+9
+5000
+109 - follows synonym and INTEGER, while stmt, false
+while w;
+Select w such that Follows(w, 10)
+none
+5000
+110 - follows _ and synonym, while stmt, true
+while w;
+Select w such that Follows(_, w)
+3, 5
+5000
+111 - follows _ and synonym, assign stmt, true
+assign a;
+Select a such that Follows(_, a)
+2, 3, 8, 9, 10
+5000
+112 - follows _ and INTEGER, all unused declarations, boolean, false
+assign a, b, c;
+Select BOOLEAN such that Follows(_, 1)
+False
+5000
+113 - follows INTEGER and INTEGER, all unused declarations, boolean, true
+constant c; variable v, b;
+Select BOOLEAN such that Follows(1, 2)
+True
+5000
+114 - follows INTEGER and INTEGER, all unused declarations, boolean, false
+stmt s, t, u, v; while r;
+Select BOOLEAN such that Follows(1, 3)
+False
+5000
+115 - follows INTEGER and synonym, while stmt, true
+while w;
+Select w such that Follows(5, w)
+6
+5000
+116 - follows INTEGER and synonym, stmt, false
+stmt s;
+Select s such that Follows(10, s)
+none
+5000
+117 - follows INTEGER and _, all unused declarations, boolean, false
+variable v, c, b;
+Select BOOLEAN such that Follows(6, _)
+False
+5000
+118 - followsT synonym and synonym, a w, select a, true
+assign a; while w;
+Select a such that Follows*(a, w)
+1, 2, 3, 5
+5000
+119 - followsT synonym and synonym, w a, select a, true
+while w; assign a;
+Select a such that Follows*(w, a)
+9, 10
+5000
+120 - followsT synonym and INTEGER, assign stmt, true (tests a followsT a)
+assign a;
+Select a such that Follows*(a, 9)
+1, 2, 3
+5000
+121 - followsT synonym and INTEGER, while stmt, false
+while w;
+Select w such that Follows*(w, 8)
+none
+5000
+122 - followsT _ and INTEGER, all unused declarations, boolean, false
+constant c;
+Select BOOLEAN such that Follows*(_, 7)
+False
+5000
+123 - followsT INTEGER and INTEGER, all unused declarations, boolean, true
+constant c;
+Select BOOLEAN such that Follows*(2, 9)
+True
+5000
+124 - followsT INTEGER and INTEGER, all unused declarations, boolean, false
+variable v;
+Select BOOLEAN such that Follows*(5, 8)
+False
+5000
+125 - followsT INTEGER and synonym, while stmt, true
+while w;
+Select w such that Follows*(2, w)
+4
+5000
+126 - followsT INTEGER and synonym, assign stmt, true
+assign a;
+Select w such that Follows*(2, a)
+3, 9, 10
+5000
+127 - followsT INTEGER and synonym, assign stmt, false
+assign w;
+Select a such that Follows*(5, a)
+none
+5000
+128 - followsT INTEGER and synonym, while stmt, false
+while w;
+Select w such that Follows*(4, w)
+none
+5000
+129 - pattern synonym and _, all unused declarations, boolean, true
+while z;
+Select BOOLEAN pattern a(v, _)
+True
+5000
+130 - pattern IDENT and factor, select diff synonym, true
+assign a#; constant c;
+Select c pattern a#("one", _"1"_)
+1, 6
+5000
+131 - pattern IDENT and factor, select a, true
+assign a;
+Select a pattern a("two", _"one"_)
+2, 7
+5000
+132 - pattern IDENT and factor, select a1, true
+assign a1;
+Select a1 pattern a1(_, _"two"_)
+3, 8, 9
+5000
+133 - pattern synonym and factor, select v, true
+assign a; variable v;
+Select v pattern a(v, _"one"_)
+one, two
+5000
+134 - pattern synonym and factor, select diff synonym, true (so far the only select diff synonym with synonym in clause)
+assign a; variable v; while w;
+Select w pattern a(v, _"two"_)
+4, 6
+5000
+135 - pattern IDENT and factor, select a, false
+assign a;
+Select a pattern a("z", _"end"_)
+none
+5000
+136 - pattern _ and factor, select diff synonym, false
+assign a; variable v;
+Select v pattern a(_, _"2"_)
+none
+5000
+137 - pattern IDENT and factor, boolean, false
+assign a;
+Select BOOLEAN pattern a("end", _"dd"_)
+False
+5000
+138 - pattern synonym and factor, select v, false
+variable v; assign a;
+Select v pattern a(v, _"3"_)
+none
+5000
+139 - modifiesS true (9) and pattern true (130)
+while w; variable v;
+Select v such that Modifies(w, v) pattern a(v, _"one"_)
+one, two
+5000
+140 - modifiesS true (16) and pattern true (129)
+assign a;
+Select a such that Modifies(a, "z") pattern a(_, _"two"_)
+3, 8
+5000
+141 - usesS false (30) and pattern true (128)
+stmt s; assign a;
+Select s such that Uses(s, "end") pattern a("two", _"one"_)
+none
+5000
+142 - usesS true (41) and pattern false (131)
+assign a;
+Select a such that Uses(10, "d") pattern a(v, _"two"_)
+none
+5000
+143 - parent false (73) and pattern false (132), diff select synonym
+assign a; constant r, c;
+Select r such that Parent(1, 2) pattern a("z", _"end"_)
+none
+5000
+144 - parent true (64) and pattern true (126), diff select synonym
+stmt s; constant c;
+Select c such that Parent(4, s) pattern a(v, _)
+1, 6
+5000
+145 - parentT true (88) and pattern true (129)
+assign a;
+Select a such that Parent*(_, a) pattern a(_, _"two"_)
+8
+5000
+146 - follows false (114) and pattern true (127), boolean
+stmt s, t, u, v; while r; assign a;
+Select BOOLEAN such that Follows(1, 3) pattern a("one", _"1"_)
+False
+5000
+147 - follows true (111) and pattern true (129)
+assign a;
+Select a such that Follows(_, a) pattern a(_, _"two"_)
+3, 8, 9
+5000
+148 - followsT true (123) and pattern false (138), diff select synonym
+constant c; assign a; variable v;
+Select BOOLEAN such that Follows*(2, 9) pattern a(v, _"3"_)
+none
+5000

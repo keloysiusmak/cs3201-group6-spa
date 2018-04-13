@@ -1,0 +1,158 @@
+procedure One {
+	x = a + b + c;					//1
+	while a {						//2
+		while b {					//3
+			if c then {				//4
+				a = a;				//5
+			} else {
+				call Two;			//6
+			}
+			Two = Three;			//7
+			call Three;				//8
+			while c {				//9
+				if First then {		//10
+					yolo = yodo;	//11
+					while a {					//12
+						yolo = yoho;			//13
+						yolo = yomo;			//14
+						while c {				//15
+							yolo = yogo;		//16
+							while One {			//17
+								One = 1 + 1;	//18
+							}
+							yolo = yofo;		//19
+						}
+					}
+				} else {
+					call Two;	//20
+				}
+			}
+		}
+		
+		yolo = forever;				//21
+		forever = never;			//22
+
+		if x then {					//23
+			while y {				//24
+				j = j + j - j * j;	//25
+				j = j - j + j * j;	//26
+				j = j * j - j + j;	//27
+				j = j * j + j - j;	//28
+				j = j + j * j - j;	//29
+				j = j - j * j + j;	//30
+			}
+
+			if a then {				//31
+				call Two;			//32
+				call Three;			//33
+				call Four;			//34
+			} else {
+				while j {			//35
+					call Two;		//36
+				}
+			}
+		} else {
+			while z {				//37
+				yahoo = yoohoo;		//38
+			}
+		}
+	}
+
+	yolo = x * y * z;				//39
+	yoho = x + y + z;				//40
+}
+
+procedure Two {
+	while a {						//41
+		while b {					//42
+			while c {				//43
+				while x {			//44
+					while y {		//45
+						z = 0;		//46
+					}
+				}
+			}
+			if Four then {				//47
+				Five = Four + Three;	//48
+			} else {			
+				One = One;				//49
+			}
+		}
+	}
+}
+
+procedure Three {
+	if a then {							//50
+		if b then {						//51
+			if c then {					//52
+				x = 0;					//53
+			} else {
+				y = 0;					//54
+			}
+		} else {
+			call Four;					//55
+		}
+	} else {
+		a = b + c + d * x + y + z * 0;	//56
+	}
+}
+
+procedure Four {	
+	if a then {							//57
+		while b {						//58
+			if c then {					//59
+				while x {				//60
+					call Two;			//61
+					a = x;				//62
+					a = b;				//63
+				}
+			} else {
+				b = x;					//64
+			}
+		}
+	} else {
+		x = x * y + x;					//65
+		call Two;						//66
+		call Two;						//67
+		x = x * y + x;					//68
+		while x {						//69
+			call Two;					//70
+		}
+		yolo = y;						//71
+		y = yolo;						//72
+		y = yolo;						//73
+		if y then {						//74
+			hello = 5 + 1 + x;			//75
+		} else {	
+			call Two;					//76
+		}
+	}
+}
+
+procedure Five {
+	call One;				//77
+	call Two;				//78
+	call Three;				//79
+	call Four;				//80
+	while a {				//81
+		call One;			//82
+		call Two;			//83
+		call Three;			//84
+		call Four;			//85
+	}
+	if x then {				//86
+		call One;			//87
+		call Two;			//88
+		call Three;			//89
+		call Four;			//90
+	} else {
+		call One;			//91
+		call One;			//92
+		call Two;			//93
+		call Two;			//94
+		call Three;			//95
+		call Three;			//96
+		call Four;			//97
+		call Four;			//98
+	}
+}

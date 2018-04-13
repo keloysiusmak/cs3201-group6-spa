@@ -1,0 +1,5 @@
+1 - CYCLIC_TEST
+
+Select BOOLEAN
+false
+5000
