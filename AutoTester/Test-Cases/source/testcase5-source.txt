@@ -1,1 +1,1 @@
-procedure a {2a = 1; while c { b = a; d = 7; } if 555 then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { a = 1; }} }
+procedure a { y = x; a = y + 1; while w { c = b; f = f + 1; } if x then { d = f; p = 7; } else { c = d; }}

@@ -1,1 +1,1 @@
-procedure First { y = (x+y)*z; a = x*y*z; while w { x = b; x = f + 1; } if x then { d = f; call Second; } else { call Second; }} procedure Second { while c { while c { x = 5*x+1; x = first*second; x = a*x+1; x = x+y*z; }}}
+procedure a {2a = 1; while c { b = a; d = 7; } if 555 then { while e { c = 4; } } else { d = 1; } e = 1; } procedure b{ a = b; while a { while b { a = 1; }} }
