@@ -63,7 +63,7 @@ void EvaluatorHelper::mergeWithoutOverlap(ClauseResults &clauseResults, Intermed
 	addClauseParamToTable(clauseResults, iTable);
 
 	/* Set iTable as hasResults if clauseResults is (concrete, concrete) and true */
-	if (clauseResults.isValid()) iTable.hasResults = true;
+	iTable.hasResults = clauseResults.isValid();
 
 	vector<vector<int>> newTable;
 	if (iTable.resultsTable.size() == 0) { // Table has no values
