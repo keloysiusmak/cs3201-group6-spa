@@ -233,6 +233,12 @@ void DesignExtractor::extractCallsStar(PKB &pkb) {
 			currProcedure++;
 		}
 	}
+	std::vector<std::vector<int>> callsStar = pkb.getAllCallsStar();
+	for (std::vector<int> i : callsStar) {
+		if (i[0] == i[1]) {
+			exit(0);
+		}
+	}
 }
 
 void DesignExtractor::extractUsesModifies(PKB &pkb) {
