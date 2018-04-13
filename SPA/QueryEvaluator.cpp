@@ -1129,9 +1129,9 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 		}
 
 		// Merge directly (No consideration for calls since not in table)
+		withClauseResults.setResults(withResults);
+		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
 		if (withResults.size() > 0) {
-			withClauseResults.setResults(withResults);
-			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
 			return true;
 		}
 		return false;
@@ -1274,17 +1274,7 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 							value = pkb.getProcedureName(procId);
 						}
 					} else { // Get line number
-						if (mergedTable.getParamAttr(currentParam) != PROCNAME) { // Same attr in table*/
-							value = to_string(paramValue);
-						} else { // Calls.procname in table, get calls line number
-							vector<vector<int>> lineNums = pkb.getCallStatementsCallingProcedure(paramValue);
-							for (vector<int> lineNum : lineNums) {
-								value = to_string(lineNum[0]);
-								if (j == selectedParams.size() - 1) tupleRowString << value;
-								else tupleRowString << value << " ";
-							}
-							continue;
-						} 
+						value = to_string(paramValue);
 					}
 				} else { // Default case just convert int to string
 					value = to_string(paramValue);

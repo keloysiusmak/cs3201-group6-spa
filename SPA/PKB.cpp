@@ -2178,7 +2178,7 @@ std::vector<std::vector<int>> PKB::getAllAffects() {
 
 			newNext = PKB::getNextAfter(currStmt);
 			for (int j = 0; j < newNext.size(); j++) {
-				if (!(PKB::checkStatementHasType(currStmt, 2) && PKB::checkStatementHasType(newNext[j][0], 2))) {
+				if (!(PKB::checkStatementHasType(currStmt, 2) && whileStack.size() == 0)) {
 					int initSize = checkedStmts.size();
 					checkedStmts.insert(newNext[j][0]);
 
@@ -2203,6 +2203,20 @@ std::vector<std::vector<int>> PKB::getAllAffects() {
 
 					if (checkedStmts.size() > initSize) {
 						next.push({ newNext[j][0] });
+					}
+					else {
+						if (whileStack.size() > 0) {
+							bool needed = false;
+							std::queue<int> tempNext = next;
+							while (tempNext.size() > 0) {
+								int item = tempNext.front();
+								tempNext.pop();
+								needed = needed || PKB::checkNextStar(item, whileStack.top());
+							}
+							if (!needed) {
+								whileStack.pop();
+							}
+						}
 					}
 				}
 			}
@@ -2357,7 +2371,7 @@ std::vector<std::vector<int>> PKB::getAllAffectsStar() {
 
 			newNext = PKB::getNextAfter(currStmt);
 			for (int j = 0; j < newNext.size(); j++) {
-				if (!(PKB::checkStatementHasType(currStmt, 2) && PKB::checkStatementHasType(newNext[j][0], 2))) {
+				if (!(PKB::checkStatementHasType(currStmt, 2) && whileStack.size() == 0)) {
 					int initSize = checkedStmts.size();
 					checkedStmts.insert(newNext[j][0]);
 
@@ -2382,6 +2396,20 @@ std::vector<std::vector<int>> PKB::getAllAffectsStar() {
 
 					if (checkedStmts.size() > initSize) {
 						next.push({ newNext[j][0] });
+					}
+					else {
+						if (whileStack.size() > 0) {
+							bool needed = false;
+							std::queue<int> tempNext = next;
+							while (tempNext.size() > 0) {
+								int item = tempNext.front();
+								tempNext.pop();
+								needed = needed || PKB::checkNextStar(item, whileStack.top());
+							}
+							if (!needed) {
+								whileStack.pop();
+							}
+						}
 					}
 				}
 			}
