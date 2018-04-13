@@ -1,0 +1,15 @@
+prodecure a {
+	call b;
+}
+
+procedure b {
+	call c;
+}
+
+procedure c {
+	call d;
+}
+
+procedure d {
+	call a;
+}

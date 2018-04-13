@@ -1,0 +1,74 @@
+procedure hihi {
+	car = apple;
+	egg = fish;
+	if xmen then {
+		call test;
+		bot = car;
+	} else {
+		bot = car;
+		dog = egg;
+		egg = dog;
+		xmen = blah + wee;
+	}
+	apple = bot + egg;
+	zip = car + b2;
+	while xmen {
+		fish = apple + zip + car;
+		if xmen then {
+			tomato = tomato;
+			apple = bot + xmen;
+			fish = dog + egg + zip;
+			while apple {
+				xmen = dog;
+				c3 = b2 + fish;
+			}
+		} else {
+			tomato = fish;
+			apple = dog;
+			xmen = new;
+		}
+		wee = apple;
+	}
+	call hey;
+	w = xmen + bot;
+	zip = apple;
+}
+
+procedure test {
+	car = zip;
+	dog = apple;
+	while xmen {
+		egg = apple;
+		if xmen then {
+			choc = dark;
+			dark = hi;
+			hi = wee;
+			wee = choc;
+		} else {
+			dark = throw;
+		}
+	}
+	light = dark;
+	call hey;
+	happy = b2;
+}
+
+procedure hey {
+	a1 = c3;
+	b2 = a1;
+	c3 = b2;
+	if panda then {
+		if panda then {
+			snake = lion;
+		} else {
+			snake = goat;
+		}
+	} else {
+		if panda then {
+			snake = rob;
+		} else {
+			snake = hot;
+		}
+	}
+	lion = snake;
+}

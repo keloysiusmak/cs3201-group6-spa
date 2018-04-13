@@ -1,0 +1,190 @@
+1 - No Declaration
+
+Select s
+
+5000
+2 - a is not declared
+stmt s; 
+Select a
+
+5000
+3 - Space is required in between Select and synonym
+stmt s;
+Selects
+
+5000
+4 - Can pad many spacing in between Select and synonym
+stmt s;
+Select            s
+1,2,3,4,5,6,7,8,9
+5000
+5 - Only single space is allowed in between such that
+stmt s; 
+Select s such         that Follows(1,2)
+
+5000
+6 - Spacing in the stmt declaration is allowed
+stmt        s1       ,             s2;
+Select s1 such that Follows(1,2)
+1,2,3,4,5,6,7,8,9
+5000
+7 - Uppercase declaration is allowed
+stmt S;
+Select S such that Follows(1,2)
+1,2,3,4,5,6,7,8,9
+5000
+8 - Spacing in the Follows* and arguments
+stmt s;
+Select s such that Follows*       (1,2)
+1,2,3,4,5,6,7,8,9
+5000
+9 - Invalid Declaration
+stmt 1;
+Select s such that Follows*(1,2)
+
+5000
+10 - Many declarations
+assign a1, a2, a3, a4, a5, a6;
+Select a1 such that Follows*(1,6)
+1,2,4,5,7,8,9
+5000
+11 - Invalid Left Argument for Modifies
+assign a;
+Select a such that Modifies(_,"c")
+
+5000
+12 - Invalid Right Argument for Modifies
+assign a;
+Select a such that Modifies(4,a)
+
+5000
+13 - Adding space in identity
+assign a;
+Select a such that Modifies(4,"        c      "  )
+1,2,4,5,7,8,9
+5000
+14 - Invalid variable synonym in the left argument
+assign a; variable v;
+Select a such that Uses(v,"c" )
+
+5000
+15 - Adding space in the Uses clause and arguments
+assign a; variable v;
+Select a such that Uses   (     a     ,    v       )
+1,2,4,5,7,9
+5000
+16 - Missing Arguments
+assign a; variable v;
+Select a such that Uses()
+
+5000
+17 - Missing Left Arguments
+assign a; variable v;
+Select a such that Parent(a,)
+
+5000
+18 - Missing Right Arguments
+assign a; variable v;
+Select a such that Parent(,a)
+
+5000
+19 - Invalid variable synonym on the left argument
+assign a; variable v;
+Select a such that Parent(v,a)
+
+5000
+20 - Invalid variable synonym on the right argument
+assign a; variable v;
+Select a such that Parent*(a,v)
+
+5000
+21 - Invalid statement number on the left argument
+assign a; variable v;
+Select a such that Parent*(0,a)
+
+5000
+22 - Invalid statement number on the right argument
+assign a; variable v;
+Select a such that Parent*(a,0)
+
+5000
+23 - Cannot have repeated synonym
+assign a; variable a;
+Select a pattern a(_,_)
+
+5000
+24 - Can have both underscore
+assign a;
+Select a pattern a(_,_)
+1,2,4,5,7,8,9
+5000
+25 - Invalid synonym on the left argument of the pattern assign
+assign a; stmt s;
+Select a pattern a(s,_)
+
+5000
+26 - Without double quotes on the right argument of the pattern assign
+assign a;
+Select a pattern a(_,_7_)
+
+5000
+27 - pattern before such that
+assign a;
+Select a pattern a(_,_"7"_) such that Modifies(a,"p")
+8
+5000
+28 - padding spaces in pattern and Modifies clause
+assign a;
+Select a such that Modifies    (   a  ,"   p  ")   pattern a   (    _   ,_"   7   "_) 
+8
+5000
+29 - pattern missing a pattern type
+assign a;
+Select a such that Follows(a,6)   pattern   ( _   ,_"   7   "_) 
+
+5000
+30 - missing the word pattern
+assign a;
+Select a such that Follows(a,6)    a ( _ ,_"7"_) 
+
+5000
+31 - missing reference relations
+assign a;
+Select a such that (a,6) pattern a ( _ ,_"7"_) 
+
+5000
+32 - Combination of Parent and pattern
+assign a;
+Select a such that Parent*(6,8) pattern a ( _ ,_"f"_) 
+5,7
+5000
+33 - Combination of Uses and pattern
+assign a;
+Select a such that Uses(a,"b") pattern a ( _ ,_"f"_) 
+
+5000
+34 - Combination of Modifies and pattern
+assign a;
+Select a such that Modifies(a,"f") pattern a ( _ ,_"f"_) 
+5
+5000
+35 - Combination of Follows* and pattern
+assign a; prog_line n;
+Select n such that Follows*(3,n) pattern a ( _ ,_"f"_) 
+6
+5000
+36 - Combination of Parent* and pattern
+assign a; prog_line n;
+Select n such that Parent*(6,n) pattern a ( "p" ,_"f"_) 
+
+5000
+37  - wrong number of argument for parent clause
+assign a; prog_line n;
+Select n such that Parent*(6,n,a) pattern a ( "p" ,_"f"_) 
+
+5000
+38  - wrong number of argument for pattern
+assign a; prog_line n;
+Select n such that Parent*(6,n) pattern a ( "p" , _, _"f"_) 
+
+5000

@@ -135,6 +135,14 @@ bool Utils::isSynonym(Param p) {
 	}
 }
 
+std::vector<std::vector<int>> Utils::invertTwoValues(std::vector<std::vector<int>> toInvert) {
+	std::vector<std::vector<int>> output;
+	for (std::vector<int> i : toInvert) {
+		output.push_back({ i[1], i[0] });
+	}
+	return output;
+}
+
 bool Utils::isSameParam(Param a, Param b) {
 	return a.type == b.type && a.value == b.value;
 }

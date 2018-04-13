@@ -1,0 +1,4260 @@
+1 - USES-boolean: fixed-fixed (regular stmt)
+
+Select BOOLEAN such that Uses(26, "how")
+true
+5000
+2 - USES-stmt: fixed-fixed (while stmt)
+stmt s;
+Select s such that Uses(27, "how")
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+3 - USES-boolean: fixed-fixed (within while stmt)
+
+Select BOOLEAN such that Uses(14, "d")
+true
+5000
+4 - USES-boolean: fixed-fixed (if stmt)
+
+Select BOOLEAN such that Uses(34, "keyboard")
+true
+5000
+5 - USES-boolean: fixed-fixed (within if stmt)
+
+Select BOOLEAN such that Uses(33, "gpu")
+true
+5000
+6 - USES-call: fixed-fixed
+call c;
+Select c such that Uses(13, "keyboard")
+3, 13, 29
+5000
+7 - USES-boolean: fixed-fixed (across proc)
+
+Select BOOLEAN such that Uses(3, "mouse")
+true
+5000
+8 - USES-stmt: fixed-fixed (stmt-false)
+stmt s;
+Select s such that Uses(18, "d")
+none
+5000
+9 - USES-boolean: fixed-fixed (proc)
+
+Select BOOLEAN such that Uses("proc2", "how")
+true
+5000
+10 - USES-procedure: fixed-fixed (across proc)
+procedure p;
+Select p such that Uses("proc1", "mouse")
+proc1, proc2, proc3
+5000
+11 - USES-boolean: fixed-fixed (proc-false)
+
+Select BOOLEAN such that Uses("proc3", "f")
+false
+5000
+12 - USES-stmt: syn-syn (tuple)
+stmt s; variable v;
+Select <s,v> such that Uses(s, v)
+1 b, 1 c, 1 d, 2 a, 2 c, 2 d, 3 how, 3 why, 3 what, 3 keyboard, 3 button, 3 speakers, 3 cpu, 3 gpu, 3 ram, 3 money, 3 parts, 3 mouse, 4 a, 4 b, 4 c, 4 d, 4 e, 4 f, 4 g, 4 h, 4 keyboard, 4 button, 4 speakers, 4 cpu, 4 gpu, 4 ram, 4 money, 4 parts, 4 mouse, 5 c, 6 a, 6 b, 6 d, 6 f, 6 g, 6 h, 6 keyboard, 6 button, 6 speakers, 6 cpu, 6 gpu, 6 ram, 6 money, 6 parts, 6 mouse, 7 f, 7 g, 7 h, 8 a, 8 d, 8 f, 8 h, 9 a, 9 d, 9 h, 10 f, 10 g, 10 h, 11 a, 11 b, 11 f, 11 h, 12 a, 12 b, 12 h, 13 keyboard, 13 button, 13 speakers, 13 cpu, 13 gpu, 13 ram, 13 money, 13 parts, 13 mouse, 14 a, 14 b, 14 c, 14 d, 14 e, 14 f, 14 g, 14 h, 15 c, 15 d, 16 d, 16 e, 17 e, 17 f, 18 a, 18 e, 19 a, 19 b, 19 c, 19 d, 19 e, 19 g, 19 h, 20 a, 20 c, 20 d, 20 e, 21 b, 21 d, 21 e, 22 d, 22 e, 23 a, 23 c, 23 g, 23 h, 24 how, 24 why, 25 why, 25 what, 26 how, 26 what, 27 how, 27 why, 27 what, 27 keyboard, 27 button, 27 speakers, 27 cpu, 27 gpu, 27 ram, 27 money, 27 parts, 27 mouse, 28 why, 28 how, 28 what, 28 keyboard, 28 button, 28 speakers, 28 cpu, 28 gpu, 28 ram, 28 money, 28 parts, 28 mouse, 29 keyboard, 29 button, 29 speakers, 29 cpu, 29 gpu, 29 ram, 29 money, 29 parts, 29 mouse, 30 how, 30 why, 30 what, 31 keyboard, 31 button, 31 speakers, 32 cpu, 32 gpu, 33 mouse, 33 keyboard, 33 speakers, 33 ram, 33 money, 33 parts, 33 cpu, 33 gpu, 34 keyboard, 34 speakers, 34 ram, 34 money, 34 parts, 34 gpu, 34 cpu, 35 speakers, 35 ram, 35 money, 35 parts, 35 gpu, 36 ram, 36 money, 36 parts, 36 gpu, 37 money, 37 parts, 37 gpu, 38 parts, 38 money, 38 gpu, 39 money, 39 cpu, 39 gpu, 40 mouse, 40 keyboard, 40 gpu, 40 cpu
+5000
+13 - USES-procedure: syn-syn (tuple)
+procedure p; variable v;
+Select <p,v> such that Uses(p, v)
+proc1 a, proc1 b, proc1 c, proc1 d, proc1 e, proc1 f, proc1 g, proc1 h, proc1 how, proc1 why, proc1 what, proc1 keyboard, proc1 button, proc1 speakers, proc1 cpu, proc1 gpu, proc1 ram, proc1 money, proc1 parts, proc1 mouse, proc2 how, proc2 why, proc2 what, proc2 keyboard, proc2 button, proc2 speakers, proc2 cpu, proc2 gpu, proc2 ram, proc2 money, proc2 parts, proc2 mouse, proc3 keyboard, proc3 button, proc3 speakers, proc3 cpu, proc3 gpu, proc3 ram, proc3 money, proc3 parts, proc3 mouse
+5000
+14 - USES-assign: syn-syn
+assign a; variable v;
+Select a such that Uses(a, v)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37, 38, 39, 40
+5000
+15 - USES-while: syn-syn
+while w; variable v;
+Select w such that Uses(w, v)
+4, 8, 11, 14, 21, 27, 36
+5000
+16 - USES-if: syn-syn
+if i; variable v;
+Select i such that Uses(i, v)
+6, 19, 28, 33, 34, 35
+5000
+17 - USES-call: syn-syn
+call c; variable v;
+Select c such that Uses(c, v)
+3, 13, 29
+5000
+18 - USES-procedure: syn-syn
+procedure p; variable v;
+Select p such that Uses(p, v)
+proc1, proc2, proc3
+5000
+19 - USES-variable: syn-syn
+stmt s; variable v;
+Select v such that Uses(s, v)
+a, b, c, d, e, f, g, h, how, why, what, keyboard, button, speakers, cpu, gpu, ram, money, parts, mouse
+5000
+20 - USES-boolean: generic-generic
+
+Select BOOLEAN such that Uses(_, _)
+true
+5000
+21 - USES-variable: fixed-syn (regular stmt)
+variable v;
+Select v such that Uses(26, v)
+how, what
+5000
+22 - USES-variable: fixed-syn (while stmt)
+variable v;
+Select v such that Uses(4, v)
+a, b, c, d, e, f, g, h, keyboard, button, speakers, cpu, gpu, ram, money, parts, mouse
+5000
+23 - USES-variable: fixed-syn (if stmt)
+variable v;
+Select v such that Uses(33, v)
+mouse, keyboard, speakers, ram, money, parts, gpu, cpu
+5000
+24 - USES-variable: fixed-syn (call stmt)
+variable v;
+Select v such that Uses(29, v)
+keyboard, button, speakers, cpu, gpu, ram, money, parts, mouse
+5000
+25 - USES-variable: fixed-syn (procedure)
+variable v;
+Select v such that Uses("proc2", v)
+how, why, what, keyboard, button, speakers, cpu, gpu, ram, money, parts, mouse
+5000
+26 - USES-stmt: syn-fixed
+stmt s;
+Select s such that Uses(s, "speakers")
+3, 4, 6, 13, 27, 28, 29, 31, 33, 34, 35
+5000
+27 - USES-assign: syn-fixed
+assign a;
+Select a such that Uses(a, "why")
+24, 25, 30
+5000
+28 - USES-while: syn-fixed
+while w;
+Select w such that Uses(w, "cpu")
+4, 27
+5000
+29 - USES-if: syn-fixed
+if i;
+Select i such that Uses(i, "what")
+28
+5000
+30 - USES-call: syn-fixed
+call c;
+Select c such that Uses(c, "what")
+3
+5000
+31 - USES-procedure: syn-fixed
+procedure p;
+Select p such that Uses(p, "ram")
+proc1, proc2, proc3
+5000
+32 - USES-variable: syn-fixed
+stmt s; variable v;
+Select v such that Uses(s, "lastPokemon")
+none
+5000
+33 - USES-boolean: fixed-generic
+
+Select BOOLEAN such that Uses(14, _)
+true
+5000
+34 - USES-boolean: generic-fixed
+
+Select BOOLEAN such that Uses(_, "how")
+true
+5000
+35 - USES-assign: syn-generic
+assign a;
+Select a such that Uses(a, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37, 38, 39, 40
+5000
+36 - USES-while: syn-generic
+while w;
+Select w such that Uses(w, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+37 - USES-if: syn-generic
+if i;
+Select i such that Uses(i, _)
+6, 19, 28, 33, 34, 35
+5000
+38 - USES-call: syn-generic
+call c;
+Select c such that Uses(c, _)
+3, 13, 29
+5000
+39 - USES-procedure: syn-generic
+procedure p;
+Select p such that Uses(p, _)
+proc1, proc2, proc3
+5000
+40 - USES-variable: syn-generic
+stmt s; variable v;
+Select v such that Uses(s, _)
+a, b, c, d, e, f, g, h, how, why, what, keyboard, button, speakers, cpu, gpu, ram, money, parts, mouse, iranoutofnames
+5000
+41 - USES-variable: generic-syn
+variable v;
+Select v such that Uses(_, v)
+a, b, c, d, e, f, g, h, how, why, what, keyboard, button, speakers, cpu, gpu, ram, money, parts, mouse
+5000
+42 - USES-assign: pattern-right defined (match select)
+assign a;
+Select a such that Uses(a, _) pattern a(_, _"d+e"_)
+20
+5000
+43 - USES-assign: pattern-right defined (does not match select)
+assign a1, a2;
+Select a1 such that Uses(a1, "c") pattern a2(_, _"69"_)
+1, 2, 5, 15, 20, 23
+5000
+44 - USES-assign: pattern-left defined (match select)
+assign a;
+Select a such that Uses(a, _) pattern a("mouse", _)
+31, 39
+5000
+45 - USES-assign: pattern-left defined (does not match select)
+assign a1, a2;
+Select a1 such that Uses(a1, "f") pattern a2("iranoutofnames", _)
+7, 10, 17
+5000
+46 - USES-assign: pattern-left defined synonym
+assign a; variable v;
+Select a such that Uses(14, v) pattern a(v, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23
+5000
+47 - USES-assign: pattern-both defined (match select)
+assign a;
+Select a such that Uses(a, _) pattern a("how", _"how"_)
+30
+5000
+48 - USES-assign: pattern-both defined (does not match select)
+assign a1, a2;
+Select a1 such that Uses(a1, "why") pattern a2("iranoutofnames", _"mouse*(keyboard + gpu)"_)
+24, 25, 30
+5000
+49 - USES-assign: pattern-both defined, left synonym
+assign a; variable v;
+Select a such that Uses(a, v) pattern a(v, _"g"_)
+none
+5000
+50 - USES-while: pattern (match select)
+while w;
+Select w such that Uses(w, _) pattern w("how", _)
+27
+5000
+51 - USES-while: pattern (does not match select)
+while w1, w2;
+Select w1 such that Uses(w1, _) pattern w2("how", _)
+4, 8, 11, 14, 21, 27, 36
+5000
+52 - USES-if: pattern (match select)
+if i;
+Select i such that Uses(i, _) pattern i("b", _, _)
+6
+5000
+53 - USES-if: pattern (does not match select)
+assign a; if i;
+Select a such that Uses(a, _) pattern i("mouse", _, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37, 38, 39, 40
+5000
+54 - USES: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Uses(24, "why") and Uses(31, "speakers")
+true
+5000
+55 - USES: 2 clauses (similar) - syn-syn, syn-syn
+assign a1, a2; variable v;
+Select <a1,a2> such that Uses(a1, v) and Uses(a2, v)
+1 1, 1 2, 1 5, 1 9, 1 12, 1 15, 1 16, 1 20, 1 22, 1 23, 2 1, 2 2, 2 5, 2 9, 2 12, 2 15, 2 16, 2 18, 2 20, 2 22, 2 23, 5 1, 5 2, 5 5, 5 15, 5 20, 5 23, 7 7, 7 9, 7 10, 7 12, 7 17, 7 23, 9 1, 9 2, 9 7, 9 9, 9 10, 9 12, 9 15, 9 16, 9 18, 9 20, 9 22, 9 23, 10 7, 10 9, 10 10, 10 12, 10 17, 10 23, 12 1, 12 2, 12 7, 12 9, 12 10, 12 12, 12 18, 12 20, 12 23, 15 1, 15 2, 15 5, 15 9, 15 15, 15 16, 15 20, 15 22, 15 23, 16 1, 16 2, 16 9, 16 15, 16 16, 16 17, 16 18, 16 20, 16 22, 17 7, 17 10, 17 16, 17 17, 17 18, 17 20, 17 22, 18 2, 18 9, 18 12, 18 16, 18 17, 18 18, 18 20, 18 22, 18 23, 20 1, 20 2, 20 5, 20 9, 20 12, 20 15, 20 16, 20 17, 20 18, 20 20, 20 22, 20 23, 22 1, 22 2, 22 9, 22 15, 22 16, 22 17, 22 18, 22 20, 22 22, 23 1, 23 2, 23 5, 23 7, 23 9, 23 10, 23 12, 23 15, 23 18, 23 20, 23 23, 24 24, 24 25, 24 26, 24 30, 25 24, 25 25, 25 26, 25 30, 26 24, 26 25, 26 26, 26 30, 30 24, 30 25, 30 26, 30 30, 31 31, 31 40, 32 32, 32 37, 32 38, 32 39, 32 40, 37 32, 37 37, 37 38, 37 39, 37 40, 38 32, 38 37, 38 38, 38 39, 38 40, 39 32, 39 37, 39 38, 39 39, 39 40, 40 31, 40 32, 40 37, 40 38, 40 39, 40 40
+5000
+56 - USES: 2 clauses (similar) - fixed-syn, fixed-syn
+variable v;
+Select v such that Uses(19, v) and Uses(23, v)
+a, c, g, h
+5000
+57 - USES: 2 clauses (similar) - syn-fixed, syn-fixed
+stmt s; assign a;
+Select s such that Uses(s, "how") and Uses(a, "money")
+3, 24, 26, 27, 28, 30
+5000
+58 - USES: 2 clauses (similar) - fixed-generic, fixed-generic
+
+Select BOOLEAN such that Uses(23, _) and Uses(40, _)
+true
+5000
+59 - USES: 2 clauses (similar) - generic-fixed, generic-fixed
+stmt s;
+Select s such that Uses(_, "parts") and Uses(_, "what")
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+60 - USES: 2 clauses (similar) - syn-generic, syn-generic
+if i; while w;
+Select <i,w> such that Uses(i, _) and Uses(w, _)
+6 4, 6 8, 6 11, 6 14, 6 21, 6 27, 6 36, 19 4, 19 8, 19 11, 19 14, 19 21, 19 27, 19 36, 28 4, 28 8, 28 11, 28 14, 28 21, 28 27, 28 36, 33 4, 33 8, 33 11, 33 14, 33 21, 33 27, 33 36, 34 4, 34 8, 34 11, 34 14, 34 21, 34 27, 34 36, 35 4, 35 8, 35 11, 35 14, 35 21, 35 27, 35 36
+5000
+61 - USES: 2 clauses (similar) - generic-syn, generic-syn
+variable v1, v2;
+Select v1 such that Uses(_, v1) and Uses(_, v2)
+a, b, c, d, e, f, g, h, how, why, what, keyboard, button, speakers, cpu, gpu, mouse, ram, money, parts
+5000
+62 - USES: 2 clauses (mixed) - fixed-fixed, fixed-syn
+variable v;
+Select v such that Uses(17, "f") and Uses("39", v)
+money, cpu, gpu
+5000
+63 - USES: 2 clauses (mixed) - syn-syn, syn-fixed
+procedure p; variable v;
+Select p such that Uses(p, v) and Uses(p, "keyboard")
+proc1, proc2, proc3
+5000
+64 - USES: 2 clauses (mixed) - generic-generic, fixed-generic
+
+Select BOOLEAN such that Uses(_, _) and Uses(28, _)
+true
+5000
+65 - USES: 2 clauses (mixed) - fixed-syn, generic-fixed
+variable v;
+Select v such that Uses(34, v) and Uses(_, "why")
+keyboard, speakers, ram, money, parts, gpu, cpu
+5000
+66 - USES: 2 clauses (mixed) - syn-fixed, syn-generic
+stmt s;
+Select s such that Uses(s, "h") and Uses(s, _)
+4, 6, 7, 8, 9, 10, 11, 12, 14, 19, 23
+5000
+67 - USES: 2 clauses (mixed) - fixed-generic, generic-syn
+variable v;
+Select v such that Uses(32, _) and Uses(_, v)
+a, b, c, d, e, f, g, h, how, why, what, keyboard, button, speakers, cpu, gpu, mouse, ram, money, parts
+5000
+68 - USES: 2 clauses (mixed) - generic-fixed, syn-generic
+call c;
+Select c such that Uses(_, "speakers") and Uses(c, _)
+3, 13, 29
+5000
+69 - USES: 2 clauses (mixed) - syn-generic, generic-syn
+if i; variable v;
+Select v such that Uses(i, _) and Uses(_, v)
+a, b, c, d, e, f, g, h, how, why, what, keyboard, button, speakers, cpu, gpu, mouse, ram, money, parts
+5000
+70 - USES: 2 clauses (mixed) - generic-fixed, generic-syn
+variable v;
+Select BOOLEAN such that Uses(_, "iranoutofnames") and Uses(_, v)
+false
+5000
+71 - USES: stmt# - select clause (has results)
+assign a;
+Select a.stmt# such that Uses(a, "d")
+1, 2, 9, 15, 16, 20, 22
+5000
+72 - USES: stmt# - select clause (no results)
+assign a;
+Select a.stmt# such that Uses(a, "iranoutofnames")
+none
+5000
+73 - USES: stmt# - with clause (has results)
+assign a;
+Select a such that Uses(a, "d") with a.stmt# = 20
+20
+5000
+74 - USES: stmt# - with clause (no results)
+assign a;
+Select a such that Uses(a, "d") with a.stmt# = 20 and s.stmt# = 9
+none
+5000
+75 - USES: procName - select clause (has results)
+procedure p;
+Select p.procName such that Uses(p, "how")
+proc1, proc2
+5000
+76 - USES: procName - select clause (no results)
+procedure p;
+Select p.procName such that Uses(p, "iranoutofnames")
+none
+5000
+77 - USES: procName - with clause (has results)
+procedure p;
+Select BOOLEAN such that Uses(p, "mouse") with p.procName = "proc1"
+true
+5000
+78 - USES: procName - with clause (no results)
+procedure p;
+Select BOOLEAN such that Uses(p, "ram") with p.procName = "proc4"
+false
+5000
+79 - USES: procName - select clause (call-has results)
+call c;
+Select c.procName such that Uses(c, "gpu")
+proc2, proc3
+5000
+80 - USES: procName - select clause (call-no results)
+call c;
+Select c.procName such that Uses(c, "iranoutofnames")
+none
+5000
+81 - USES: procName - with clause (call-has results)
+call c;
+Select c such that Uses(c, _) with c.procName = "proc3"
+13, 29
+5000
+82 - USES: procName - with clause (call-no results)
+call c;
+Select c such that Uses(c, _) with c.procName = "proc1"
+none
+5000
+83 - USES: varName - select clause (has results)
+variable v;
+Select v.varName such that Uses(26, v)
+how, what
+5000
+84 - USES: varName - with clause (has results)
+variable v;
+Select BOOLEAN such that Uses(19, v) with v.varName = "e"
+true
+5000
+85 - USES: varName - with clause (no results)
+variable v;
+Select BOOLEAN such that Uses(19, v) with v.varName = "money"
+false
+5000
+86 - USES: const - with clause (has results)
+variable v; constant c;
+Select c such that Uses(37, v) with c.value = 9001
+9001
+5000
+87 - USES: const - with clause (no results)
+variable v; constant c;
+Select BOOLEAN such that Uses(17, v) with c.value = 6
+false
+5000
+88 - USES: prog_line
+prog_line n;
+Select n such that Uses(n, "parts")
+3, 4, 6, 13, 27, 28, 29, 33, 34, 35, 36, 37, 38
+5000
+89 - USES: stmt overflow
+variable v;
+Select v such that Uses(45, v)
+none
+5000
+90 - USES: stmt underflow
+variable v;
+Select v such that Uses(-1, v)
+none
+5000
+91 - USES: stmt underflow
+variable v;
+Select v such that Uses(0, v)
+none
+5000
+92 - USES: non-existent variable
+assign a;
+Select a such that Uses(a, "helloworld")
+none
+5000
+93 - MODIFIES-boolean: fixed-fixed (regular stmt)
+
+Select BOOLEAN such that Modifies(26, "why")
+true
+5000
+94 - MODIFIES-boolean: fixed-fixed (within while stmt)
+
+Select BOOLEAN such that Modifies(14, "d")
+true
+5000
+95 - MODIFIES-boolean: fixed-fixed (within if stmt)
+
+Select BOOLEAN such that Modifies(33, "cpu")
+true
+5000
+96 - MODIFIES-call: fixed-fixed
+call c;
+Select c such that Modifies(13, "mouse")
+3, 13, 29
+5000
+97 - MODIFIES-boolean: fixed-fixed (across proc)
+
+Select BOOLEAN such that Modifies(3, "mouse")
+true
+5000
+98 - MODIFIES-stmt: fixed-fixed (stmt-false)
+stmt s;
+Select s such that Modifies(18, "d")
+none
+5000
+99 - MODIFIES-boolean: fixed-fixed (proc)
+
+Select BOOLEAN such that Modifies("proc2", "how")
+true
+5000
+100 - MODIFIES-procedure: fixed-fixed (across proc)
+procedure p;
+Select p such that Modifies("proc1", "mouse")
+proc1, proc2, proc3
+5000
+101 - MODIFIES-boolean: fixed-fixed (proc-false)
+
+Select BOOLEAN such that Modifies("proc3", "f")
+false
+5000
+102 - MODIFIES-stmt: syn-syn (tuple)
+stmt s; variable v;
+Select <s,v> such that Modifies(s, v)
+1 a, 2 b, 3 what, 3 how, 3 why, 3 mouse, 3 ram, 3 cpu, 3 keyboard, 3 iranoutofnames, 4 d, 4 e, 4 g, 4 b, 4 c, 4 f, 4 mouse, 4 ram, 4 cpu, 4 keyboard, 4 iranoutofnames, 5 d, 6 e, 6 g, 6 mouse, 6 ram, 6 cpu, 6 keyboard, 6 iranoutofnames, 7 e, 8 g, 9 g, 10 e, 11 g, 12 g, 13 mouse, 13 ram, 13 cpu, 13 keyboard, 13 iranoutofnames, 14 b, 14 c, 14 d, 14 f, 15 b, 16 c, 17 d, 18 f, 19 b, 19 c, 20 b, 21 c, 22 c, 23 b, 24 what, 25 how, 26 why, 27 how, 27 mouse, 27 ram, 27 cpu, 27 keyboard, 27 iranoutofnames, 28 how, 28 mouse, 28 ram, 28 cpu, 28 keyboard, 28 iranoutofnames, 29 mouse, 29 ram, 29 cpu, 29 keyboard, 29 iranoutofnames, 30 how, 31 mouse, 32 ram, 33 cpu, 33 keyboard, 33 mouse, 33 iranoutofnames, 34 cpu, 34 keyboard, 34 mouse, 35 cpu, 35 keyboard, 36 cpu, 37 cpu, 38 keyboard, 39 mouse, 40 iranoutofnames
+5000
+103 - MODIFIES-procedure: syn-syn (tuple)
+procedure p; variable v;
+Select <p,v> such that Modifies(p, v)
+proc1 a, proc1 b, proc1 c, proc1 d, proc1 e, proc1 f, proc1 g, proc1 how, proc1 why, proc1 what, proc1 mouse, proc1 ram, proc1 cpu, proc1 keyboard, proc1 iranoutofnames, proc2 how, proc2 why, proc2 what, proc2 mouse, proc2 ram, proc2 cpu, proc2 keyboard, proc2 iranoutofnames, proc3 mouse, proc3 ram, proc3 cpu, proc3 keyboard, proc3 iranoutofnames
+5000
+104 - MODIFIES-assign: syn-syn
+assign a; variable v;
+Select a such that Modifies(a, v)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37, 38, 39, 40
+5000
+105 - MODIFIES-while: syn-syn
+while w; variable v;
+Select w such that Modifies(w, v)
+4, 8, 11, 14, 21, 27, 36
+5000
+106 - MODIFIES-if: syn-syn
+if i; variable v;
+Select i such that Modifies(i, v)
+6, 19, 28, 33, 34, 35
+5000
+107 - MODIFIES-call: syn-syn
+call c; variable v;
+Select c such that Modifies(c, v)
+3, 13, 29
+5000
+108 - MODIFIES-procedure: syn-syn
+procedure p; variable v;
+Select p such that Modifies(p, v)
+proc1, proc2, proc3
+5000
+109 - MODIFIES-variable: syn-syn
+stmt s; variable v;
+Select v such that Modifies(s, v)
+a, b, c, d, e, f, g, how, why, what, mouse, ram, cpu, keyboard, iranoutofnames
+5000
+110 - MODIFIES-boolean: generic-generic
+
+Select BOOLEAN such that Modifies(_, _)
+true
+5000
+111 - MODIFIES-variable: fixed-syn (regular stmt)
+variable v;
+Select v such that Modifies(26, v)
+why
+5000
+112 - MODIFIES-variable: fixed-syn (while stmt)
+variable v;
+Select v such that Modifies(4, v)
+b, c, d, e, f, g, mouse, ram, cpu, keyboard, iranoutofnames
+5000
+113 - MODIFIES-variable: fixed-syn (if stmt)
+variable v;
+Select v such that Modifies(33, v)
+cpu, keyboard, mouse, iranoutofnames
+5000
+114 - MODIFIES-variable: fixed-syn (call stmt)
+variable v;
+Select v such that Modifies(29, v)
+mouse, ram, cpu, keyboard, iranoutofnames
+5000
+115 - MODIFIES-variable: fixed-syn (procedure)
+variable v;
+Select v such that Modifies("proc2", v)
+how, why, what, mouse, ram, cpu, keyboard, iranoutofnames
+5000
+116 - MODIFIES-stmt: syn-fixed
+stmt s;
+Select s such that Modifies(s, "speakers")
+none
+5000
+117 - MODIFIES-assign: syn-fixed
+assign a;
+Select a such that Modifies(a, "why")
+26
+5000
+118 - MODIFIES-while: syn-fixed
+while w;
+Select w such that Modifies(w, "cpu")
+4, 27, 36
+5000
+119 - MODIFIES-if: syn-fixed
+if i;
+Select i such that Modifies(i, "how")
+28
+5000
+120 - MODIFIES-call: syn-fixed
+call c;
+Select c such that Modifies(c, "keyboard")
+3, 13, 29
+5000
+121 - MODIFIES-procedure: syn-fixed
+procedure p;
+Select p such that Modifies(p, "ram")
+proc1, proc2, proc3
+5000
+122 - MODIFIES-variable: syn-fixed
+stmt s; variable v;
+Select v such that Modifies(s, "iranoutofnames")
+a, b, c, d, e, f, g, h, how, why, what, mouse, keyboard, button, speakers, ram, cpu, gpu, parts, money, iranoutofnames
+5000
+123 - MODIFIES-boolean: fixed-generic
+
+Select BOOLEAN such that Modifies(14, _)
+true
+5000
+124 - MODIFIES-boolean: generic-fixed
+
+Select BOOLEAN such that Modifies(_, "how")
+true
+5000
+125 - MODIFIES-assign: syn-generic
+assign a;
+Select a such that Modifies(a, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37, 38, 39, 40
+5000
+126 - MODIFIES-while: syn-generic
+while w;
+Select w such that Modifies(w, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+127 - MODIFIES-if: syn-generic
+if i;
+Select i such that Modifies(i, _)
+6, 19, 28, 33, 34, 35
+5000
+128 - MODIFIES-call: syn-generic
+call c;
+Select c such that Modifies(c, _)
+3, 13, 29
+5000
+129 - MODIFIES-procedure: syn-generic
+procedure p;
+Select p such that Modifies(p, _)
+proc1, proc2, proc3
+5000
+130 - MODIFIES-variable: syn-generic
+stmt s; variable v;
+Select v such that Modifies(s, _)
+a, b, c, d, e, f, g, h, how, why, what, keyboard, button, speakers, cpu, gpu, ram, money, parts, mouse, iranoutofnames
+5000
+131 - MODIFIES-variable: generic-syn
+variable v;
+Select v such that Modifies(_, v)
+a, b, c, d, e, f, g, how, why, what, mouse, ram, cpu, keyboard, iranoutofnames
+5000
+132 - MODIFIES-assign: pattern-right defined (match select)
+assign a;
+Select a such that Modifies(a, _) pattern a(_, _"d+e"_)
+20
+5000
+133 - MODIFIES-assign: pattern-right defined (does not match select)
+assign a1, a2;
+Select a1 such that Modifies(a1, "c") pattern a2(_, _"69"_)
+16, 22
+5000
+134 - MODIFIES-assign: pattern-left defined (match select)
+assign a;
+Select a such that Modifies(a, _) pattern a("mouse", _)
+31, 39
+5000
+135 - MODIFIES-assign: pattern-left defined (does not match select)
+assign a1, a2;
+Select a1 such that Modifies(a1, "f") pattern a2("iranoutofnames", _)
+18
+5000
+136 - MODIFIES-assign: pattern-left defined synonym
+assign a; variable v;
+Select a such that Modifies(14, v) pattern a(v, _)
+2, 5, 15, 16, 17, 18, 20, 22, 23
+5000
+137 - MODIFIES-assign: pattern-both defined (match select)
+assign a;
+Select a such that Modifies(a, _) pattern a("how", _"how"_)
+30
+5000
+138 - MODIFIES-assign: pattern-both defined (does not match select)
+assign a1, a2;
+Select a1 such that Modifies(a1, "why") pattern a2("iranoutofnames", _"mouse*(keyboard + gpu)"_)
+26
+5000
+139 - MODIFIES-assign: pattern-both defined, left synonym
+assign a; variable v;
+Select a such that Modifies(a, v) pattern a(v, _"g"_)
+7, 10, 23
+5000
+140 - MODIFIES-while: pattern (match select)
+while w;
+Select w such that Modifies(w, _) pattern w("how", _)
+27
+5000
+141 - MODIFIES-while: pattern (does not match select)
+while w1, w2;
+Select w1 such that Modifies(w1, _) pattern w2("how", _)
+4, 8, 11, 14, 21, 27, 36
+5000
+142 - MODIFIES-if: pattern (match select)
+if i;
+Select i such that Modifies(i, _) pattern i("b", _, _)
+6
+5000
+143 - MODIFIES-if: pattern (does not match select)
+assign a; if i;
+Select a such that Modifies(a, _) pattern i("mouse", _, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37, 38, 39, 40
+5000
+144 - MODIFIES: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Modifies(24, "what") and Modifies(31, "mouse")
+true
+5000
+145 - MODIFIES: 2 clauses (similar) - syn-syn, syn-syn
+assign a1, a2; variable v;
+Select <a1,a2> such that Modifies(a1, v) and Modifies(a2, v)
+1 1, 2 2, 2 15, 2 20, 2 23, 5 5, 5 17, 7 7, 7 10, 9 9, 9 12, 10 7, 10 10, 12 9, 12 12, 15 2, 15 15, 15 20, 15 23, 16 16, 16 22, 17 5, 17 17, 18 18, 20 2, 20 15, 20 20, 20 23, 22 16, 22 22, 23 2, 23 15, 23 20, 23 23, 24 24, 25 25, 25 30, 26 26, 30 25, 30 30, 31 31, 31 39, 32 32, 37 37, 38 38, 39 31, 39 39, 40 40
+5000
+146 - MODIFIES: 2 clauses (similar) - fixed-syn, fixed-syn
+variable v;
+Select v such that Modifies(19, v) and Modifies(23, v)
+b
+5000
+147 - MODIFIES: 2 clauses (similar) - syn-fixed, syn-fixed
+stmt s; assign a;
+Select s such that Modifies(s, "how") and Modifies(a, "money")
+none
+5000
+148 - MODIFIES: 2 clauses (similar) - fixed-generic, fixed-generic
+
+Select BOOLEAN such that Modifies(23, _) and Modifies(40, _)
+true
+5000
+149 - MODIFIES: 2 clauses (similar) - generic-fixed, generic-fixed
+stmt s;
+Select s such that Modifies(_, "ram") and Modifies(_, "what")
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+150 - MODIFIES: 2 clauses (similar) - syn-generic, syn-generic
+if i; while w;
+Select <i,w> such that Modifies(i, _) and Modifies(w, _)
+6 4, 6 8, 6 11, 6 14, 6 21, 6 27, 6 36, 19 4, 19 8, 19 11, 19 14, 19 21, 19 27, 19 36, 28 4, 28 8, 28 11, 28 14, 28 21, 28 27, 28 36, 33 4, 33 8, 33 11, 33 14, 33 21, 33 27, 33 36, 34 4, 34 8, 34 11, 34 14, 34 21, 34 27, 34 36, 35 4, 35 8, 35 11, 35 14, 35 21, 35 27, 35 36
+5000
+151 - MODIFIES: 2 clauses (similar) - generic-syn, generic-syn
+variable v1, v2;
+Select v1 such that Modifies(_, v1) and Modifies(_, v2)
+a, b, c, d, e, f, g, how, why, what, mouse, ram, cpu, keyboard, iranoutofnames
+5000
+152 - MODIFIES: 2 clauses (mixed) - fixed-fixed, fixed-syn
+variable v;
+Select v such that Modifies(17, "d") and Modifies("39", v)
+mouse
+5000
+153 - MODIFIES: 2 clauses (mixed) - syn-syn, syn-fixed
+procedure p; variable v;
+Select p such that Modifies(p, v) and Modifies(p, "keyboard")
+proc1, proc2, proc3
+5000
+154 - MODIFIES: 2 clauses (mixed) - generic-generic, fixed-generic
+
+Select BOOLEAN such that Modifies(_, _) and Modifies(28, _)
+true
+5000
+155 - MODIFIES: 2 clauses (mixed) - fixed-syn, generic-fixed
+variable v;
+Select v such that Modifies(34, v) and Modifies(_, "why")
+cpu, keyboard, mouse
+5000
+156 - MODIFIES: 2 clauses (mixed) - syn-fixed, syn-generic
+stmt s;
+Select s such that Modifies(s, "g") and Modifies(s, _)
+4, 6, 8, 9, 11, 12
+5000
+157 - MODIFIES: 2 clauses (mixed) - fixed-generic, generic-syn
+variable v;
+Select v such that Modifies(32, _) and Modifies(_, v)
+a, b, c, d, e, f, g, how, why, what, mouse, ram, cpu, keyboard, iranoutofnames
+5000
+158 - MODIFIES: 2 clauses (mixed) - generic-fixed, syn-generic
+call c;
+Select c such that Modifies(_, "mouse") and Modifies(c, _)
+3, 13, 29
+5000
+159 - MODIFIES: 2 clauses (mixed) - syn-generic, generic-syn
+if i; variable v;
+Select v such that Modifies(i, _) and Modifies(_, v)
+a, b, c, d, e, f, g, how, why, what, mouse, ram, cpu, keyboard, iranoutofnames
+5000
+160 - MODIFIES: 2 clauses (mixed) - generic-fixed, generic-syn
+variable v;
+Select BOOLEAN such that Modifies(_, "iranoutofnames") and Modifies(_, v)
+true
+5000
+161 - MODIFIES: stmt# - select clause (has results)
+assign a;
+Select a.stmt# such that Modifies(a, "d")
+5, 17
+5000
+162 - MODIFIES: stmt# - select clause (no results)
+assign a;
+Select a.stmt# such that Modifies(a, "iranoutofnames")
+40
+5000
+163 - MODIFIES: stmt# - with clause (has results)
+assign a;
+Select a such that Modifies(a, "d") with a.stmt# = 17
+17
+5000
+164 - MODIFIES: stmt# - with clause (no results)
+assign a;
+Select a such that Modifies(a, "d") with a.stmt# = 5 and s.stmt# = 17
+none
+5000
+165 - MODIFIES: procName - select clause (has results)
+procedure p;
+Select p.procName such that Modifies(p, "how")
+proc1, proc2
+5000
+166 - MODIFIES: procName - select clause (no results)
+procedure p;
+Select p.procName such that Modifies(p, "iranoutofnames")
+proc1, proc2, proc3
+5000
+167 - MODIFIES: procName - with clause (has results)
+procedure p;
+Select BOOLEAN such that Modifies(p, "mouse") with p.procName = "proc1"
+true
+5000
+168 - MODIFIES: procName - with clause (no results)
+procedure p;
+Select BOOLEAN such that Modifies(p, "ram") with p.procName = "proc4"
+false
+5000
+169 - MODIFIES: procName - select clause (call-has results)
+call c;
+Select c.procName such that Modifies(c, "cpu")
+proc2, proc3
+5000
+170 - MODIFIES: procName - select clause (call-no results)
+call c;
+Select c.procName such that Modifies(c, "speakers")
+none
+5000
+171 - MODIFIES: procName - with clause (call-has results)
+call c;
+Select c such that Modifies(c, _) with c.procName = "proc3"
+13, 29
+5000
+172 - MODIFIES: procName - with clause (call-no results)
+call c;
+Select c such that Modifies(c, _) with c.procName = "proc1"
+none
+5000
+173 - MODIFIES: varName - select clause (has results)
+variable v;
+Select v.varName such that Modifies(26, v)
+why
+5000
+174 - MODIFIES: varName - with clause (has results)
+variable v;
+Select BOOLEAN such that Modifies(19, v) with v.varName = "b"
+true
+5000
+175 - MODIFIES: varName - with clause (no results)
+variable v;
+Select BOOLEAN such that Modifies(19, v) with v.varName = "e"
+false
+5000
+176 - MODIFIES: const - with clause (has results)
+variable v; constant c;
+Select c such that Modifies(37, v) with c.value = 9001
+9001
+5000
+177 - MODIFIES: const - with clause (no results)
+variable v; constant c;
+Select BOOLEAN such that Modifies(17, v) with c.value = 6
+false
+5000
+178 - MODIFIES: prog_line
+prog_line n;
+Select n such that Modifies(n, "keyboard")
+3, 4, 6, 13, 27, 28, 29, 33, 34, 35, 38
+5000
+179 - MODIFIES: stmt overflow
+variable v;
+Select v such that Modifies(45, v)
+none
+5000
+180 - MODIFIES: stmt underflow
+variable v;
+Select v such that Modifies(-1, v)
+none
+5000
+181 - MODIFIES: stmt underflow
+variable v;
+Select v such that Modifies(0, v)
+none
+5000
+182 - MODIFIES: non-existent variable
+assign a;
+Select a such that Modifies(a, "helloworld")
+none
+5000
+183 - PARENT-boolean: fixed-fixed (while stmt)
+
+Select BOOLEAN such that Parent(27, 28)
+true
+5000
+184 - PARENT-stmt: fixed-fixed (nested under while stmt)
+stmt s;
+Select s such that Parent(27, 30)
+none
+5000
+185 - PARENT-boolean: fixed-fixed (if stmt, if block)
+
+Select BOOLEAN such that Parent(34, 35)
+true
+5000
+186 - PARENT-boolean: fixed-fixed (if stmt, else block)
+
+Select BOOLEAN such that Parent(34, 39)
+true
+5000
+187 - PARENT-stmt: fixed-fixed (nested under if stmt)
+stmt s;
+Select s such that Parent(33, 39)
+none
+5000
+188 - PARENT-stmt: syn-syn (tuple)
+stmt s1, s2;
+Select <s1,s2> such that Parent(s1, s2)
+4 5, 4 6, 4 14, 6 7, 6 8, 6 10, 6 11, 6 13, 8 9, 11 12, 14 15, 14 16, 14 17, 14 18, 14 19, 19 20, 19 21, 19 23, 21 22, 27 28, 28 29, 28 30, 33 34, 33 40, 34 35, 34 39, 35 36, 35 38, 36 37
+5000
+189 - PARENT-assign: syn-syn
+stmt s; assign a;
+Select a such that Parent(s, a)
+5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 30, 37, 38, 39, 40
+5000
+190 - PARENT-while: syn-syn
+while w1, w2;
+Select w1 such that Parent(w1, w2)
+4
+5000
+191 - PARENT-if: syn-syn
+stmt s; if i;
+Select i such that Parent(i, s)
+6, 19, 28, 33, 34, 35
+5000
+192 - PARENT-call: syn-syn
+stmt s; call c;
+Select c such that Parent(s, c)
+13, 29
+5000
+193 - PARENT-boolean: generic-generic
+
+Select BOOLEAN such that Parent(_, _)
+true
+5000
+194 - PARENT-assign: fixed-syn (while stmt)
+assign a;
+Select a such that Parent(14, a)
+15, 16, 17, 18
+5000
+195 - PARENT-stmt: fixed-syn (if stmt)
+stmt s;
+Select s such that Parent(35, s)
+36, 38
+5000
+196 - PARENT-stmt: syn-fixed
+stmt s;
+Select s such that Parent(s, 19)
+14
+5000
+197 - PARENT-while: syn-fixed
+while w;
+Select w such that Parent(w, 37)
+36
+5000
+198 - PARENT-if: syn-fixed
+if i;
+Select i such that Parent(i, 35)
+34
+5000
+199 - PARENT-boolean: fixed-generic
+
+Select BOOLEAN such that Parent(28, _)
+true
+5000
+200 - PARENT-boolean: generic-fixed
+
+Select BOOLEAN such that Parent(_, 28)
+true
+5000
+201 - PARENT-assign: syn-generic
+assign a;
+Select a such that Parent(a, _)
+none
+5000
+202 - PARENT-while: syn-generic
+while w;
+Select w such that Parent(w, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+203 - PARENT-if: syn-generic
+if i;
+Select i such that Parent(i, _)
+6, 19, 28, 33, 34, 35
+5000
+204 - PARENT-stmt: generic-syn
+stmt s;
+Select s such that Parent(_, s)
+5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 28, 29, 30, 34, 35, 36, 37, 38, 39, 40
+5000
+205 - PARENT-assign: generic-syn
+assign a;
+Select a such that Parent(_, a)
+5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 30, 37, 38, 39, 40
+5000
+206 - PARENT-while: generic-syn
+while w;
+Select w such that Parent(_, w)
+8, 11, 14, 21, 36
+5000
+207 - PARENT-if: generic-syn
+if i;
+Select i such that Parent(_, i)
+6, 19, 28, 34, 35
+5000
+208 - PARENT-call: generic-syn
+call c;
+Select c such that Parent(_, c)
+13, 29
+5000
+209 - PARENT-while: pattern-left defined
+while w;
+Select w such that Parent(w, _) pattern w("how", _)
+27
+5000
+210 - PARENT-while: pattern-left defined synonym
+while w; variable v;
+Select w such that Parent(35, w) pattern w(v, _)
+36
+5000
+211 - PARENT-if: pattern-left defined
+if i;
+Select i such that Parent(i, 34) pattern i("keyboard", _, _)
+none
+5000
+212 - PARENT-if: pattern-left defined synonym
+if i; variable v;
+Select v such that Parent(i, 21) pattern i(v, _, _)
+a
+5000
+213 - PARENT: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Parent(28, 29) and Parent(35, 36)
+true
+5000
+214 - PARENT: 2 clauses (similar) - syn-syn, syn-syn
+stmt s1, s2;
+Select <s1,s2> such that Parent(s1, s2) and Parent(s2, s1)
+none
+5000
+215 - PARENT: 2 clauses (similar) - fixed-syn, fixed-syn
+stmt s;
+Select s such that Parent(33, s) and Parent(34, s)
+none
+5000
+216 - PARENT: 2 clauses (similar) - syn-fixed, syn-fixed
+while w;
+Select w such that Parent(14, w) and Parent(i, 29)
+none
+5000
+217 - PARENT: 2 clauses (similar) - fixed-generic, fixed-generic
+
+Select BOOLEAN such that Parent(14, _) and Parent(28, _)
+true
+5000
+218 - PARENT: 2 clauses (similar) - generic-fixed, generic-fixed
+stmt s;
+Select s such that Parent(_, 30) and Parent(_, 34)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+219 - PARENT: 2 clauses (similar) - syn-generic, syn-generic
+while w; if i;
+Select <i,w> such that Parent(w, _) and Parent(i, _)
+6 4, 6 8, 6 11, 6 14, 6 21, 6 27, 6 36, 19 4, 19 8, 19 11, 19 14, 19 21, 19 27, 19 36, 28 4, 28 8, 28 11, 28 14, 28 21, 28 27, 28 36, 33 4, 33 8, 33 11, 33 14, 33 21, 33 27, 33 36, 34 4, 34 8, 34 11, 34 14, 34 21, 34 27, 34 36, 35 4, 35 8, 35 11, 35 14, 35 21, 35 27, 35 36
+5000
+220 - PARENT: 2 clauses (similar) - generic-syn, generic-syn
+stmt s; if i;
+Select i such that Parent(_, s) and Parent(_, i)
+6, 19, 28, 34, 35
+5000
+221 - PARENT: 2 clauses (mixed) - fixed-fixed, fixed-syn
+stmt s;
+Select s such that Parent(34, 35) and Parent(28, s)
+29, 30
+5000
+222 - PARENT: 2 clauses (mixed) - syn-syn, syn-fixed
+stmt s1, s2;
+Select <s1,s2> such that Parent(s1, s2) and Parent(s1, 30)
+28 29, 28 30
+5000
+223 - PARENT: 2 clauses (mixed) - generic-generic, fixed-generic
+while w;
+Select w such that Parent(_, _) and Parent(33, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+224 - PARENT: 2 clauses (mixed) - fixed-syn, generic-fixed
+assign a;
+Select a such that Parent(19, a) and Parent(_, 28)
+20, 23
+5000
+225 - PARENT: 2 clauses (mixed) - syn-fixed, syn-generic
+if i; assign a;
+Select i such that Parent(i, 22) and Parent(a, _)
+none
+5000
+226 - PARENT: 2 clauses (mixed) - fixed-generic, generic-syn
+
+Select BOOLEAN such that Parent(28, _) and Parent(_, 28)
+true
+5000
+227 - PARENT: 2 clauses (mixed) - generic-fixed, syn-generic
+stmt s;
+Select s such that Parent(_, 38) and Parent(s, _)
+4, 6, 8, 11, 14, 19, 21, 27, 28, 33, 34, 35, 36
+5000
+228 - PARENT: 2 clauses (mixed) - syn-generic, generic-syn
+if i;
+Select i such that Parent(i, _) and Parent(_, i)
+6, 19, 28, 34, 35
+5000
+229 - PARENT: 2 clauses (mixed) - generic-fixed, generic-syn
+assign a;
+Select a such that Parent(_, 23) and Parent(_, a)
+5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 30, 37, 38, 39, 40
+5000
+230 - PARENT: stmt# - select clause (has results)
+assign a;
+Select a.stmt# such that Parent(28, a)
+30
+5000
+231 - PARENT: stmt# - select clause (no results)
+assign a;
+Select a.stmt# such that Parent(27, a)
+none
+5000
+232 - PARENT: stmt# - with clause (has results)
+while w;
+Select w such that Parent(w, _) with w.stmt# = 27
+27
+5000
+233 - PARENT: stmt# - with clause (no results)
+while w;
+Select w such that Parent(w, _) with w.stmt# = 4 and w.stmt# = 8
+none
+5000
+234 - PARENT: prog_line
+prog_line n;
+Select n such that Parent(n, _)
+4, 6, 8, 11, 14, 19, 21, 27, 28, 33, 34, 35, 36
+5000
+235 - PARENT: stmt overflow
+stmt s;
+Select s such that Parent(45, s)
+none
+5000
+236 - PARENT: stmt underflow
+stmt s;
+Select s such that Parent(-1, s)
+none
+5000
+237 - PARENT: stmt underflow
+variable s;
+Select s such that Parent(0, s)
+none
+5000
+238 - PARENT: invalid argument
+assign a;
+Select a such that Parent(a, "helloworld")
+none
+5000
+239 - PARENT*-boolean: fixed-fixed (while stmt)
+
+Select BOOLEAN such that Parent*(27, 29)
+true
+5000
+240 - PARENT*-stmt: fixed-fixed (nested under while stmt)
+stmt s;
+Select s such that Parent*(27, 30)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+241 - PARENT*-boolean: fixed-fixed (if stmt, if block)
+
+Select BOOLEAN such that Parent*(34, 36)
+true
+5000
+242 - PARENT*-boolean: fixed-fixed (if stmt, else block)
+
+Select BOOLEAN such that Parent*(33, 39)
+true
+5000
+243 - PARENT*-stmt: fixed-fixed (nested under if stmt)
+stmt s;
+Select s such that Parent*(33, 39)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+244 - PARENT*-stmt: syn-syn (tuple)
+stmt s1, s2;
+Select <s1,s2> such that Parent*(s1, s2)
+4 5, 4 6, 4 7, 4 8, 4 9, 4 10, 4 11, 4 12, 4 13, 4 14, 4 15, 4 16, 4 17, 4 18, 4 19, 4 20, 4 21, 4 22, 4 23, 6 7, 6 8, 6 9, 6 10, 6 11, 6 12, 6 13, 8 9, 11 12, 14 15, 14 16, 14 17, 14 18, 14 19, 14 20, 14 21, 14 22, 14 23, 19 20, 19 21, 19 22, 19 23, 21 22, 27 28, 27 29, 27 30, 28 29, 28 30, 33 34, 33 35, 33 36, 33 37, 33 38, 33 39, 33 40, 34 35, 34 36, 34 37, 34 38, 34 39, 35 36, 35 37, 35 38, 36 37
+5000
+245 - PARENT*-assign: syn-syn
+stmt s; assign a;
+Select a such that Parent*(s, a)
+5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 30, 37, 38, 39, 40
+5000
+246 - PARENT*-while: syn-syn
+while w1, w2;
+Select w1 such that Parent*(w1, w2)
+4, 14
+5000
+247 - PARENT*-if: syn-syn
+stmt s; if i;
+Select i such that Parent*(i, s)
+6, 19, 28, 33, 34, 35
+5000
+248 - PARENT*-call: syn-syn
+stmt s; call c;
+Select c such that Parent*(s, c)
+13, 29
+5000
+249 - PARENT*-boolean: generic-generic
+
+Select BOOLEAN such that Parent*(_, _)
+true
+5000
+250 - PARENT*-assign: fixed-syn (while stmt)
+assign a;
+Select a such that Parent*(14, a)
+15, 16, 17, 18, 20, 22, 23
+5000
+251 - PARENT*-stmt: fixed-syn (if stmt)
+stmt s;
+Select s such that Parent*(35, s)
+36, 37, 38
+5000
+252 - PARENT*-stmt: syn-fixed
+stmt s;
+Select s such that Parent*(s, 19)
+4, 14
+5000
+253 - PARENT*-while: syn-fixed
+while w;
+Select w such that Parent*(w, 37)
+36
+5000
+254 - PARENT*-if: syn-fixed
+if i;
+Select i such that Parent*(i, 35)
+33, 34
+5000
+255 - PARENT*-boolean: fixed-generic
+
+Select BOOLEAN such that Parent*(28, _)
+true
+5000
+256 - PARENT*-boolean: generic-fixed
+
+Select BOOLEAN such that Parent*(_, 28)
+true
+5000
+257 - PARENT*-assign: syn-generic
+assign a;
+Select a such that Parent*(a, _)
+none
+5000
+258 - PARENT*-while: syn-generic
+while w;
+Select w such that Parent*(w, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+259 - PARENT*-if: syn-generic
+if i;
+Select i such that Parent*(i, _)
+6, 19, 28, 33, 34, 35
+5000
+260 - PARENT*-stmt: generic-syn
+stmt s;
+Select s such that Parent*(_, s)
+5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 28, 29, 30, 34, 35, 36, 37, 38, 39, 40
+5000
+261 - PARENT*-assign: generic-syn
+assign a;
+Select a such that Parent*(_, a)
+5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 30, 37, 38, 39, 40
+5000
+262 - PARENT*-while: generic-syn
+while w;
+Select w such that Parent*(_, w)
+8, 11, 14, 21, 36
+5000
+263 - PARENT*-if: generic-syn
+if i;
+Select i such that Parent*(_, i)
+6, 19, 28, 34, 35
+5000
+264 - PARENT*-call: generic-syn
+call c;
+Select c such that Parent*(_, c)
+13, 29
+5000
+265 - PARENT*-while: pattern-left defined
+while w;
+Select w such that Parent*(w, _) pattern w("how", _)
+27
+5000
+266 - PARENT*-while: pattern-left defined synonym
+while w; variable v;
+Select w such that Parent*(35, w) pattern w(v, _)
+36
+5000
+267 - PARENT*-if: pattern-left defined
+if i;
+Select i such that Parent*(i, 34) pattern i("keyboard", _, _)
+none
+5000
+268 - PARENT*-if: pattern-left defined synonym
+if i; variable v;
+Select v such that Parent*(i, 21) pattern i(v, _, _)
+a
+5000
+269 - PARENT*: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Parent*(28, 29) and Parent*(35, 36)
+true
+5000
+270 - PARENT*: 2 clauses (similar) - syn-syn, syn-syn
+stmt s1, s2;
+Select <s1,s2> such that Parent*(s1, s2) and Parent*(s2, s1)
+none
+5000
+271 - PARENT*: 2 clauses (similar) - fixed-syn, fixed-syn
+stmt s;
+Select s such that Parent*(33, s) and Parent*(34, s)
+35, 36, 37, 38, 39
+5000
+272 - PARENT*: 2 clauses (similar) - syn-fixed, syn-fixed
+while w;
+Select w such that Parent*(14, w) and Parent*(i, 29)
+none
+5000
+273 - PARENT*: 2 clauses (similar) - fixed-generic, fixed-generic
+
+Select BOOLEAN such that Parent*(14, _) and Parent*(28, _)
+true
+5000
+274 - PARENT*: 2 clauses (similar) - generic-fixed, generic-fixed
+stmt s;
+Select s such that Parent*(_, 30) and Parent*(_, 34)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+275 - PARENT*: 2 clauses (similar) - syn-generic, syn-generic
+while w; if i;
+Select <i,w> such that Parent*(w, _) and Parent*(i, _)
+6 4, 6 8, 6 11, 6 14, 6 21, 6 27, 6 36, 19 4, 19 8, 19 11, 19 14, 19 21, 19 27, 19 36, 28 4, 28 8, 28 11, 28 14, 28 21, 28 27, 28 36, 33 4, 33 8, 33 11, 33 14, 33 21, 33 27, 33 36, 34 4, 34 8, 34 11, 34 14, 34 21, 34 27, 34 36, 35 4, 35 8, 35 11, 35 14, 35 21, 35 27, 35 36
+5000
+276 - PARENT*: 2 clauses (similar) - generic-syn, generic-syn
+stmt s; if i;
+Select i such that Parent*(_, s) and Parent*(_, i)
+6, 19, 28, 34, 35
+5000
+277 - PARENT*: 2 clauses (mixed) - fixed-fixed, fixed-syn
+stmt s;
+Select s such that Parent*(34, 35) and Parent*(28, s)
+29, 30
+5000
+278 - PARENT*: 2 clauses (mixed) - syn-syn, syn-fixed
+stmt s1, s2;
+Select <s1,s2> such that Parent*(s1, s2) and Parent*(s1, 30)
+27 28, 27 29, 27 30, 28 29, 28 30
+5000
+279 - PARENT*: 2 clauses (mixed) - generic-generic, fixed-generic
+while w;
+Select w such that Parent*(_, _) and Parent*(33, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+280 - PARENT*: 2 clauses (mixed) - fixed-syn, generic-fixed
+assign a;
+Select a such that Parent*(19, a) and Parent*(_, 28)
+20, 22, 23
+5000
+281 - PARENT*: 2 clauses (mixed) - syn-fixed, syn-generic
+if i; assign a;
+Select i such that Parent*(i, 22) and Parent*(a, _)
+none
+5000
+282 - PARENT*: 2 clauses (mixed) - fixed-generic, generic-syn
+
+Select BOOLEAN such that Parent*(28, _) and Parent*(_, 28)
+true
+5000
+283 - PARENT*: 2 clauses (mixed) - generic-fixed, syn-generic
+stmt s;
+Select s such that Parent*(_, 38) and Parent*(s, _)
+4, 6, 8, 11, 14, 19, 21, 27, 28, 33, 34, 35, 36
+5000
+284 - PARENT*: 2 clauses (mixed) - syn-generic, generic-syn
+if i;
+Select i such that Parent*(i, _) and Parent*(_, i)
+6, 19, 28, 34, 35
+5000
+285 - PARENT*: 2 clauses (mixed) - generic-fixed, generic-syn
+assign a;
+Select a such that Parent*(_, 23) and Parent*(_, a)
+5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 30, 37, 38, 39, 40
+5000
+286 - PARENT*: stmt# - select clause (has results)
+assign a;
+Select a.stmt# such that Parent*(28, a)
+30
+5000
+287 - PARENT*: stmt# - select clause (no results)
+assign a;
+Select a.stmt# such that Parent*(27, a)
+30
+5000
+288 - PARENT*: stmt# - with clause (has results)
+while w;
+Select w such that Parent*(w, _) with w.stmt# = 27
+27
+5000
+289 - PARENT*: stmt# - with clause (no results)
+while w;
+Select w such that Parent*(w, _) with w.stmt# = 4 and w.stmt# = 8
+none
+5000
+290 - PARENT*: prog_line
+prog_line n;
+Select n such that Parent*(n, _)
+4, 6, 8, 11, 14, 19, 21, 27, 28, 33, 34, 35, 36
+5000
+291 - PARENT*: stmt overflow
+stmt s;
+Select s such that Parent*(45, s)
+none
+5000
+292 - PARENT*: stmt underflow
+stmt s;
+Select s such that Parent*(-1, s)
+none
+5000
+293 - PARENT*: stmt underflow
+variable s;
+Select s such that Parent*(0, s)
+none
+5000
+294 - PARENT*: invalid argument
+assign a;
+Select a such that Parent*(a, "helloworld")
+none
+5000
+295 - FOLLOWS-boolean: fixed-fixed (regular stmt)
+
+Select BOOLEAN such that Follows(1, 2)
+true
+5000
+296 - FOLLOWS-stmt: fixed-fixed (while stmt)
+stmt s;
+Select s such that Follows(11, 13)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+297 - FOLLOWS-boolean: fixed-fixed (if stmt)
+
+Select BOOLEAN such that Follows(6, 14)
+true
+5000
+298 - FOLLOWS-stmt: syn-syn (tuple)
+stmt s1, s2;
+Select <s1,s2> such that Follows(s1, s2)
+1 2, 2 3, 3 4, 5 6, 6 14, 7 8, 10 11, 11 13, 15 16, 16 17, 17 18, 18 19, 20 21, 24 25, 25 26, 26 27, 31 32, 32 33
+5000
+299 - FOLLOWS-assign: syn-syn
+assign a1, a2;
+Select a2 such that Follows(a1, a2)
+2, 16, 17, 18, 25, 26, 32
+5000
+300 - FOLLOWS-while: syn-syn
+while w; stmt s;
+Select w such that Follows(w, s)
+11
+5000
+301 - FOLLOWS-if: syn-syn
+if i; stmt s;
+Select i such that Follows(i, s)
+6
+5000
+302 - FOLLOWS-boolean: generic-generic
+
+Select BOOLEAN such that Follows(_, _)
+true
+5000
+303 - FOLLOWS-stmt: fixed-syn
+stmt s;
+Select s such that Follows(26, s)
+27
+5000
+304 - FOLLOWS-while: fixed-syn
+while w;
+Select w such that Follows(20, w)
+21
+5000
+305 - FOLLOWS-if: fixed-syn
+if i;
+Select i such that Follows(32, i)
+33
+5000
+306 - FOLLOWS-stmt: syn-fixed
+stmt s;
+Select s such that Follows(s, 14)
+6
+5000
+307 - FOLLOWS-assign: syn-fixed
+assign a;
+Select a such that Follows(a, 23)
+none
+5000
+308 - FOLLOWS-while: syn-fixed
+while w;
+Select w such that Follows(w, 28)
+none
+5000
+309 - FOLLOWS-if: syn-fixed
+if i;
+Select i such that Follows(i, 14)
+6
+5000
+310 - FOLLOWS-boolean: fixed-generic
+
+Select BOOLEAN such that Follows(25, _)
+true
+5000
+311 - FOLLOWS-boolean: generic-fixed
+
+Select BOOLEAN such that Follows(_, 32)
+true
+5000
+312 - FOLLOWS-assign: syn-generic
+assign a;
+Select a such that Follows(a, _)
+1, 2, 5, 7, 10, 15, 16, 17, 18, 20, 24, 25, 26, 31, 32
+5000
+313 - FOLLOWS-while: syn-generic
+while w;
+Select w such that Follows(w, _)
+11
+5000
+314 - FOLLOWS-if: syn-generic
+if i;
+Select i such that Follows(i, _)
+6
+5000;
+315 - FOLLOWS-boolean : generic-syn
+stmt s;
+Select BOOLEAN such that Follows(_, s)
+true
+5000
+316 - FOLLOWS-assign: pattern-right defined (match select)
+assign a;
+Select a such that Follows(a, _) pattern a(_, _"a"_)
+2, 18, 20
+5000
+317 - FOLLOWS-assign: pattern-right defined (does not match select)
+assign a1, a2;
+Select a1 such that Follows(a1, 32) pattern a2(_, _"69"_)
+31
+5000
+318 - FOLLOWS-assign: pattern-left defined (match select)
+assign a;
+Select a such that Follows(a, _) pattern a("what", _)
+24
+5000
+319 - FOLLOWS-assign: pattern-left defined (does not match select)
+assign a1, a2;
+Select a1 such that Follows(a1, 27) pattern a2("ram", _)
+26
+5000
+320 - FOLLOWS-assign: pattern-left defined synonym
+assign a; variable v;
+Select a such that Follows(a, _) pattern a(v, _)
+1, 2, 5, 7, 10, 15, 16, 17, 18, 20, 24, 25, 26, 31, 32
+5000
+321 - FOLLOWS-assign: pattern-both defined (match select)
+assign a;
+Select a such that Follows(a, _) pattern a("mouse", _"speakers"_)
+31
+5000
+322 - FOLLOWS-assign: pattern-both defined (does not match select)
+assign a1, a2;
+Select a1 such that Follows(a1, 1) pattern a2("mouse", _"gpu"_)
+none
+5000
+323 - FOLLOWS-assign: pattern-both defined, left synonym
+assign a; variable v;
+Select a such that Follows(a, _) pattern a(v, _"69"_)
+16, 25
+5000
+324 - FOLLOWS-while: pattern (match select)
+while w;
+Select w such that Follows(w, _) pattern w("f", _)
+11
+5000
+325 - FOLLOWS-while: pattern (does not match select)
+stmt s; while w;
+Select s such that Follows(s, w) pattern w("how", _)
+26
+5000
+326 - FOLLOWS-while: pattern, left synonym
+while w; variable v;
+Select w such that Follows(_, w) pattern w(v, _)
+4, 8, 11, 14, 21, 27
+5000
+327 - FOLLOWS-if: pattern (match select)
+if i;
+Select i such that Follows(i, _) pattern i("b", _, _)
+6
+5000
+328 - FOLLOWS-if: pattern (does not match select)
+assign a; if i;
+Select a such that Follows(a, _) pattern i("why", _, _)
+1, 2, 5, 7, 10, 15, 16, 17, 18, 20, 24, 25, 26, 31, 32
+5000
+329 - FOLLOWS-if: pattern, left synonym
+if i; variable v;
+Select i such that Follows(_, i) pattern i(v, _, _)
+6, 19, 33
+5000
+330 - FOLLOWS: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Follows(24, 25) and Follows(32, 33)
+true
+5000
+331 - FOLLOWS: 2 clauses (similar) - syn-syn, syn-syn
+stmt s1, s2, s3;
+Select s1 such that Follows(s1, s2) and Follows(s3, s1)
+2, 3, 6, 11, 16, 17, 18, 25, 26, 32
+5000
+332 - FOLLOWS: 2 clauses (similar) - fixed-syn, fixed-syn
+stmt s1, s2;
+Select BOOLEAN such that Follows(18, s1) and Follows(26, s2)
+true
+5000
+333 - FOLLOWS: 2 clauses (similar) - syn-fixed, syn-fixed
+assign a; while w;
+Select a such that Follows(a, 15) and Follows(w, 23)
+none
+5000
+334 - FOLLOWS: 2 clauses (similar) - fixed-generic, fixed-generic
+stmt s;
+Select s such that Follows(26, _) and Follows(32, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+335 - FOLLOWS: 2 clauses (similar) - generic-fixed, generic-fixed
+
+Select BOOLEAN such that Follows(_, 27) and Follows(_, 33)
+true
+5000
+336 - FOLLOWS: 2 clauses (similar) - syn-generic, syn-generic
+while w; if i;
+Select <w,i> such that Follows(w, _) and Follows(i, _)
+11 6
+5000
+337 - FOLLOWS: 2 clauses (similar) - generic-syn, generic-syn
+while w; if i;
+Select w such that Follows(_, w) and Follows(_, i)
+4, 8, 11, 14, 21, 27
+5000
+338 - FOLLOWS: 2 clauses (mixed) - fixed-fixed, fixed-syn
+assign a;
+Select BOOLEAN such that Follows(1, 2) and Follows(24, a)
+true
+5000
+339 - FOLLOWS: 2 clauses (mixed) - syn-syn, syn-fixed
+assign a1, a2;
+Select a2 such that Follows(a1, a2) and Follows(a1, 17)
+17
+5000
+340 - FOLLOWS: 2 clauses (mixed) - generic-generic, fixed-generic
+
+Select BOOLEAN such that Follows(_, _) and Follows(26, _)
+true
+5000
+341 - FOLLOWS: 2 clauses (mixed) - fixed-syn, generic-fixed
+stmt s;
+Select s such that Follows(15, s) and Follows(_, 23)
+none
+5000
+342 - FOLLOWS: 2 clauses (mixed) - syn-fixed, syn-generic
+stmt s;
+Select s such that Follows(s, 33) and Follows(s, _)
+32
+5000
+343 - FOLLOWS: 2 clauses (mixed) - fixed-generic, generic-syn
+if i;
+Select i such that Follows(15, _) and Follows(_, i)
+6, 19, 33
+5000
+344 - FOLLOWS: 2 clauses (mixed) - generic-fixed, syn-generic
+assign a;
+Select a such that Follows(_, 8) and Follows(a, _)
+1, 2, 5, 7, 10, 15, 16, 17, 18, 20, 24, 25, 26, 31, 32
+5000
+345 - FOLLOWS: 2 clauses (mixed) - syn-generic, generic-syn
+stmt s;
+Select s such that Follows(s, _) and Follows(_, s)
+2, 3, 6, 11, 16, 17, 18, 25, 26, 32
+5000
+346 - FOLLOWS: 2 clauses (mixed) - generic-fixed, generic-syn
+while w;
+Select BOOLEAN such that Follows(_, 19) and Follows(_, w)
+true
+5000
+347 - FOLLOWS: stmt# - select clause (has results)
+assign a;
+Select a.stmt# such that Follows(a, _)
+1, 2, 5, 7, 10, 15, 16, 17, 18, 20, 24, 25, 26, 31, 32
+5000
+348 - FOLLOWS: stmt# - select clause (no results)
+if i;
+Select i.stmt# such that Follows(i, _)
+6
+5000
+349 - FOLLOWS: stmt# - with clause (has results)
+while w;
+Select w such that Follows(_, w) with w.stmt# = 14
+14
+5000
+350 - FOLLOWS: stmt# - with clause (no results)
+stmt s; while w;
+Select w such that Follows(_, w) with w.stmt# = 1
+none
+5000
+351 - FOLLOWS: prog_line
+prog_line n; if i;
+Select n such that Follows(n, i)
+5, 18, 32
+5000
+352 - FOLLOWS: stmt overflow
+variable v;
+Select v such that Follows(45, v)
+none
+5000
+353 - FOLLOWS: stmt underflow
+variable v;
+Select v such that Follows(-1, v)
+none
+5000
+354 - FOLLOWS: invalid argument
+variable v;
+Select v such that Follows(1, v)
+none
+5000
+355 - FOLLOWS: invalid argument
+procedure p;
+Select p such that Follows(1, p)
+none
+5000
+356 - FOLLOWS*-boolean: fixed-fixed (regular stmt)
+
+Select BOOLEAN such that Follows*(1, 4)
+true
+5000
+357 - FOLLOWS*-stmt: fixed-fixed (while stmt)
+stmt s;
+Select s such that Follows*(11, 13)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+358 - FOLLOWS*-boolean: fixed-fixed (if stmt)
+
+Select BOOLEAN such that Follows*(6, 14)
+true
+5000
+359 - FOLLOWS*-stmt: syn-syn (tuple)
+stmt s1, s2;
+Select <s1,s2> such that Follows*(s1, s2)
+1 2, 1 3, 1 4, 2 3, 2 4, 3 4, 5 6, 5 14, 6 14, 7 8, 10 11, 10 13, 11 13, 15 16, 15 17, 15 18, 15 19, 16 17, 16 18, 16 19, 17 18, 17 19, 18 19, 20 21, 24 25, 24 26, 24 27, 25 26, 25 27, 26 27, 31 32, 31 33, 32 33
+5000
+360 - FOLLOWS*-assign: syn-syn
+assign a1, a2;
+Select a2 such that Follows*(a1, a2)
+2, 16, 17, 18, 25, 26, 32
+5000
+361 - FOLLOWS*-while: syn-syn
+while w; stmt s;
+Select w such that Follows*(w, s)
+11
+5000
+362 - FOLLOWS*-if: syn-syn
+if i; stmt s;
+Select i such that Follows*(i, s)
+6
+5000
+363 - FOLLOWS*-boolean: generic-generic
+
+Select BOOLEAN such that Follows*(_, _)
+true
+5000
+364 - FOLLOWS*-stmt: fixed-syn
+stmt s;
+Select s such that Follows*(25, s)
+26, 27
+5000
+365 - FOLLOWS*-while: fixed-syn
+while w;
+Select w such that Follows*(1, w)
+4
+5000
+366 - FOLLOWS*-if: fixed-syn
+if i;
+Select i such that Follows*(32, i)
+33
+5000
+367 - FOLLOWS*-stmt: syn-fixed
+stmt s;
+Select s such that Follows*(s, 14)
+5, 6
+5000
+368 - FOLLOWS*-assign: syn-fixed
+assign a;
+Select a such that Follows*(a, 23)
+none
+5000
+369 - FOLLOWS*-while: syn-fixed
+while w;
+Select w such that Follows*(w, 28)
+none
+5000
+370 - FOLLOWS*-if: syn-fixed
+if i;
+Select i such that Follows*(i, 14)
+6
+5000
+371 - FOLLOWS*-boolean: fixed-generic
+
+Select BOOLEAN such that Follows*(25, _)
+true
+5000
+372 - FOLLOWS*-boolean: generic-fixed
+
+Select BOOLEAN such that Follows*(_, 32)
+true
+5000
+373 - FOLLOWS*-assign: syn-generic
+assign a;
+Select a such that Follows*(a, _)
+1, 2, 5, 7, 10, 15, 16, 17, 18, 20, 24, 25, 26, 31, 32
+5000
+374 - FOLLOWS*-while: syn-generic
+while w;
+Select w such that Follows*(w, _)
+11
+5000
+375 - FOLLOWS*-if: syn-generic
+if i;
+Select i such that Follows*(i, _)
+6
+5000;
+376 - FOLLOWS*-boolean : generic-syn
+stmt s;
+Select BOOLEAN such that Follows*(_, s)
+true
+5000
+377 - FOLLOWS*-assign: pattern-right defined (match select)
+assign a;
+Select a such that Follows*(a, _) pattern a(_, _"a"_)
+2, 18, 20
+5000
+378 - FOLLOWS*-assign: pattern-right defined (does not match select)
+assign a1, a2;
+Select a1 such that Follows*(a1, 32) pattern a2(_, _"69"_)
+31
+5000
+379 - FOLLOWS*-assign: pattern-left defined (match select)
+assign a;
+Select a such that Follows*(a, _) pattern a("what", _)
+24
+5000
+380 - FOLLOWS*-assign: pattern-left defined (does not match select)
+assign a1, a2;
+Select a1 such that Follows*(a1, 27) pattern a2("ram", _)
+24, 25, 26
+5000
+381 - FOLLOWS*-assign: pattern-left defined synonym
+assign a; variable v;
+Select a such that Follows*(a, _) pattern a(v, _)
+1, 2, 5, 7, 10, 15, 16, 17, 18, 20, 24, 25, 26, 31, 32
+5000
+382 - FOLLOWS*-assign: pattern-both defined (match select)
+assign a;
+Select a such that Follows*(a, _) pattern a("mouse", _"speakers"_)
+31
+5000
+383 - FOLLOWS*-assign: pattern-both defined (does not match select)
+assign a1, a2;
+Select a1 such that Follows*(a1, 1) pattern a2("mouse", _"gpu"_)
+none
+5000
+384 - FOLLOWS*-assign: pattern-both defined, left synonym
+assign a; variable v;
+Select a such that Follows*(a, _) pattern a(v, _"69"_)
+16, 25
+5000
+385 - FOLLOWS*-while: pattern (match select)
+while w;
+Select w such that Follows*(w, _) pattern w("f", _)
+11
+5000
+386 - FOLLOWS*-while: pattern (does not match select)
+stmt s; while w;
+Select s such that Follows*(s, w) pattern w("how", _)
+24, 25, 26
+5000
+387 - FOLLOWS*-while: pattern, left synonym
+while w; variable v;
+Select w such that Follows*(_, w) pattern w(v, _)
+4, 8, 11, 14, 21, 27
+5000
+388 - FOLLOWS*-if: pattern (match select)
+if i;
+Select i such that Follows*(i, _) pattern i("b", _, _)
+6
+5000
+389 - FOLLOWS*-if: pattern (does not match select)
+assign a; if i;
+Select a such that Follows*(a, _) pattern i("why", _, _)
+1, 2, 5, 7, 10, 15, 16, 17, 18, 20, 24, 25, 26, 31, 32
+5000
+390 - FOLLOWS*-if: pattern, left synonym
+if i; variable v;
+Select i such that Follows*(_, i) pattern i(v, _, _)
+6, 19, 33
+5000
+391 - FOLLOWS*: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Follows*(24, 25) and Follows*(32, 33)
+true
+5000
+392 - FOLLOWS*: 2 clauses (similar) - syn-syn, syn-syn
+stmt s1, s2, s3;
+Select s1 such that Follows*(s1, s2) and Follows*(s3, s1)
+2, 3, 6, 11, 16, 17, 18, 25, 26, 32
+5000
+393 - FOLLOWS*: 2 clauses (similar) - fixed-syn, fixed-syn
+stmt s1, s2;
+Select BOOLEAN such that Follows*(18, s1) and Follows*(26, s2)
+true
+5000
+394 - FOLLOWS*: 2 clauses (similar) - syn-fixed, syn-fixed
+assign a; while w;
+Select a such that Follows*(a, 15) and Follows*(w, 23)
+none
+5000
+395 - FOLLOWS*: 2 clauses (similar) - fixed-generic, fixed-generic
+stmt s;
+Select s such that Follows*(26, _) and Follows*(32, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+396 - FOLLOWS*: 2 clauses (similar) - generic-fixed, generic-fixed
+
+Select BOOLEAN such that Follows*(_, 27) and Follows*(_, 33)
+true
+5000
+397 - FOLLOWS*: 2 clauses (similar) - syn-generic, syn-generic
+while w; if i;
+Select <w,i> such that Follows*(w, _) and Follows*(i, _)
+11 6
+5000
+398 - FOLLOWS*: 2 clauses (similar) - generic-syn, generic-syn
+while w; if i;
+Select w such that Follows*(_, w) and Follows*(_, i)
+4, 8, 11, 14, 21, 27
+5000
+399 - FOLLOWS*: 2 clauses (mixed) - fixed-fixed, fixed-syn
+assign a;
+Select BOOLEAN such that Follows*(1, 2) and Follows*(24, a)
+true
+5000
+400 - FOLLOWS*: 2 clauses (mixed) - syn-syn, syn-fixed
+assign a1, a2;
+Select a2 such that Follows*(a1, a2) and Follows*(a1, 17)
+16, 17, 18
+5000
+401 - FOLLOWS*: 2 clauses (mixed) - generic-generic, fixed-generic
+
+Select BOOLEAN such that Follows*(_, _) and Follows*(26, _)
+true
+5000
+402 - FOLLOWS*: 2 clauses (mixed) - fixed-syn, generic-fixed
+stmt s;
+Select s such that Follows*(15, s) and Follows*(_, 23)
+none
+5000
+403 - FOLLOWS*: 2 clauses (mixed) - syn-fixed, syn-generic
+stmt s;
+Select s such that Follows*(s, 33) and Follows*(s, _)
+31, 32
+5000
+404 - FOLLOWS*: 2 clauses (mixed) - fixed-generic, generic-syn
+if i;
+Select i such that Follows*(15, _) and Follows*(_, i)
+6, 19, 33
+5000
+405 - FOLLOWS*: 2 clauses (mixed) - generic-fixed, syn-generic
+assign a;
+Select a such that Follows*(_, 8) and Follows*(a, _)
+1, 2, 5, 7, 10, 15, 16, 17, 18, 20, 24, 25, 26, 31, 32
+5000
+406 - FOLLOWS*: 2 clauses (mixed) - syn-generic, generic-syn
+stmt s;
+Select s such that Follows*(s, _) and Follows*(_, s)
+2, 3, 6, 11, 16, 17, 18, 25, 26, 32
+5000
+407 - FOLLOWS*: 2 clauses (mixed) - generic-fixed, generic-syn
+while w;
+Select BOOLEAN such that Follows*(_, 19) and Follows*(_, w)
+true
+5000
+408 - FOLLOWS*: stmt# - select clause (has results)
+assign a;
+Select a.stmt# such that Follows*(a, _)
+1, 2, 5, 7, 10, 15, 16, 17, 18, 20, 24, 25, 26, 31, 32
+5000
+409 - FOLLOWS*: stmt# - select clause (no results)
+if i;
+Select i.stmt# such that Follows*(i, _)
+6
+5000
+410 - FOLLOWS*: stmt# - with clause (has results)
+while w;
+Select w such that Follows*(_, w) with w.stmt# = 14
+14
+5000
+411 - FOLLOWS*: stmt# - with clause (no results)
+stmt s; while w;
+Select w such that Follows*(_, w) with w.stmt# = 1
+none
+5000
+412 - FOLLOWS*: prog_line
+prog_line n; if i;
+Select n such that Follows*(n, i)
+5, 15, 16, 17, 18, 31, 32
+5000
+413 - FOLLOWS*: stmt overflow
+variable v;
+Select v such that Follows*(45, v)
+none
+5000
+414 - FOLLOWS*: stmt underflow
+variable v;
+Select v such that Follows*(-1, v)
+none
+5000
+415 - FOLLOWS*: invalid argument
+variable v;
+Select v such that Follows*(1, v)
+none
+5000
+416 - FOLLOWS*: invalid argument
+procedure p;
+Select p such that Follows*(1, p)
+none
+5000
+417 - CALLS-boolean: fixed-fixed
+
+Select BOOLEAN such that Calls("proc1", "proc2")
+true
+5000
+418 - CALLS-proc: fixed-fixed (false)
+procedure p;
+Select p such that Calls("proc2", "proc1")
+none
+5000
+419 - CALLS-proc: syn-syn (tuple)
+procedure p1, p2;
+Select <p1,p2> such that Calls(p1, p2)
+proc1 proc2, proc1 proc3, proc2 proc3
+5000
+420 - CALLS-boolean: generic-generic
+
+Select BOOLEAN such that Calls(_, _)
+true
+5000
+421 - CALLS-proc: fixed-syn
+procedure p;
+Select p such that Calls("proc1", p)
+proc2, proc3
+5000
+422 - CALLS-stmt: syn-fixed
+stmt s; procedure p;
+Select s such that Calls(p, "proc3")
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+423 - CALLS-boolean: fixed-generic
+
+Select BOOLEAN such that Calls("proc2", _)
+true
+5000
+424 - CALLS-boolean: generic-fixed
+
+Select BOOLEAN such that Calls(_, "proc2")
+true
+5000
+425 - CALLS-while: syn-generic
+while w; procedure p;
+Select w such that Calls(p, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+426 - CALLS-if: generic-syn
+if i; procedure p;
+Select i such that Calls(_, p)
+6, 19, 28, 33, 34, 35
+5000
+427 - CALLS: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Calls("proc1", "proc2") and Calls("proc1", "proc3")
+true
+5000
+428 - CALLS: 2 clauses (similar) - syn-syn, syn-syn
+procedure p1, p2, p3;
+Select p2 such that Calls(p1, p2) and Calls(p2, p3)
+proc2
+5000
+429 - CALLS: 2 clauses (similar) - fixed-syn, fixed-syn
+procedure p;
+Select p such that Calls("proc1", p) and Calls("proc2", p)
+proc3
+5000
+430 - CALLS: 2 clauses (similar) - syn-fixed, syn-fixed
+procedure p;
+Select p such that Calls(p, "proc2") and Calls(p, "proc3")
+proc1
+5000
+431 - CALLS: 2 clauses (similar) - fixed-generic, fixed-generic
+
+Select BOOLEAN such that Calls("proc1", _) and Calls("proc2", _)
+true
+5000
+432 - CALLS: 2 clauses (similar) - generic-fixed, generic-fixed
+
+Select BOOLEAN such that Calls(_, "proc2") and Calls(_, "proc3")
+true
+5000
+433 - CALLS: 2 clauses (similar) - syn-generic, syn-generic
+procedure p1, p2;
+Select <p1,p2> such that Calls(p1, _) and Calls(p2, _)
+proc1 proc1, proc1 proc2, proc2 proc1, proc2 proc2
+5000
+434 - CALLS: 2 clauses (similar) - generic-syn, generic-syn
+procedure p1, p2;
+Select <p1,p2> such that Calls(_, p1) and Calls(_, p2)
+proc2 proc2, proc2 proc3, proc3 proc2, proc3 proc3
+5000
+435 - CALLS: 2 clauses (mixed) - fixed-fixed, fixed-syn
+procedure p;
+Select p such that Calls("proc2", "proc3") and Calls("proc1", p)
+proc2, proc3
+5000
+436 - CALLS: 2 clauses (mixed) - syn-syn, syn-fixed
+procedure p1, p2;
+Select p2 such that Calls(p1, p2) and Calls(p2, "proc3")
+proc2
+5000
+437 - CALLS: 2 clauses (mixed) - generic-generic, fixed-generic
+
+Select BOOLEAN such that Calls(_, _) and Calls("proc3", _)
+false
+5000
+438 - CALLS: 2 clauses (mixed) - fixed-syn, generic-fixed
+procedure p;
+Select p such that Calls("proc2", p) and Calls(_, "proc2")
+proc3
+5000
+439 - CALLS: 2 clauses (mixed) - syn-fixed, syn-generic
+procedure p1, p2;
+Select p1 such that Calls(p1, "proc3") and Calls(p2, _)
+proc1, proc2
+5000
+440 - CALLS: 2 clauses (mixed) - fixed-generic, generic-syn
+procedure p;
+Select p such that Calls("proc2", _) and Calls(_, p)
+proc2, proc3
+5000
+441 - CALLS: 2 clauses (mixed) - generic-fixed, syn-generic
+procedure p;
+Select p such that Calls(_, "proc1") and Calls(p, _)
+none
+5000
+442 - CALLS: 2 clauses (mixed) - syn-generic, generic-syn
+procedure p;
+Select p such that Calls(p, _) and Calls(_, p)
+proc2
+5000
+443 - CALLS: 2 clauses (mixed) - generic-fixed, generic-syn
+procedure p;
+Select BOOLEAN such that Calls(_, "proc3") and Calls(_, p)
+true
+5000
+444 - CALLS: procName - select clause (has results)
+procedure p;
+Select p.procName such that Calls(p, _)
+proc1, proc2
+5000
+445 - CALLS: procName - select clause (no results)
+procedure p;
+Select p.procName such that Calls(p, "proc4")
+none
+5000
+446 - CALLS: procName - with clause (has results)
+procedure p;
+Select p such that Calls(p, _) with p.procName = "proc2"
+proc2
+5000
+447 - CALLS: procName - with clause (no results)
+procedure p;
+Select p such that Calls(_, p) with p.procName = "proc123"
+none
+5000
+448 - CALLS: non-existent procedure
+procedure p;
+Select p such that Calls("proc4", p)
+none
+5000
+449 - CALLS: non-existent procedure
+procedure p;
+Select p such that Calls(p, "proc5")
+none
+5000
+450 - CALLS*-boolean: fixed-fixed
+
+Select BOOLEAN such that Calls*("proc1", "proc2")
+true
+5000
+451 - CALLS*-proc: fixed-fixed (false)
+procedure p;
+Select p such that Calls*("proc2", "proc1")
+none
+5000
+452 - CALLS*-proc: syn-syn (tuple)
+procedure p1, p2;
+Select <p1,p2> such that Calls*(p1, p2)
+proc1 proc2, proc1 proc3, proc2 proc3
+5000
+453 - CALLS*-boolean: generic-generic
+
+Select BOOLEAN such that Calls*(_, _)
+true
+5000
+454 - CALLS*-proc: fixed-syn
+procedure p;
+Select p such that Calls*("proc1", p)
+proc2, proc3
+5000
+455 - CALLS*-stmt: syn-fixed
+stmt s; procedure p;
+Select s such that Calls*(p, "proc3")
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+456 - CALLS*-boolean: fixed-generic
+
+Select BOOLEAN such that Calls*("proc2", _)
+true
+5000
+457 - CALLS*-boolean: generic-fixed
+
+Select BOOLEAN such that Calls*(_, "proc2")
+true
+5000
+458 - CALLS*-while: syn-generic
+while w; procedure p;
+Select w such that Calls*(p, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+459 - CALLS*-if: generic-syn
+if i; procedure p;
+Select i such that Calls*(_, p)
+6, 19, 28, 33, 34, 35
+5000
+460 - CALLS*: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Calls*("proc1", "proc2") and Calls*("proc1", "proc3")
+true
+5000
+461 - CALLS*: 2 clauses (similar) - syn-syn, syn-syn
+procedure p1, p2, p3;
+Select p2 such that Calls*(p1, p2) and Calls*(p2, p3)
+proc2
+5000
+462 - CALLS*: 2 clauses (similar) - fixed-syn, fixed-syn
+procedure p;
+Select p such that Calls*("proc1", p) and Calls*("proc2", p)
+proc3
+5000
+463 - CALLS*: 2 clauses (similar) - syn-fixed, syn-fixed
+procedure p;
+Select p such that Calls*(p, "proc2") and Calls*(p, "proc3")
+proc1
+5000
+464 - CALLS*: 2 clauses (similar) - fixed-generic, fixed-generic
+
+Select BOOLEAN such that Calls*("proc1", _) and Calls*("proc2", _)
+true
+5000
+465 - CALLS*: 2 clauses (similar) - generic-fixed, generic-fixed
+
+Select BOOLEAN such that Calls*(_, "proc2") and Calls*(_, "proc3")
+true
+5000
+466 - CALLS*: 2 clauses (similar) - syn-generic, syn-generic
+procedure p1, p2;
+Select <p1,p2> such that Calls*(p1, _) and Calls*(p2, _)
+proc1 proc1, proc1 proc2, proc2 proc1, proc2 proc2
+5000
+467 - CALLS*: 2 clauses (similar) - generic-syn, generic-syn
+procedure p1, p2;
+Select <p1,p2> such that Calls*(_, p1) and Calls*(_, p2)
+proc2 proc2, proc2 proc3, proc3 proc2, proc3 proc3
+5000
+468 - CALLS*: 2 clauses (mixed) - fixed-fixed, fixed-syn
+procedure p;
+Select p such that Calls*("proc2", "proc3") and Calls*("proc1", p)
+proc2, proc3
+5000
+469 - CALLS*: 2 clauses (mixed) - syn-syn, syn-fixed
+procedure p1, p2;
+Select p2 such that Calls*(p1, p2) and Calls*(p2, "proc3")
+proc2
+5000
+470 - CALLS*: 2 clauses (mixed) - generic-generic, fixed-generic
+
+Select BOOLEAN such that Calls*(_, _) and Calls*("proc3", _)
+false
+5000
+471 - CALLS*: 2 clauses (mixed) - fixed-syn, generic-fixed
+procedure p;
+Select p such that Calls*("proc2", p) and Calls*(_, "proc2")
+proc3
+5000
+472 - CALLS*: 2 clauses (mixed) - syn-fixed, syn-generic
+procedure p1, p2;
+Select p1 such that Calls*(p1, "proc3") and Calls*(p2, _)
+proc1, proc2
+5000
+473 - CALLS*: 2 clauses (mixed) - fixed-generic, generic-syn
+procedure p;
+Select p such that Calls*("proc2", _) and Calls*(_, p)
+proc2, proc3
+5000
+474 - CALLS*: 2 clauses (mixed) - generic-fixed, syn-generic
+procedure p;
+Select p such that Calls*(_, "proc1") and Calls*(p, _)
+none
+5000
+475 - CALLS*: 2 clauses (mixed) - syn-generic, generic-syn
+procedure p;
+Select p such that Calls*(p, _) and Calls*(_, p)
+proc2
+5000
+476 - CALLS*: 2 clauses (mixed) - generic-fixed, generic-syn
+procedure p;
+Select BOOLEAN such that Calls*(_, "proc3") and Calls*(_, p)
+true
+5000
+477 - CALLS*: procName - select clause (has results)
+procedure p;
+Select p.procName such that Calls*(p, _)
+proc1, proc2
+5000
+478 - CALLS*: procName - select clause (no results)
+procedure p;
+Select p.procName such that Calls*(p, "proc4")
+none
+5000
+479 - CALLS*: procName - with clause (has results)
+procedure p;
+Select p such that Calls*(p, _) with p.procName = "proc2"
+proc2
+5000
+480 - CALLS*: procName - with clause (no results)
+procedure p;
+Select p such that Calls*(_, p) with p.procName = "proc123"
+none
+5000
+481 - CALLS: non-existent procedure
+procedure p;
+Select p such that Calls("proc4", p)
+none
+5000
+482 - CALLS: non-existent procedure
+procedure p;
+Select p such that Calls(p, "proc5")
+none
+5000
+483 - NEXT-boolean: fixed-fixed (regular stmt)
+
+Select BOOLEAN such that Next(35, 38)
+true
+5000
+484 - NEXT-stmt: fixed-fixed (while stmt)
+stmt s;
+Select s such that Next(27, 28)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+485 - NEXT-boolean: fixed-fixed (loop while stmt)
+
+Select BOOLEAN such that Next(37, 36)
+true
+5000
+486 - NEXT-boolean: fixed-fixed (if stmt)
+
+Select BOOLEAN such that Next(33, 34)
+true
+5000
+487 - NEXT-boolean: fixed-fixed (if stmt to then block)
+
+Select BOOLEAN such that Next(33, 40)
+true
+5000
+488 - NEXT-stmt: fixed-fixed (false)
+stmt s;
+Select s such that Next(37, 38)
+none
+5000
+489 - NEXT-stmt: syn-syn (tuple)
+stmt s1, s2;
+Select <s1,s2> such that Next(s1, s2)
+1 2, 2 3, 3 4, 4 5, 5 6, 6 7, 6 10, 7 8, 8 9, 8 14, 9 8, 10 11, 11 12, 11 13, 12 11, 13 14, 14 4, 14 15, 15 16, 16 17, 17 18, 18 19, 19 20, 19 23, 20 21, 21 22, 21 14, 22 21, 23 14, 24 25, 25 26, 26 27, 27 28, 28 29, 28 30, 29 27, 30 27, 31 32, 32 33, 33 34, 33 40, 34 35, 34 39, 35 36, 35 38, 36 37, 37 36
+5000
+490 - NEXT-assign: syn-syn
+assign a1, a2;
+Select a1 such that Next(a1, a2)
+1, 15, 16, 17, 24, 25, 31
+5000
+491 - NEXT-while: syn-syn
+while w; if i;
+Select w such that Next(i, w)
+36
+5000
+492 - NEXT-if: syn-syn
+if i; stmt s;
+Select i such that Next(i, s)
+6, 19, 28, 33, 34, 35
+5000
+493 - NEXT-call: syn-syn
+call c; stmt s;
+Select c such that Next(c, s)
+3, 13, 29
+5000
+494 - NEXT-boolean: generic-generic
+
+Select BOOLEAN such that Next(_, _)
+true
+5000
+495 - NEXT-stmt: fixed-syn (regular stmt)
+stmt s;
+Select s such that Next(25, s)
+26
+5000
+496 - NEXT-assign: fixed-syn (while stmt)
+assign a;
+Select a such that Next(14, a)
+15
+5000
+497 - NEXT-while: fixed-syn (if stmt)
+while w; stmt s;
+Select w such that Next(28, s)
+4, 8, 11, 14, 21, 27, 36
+5000
+498 - NEXT-stmt: syn-fixed
+stmt s;
+Select s such that Next(s, 40)
+33
+5000
+499 - NEXT-assign: syn-fixed
+assign a;
+Select a such that Next(a, 33)
+32
+5000
+500 - NEXT-while: syn-fixed
+while w;
+Select w such that Next(w, 37)
+36
+5000
+501 - NEXT-if: syn-fixed
+if i;
+Select i such that Next(i, 30)
+28
+5000
+502 - NEXT-call: syn-fixed
+call c;
+Select c such that Next(c, 27)
+29
+5000
+503 - NEXT-boolean: fixed-generic
+
+Select BOOLEAN such that Next(22, _)
+true
+5000
+504 - NEXT-boolean: generic-fixed
+
+Select BOOLEAN such that Next(_, 18)
+true
+5000
+505 - NEXT-assign: syn-generic
+assign a;
+Select a such that Next(a, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37
+5000
+506 - NEXT-while: syn-generic
+while w;
+Select w such that Next(w, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+507 - NEXT-if: syn-generic
+if i;
+Select i such that Next(i, _)
+6, 19, 28, 33, 34, 35
+5000
+508 - NEXT-call: syn-generic
+call c;
+Select c such that Next(c, _)
+3, 13, 29
+5000
+509 - NEXT-stmt: generic-syn
+stmt s;
+Select s such that Next(_, s)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+510 - NEXT-while: generic-syn
+while w;
+Select w such that Next(_, w)
+4, 8, 11, 14, 21, 27, 36
+5000
+511 - NEXT-if: generic-syn
+if i;
+Select i such that Next(_, i)
+6, 19, 28, 33, 34, 35
+5000
+512 - NEXT-call: generic-syn
+call c;
+Select c such that Next(_, c)
+3, 13, 29
+5000
+513 - NEXT-assign: pattern-right defined (match select)
+assign a; while w;
+Select a such that Next(a, w) pattern a(_, _"c -a"_)
+23
+5000
+514 - NEXT-while: pattern-right defined (does not match select)
+while w; assign a;
+Select w such that Next(w, a) pattern a(_, _"2"_)
+14
+5000
+515 - NEXT-while: pattern-left defined (match select)
+while w;
+Select w such that Next(_, w) pattern w("ram", _)
+36
+5000
+516 - NEXT-stmt: pattern-left defined (does not match select)
+stmt s; assign a;
+Select s such that Next(s, _) pattern a("why", _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37
+5000
+517 - NEXT-assign: pattern-left defined synonym
+assign a; variable v;
+Select a such that Next(a, _) pattern a(v, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37
+5000
+518 - NEXT-assign: pattern-both defined (match select)
+assign a; while w;
+Select a such that Next(a, w) pattern a("b", _"c"_)
+20, 23
+5000
+519 - NEXT-while: pattern-both defined (match does not select)
+while w; assign a;
+Select w such that Next(_, w) pattern a("how", _"what+what"_)
+4, 8, 11, 14, 21, 27, 36
+5000
+520 - NEXT-while: pattern-both defined, left synonym
+while w; variable v;
+Select w such that Next(w, _) pattern w(v, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+521 - NEXT-if: pattern (match select)
+if i;
+Select i such that Next(i, _) pattern i("a", _, _)
+19
+5000
+522 - NEXT-if: pattern (does not match select)
+if i; assign a1, a2;
+Select i such that Next(i, a2) pattern a1(_, _"(money-cpu)"_)
+6, 19, 28, 33, 34, 35
+5000
+523 - NEXT-if: pattern, left synonym
+if i; variable v;
+Select i such that Next(i, _) pattern i(v, _, _)
+6, 19, 28, 33, 34, 35
+5000
+524 - NEXT: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Next(1, 2) and Next(24, 25)
+true
+5000
+525 - NEXT: 2 clauses (similar) - syn-syn, syn-syn
+stmt s; while w; assign a;
+Select <s,w> such that Next(s, w) and Next(a, w)
+7 8, 8 14, 9 8, 10 11, 12 11, 13 14, 20 21, 21 14, 22 21, 23 14, 26 27, 29 27, 30 27, 35 36, 37 36
+5000
+526 - NEXT: 2 clauses (similar) - fixed-syn, fixed-syn
+stmt s;
+Select s such that Next(35, s) and Next(37, s)
+36
+5000
+527 - NEXT: 2 clauses (similar) - syn-fixed, syn-fixed
+assign a; while w;
+Select a such that Next(a, 17) and Next (w, 13)
+16
+5000
+528 - NEXT: 2 clauses (similar) - fixed-generic, fixed-generic
+
+Select BOOLEAN such that Next(27, _) and Next(37, _)
+true
+5000
+529 - NEXT: 2 clauses (similar) - generic-fixed, generic-fixed
+stmt s; while w;
+Select s such that Next(_, s) and Next(_, w)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+530 - NEXT: 2 clauses (similar) - syn-generic, syn-generic
+assign a; if i;
+Select i such that Next(a, _) and Next(i, _)
+6, 19, 28, 33, 34, 35
+5000
+531 - NEXT: 2 clauses (similar) - generic-syn, generic-syn
+assign a; while w;
+Select w such that Next(_, a) and Next(_, w)
+4, 8, 11, 14, 21, 27, 36
+5000
+532 - NEXT: 2 clauses (mixed) - fixed-fixed, fixed-syn
+stmt s;
+Select s such that Next(30, 27) and Next(35, s)
+36, 38
+5000
+533 - NEXT: 2 clauses (mixed) - syn-syn, syn-fixed
+assign a; if i;
+Select a such that Next(i, a) and Next(34, i)
+38
+5000
+534 - NEXT: 2 clauses (mixed) - generic-generic, fixed-generic
+
+Select BOOLEAN such that Next(_, _) and Next(29, _)
+true
+5000
+535 - NEXT: 2 clauses (mixed) - fixed-syn, generic-fixed
+while w;
+Select w such that Next(35, w) and Next(_, w)
+36
+5000
+536 - NEXT: 2 clauses (mixed) - syn-fixed, syn-generic
+stmt s;
+Select s such that Next(s, 30) and Next(s, _)
+28
+5000
+537 - NEXT: 2 clauses (mixed) - fixed-generic, generic-syn
+assign a;
+Select a such that Next(23, _) and Next(_, a)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 32, 37, 38, 39, 40
+5000
+538 - NEXT: 2 clauses (mixed) - generic-fixed, syn-generic
+while w;
+Select w such that Next(_, 21) and Next(w, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+539 - NEXT: 2 clauses (mixed) - syn-generic, generic-syn
+assign a; while w;
+Select <a,w> such that Next(w, _) and Next(_, a)
+2 4, 2 8, 2 11, 2 14, 2 21, 2 27, 2 36, 5 4, 5 8, 5 11, 5 14, 5 21, 5 27, 5 36, 7 4, 7 8, 7 11, 7 14, 7 21, 7 27, 7 36, 9 4, 9 8, 9 11, 9 14, 9 21, 9 27, 9 36, 10 4, 10 8, 10 11, 10 14, 10 21, 10 27, 10 36, 12 4, 12 8, 12 11, 12 14, 12 21, 12 27, 12 36, 15 4, 15 8, 15 11, 15 14, 15 21, 15 27, 15 36, 16 4, 16 8, 16 11, 16 14, 16 21, 16 27, 16 36, 17 4, 17 8, 17 11, 17 14, 17 21, 17 27, 17 36, 18 4, 18 8, 18 11, 18 14, 18 21, 18 27, 18 36, 20 4, 20 8, 20 11, 20 14, 20 21, 20 27, 20 36, 22 4, 22 8, 22 11, 22 14, 22 21, 22 27, 22 36, 23 4, 23 8, 23 11, 23 14, 23 21, 23 27, 23 36, 25 4, 25 8, 25 11, 25 14, 25 21, 25 27, 25 36, 26 4, 26 8, 26 11, 26 14, 26 21, 26 27, 26 36, 30 4, 30 8, 30 11, 30 14, 30 21, 30 27, 30 36, 32 4, 32 8, 32 11, 32 14, 32 21, 32 27, 32 36, 37 4, 37 8, 37 11, 37 14, 37 21, 37 27, 37 36, 38 4, 38 8, 38 11, 38 14, 38 21, 38 27, 38 36, 39 4, 39 8, 39 11, 39 14, 39 21, 39 27, 39 36, 40 4, 40 8, 40 11, 40 14, 40 21, 40 27, 40 36
+5000
+540 - NEXT: 2 clauses (mixed) - generic-fixed, generic-syn
+stmt s;
+Select  such that Next(_, 1) and Next(_, s)
+none
+5000
+541 - NEXT: stmt# - select clause (has results)
+assign a;
+Select a.stmt# such that Next(a, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37
+5000
+542 - NEXT: stmt# - select clause (no results)
+if i; assign a;
+Select i.stmt# such that Next(a, i)
+6, 19, 33
+5000
+543 - NEXT: stmt# - with clause (has results)
+while w;
+Select w such that Next(w, _) with w.stmt# = 36
+36
+5000
+544 NEXT: stmt# - with clause (no results)
+if i;
+Select i such that Next(i, _) with i.stmt# = 33
+33
+5000
+545 - NEXT: prog_line
+prog_line n; if i;
+Select n such that Next(n, i)
+5, 18, 27, 32, 33, 34
+5000
+546 - NEXT: stmt overflow
+variable v;
+Select v such that Next(45, v)
+none
+5000
+547 - NEXT: stmt underflow
+variable v;
+Select v such that Next(-1, v)
+none
+5000
+548 - NEXT: invalid type
+variable v;
+Select v such that Next(2, v)
+none
+5000
+549 - NEXT: invalid type
+procedure p;
+Select p such that Next(p, 2)
+none
+5000
+550 - NEXT*-boolean: fixed-fixed (regular stmt)
+
+Select BOOLEAN such that Next*(28, 27)
+true
+5000
+551 - NEXT*-stmt: fixed-fixed (while stmt)
+stmt s;
+Select s such that Next*(11, 4)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+552 - NEXT*-boolean: fixed-fixed (loop while stmt)
+
+Select BOOLEAN such that Next*(37, 36)
+true
+5000
+553 - NEXT*-boolean: fixed-fixed (if stmt)
+
+Select BOOLEAN such that Next*(33, 35)
+true
+5000
+554 - NEXT*-boolean: fixed-fixed (if stmt to then block)
+
+Select BOOLEAN such that Next*(33, 38)
+true
+5000
+555 - NEXT*-stmt: fixed-fixed (false)
+stmt s;
+Select s such that Next*(40, 33)
+none
+5000
+556 - NEXT*-stmt: syn-syn (tuple)
+stmt s1, s2;
+Select <s1,s2> such that Next*(s1, s2)
+1 2, 1 3, 1 4, 1 5, 1 6, 1 7, 1 8, 1 9, 1 10, 1 11, 1 12, 1 13, 1 14, 1 15, 1 16, 1 17, 1 18, 1 19, 1 20, 1 21, 1 22, 1 23, 2 3, 2 4, 2 5, 2 6, 2 7, 2 8, 2 9, 2 10, 2 11, 2 12, 2 13, 2 14, 2 15, 2 16, 2 17, 2 18, 2 19, 2 20, 2 21, 2 22, 2 23, 3 4, 3 5, 3 6, 3 7, 3 8, 3 9, 3 10, 3 11, 3 12, 3 13, 3 14, 3 15, 3 16, 3 17, 3 18, 3 19, 3 20, 3 21, 3 22, 3 23, 4 4, 4 5, 4 6, 4 7, 4 8, 4 9, 4 10, 4 11, 4 12, 4 13, 4 14, 4 15, 4 16, 4 17, 4 18, 4 19, 4 20, 4 21, 4 22, 4 23, 5 4, 5 5, 5 6, 5 7, 5 8, 5 9, 5 10, 5 11, 5 12, 5 13, 5 14, 5 15, 5 16, 5 17, 5 18, 5 19, 5 20, 5 21, 5 22, 5 23, 6 4, 6 5, 6 6, 6 7, 6 8, 6 9, 6 10, 6 11, 6 12, 6 13, 6 14, 6 15, 6 16, 6 17, 6 18, 6 19, 6 20, 6 21, 6 22, 6 23, 7 4, 7 5, 7 6, 7 7, 7 8, 7 9, 7 10, 7 11, 7 12, 7 13, 7 14, 7 15, 7 16, 7 17, 7 18, 7 19, 7 20, 7 21, 7 22, 7 23, 8 4, 8 5, 8 6, 8 7, 8 8, 8 9, 8 10, 8 11, 8 12, 8 13, 8 14, 8 15, 8 16, 8 17, 8 18, 8 19, 8 20, 8 21, 8 22, 8 23, 9 4, 9 5, 9 6, 9 7, 9 8, 9 9, 9 10, 9 11, 9 12, 9 13, 9 14, 9 15, 9 16, 9 17, 9 18, 9 19, 9 20, 9 21, 9 22, 9 23, 10 4, 10 5, 10 6, 10 7, 10 8, 10 9, 10 10, 10 11, 10 12, 10 13, 10 14, 10 15, 10 16, 10 17, 10 18, 10 19, 10 20, 10 21, 10 22, 10 23, 11 4, 11 5, 11 6, 11 7, 11 8, 11 9, 11 10, 11 11, 11 12, 11 13, 11 14, 11 15, 11 16, 11 17, 11 18, 11 19, 11 20, 11 21, 11 22, 11 23, 12 4, 12 5, 12 6, 12 7, 12 8, 12 9, 12 10, 12 11, 12 12, 12 13, 12 14, 12 15, 12 16, 12 17, 12 18, 12 19, 12 20, 12 21, 12 22, 12 23, 13 4, 13 5, 13 6, 13 7, 13 8, 13 9, 13 10, 13 11, 13 12, 13 13, 13 14, 13 15, 13 16, 13 17, 13 18, 13 19, 13 20, 13 21, 13 22, 13 23, 14 4, 14 5, 14 6, 14 7, 14 8, 14 9, 14 10, 14 11, 14 12, 14 13, 14 14, 14 15, 14 16, 14 17, 14 18, 14 19, 14 20, 14 21, 14 22, 14 23, 15 4, 15 5, 15 6, 15 7, 15 8, 15 9, 15 10, 15 11, 15 12, 15 13, 15 14, 15 15, 15 16, 15 17, 15 18, 15 19, 15 20, 15 21, 15 22, 15 23, 16 4, 16 5, 16 6, 16 7, 16 8, 16 9, 16 10, 16 11, 16 12, 16 13, 16 14, 16 15, 16 16, 16 17, 16 18, 16 19, 16 20, 16 21, 16 22, 16 23, 17 4, 17 5, 17 6, 17 7, 17 8, 17 9, 17 10, 17 11, 17 12, 17 13, 17 14, 17 15, 17 16, 17 17, 17 18, 17 19, 17 20, 17 21, 17 22, 17 23, 18 4, 18 5, 18 6, 18 7, 18 8, 18 9, 18 10, 18 11, 18 12, 18 13, 18 14, 18 15, 18 16, 18 17, 18 18, 18 19, 18 20, 18 21, 18 22, 18 23, 19 4, 19 5, 19 6, 19 7, 19 8, 19 9, 19 10, 19 11, 19 12, 19 13, 19 14, 19 15, 19 16, 19 17, 19 18, 19 19, 19 20, 19 21, 19 22, 19 23, 20 4, 20 5, 20 6, 20 7, 20 8, 20 9, 20 10, 20 11, 20 12, 20 13, 20 14, 20 15, 20 16, 20 17, 20 18, 20 19, 20 20, 20 21, 20 22, 20 23, 21 4, 21 5, 21 6, 21 7, 21 8, 21 9, 21 10, 21 11, 21 12, 21 13, 21 14, 21 15, 21 16, 21 17, 21 18, 21 19, 21 20, 21 21, 21 22, 21 23, 22 4, 22 5, 22 6, 22 7, 22 8, 22 9, 22 10, 22 11, 22 12, 22 13, 22 14, 22 15, 22 16, 22 17, 22 18, 22 19, 22 20, 22 21, 22 22, 22 23, 23 4, 23 5, 23 6, 23 7, 23 8, 23 9, 23 10, 23 11, 23 12, 23 13, 23 14, 23 15, 23 16, 23 17, 23 18, 23 19, 23 20, 23 21, 23 22, 23 23, 24 25, 24 26, 24 27, 24 28, 24 29, 24 30, 25 26, 25 27, 25 28, 25 29, 25 30, 26 27, 26 28, 26 29, 26 30, 27 27, 27 28, 27 29, 27 30, 28 27, 28 28, 28 29, 28 30, 29 27, 29 28, 29 29, 29 30, 30 27, 30 28, 30 29, 30 30, 31 32, 31 33, 31 34, 31 35, 31 36, 31 37, 31 38, 31 39, 31 40, 32 33, 32 34, 32 35, 32 36, 32 37, 32 38, 32 39, 32 40, 33 34, 33 35, 33 36, 33 37, 33 38, 33 39, 33 40, 34 35, 34 36, 34 37, 34 38, 34 39, 35 36, 35 37, 35 38, 36 36, 36 37, 37 36, 37 37
+5000
+557 - NEXT*-assign: syn-syn
+assign a1, a2;
+Select a1 such that Next*(a1, a2)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37
+5000
+558 - NEXT*-while: syn-syn
+while w; if i;
+Select w such that Next*(i, w)
+4, 8, 11, 14, 21, 27, 36
+5000
+559 - NEXT*-if: syn-syn
+if i; stmt s;
+Select i such that Next*(i, s)
+6, 19, 28, 33, 34, 35
+5000
+560 - NEXT*-call: syn-syn
+call c; stmt s;
+Select c such that Next*(c, s)
+3, 13, 29
+5000
+561 - NEXT*-boolean: generic-generic
+
+Select BOOLEAN such that Next*(_, _)
+true
+5000
+562 - NEXT*-stmt: fixed-syn (regular stmt)
+stmt s;
+Select s such that Next*(25, s)
+26, 27, 28, 29, 30
+5000
+563 - NEXT*-assign: fixed-syn (while stmt)
+assign a;
+Select a such that Next*(14, a)
+5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23
+5000
+564 - NEXT*-while: fixed-syn (if stmt)
+while w; stmt s;
+Select w such that Next*(28, s)
+4, 8, 11, 14, 21, 27, 36
+5000
+565 - NEXT*-stmt: syn-fixed
+stmt s;
+Select s such that Next*(s, 40)
+31, 32, 33
+5000
+566 - NEXT*-assign: syn-fixed
+assign a;
+Select a such that Next*(a, 33)
+31, 32
+5000
+567 - NEXT*-while: syn-fixed
+while w;
+Select w such that Next*(w, 37)
+36
+5000
+568 - NEXT*-if: syn-fixed
+if i;
+Select i such that Next*(i, 30)
+28
+5000
+569 - NEXT*-call: syn-fixed
+call c;
+Select c such that Next*(c, 27)
+29
+5000
+570 - NEXT*-boolean: fixed-generic
+
+Select BOOLEAN such that Next*(22, _)
+true
+5000
+571 - NEXT*-boolean: generic-fixed
+
+Select BOOLEAN such that Next*(_, 18)
+true
+5000
+572 - NEXT*-assign: syn-generic
+assign a;
+Select a such that Next*(a, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37
+5000
+573 - NEXT*-while: syn-generic
+while w;
+Select w such that Next*(w, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+574 - NEXT*-if: syn-generic
+if i;
+Select i such that Next*(i, _)
+6, 19, 28, 33, 34, 35
+5000
+575 - NEXT*-call: syn-generic
+call c;
+Select c such that Next*(c, _)
+3, 13, 29
+5000
+576 - NEXT*-stmt: generic-syn
+stmt s;
+Select s such that Next*(_, s)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+577 - NEXT*-while: generic-syn
+while w;
+Select w such that Next*(_, w)
+4, 8, 11, 14, 21, 27, 36
+5000
+578 - NEXT*-if: generic-syn
+if i;
+Select i such that Next*(_, i)
+6, 19, 28, 33, 34, 35
+5000
+579 - NEXT*-call: generic-syn
+call c;
+Select c such that Next*(_, c)
+3, 13, 29
+5000
+580 - NEXT*-assign: pattern-right defined (match select)
+assign a; while w;
+Select a such that Next*(a, w) pattern a(_, _"c -a"_)
+23
+5000
+581 - NEXT*-while: pattern-right defined (does not match select)
+while w; assign a;
+Select w such that Next*(w, a) pattern a(_, _"2"_)
+4, 8, 11, 14, 21
+5000
+582 - NEXT*-while: pattern-left defined (match select)
+while w;
+Select w such that Next*(_, w) pattern w("ram", _)
+36
+5000
+583 - NEXT*-stmt: pattern-left defined (does not match select)
+stmt s; assign a;
+Select s such that Next*(s, _) pattern a("why", _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37
+5000
+584 - NEXT*-assign: pattern-left defined synonym
+assign a; variable v;
+Select a such that Next*(a, _) pattern a(v, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37
+5000
+585 - NEXT*-assign: pattern-both defined (match select)
+assign a; while w;
+Select a such that Next*(a, w) pattern a("b", _"c"_)
+2, 15, 20, 23
+5000
+586 - NEXT*-while: pattern-both defined (match does not select)
+while w; assign a;
+Select w such that Next*(_, w) pattern a("how", _"what+what"_)
+4, 8, 11, 14, 21, 27, 36
+5000
+587 - NEXT*-while: pattern-both defined, left synonym
+while w; variable v;
+Select w such that Next*(w, _) pattern w(v, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+588 - NEXT*-if: pattern (match select)
+if i;
+Select i such that Next*(i, _) pattern i("a", _, _)
+19
+5000
+589 - NEXT*-if: pattern (does not match select)
+if i; assign a1, a2;
+Select i such that Next*(i, a2) pattern a1(_, _"(money-cpu)"_)
+6, 19, 28, 33, 34, 35
+5000
+590 - NEXT*-if: pattern, left synonym
+if i; variable v;
+Select i such that Next*(i, _) pattern i(v, _, _)
+6, 19, 28, 33, 34, 35
+5000
+591 - NEXT*: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Next*(1, 19) and Next*(24, 30)
+true
+5000
+592 - NEXT*: 2 clauses (similar) - syn-syn, syn-syn
+stmt s; while w; assign a;
+Select <s,w> such that Next*(s, w) and Next*(a, w)
+1 4, 1 8, 1 11, 1 14, 1 21, 2 4, 2 8, 2 11, 2 14, 2 21, 3 4, 3 8, 3 11, 3 14, 3 21, 4 4, 4 8, 4 11, 4 14, 4 21, 5 4, 5 8, 5 11, 5 14, 5 21, 6 4, 6 8, 6 11, 6 14, 6 21, 7 4, 7 8, 7 11, 7 14, 7 21, 8 4, 8 8, 8 11, 8 14, 8 21, 9 4, 9 8, 9 11, 9 14, 9 21, 10 4, 10 8, 10 11, 10 14, 10 21, 11 4, 11 8, 11 11, 11 14, 11 21, 12 4, 12 8, 12 11, 12 14, 12 21, 13 4, 13 8, 13 11, 13 14, 13 21, 14 4, 14 8, 14 11, 14 14, 14 21, 15 4, 15 8, 15 11, 15 14, 15 21, 16 4, 16 8, 16 11, 16 14, 16 21, 17 4, 17 8, 17 11, 17 14, 17 21, 18 4, 18 8, 18 11, 18 14, 18 21, 19 4, 19 8, 19 11, 19 14, 19 21, 20 4, 20 8, 20 11, 20 14, 20 21, 21 4, 21 8, 21 11, 21 14, 21 21, 22 4, 22 8, 22 11, 22 14, 22 21, 23 4, 23 8, 23 11, 23 14, 23 21, 24 27, 25 27, 26 27, 27 27, 28 27, 29 27, 30 27, 31 36, 32 36, 33 36, 34 36, 35 36, 36 36, 37 36
+5000
+593 - NEXT*: 2 clauses (similar) - fixed-syn, fixed-syn
+stmt s;
+Select s such that Next*(35, s) and Next*(37, s)
+36, 37
+5000
+594 - NEXT*: 2 clauses (similar) - syn-fixed, syn-fixed
+assign a; while w;
+Select a such that Next*(a, 17) and Next* (w, 13)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23
+5000
+595 - NEXT*: 2 clauses (similar) - fixed-generic, fixed-generic
+
+Select BOOLEAN such that Next*(27, _) and Next*(37, _)
+true
+5000
+596 - NEXT*: 2 clauses (similar) - generic-fixed, generic-fixed
+stmt s; while w;
+Select s such that Next*(_, s) and Next*(_, w)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+597 - NEXT*: 2 clauses (similar) - syn-generic, syn-generic
+assign a; if i;
+Select i such that Next*(a, _) and Next*(i, _)
+6, 19, 28, 33, 34, 35
+5000
+598 - NEXT*: 2 clauses (similar) - generic-syn, generic-syn
+assign a; while w;
+Select w such that Next*(_, a) and Next*(_, w)
+4, 8, 11, 14, 21, 27, 36
+5000
+599 - NEXT*: 2 clauses (mixed) - fixed-fixed, fixed-syn
+stmt s;
+Select s such that Next*(30, 27) and Next*(35, s)
+36, 37, 38
+5000
+600 - NEXT*: 2 clauses (mixed) - syn-syn, syn-fixed
+assign a; if i;
+Select a such that Next*(i, a) and Next*(33, i)
+37, 38, 39
+5000
+601 - NEXT*: 2 clauses (mixed) - generic-generic, fixed-generic
+
+Select BOOLEAN such that Next*(_, _) and Next*(29, _)
+true
+5000
+602 - NEXT*: 2 clauses (mixed) - fixed-syn, generic-fixed
+while w;
+Select w such that Next*(35, w) and Next*(_, w)
+36
+5000
+603 - NEXT*: 2 clauses (mixed) - syn-fixed, syn-generic
+stmt s;
+Select s such that Next*(s, 30) and Next*(s, _)
+24, 25, 26, 27, 28, 29, 30
+5000
+604 - NEXT*: 2 clauses (mixed) - fixed-generic, generic-syn
+assign a;
+Select a such that Next*(23, _) and Next*(_, a)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 32, 37, 38, 39, 40
+5000
+605 - NEXT*: 2 clauses (mixed) - generic-fixed, syn-generic
+while w;
+Select w such that Next*(_, 21) and Next*(w, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+606 - NEXT*: 2 clauses (mixed) - syn-generic, generic-syn
+assign a; while w;
+Select <a,w> such that Next*(w, _) and Next*(_, a)
+2 4, 2 8, 2 11, 2 14, 2 21, 2 27, 2 36, 5 4, 5 8, 5 11, 5 14, 5 21, 5 27, 5 36, 7 4, 7 8, 7 11, 7 14, 7 21, 7 27, 7 36, 9 4, 9 8, 9 11, 9 14, 9 21, 9 27, 9 36, 10 4, 10 8, 10 11, 10 14, 10 21, 10 27, 10 36, 12 4, 12 8, 12 11, 12 14, 12 21, 12 27, 12 36, 15 4, 15 8, 15 11, 15 14, 15 21, 15 27, 15 36, 16 4, 16 8, 16 11, 16 14, 16 21, 16 27, 16 36, 17 4, 17 8, 17 11, 17 14, 17 21, 17 27, 17 36, 18 4, 18 8, 18 11, 18 14, 18 21, 18 27, 18 36, 20 4, 20 8, 20 11, 20 14, 20 21, 20 27, 20 36, 22 4, 22 8, 22 11, 22 14, 22 21, 22 27, 22 36, 23 4, 23 8, 23 11, 23 14, 23 21, 23 27, 23 36, 25 4, 25 8, 25 11, 25 14, 25 21, 25 27, 25 36, 26 4, 26 8, 26 11, 26 14, 26 21, 26 27, 26 36, 30 4, 30 8, 30 11, 30 14, 30 21, 30 27, 30 36, 32 4, 32 8, 32 11, 32 14, 32 21, 32 27, 32 36, 37 4, 37 8, 37 11, 37 14, 37 21, 37 27, 37 36, 38 4, 38 8, 38 11, 38 14, 38 21, 38 27, 38 36, 39 4, 39 8, 39 11, 39 14, 39 21, 39 27, 39 36, 40 4, 40 8, 40 11, 40 14, 40 21, 40 27, 40 36
+5000
+607 - NEXT*: 2 clauses (mixed) - generic-fixed, generic-syn
+stmt s;
+Select  such that Next*(_, 1) and Next*(_, s)
+none
+5000
+608 - NEXT*: stmt# - select clause (has results)
+assign a;
+Select a.stmt# such that Next*(a, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37
+5000
+609 - NEXT*: stmt# - select clause (no results)
+if i; assign a;
+Select i.stmt# such that Next*(a, i)
+6, 19, 28, 33, 34, 35
+5000
+610 - NEXT*: stmt# - with clause (has results)
+while w;
+Select w such that Next*(w, _) with w.stmt# = 36
+36
+5000
+611 NEXT*: stmt# - with clause (no results)
+if i;
+Select i such that Next*(i, _) with i.stmt# = 33
+33
+5000
+612 - NEXT*: prog_line
+prog_line n; if i;
+Select n such that Next*(n, i)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
+5000
+613 - NEXT*: stmt overflow
+variable v;
+Select v such that Next*(45, v)
+none
+5000
+614 - NEXT*: stmt underflow
+variable v;
+Select v such that Next*(-1, v)
+none
+5000
+615 - NEXT*: invalid type
+variable v;
+Select v such that Next*(2, v)
+none
+5000
+616 - NEXT*: invalid type
+procedure p;
+Select p such that Next*(p, 2)
+none
+5000
+617 - AFFECTS-boolean: fixed-fixed
+
+Select BOOLEAN such that Affects(20, 12)
+true
+5000
+618 - AFFECTS-stmt: fixed-fixed (non-assign stmt)
+stmt s;
+Select s such that Affects(27, 28)
+none
+5000
+619 - AFFECTS-boolean: fixed-fixed (indirect affects)
+
+Select BOOLEAN such that Affects(2, 20)
+false
+5000
+620 - AFFECTS-boolean: fixed-fixed (false)
+
+Select BOOLEAN such that Affects(26, 25)
+false
+5000
+621 - AFFECTS-assign: syn-syn (tuple)
+assign a1, a2;
+Select <a1,a2> such that Affects(a1, a2)
+1 2, 1 9, 1 12, 1 18, 1 20, 1 23, 2 12, 5 9, 5 15, 5 16, 7 16, 7 17, 7 18, 7 20, 7 22, 9 7, 9 10, 9 23, 10 16, 10 17, 10 18, 10 20, 10 22, 12 7, 12 10, 12 23, 16 5, 16 15, 16 20, 16 23, 17 15, 17 16, 17 20, 17 22, 18 7, 18 10, 18 17, 20 12, 22 5, 22 15, 23 12, 24 25, 24 26, 24 30, 25 26, 25 30, 26 30, 30 30, 31 40
+5000
+622 - AFFECTS-assign: syn-syn (non-assign stmt)
+while w; assign a;
+Select a such that Affects(w, a)
+none
+5000
+623 - AFFECTS-stmt: syn-syn (regular stmt)
+stmt s1, s2;
+Select s1 such that Affects(s1, s2)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31
+5000
+624 - AFFECTS-prog_line: syn-syn (prog_line)
+prog_line n1, n2;
+Select n2 such that Affects(n1, n2)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+625 - AFFECTS-boolean: generic-generic
+
+Select BOOLEAN such that Affects(_, _)
+true
+5000
+626 - AFFECTS-assign: fixed-syn
+assign a;
+Select a such that Affects(24, a)
+25, 26, 30
+5000
+627 - AFFECTS-stmt: fixed-syn (regular stmt)
+stmt s;
+Select s such that Affects(25, s)
+26, 30
+5000
+628 - AFFECTS-prog_line: fixed-syn (prog_line)
+prog_line n;
+Select n such that Affects(16, n)
+5, 15, 20, 23
+5000
+629 - AFFECTS-boolean: fixed-syn (non-assign stmt)
+if i;
+Select BOOLEAN such that Affects(31, i)
+false
+5000
+630 - AFFECTS-assign: syn-fixed
+assign a;
+Select a such that Affects(a, 30)
+24, 25, 26, 30
+5000
+631 - AFFECTS-stmt: syn-fixed (regular stmt)
+stmt s;
+Select s such that Affects(s, 15)
+5, 16, 17, 22
+5000
+632 - AFFECTS-prog_line: syn-fixed (prog_line)
+prog_line n;
+Select n such that Affects(n, 40)
+31
+5000
+633 - AFFECTS-boolean: syn-fixed (non-assign stmt)
+while w;
+Select BOOLEAN such that Affects(w, 30)
+false
+5000
+634 - AFFECTS-boolean: fixed-generic (assign)
+
+Select BOOLEAN such that Affects(31, _)
+true
+5000
+635 - AFFECTS-boolean: fixed-generic (non-assign stmt)
+
+Select BOOLEAN such that Affects(34, _)
+false
+5000
+636 - AFFECTS-boolean: fixed-generic (false)
+
+Select BOOLEAN such that Affects(38, _)
+false
+5000
+637 - AFFECTS-boolean: generic-fixed (assign)
+
+Select BOOLEAN such that Affects(_, 26)
+true
+5000
+638 - AFFECTS-boolean: generic-fixed (non-assign stmt)
+
+Select BOOLEAN such that Affects(_, 19)
+false
+5000
+639 - AFFECTS-boolean: generic-fixed (false)
+
+Select BOOLEAN such that Affects(_, 37)
+false
+5000
+640 - AFFECTS-assign: syn-generic
+assign a;
+Select a such that Affects(a, _)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31
+5000
+641 - AFFECTS-stmt: syn-generic
+stmt s;
+Select s such that Affects(s, _)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31
+5000
+642 - AFFECTS-while: syn-generic
+while w;
+Select w such that Affects(w, _)
+none
+5000
+643 - AFFECTS-if: syn-generic
+if i;
+Select i such that Affects(i, _)
+none
+5000
+644 - AFFECTS-call: syn-generic
+call c;
+Select c such that Affects(c, _)
+none
+5000
+645 - AFFECTS-assign: generic-syn
+assign a;
+Select a such that Affects(_, a)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+646 - AFFECTS-stmt: generic-syn
+stmt s;
+Select s such that Affects(_, s)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+647 - AFFECTS-while: generic-syn
+while w;
+Select w such that Affects(_, w)
+none
+5000
+648 - AFFECTS-if: generic-syn
+if i;
+Select i such that Affects(_, i)
+none
+5000
+649 - AFFECTS-call: generic-syn
+call c;
+Select c such that Affects(_, c)
+none
+5000
+650 - AFFECTS-assign: pattern-right defined (match select)
+assign a;
+Select a such that Affects(a, _) pattern a(_, _"how"_)
+24, 26, 30
+5000
+651 - AFFECTS-assign: pattern-right defined (does not match select)
+assign a1, a2;
+Select a1 such that Affects(_, a1) pattern a2(_, _"how"_)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+652 - AFFECTS-assign: pattern-left defined (match select)
+assign a;
+Select a such that Affects(a, _) pattern a("mouse", _)
+31
+5000
+653 - AFFECTS-assign: pattern-left defined (does not match select)
+assign a1, a2;
+Select a1 such that Affects(_, a1) pattern a2("why", _)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+654 - AFFECTS-assign: pattern-left defined synonym
+assign a; variable v;
+Select a such that Affects(a, _) pattern a(v, _)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31
+5000
+655 - AFFECTS-assign: patter-both defined (match select)
+assign a;
+Select a such that Affects(a, _) pattern a("b", _"h+g"_)
+23
+5000
+656 - AFFECTS-assign: patter-both defined (does not match select)
+assign a1, a2;
+Select a1 such that Affects(_, a1) pattern a2("b", _"c"_)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+657 - AFFECTS-assign: pattern-both defined, left synonym
+assign a; variable v;
+Select a such that Affects(a, _) pattern a(v, _"5"_)
+1
+5000
+658 - AFFECTS: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Affects(1, 9) and Affects(2, 12)
+true
+5000
+659 - AFFECTS: 2 clauses (similar) - syn-syn, syn-syn
+assign a1, a2, a3;
+Select <a1,a3> such that Affects(a1, a2) and Affects(a2, a3)
+1 7, 1 10, 1 12, 1 17, 1 23, 2 7, 2 10, 2 23, 5 5, 5 7, 5 10, 5 15, 5 20, 5 23, 7 5, 7 7, 7 10, 7 12, 7 15, 7 16, 7 17, 7 20, 7 22, 7 23, 9 12, 9 16, 9 17, 9 18, 9 20, 9 22, 10 5, 10 7, 10 10, 10 12, 10 15, 10 16, 10 17, 10 20, 10 22, 10 23, 12 12, 12 16, 12 17, 12 18, 12 20, 12 22, 16 9, 16 12, 16 15, 16 16, 17 5, 17 12, 17 15, 17 20, 17 23, 18 15, 18 16, 18 17, 18 18, 18 20, 18 22, 20 7, 20 10, 20 23, 22 9, 22 15, 22 16, 23 7, 23 10, 23 23, 24 26, 24 30, 25 30, 26 30, 30 30
+5000
+660 - AFFECTS: 2 clauses (similar) - fixed-syn, fixed-syn
+stmt s;
+Select s such that Affects(24, s) and Affects(25, s)
+26, 30
+5000
+661 - AFFECTS: 2 clauses (similar) - syn-fixed, syn-fixed
+assign a1, a2;
+Select BOOLEAN such that Affects(a1, 15) and Affects(a2, 12)
+true
+5000
+662 - AFFECTS: 2 clauses (similar) - fixed-generic, fixed-generic
+while w;
+Select w such that Affects(17, _) and Affects(31, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+663 - AFFECTS: 2 clauses (similar) - generic-fixed, generic-fixed
+if i;
+Select i such that Affects(_, 22) and Affects(_, 30)
+6, 19, 28, 33, 34, 35
+5000
+664 - AFFECTS: 2 clauses (similar) - syn-generic, syn-generic
+assign a; stmt s;
+Select a such that Affects(a, _) and Affects(s, _)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31
+5000
+665 - AFFECTS: 2 clauses (similar) - generic-syn, generic-syn
+assign a; stmt s;
+Select s such that Affects(_, s) and Affects(_, a)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+666 - AFFECTS: 2 clauses (mixed) - fixed-fixed, fixed-syn
+assign a;
+Select a such that Affects(25, 30) and Affects(5, a)
+9, 15, 16
+5000
+667 - AFFECTS: 2 clauses (mixed) - syn-syn, syn-fixed
+assign a1, a2;
+Select a1 such that Affects(a1, a2) and Affects(a1, 23)
+1, 9, 12, 16
+5000
+668 - AFFECTS: 2 clauses (mixed) - generic-generic, fixed-generic
+
+Select BOOLEAN such that Affects(_, _) and Affects(24, _)
+true
+5000
+669 - AFFECTS: 2 clauses (mixed) - fixed-syn, generic-fixed
+assign a;
+Select a such that Affects(5, a) and Affects(_, 23)
+9, 15, 16
+5000
+670 - AFFECTS: 2 clauses (mixed) - syn-fixed, syn-generic
+stmt s1, s2;
+Select BOOLEAN such that Affects(s1, 40) and Affects(s2, _)
+true
+5000
+671 - AFFECTS: 2 clauses (mixed) - fixed-generic, generic-syn
+assign a; while w;
+Select w such that Affects(2, _) and Affects(_, a)
+4, 8, 11, 14, 21, 27, 36
+5000
+672 - AFFECTS: 2 clauses (mixed) - generic-fixed, syn-generic
+assign a; stmt s;
+Select s such that Affects(_, 26) and Affects(a, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+673 - AFFECTS: 2 clauses (mixed) - syn-generic, generic-syn
+assign a;
+Select a such that Affects(a, _) and Affects(_, a)
+2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 25, 26, 30
+5000
+674 - AFFECTS: 2 clauses (mixed) - generic-fixed, generic-syn
+assign a;
+Select BOOLEAN such that Affects(_, 5) and Affects(_, a)
+true
+5000
+675 - AFFECTS: stmt# - select clause (has results)
+assign a;
+Select a.stmt# such that Affects(a, 30)
+24, 25, 26, 30
+5000
+676 - AFFECTS: stmt# - select clause (no results)
+assign a;
+Select a.stmt# such that Affects(a, 4)
+none
+5000
+677 - AFFECTS: stmt# - with clause (has results)
+stmt s;
+Select s such that Affects(s, 15) with s.stmt# = 5
+5
+5000
+678 - AFFECTS: stmt# - with clause (no results)
+stmt s;
+Select s such that Affects(s, 15) with s.stmt# = 1
+none
+5000
+679 - AFFECTS: stmt overflow
+assign a;
+Select a such that Affects(45, a)
+none
+5000
+680 - AFFECTS: stmt underflow
+assign a;
+Select a such that Affects(-1, a)
+none
+5000
+681 - AFFECTS: stmt underflow
+assign a;
+Select v such that Affects(0, a)
+none
+5000
+682 - AFFECTS: invalid argument
+assign a; variable v;
+Select a such that Affects(a, v)
+none
+5000
+683 - AFFECTS: invalid argument
+procedure p; assign a
+Select p such that Affects(p, a)
+none
+5000
+684 - AFFECTS*-boolean: fixed-fixed
+
+Select BOOLEAN such that Affects*(23, 9)
+true
+5000
+685 - AFFECTS*-stmt: fixed-fixed (non-assign stmt)
+stmt s;
+Select s such that Affects*(27, 30)
+none
+5000
+686 - AFFECTS*-boolean: fixed-fixed (indirect affects)
+
+Select BOOLEAN such that Affects*(1, 22)
+true
+5000
+687 - AFFECTS*-boolean: fixed-fixed (false)
+
+Select BOOLEAN such that Affects*(26, 25)
+false
+5000
+688 - AFFECTS*-assign: syn-syn (tuple)
+assign a1, a2;
+Select <a1,a2> such that Affects*(a1, a2)
+1 2, 1 5, 1 7, 1 9, 1 10, 1 12, 1 15, 1 16, 1 17, 1 18, 1 20, 1 22, 1 23, 2 5, 2 7, 2 9, 2 10, 2 12, 2 15, 2 16, 2 17, 2 18, 2 20, 2 22, 2 23, 5 5, 5 7, 5 9, 5 10, 5 12, 5 15, 5 16, 5 17, 5 18, 5 20, 5 22, 5 23, 7 5, 7 7, 7 9, 7 10, 7 12, 7 15, 7 16, 7 17, 7 18, 7 20, 7 22, 7 23, 9 5, 9 7, 9 9, 9 10, 9 12, 9 15, 9 16, 9 17, 9 18, 9 20, 9 22, 9 23, 10 5, 10 7, 10 9, 10 10, 10 12, 10 15, 10 16, 10 17, 10 18, 10 20, 10 22, 10 23, 12 5, 12 7, 12 9, 12 10, 12 12, 12 15, 12 16, 12 17, 12 18, 12 20, 12 22, 12 23, 16 5, 16 7, 16 9, 16 10, 16 12, 16 15, 16 16, 16 17, 16 18, 16 20, 16 22, 16 23, 17 5, 17 7, 17 9, 17 10, 17 12, 17 15, 17 16, 17 17, 17 18, 17 20, 17 22, 17 23, 18 5, 18 7, 18 9, 18 10, 18 12, 18 15, 18 16, 18 17, 18 18, 18 20, 18 22, 18 23, 20 5, 20 7, 20 9, 20 10, 20 12, 20 15, 20 16, 20 17, 20 18, 20 20, 20 22, 20 23, 22 5, 22 7, 22 9, 22 10, 22 12, 22 15, 22 16, 22 17, 22 18, 22 20, 22 22, 22 23, 23 5, 23 7, 23 9, 23 10, 23 12, 23 15, 23 16, 23 17, 23 18, 23 20, 23 22, 23 23, 24 25, 24 26, 24 30, 25 26, 25 30, 26 30, 30 30, 31 40
+5000
+689 - AFFECTS*-assign: syn-syn (non-assign stmt)
+while w; assign a;
+Select a such that Affects*(w, a)
+none
+5000
+690 - AFFECTS*-stmt: syn-syn (regular stmt)
+stmt s1, s2;
+Select s1 such that Affects*(s1, s2)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31
+5000
+691 - AFFECTS*-prog_line: syn-syn (prog_line)
+prog_line n1, n2;
+Select n2 such that Affects*(n1, n2)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+692 - AFFECTS*-boolean: generic-generic
+
+Select BOOLEAN such that Affects*(_, _)
+true
+5000
+693 - AFFECTS*-assign: fixed-syn
+assign a;
+Select a such that Affects*(12, a)
+5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23
+5000
+694 - AFFECTS*-stmt: fixed-syn (regular stmt)
+stmt s;
+Select s such that Affects*(25, s)
+26, 30
+5000
+695 - AFFECTS*-prog_line: fixed-syn (prog_line)
+prog_line n;
+Select n such that Affects*(16, n)
+5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23
+5000
+696 - AFFECTS*-boolean: fixed-syn (non-assign stmt)
+if i;
+Select BOOLEAN such that Affects*(31, i)
+false
+5000
+697 - AFFECTS*-assign: syn-fixed
+assign a;
+Select a such that Affects*(a, 30)
+24, 25, 26, 30
+5000
+698 - AFFECTS*-stmt: syn-fixed (regular stmt)
+stmt s;
+Select s such that Affects*(s, 15)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23
+5000
+699 - AFFECTS*-prog_line: syn-fixed (prog_line)
+prog_line n;
+Select n such that Affects*(n, 40)
+31
+5000
+700 - AFFECTS*-boolean: syn-fixed (non-assign stmt)
+while w;
+Select BOOLEAN such that Affects*(w, 30)
+false
+5000
+701 - AFFECTS*-boolean: fixed-generic (assign)
+
+Select BOOLEAN such that Affects*(31, _)
+true
+5000
+702 - AFFECTS*-boolean: fixed-generic (non-assign stmt)
+
+Select BOOLEAN such that Affects*(34, _)
+false
+5000
+703 - AFFECTS*-boolean: fixed-generic (false)
+
+Select BOOLEAN such that Affects*(38, _)
+false
+5000
+704 - AFFECTS*-boolean: generic-fixed (assign)
+
+Select BOOLEAN such that Affects*(_, 26)
+true
+5000
+705 - AFFECTS*-boolean: generic-fixed (non-assign stmt)
+
+Select BOOLEAN such that Affects*(_, 19)
+false
+5000
+706 - AFFECTS*-boolean: generic-fixed (false)
+
+Select BOOLEAN such that Affects*(_, 37)
+false
+5000
+707 - AFFECTS*-assign: syn-generic
+assign a;
+Select a such that Affects*(a, _)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31
+5000
+708 - AFFECTS*-stmt: syn-generic
+stmt s;
+Select s such that Affects*(s, _)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31
+5000
+709 - AFFECTS*-while: syn-generic
+while w;
+Select w such that Affects*(w, _)
+none
+5000
+710 - AFFECTS*-if: syn-generic
+if i;
+Select i such that Affects*(i, _)
+none
+5000
+711 - AFFECTS*-call: syn-generic
+call c;
+Select c such that Affects*(c, _)
+none
+5000
+712 - AFFECTS*-assign: generic-syn
+assign a;
+Select a such that Affects*(_, a)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+713 - AFFECTS*-stmt: generic-syn
+stmt s;
+Select s such that Affects*(_, s)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+714 - AFFECTS*-while: generic-syn
+while w;
+Select w such that Affects*(_, w)
+none
+5000
+715 - AFFECTS*-if: generic-syn
+if i;
+Select i such that Affects*(_, i)
+none
+5000
+716 - AFFECTS*-call: generic-syn
+call c;
+Select c such that Affects*(_, c)
+none
+5000
+717 - AFFECTS*-assign: pattern-right defined (match select)
+assign a;
+Select a such that Affects*(a, _) pattern a(_, _"how"_)
+24, 26, 30
+5000
+718 - AFFECTS*-assign: pattern-right defined (does not match select)
+assign a1, a2;
+Select a1 such that Affects*(_, a1) pattern a2(_, _"how"_)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+719 - AFFECTS*-assign: pattern-left defined (match select)
+assign a;
+Select a such that Affects*(a, _) pattern a("mouse", _)
+31
+5000
+720 - AFFECTS*-assign: pattern-left defined (does not match select)
+assign a1, a2;
+Select a1 such that Affects*(_, a1) pattern a2("why", _)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+721 - AFFECTS*-assign: pattern-left defined synonym
+assign a; variable v;
+Select a such that Affects*(a, _) pattern a(v, _)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31
+5000
+722 - AFFECTS*-assign: patter-both defined (match select)
+assign a;
+Select a such that Affects*(a, _) pattern a("b", _"h+g"_)
+23
+5000
+723 - AFFECTS*-assign: patter-both defined (does not match select)
+assign a1, a2;
+Select a1 such that Affects*(_, a1) pattern a2("b", _"c"_)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+724 - AFFECTS*-assign: pattern-both defined, left synonym
+assign a; variable v;
+Select a such that Affects*(a, _) pattern a(v, _"5"_)
+1
+5000
+725 - AFFECTS*: 2 clauses (similar) - fixed-fixed, fixed-fixed
+
+Select BOOLEAN such that Affects*(1, 9) and Affects*(2, 12)
+true
+5000
+726 - AFFECTS*: 2 clauses (similar) - syn-syn, syn-syn
+assign a1, a2, a3;
+Select <a1,a3> such that Affects*(a1, a2) and Affects*(a2, a3)
+1 5, 1 7, 1 9, 1 10, 1 12, 1 15, 1 16, 1 17, 1 18, 1 20, 1 22, 1 23, 2 5, 2 7, 2 9, 2 10, 2 12, 2 15, 2 16, 2 17, 2 18, 2 20, 2 22, 2 23, 5 5, 5 7, 5 9, 5 10, 5 12, 5 15, 5 16, 5 17, 5 18, 5 20, 5 22, 5 23, 7 5, 7 7, 7 9, 7 10, 7 12, 7 15, 7 16, 7 17, 7 18, 7 20, 7 22, 7 23, 9 5, 9 7, 9 9, 9 10, 9 12, 9 15, 9 16, 9 17, 9 18, 9 20, 9 22, 9 23, 10 5, 10 7, 10 9, 10 10, 10 12, 10 15, 10 16, 10 17, 10 18, 10 20, 10 22, 10 23, 12 5, 12 7, 12 9, 12 10, 12 12, 12 15, 12 16, 12 17, 12 18, 12 20, 12 22, 12 23, 16 5, 16 7, 16 9, 16 10, 16 12, 16 15, 16 16, 16 17, 16 18, 16 20, 16 22, 16 23, 17 5, 17 7, 17 9, 17 10, 17 12, 17 15, 17 16, 17 17, 17 18, 17 20, 17 22, 17 23, 18 5, 18 7, 18 9, 18 10, 18 12, 18 15, 18 16, 18 17, 18 18, 18 20, 18 22, 18 23, 20 5, 20 7, 20 9, 20 10, 20 12, 20 15, 20 16, 20 17, 20 18, 20 20, 20 22, 20 23, 22 5, 22 7, 22 9, 22 10, 22 12, 22 15, 22 16, 22 17, 22 18, 22 20, 22 22, 22 23, 23 5, 23 7, 23 9, 23 10, 23 12, 23 15, 23 16, 23 17, 23 18, 23 20, 23 22, 23 23, 24 26, 24 30, 25 30, 26 30, 30 30
+5000
+727 - AFFECTS*: 2 clauses (similar) - fixed-syn, fixed-syn
+stmt s;
+Select s such that Affects*(24, s) and Affects*(25, s)
+26, 30
+5000
+728 - AFFECTS*: 2 clauses (similar) - syn-fixed, syn-fixed
+assign a1, a2;
+Select BOOLEAN such that Affects*(a1, 15) and Affects*(a2, 12)
+true
+5000
+729 - AFFECTS*: 2 clauses (similar) - fixed-generic, fixed-generic
+while w;
+Select w such that Affects*(17, _) and Affects*(31, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+730 - AFFECTS*: 2 clauses (similar) - generic-fixed, generic-fixed
+if i;
+Select i such that Affects*(_, 22) and Affects*(_, 30)
+6, 19, 28, 33, 34, 35
+5000
+731 - AFFECTS*: 2 clauses (similar) - syn-generic, syn-generic
+assign a; stmt s;
+Select a such that Affects*(a, _) and Affects*(s, _)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31
+5000
+732 - AFFECTS*: 2 clauses (similar) - generic-syn, generic-syn
+assign a; stmt s;
+Select s such that Affects*(_, s) and Affects*(_, a)
+2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 25, 26, 30, 40
+5000
+733 - AFFECTS*: 2 clauses (mixed) - fixed-fixed, fixed-syn
+assign a;
+Select a such that Affects*(25, 30) and Affects*(5, a)
+5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23
+5000
+734 - AFFECTS*: 2 clauses (mixed) - syn-syn, syn-fixed
+assign a1, a2;
+Select a1 such that Affects*(a1, a2) and Affects*(a1, 23)
+1, 2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23
+5000
+735 - AFFECTS*: 2 clauses (mixed) - generic-generic, fixed-generic
+
+Select BOOLEAN such that Affects*(_, _) and Affects*(24, _)
+true
+5000
+736 - AFFECTS*: 2 clauses (mixed) - fixed-syn, generic-fixed
+assign a;
+Select a such that Affects*(5, a) and Affects*(_, 23)
+5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23
+5000
+737 - AFFECTS*: 2 clauses (mixed) - syn-fixed, syn-generic
+stmt s1, s2;
+Select BOOLEAN such that Affects*(s1, 40) and Affects*(s2, _)
+true
+5000
+738 - AFFECTS*: 2 clauses (mixed) - fixed-generic, generic-syn
+assign a; while w;
+Select w such that Affects*(2, _) and Affects*(_, a)
+4, 8, 11, 14, 21, 27, 36
+5000
+739 - AFFECTS*: 2 clauses (mixed) - generic-fixed, syn-generic
+assign a; stmt s;
+Select s such that Affects*(_, 26) and Affects*(a, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+740 - AFFECTS*: 2 clauses (mixed) - syn-generic, generic-syn
+assign a;
+Select a such that Affects*(a, _) and Affects*(_, a)
+2, 5, 7, 9, 10, 12, 16, 17, 18, 20, 22, 23, 25, 26, 30
+5000
+741 - AFFECTS*: 2 clauses (mixed) - generic-fixed, generic-syn
+assign a;
+Select BOOLEAN such that Affects*(_, 5) and Affects*(_, a)
+true
+5000
+742 - AFFECTS*: stmt# - select clause (has results)
+assign a;
+Select a.stmt# such that Affects*(a, 30)
+24, 25, 26, 30
+5000
+743 - AFFECTS*: stmt# - select clause (no results)
+assign a;
+Select a.stmt# such that Affects*(a, 4)
+none
+5000
+744 - AFFECTS*: stmt# - with clause (has results)
+stmt s;
+Select s such that Affects*(s, 15) with s.stmt# = 1
+1
+5000
+745 - AFFECTS*: stmt# - with clause (no results)
+stmt s;
+Select s such that Affects*(s, 15) with s.stmt# = 25
+none
+5000
+746 - AFFECTS*: stmt overflow
+assign a;
+Select a such that Affects*(45, a)
+none
+5000
+747 - AFFECTS*: stmt underflow
+assign a;
+Select a such that Affects*(-1, a)
+none
+5000
+748 - AFFECTS*: stmt underflow
+assign a;
+Select v such that Affects*(0, a)
+none
+5000
+749 - AFFECTS*: invalid argument
+assign a; variable v;
+Select a such that Affects*(a, v)
+none
+5000
+750 - AFFECTS*: invalid argument
+procedure p; assign a
+Select p such that Affects*(p, a)
+none
+5000
+751 - PATTERN-assign: left-defined only, fixed
+assign a;
+Select a pattern a("how", _)
+25, 30
+5000
+752 - PATTERN-assign: left-defined only, fixed (no result)
+assign a;
+Select a pattern a("pokemonMaster", _)
+none
+5000
+753 - PATTERN-while: left-defined only, fixed
+while w;
+Select w pattern w("ram", _)
+36
+5000
+754 - PATTERN-while: left-defined only, fixed (no result)
+while w;
+Select w pattern w("mouse", _)
+none
+5000
+755 - PATTERN-if: left-defined only, fixed
+if i;
+Select i pattern i("a", _, _)
+19
+5000
+756 - PATTERN-if: left-defined only, fixed (no results)
+if i;
+Select i pattern i("cpu", _, _)
+none
+5000
+757 - PATTERN-assign: left-defined only, synonym
+assign a; variable v;
+Select a pattern a(v, _)
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37, 38, 39, 40
+5000
+758 - PATTERN-assign: left-defined only, synonym (with clause constraint)
+assign a; variable v;
+Select a pattern a(v, _) with v.varName = "b"
+2, 15, 20, 23
+5000
+759 - PATTERN-assign: left-defined only, synonym (no results)
+assign a; variable v;
+Select a pattern a(v, _) with v.varName = "speakers"
+none
+5000
+760 - PATTERN-while: left-defined only, synonym
+while w; variable v;
+Select w pattern w(v, _)
+4, 8, 11, 14, 21, 27, 36
+5000
+761 - PATTERN-while: left-defined only, synonym (with clause constraint)
+while w; variable v;
+Select w pattern w(v, _) with v.varName = "how"
+27
+5000
+762 - PATTERN-while: left-defined only, synonym (no result)
+while w; variable v;
+Select w pattern w(v, _) with v.varName = "keyboard"
+none
+5000
+763 - PATTERN-if: left-defined only, synonym
+if i; variable v;
+Select i pattern i(v, _, _)
+6, 19, 28, 33, 34, 35
+5000
+764 - PATTERN-if: left-defined only, synonym (with clause constraint)
+if i; variable v;
+Select i pattern i(v, _, _) with v.varName = "a"
+19
+5000
+765 - PATTERN-if: left-defined only, synonym (no result)
+if i; variable v;
+Select i pattern i(v, _, _) with v.varName = "g"
+none
+5000
+766 - PATTERN-assign: right-defined only, fixed
+assign a;
+Select a pattern a(_, "f - g-h")
+10
+5000
+767 - PATTERN-assign: right-defined only, fixed (no result)
+assign a;
+Select a pattern a(_, "69")
+none
+5000
+768 - PATTERN-assign: right-defined only, sub
+assign a;
+Select a pattern a(_, _"(d+e)"_)
+20
+5000
+769 - PATTERN-assign: right-defined only, sub (no result)
+assign a;
+Select a pattern a(_, _"900"_)
+none
+5000
+770 - PATTERN-assign: both-defined, fixed-fixed
+assign a;
+Select a pattern a("how", _"how"_)
+30
+5000
+771 - PATTERN-assign: both-defined, fixed-fixed (no result)
+assign a;
+Select a pattern a("what", "why * 9001")
+none
+5000
+772 - PATTERN-assign: both-defined, fixed-sub
+assign a;
+Select a pattern a("keyboard", _"money-gpu"_)
+38
+5000
+773 - PATTERN-assign: both-defined, fixed-sub (no result)
+assign a;
+Select a pattern a("what", _"why * 9001"_)
+none
+5000
+774 - PATTERN-assign: both-defined, synonym-fixed
+assign a; variable v;
+Select a pattern a(v, "cpu-gpu")
+32
+5000
+775 - PATTERN-assign: both-defined, synonym-fixed (with clause constraint)
+assign a; variable v;
+Select a pattern a(v, "how*what") with v.varName = "why"
+26
+5000
+776 - PATTERN-assign: both-defined, synonym-fixed (no result)
+assign a; variable v;
+Select a pattern a(v, "how + why") with v.varName = "why"
+none
+5000
+777 - PATTERN-assign: both-defined, synonym-sub
+assign a; variable v;
+Select a pattern a(v, _"55"_)
+18
+5000
+778 - PATTERN-assign: both-defined, synonym-sub (with clause constraint)
+assign a; variable v;
+Select a pattern a(v, _"why+why"_) with v.varName = "how"
+30
+5000
+779 - PATTERN-assign: both-defined, synonym-sub (no result)
+assign a; variable v;
+Select a pattern a(v, _"what + what"_) with v.varName = "what"
+none
+5000
+780 - PATTERN-assign: pattern mismatch
+assign a;
+Select a pattern a("g", _, _)
+none
+5000
+781 - PATTERN-while: pattern mismatch
+while w;
+Select w pattern w("how", _, _)
+none
+5000
+782 - PATTERN-if: pattern mismatch
+if i;
+Select i pattern i("keyboard", _)
+none
+5000
+783 - WITH: prog_line = constant
+prog_line n;
+Select n with n = 35
+35
+5000
+784 - WITH: prog_line = constant (underflow)
+prog_line n;
+Select n with n = 0
+none
+5000
+785 - WITH: prog_line = constant (overflow)
+prog_line n;
+Select n with n = 45
+none
+5000
+786 - WITH: constant = prog_line
+prog_line n;
+Select n with 40 = n
+40
+5000
+787 - WITH: constant = prog_line (underflow)
+prog_line n;
+Select n with 0 = n
+none
+5000
+788 - WITH: constant = prog_line (overflow)
+prog_line n;
+Select n with 45 = n
+none
+5000
+789 - WITH-stmt: stmt# = constant
+stmt s;
+Select s with s.stmt# = 23
+23
+5000
+790 - WITH-stmt: stmt# = constant (no result)
+stmt s;
+Select s with s.stmt# = 50
+none
+5000
+791 - WITH-assign: stmt# = constant
+assign a;
+Select a with a.stmt# = 31
+31
+5000
+792 - WITH-assign: stmt# = constant (no result)
+assign a;
+Select a with a.stmt# = 27
+none
+5000
+793 - WITH-while: stmt# = constant
+while w;
+Select w with w.stmt# = 27
+27
+5000
+794 - WITH-while: stmt# = constant (no result)
+while w;
+Select w with w.stmt# = 28
+none
+5000
+795 - WITH-if: stmt# = constant
+if i;
+Select i with i.stmt# = 28
+28
+5000
+796 - WITH-if: stmt# = constant (no result)
+if i;
+Select i with i.stmt# = 37
+none
+5000
+797 - WITH-call: stmt# = constant
+call c;
+Select c with c.stmt# = 29
+29
+5000
+798 - WITH-call: stmt# = constant (no result)
+call c;
+Select c with c.stmt# = 16
+none
+5000
+799 - WITH-stmt: constant = stmt#
+stmt s;
+Select s with 24 = s.stmt#
+24
+5000
+800 - WITH-stmt: constant = stmt# (no result)
+stmt s;
+Select s with 48 = s.stmt#
+none
+5000
+801 - WITH-assign: constant = stmt#
+assign a;
+Select a with 37 = a.stmt#
+37
+5000
+802 - WITH-assign: constant = stmt# (no result)
+assign a;
+Select a with 36 = a.stmt#
+none
+5000
+803 - WITH-while: constant = stmt#
+while w;
+Select w with 21 = w.stmt#
+21
+5000
+804 - WITH-while: constant = stmt# (no result)
+while w;
+Select w with 19 = w.stmt#
+none
+5000
+805 - WITH-if: constant = i.stmt#
+if i;
+Select i with 35 = i.stmt#
+35
+5000
+806 - WITH-if: constant = stmt# (no result)
+if i;
+Select i with 21 = i.stmt#
+none
+5000
+807 - WITH-call: constant = stmt#
+call c;
+Select c with 29 = c.stmt#
+29
+5000
+808 - WITH-call: constant = stmt# (no result)
+call c;
+Select c with 18 = c.stmt#
+none
+5000
+809 - WITH-stmt: stmt# = prog_line
+stmt s; prog_line n;
+Select s with s.stmt# = n
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+5000
+810 - WITH-assign: stmt# = prog_line
+assign a; prog_line n;
+Select a with a.stmt# = n
+1, 2, 5, 7, 9, 10, 12, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 30, 31, 32, 37, 38, 39, 40
+5000
+811 - WITH-while: stmt# = prog_line
+while w; prog_line n;
+Select w with w.stmt# = n
+4, 8, 11, 14, 21, 27, 36
+5000
+812 - WITH-if: stmt# = prog_line
+if i; prog_line n;
+Select i with i.stmt# = n
+6, 19, 28, 33, 34, 35
+5000
+813 - WITH: value = constant
+constant c;
+Select c with c.value = 9001
+9001
+5000
+814 - WITH: value = constant (no result)
+constant c;
+Select c with c.value = 6
+none
+5000
+815 - WITH: constant = value
+constant c;
+Select c with 5 = c.value
+5
+5000
+816 - WITH: constant = value (no result)
+constant c;
+Select c with 7 = c.value
+none
+5000
+817 - WITH: prog_line = value
+prog_line n; constant c;
+Select n with n = c.value
+2, 3, 5
+5000
+818 - WITH: value = prog_line
+constant c; prog_line n;
+Select c with c.value = n
+2, 3, 5
+5000
+819 - WITH: procName = string
+procedure p;
+Select p with p.procName = "proc3"
+proc3
+5000
+820 - WITH: procName = string (no result)
+procedure p;
+Select p with p.procName = "proc4"
+none
+5000
+821 - WITH: string = procName
+procedure p;
+Select p with "proc1" = p.procName
+proc1
+5000
+822 - WITH: string = procName
+procedure p;
+Select p with "proc5" = p.procName
+none
+5000
+823 - WITH: varName = string
+variable v;
+Select v with v.varName = "what"
+what
+5000
+824 - WITH: varName = string (no result)
+variable v;
+Select v with v.varName = "when"
+none
+5000
+825 - WITH: string = varName
+variable v;
+Select v with "parts" = v.varName
+parts
+5000
+826 - WITH: string = varName (no result)
+variable v;
+Select v with "harddisk" = v.varName
+none
+5000
+827 - WITH: call.procName = string
+call c;
+Select c with c.procName = "proc3"
+13, 29
+5000
+828 - WITH: call.procName = string (no result)
+call c;
+Select c with c.procName = "proc1"
+none
+5000
+829 - WITH: string = call.procName
+call c;
+Select c with "proc2" = c.procName
+3
+5000
+830 - WITH: string = call.procName (no result)
+call c;
+Select c with "proc" = c.procName
+none
+5000
+831 - WITH: p.procName = c.procName
+procedure p; call c;
+Select p with p.procName = c.procName
+proc2, proc3
+5000
+832 - WITH: c.procName = p.procName
+call c; procedure p;
+Select c with c.procName = p.procName
+3, 13, 29
+5000
+833 - WITH-stmt: stmt# = value
+stmt s; constant c;
+Select s with s.stmt# = c.value
+2, 3, 5
+5000
+834 - WITH-assign: stmt# = value
+assign a; constant c;
+Select a with a.stmt# = c.value
+2, 5
+5000
+835 - WITH-while: stmt# = value (no result)
+while w; constant c;
+Select w with w.stmt# = c.value
+none
+5000
+836 - WITH-if: stmt# = value (no result)
+if i; constant c;
+Select i with i.stmt# = c.value
+none
+5000
+837 - WITH-call: stmt# = value (no result)
+call cl; constant c;
+Select cl with cl.stmt# = c.value
+3
+5000
+838 - WITH-stmt: value = stmt#
+stmt s; constant c;
+Select c with c.value = s.stmt#
+2, 3, 5
+5000
+839 - WITH-assign: value = stmt#
+assign a; constant c;
+Select c with c.value = a.stmt#
+2, 5
+5000
+840 - WITH-while: value = stmt# (no result)
+while w; constant c;
+Select c with c.value = w.stmt#
+none
+5000
+841 - WITH-if: value = stmt# (no result)
+if i; constant c;
+Select c with c.value = i.stmt#
+none
+5000
+842 - WITH-call: stmt# = value
+call cl; constant c;
+Select c with c.value = cl.stmt#
+3
+5000
+843 - WITH: constant = constant
+
+Select BOOLEAN with 1 = 1
+true
+5000
+844 - WITH: constant = constant (no result)
+
+Select BOOLEAN with 5 = 10
+false
+5000
+845 - WITH: string = string
+
+Select BOOLEAN with "hello" = "hello"
+true
+5000
+846 - WITH: string = string (no result)
+
+Select BOOLEAN with "harlo" = "hello"
+false
+5000
+847 - WITH: prog_line = prog_line
+prog_line n1; prog_line n2;
+Select BOOLEAN with n1 = n2
+true
+5000
+848 - WITH: stmt# = stmt#
+stmt s;
+Select BOOLEAN with s.stmt# = s.stmt#
+true
+5000
+849 - WITH: stmt# = stmt# (no result)
+assign a; while w;
+Select BOOLEAN with a.stmt# = w.stmt#
+false
+5000
+850 - WITH: c.value = c.value
+constant c;
+Select BOOLEAN with c.value = c.value
+true
+5000
+851 - WITH: c.procName = c.procName
+call c;
+Select c.procName with c.procName = c.procName
+proc2, proc3
+5000
+852 - WITH: p.procName = p.procName
+procedure p;
+Select BOOLEAN with p.procName = p.procName
+true
+5000

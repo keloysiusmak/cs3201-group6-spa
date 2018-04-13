@@ -1,0 +1,37 @@
+procedure First {
+    o = z * c - x + x - o - v;
+    g = j;
+    a = 100 + x;
+    if f then {
+        if a then {
+            m = k - p - b + First;
+        }
+        else {
+            x = 82 * w * 152 + o * z - j;
+            w = e;
+        }
+    }
+    else {
+        g = k - q + z * n + 4 + f;
+    }
+    while g {
+        while z {
+            b = r - s * e;
+            j = s + g * t;
+        }
+    }
+    o = l;
+    x = 54 - 45 - l;
+    if l then {
+        y = c * 157 + z * s + p;
+        l = f - m * u * o;
+        k = y + o + u * y - e;
+        m = u + m + j + f + z * u;
+    }
+    else {
+        f = d - w + o * 143 * c - v;
+        l = p + w * e;
+        i = d * s - p;
+        n = s * t + 166 - 23 + g - r;
+    }
+}

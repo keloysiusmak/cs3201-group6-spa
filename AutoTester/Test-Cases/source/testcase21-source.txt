@@ -1,0 +1,14 @@
+procedure SIMPLE1 {
+	one = 1;
+	two = one + one;
+	z = two + one + 6;
+	while z {
+		one = one + 1;
+		while one {
+			two = one;
+			z = two + 1;
+		}
+	}
+	d = z + two;
+	end = d;
+}

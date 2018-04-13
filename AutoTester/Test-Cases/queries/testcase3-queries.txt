@@ -1,0 +1,370 @@
+1 - Follows(0,1)
+stmt s;
+Select s such that Follows(0,1)
+
+5000
+2 - Follows(1,0)
+stmt s;
+Select s such that Follows(1,0)
+
+5000
+3 - Follows('a', 1)
+stmt s;
+Select s such that Follows("a", 1)
+
+5000
+4 - Follows(1,'a')
+stmt s;
+Select s such that Follows(1,"a")
+
+5000
+5 - Follows('a', 'a')
+stmt s;
+Select s such that Follows("a", "a")
+
+5000
+6 - Follows*(0,1)
+stmt s;
+Select s such that Follows*(0,1)
+
+5000
+7 - Follows*(1,0)
+stmt s;
+Select s such that Follows*(1,0)
+
+5000
+8 - Follows*('a', 1)
+stmt s;
+Select s such that Follows*("a", 1)
+
+5000
+9 - Follows*(1,'a')
+stmt s;
+Select s such that Follows*(1,"a")
+
+5000
+10 - Follows*('a', 'a')
+stmt s;
+Select s such that Follows*("a", "a")
+
+5000
+11 - Parent(0,1)
+stmt s;
+Select s such that Parent(0,1)
+
+5000
+12 - Parent(1,0)
+stmt s;
+Select s such that Parent(1,0)
+
+5000
+13 - Parent('a', 1)
+stmt s;
+Select s such that Parent("a", 1)
+
+5000
+14 - Parent(1,'a')
+stmt s;
+Select s such that Parent(1,"a")
+
+5000
+15 - Parent('a', 'a')
+stmt s;
+Select s such that Parent("a", "a")
+
+5000
+16 - Parent*(0,1)
+stmt s;
+Select s such that Parent*(0,1)
+
+5000
+17 - Parent*(1,0)
+stmt s;
+Select s such that Parent*(1,0)
+
+5000
+18 - Parent*('a', 1)
+stmt s;
+Select s such that Parent*("a", 1)
+
+5000
+19 - Parent*(1,'a')
+stmt s;
+Select s such that Parent*(1,"a")
+
+5000
+20 - Parent*('a', 'a')
+stmt s;
+Select s such that Parent*("a", "a")
+
+5000
+21 - Uses(0,1)
+stmt s;
+Select s such that Uses(0,1)
+
+5000
+22 - Uses(1,0)
+stmt s;
+Select s such that Uses(1,0)
+
+5000
+23 - Uses('a', 1)
+stmt s;
+Select s such that Uses("a", 1)
+
+5000
+24 - Uses(_,1)
+stmt s;
+Select s such that Uses(_,1)
+
+5000
+25 - Uses('a', 'a')
+stmt s;
+Select s such that Uses("a", "j")
+
+5000
+26 - Uses(_, 'a')
+stmt s;
+Select s such that Uses(_, "a")
+
+5000
+27 - Modifies(0,1)
+stmt s;
+Select s such that Modifies(0,1)
+
+5000
+28 - Modifies(1,0)
+stmt s;
+Select s such that Modifies(1,0)
+
+5000
+29 - Modifies('a', 1)
+stmt s;
+Select s such that Modifies("a", 1)
+
+5000
+30 - Modifies(_,1)
+stmt s;
+Select s such that Modifies(_,1)
+
+5000
+31 - Modifies('a', 'a')
+stmt s;
+Select s such that Modifies("a", "a")
+1,10,11,12,13,14,15,16,17,2,3,4,5,6,7,8,9
+5000
+32 - Modifies(_, 'a')
+stmt s;
+Select s such that Modifies(_, "a")
+
+5000
+33 - Follows(a1,a2) pattern a1(_, _)
+assign a1, a2;
+Select a1 such that Follows(a1,a2) pattern a1(_, _)
+6,7,14,15
+5000
+34 - Follows(a1,a2) pattern a1(_, _'1'_)
+assign a1, a2;
+Select a1 such that Follows(a1,a2) pattern a1(_, _"1"_)
+6,14
+5000
+35 - Follows(a1,a2) pattern a1(_, _'x'_)
+assign a1, a2;
+Select a1 such that Follows(a1,a2) pattern a1(_, _"x"_)
+6,7,14,15
+5000
+36 - Follows(a1,a2) pattern a1(v, _)
+assign a1, a2; variable v;
+Select a1 such that Follows(a1,a2) pattern a1(v, _)
+6,7,14,15
+5000
+37 - Follows(a1,a2) pattern a1(v, _'1'_)
+assign a1, a2; variable v;
+Select a1 such that Follows(a1,a2) pattern a1(v, _"1"_)
+6,14
+5000
+38 - Follows(a1,a2) pattern a1(v, _'x'_)
+assign a1, a2; variable v;
+Select a1 such that Follows(a1,a2) pattern a1(v, _"x"_)
+6,7,14,15
+5000
+39 - Follows(a1,a2) pattern a1('z', _)
+assign a1, a2;
+Select a1 such that Follows(a1,a2) pattern a1("z", _)
+6,7,14,15
+5000
+40 - Follows(a1,a2) pattern a1('z', _'1'_)
+assign a1, a2;
+Select a1 such that Follows(a1,a2) pattern a1("z", _"1"_)
+6,14
+5000
+41 - Follows(a1,a2) pattern a1('z', _'x'_)
+assign a1, a2;
+Select a1 such that Follows(a1,a2) pattern a1("z", _"x"_)
+6,7,14,15
+5000
+42 - Parent(s,a1) pattern a1(_, _)
+stmt s; assign a1;
+Select a1 such that Parent(s,a1) pattern a1(_, _)
+6,7,8,14,15,16,17
+5000
+43 - Parent(s,a1) pattern a1(_, _'1'_)
+stmt s; assign a1;
+Select a1 such that Parent(s,a1) pattern a1(_, _"1"_)
+6,14
+5000
+44 - Parent(s,a1) pattern a1(_, _'x'_)
+stmt s; assign a1;
+Select a1 such that Parent(s,a1) pattern a1(_, _"x"_)
+6,7,8,14,15,16
+5000
+45 - Parent(s,a1) pattern a1(v, _)
+stmt s; assign a1; variable v;
+Select a1 such that Parent(s,a1) pattern a1(v, _)
+6,7,8,14,15,16,17
+5000
+46 - Parent(s,a1) pattern a1(v, _'1'_)
+stmt s; assign a1; variable v;
+Select a1 such that Parent(s,a1) pattern a1(v, _"1"_)
+6,14
+5000
+47 - Parent(s,a1) pattern a1(v, _'x'_)
+stmt s; assign a1; variable v;
+Select a1 such that Parent(s,a1) pattern a1(v, _"x"_)
+6,7,8,14,15,16
+5000
+48 - Parent(s,a1) pattern a1('z', _)
+stmt s; assign a1;
+Select a1 such that Parent(s,a1) pattern a1("z", _)
+6,7,8,14,15,16
+5000
+49 - Parent(s,a1) pattern a1('z', _'1'_)
+stmt s; assign a1;
+Select a1 such that Parent(s,a1) pattern a1("z", _"1"_)
+6,14
+5000
+50 - Parent(s,a1) pattern a1('z', _'x'_)
+stmt s; assign a1;
+Select a1 such that Parent(s,a1) pattern a1("z", _"x"_)
+6,7,8,14,15,16
+5000
+51 - Uses(a1,'x') pattern a1(_, _)
+assign a1;
+Select a1 such that Uses(a1,"x") pattern a1(_, _)
+6,7,8,14,15,16
+5000
+52 - Uses(a1,'x') pattern a1(_, _'1'_)
+assign a1;
+Select a1 such that Uses(a1,"x") pattern a1(_, _"1"_)
+6,14
+5000
+53 - Uses(a1,'x') pattern a1(_, _'x'_)
+assign a1;
+Select a1 such that Uses(a1,"x") pattern a1(_, _"x"_)
+6,7,8,14,15,16
+5000
+54 - Uses(a1,'x') pattern a1(v, _)
+assign a1; variable v;
+Select a1 such that Uses(a1,"x") pattern a1(v, _)
+6,7,8,14,15,16
+5000
+55 - Uses(a1,'x') pattern a1(v, _'1'_)
+assign a1; variable v;
+Select a1 such that Uses(a1,"x") pattern a1(v, _"1"_)
+6,14
+5000
+56 - Uses(a1,'x') pattern a1(v, _'x'_)
+assign a1; variable v;
+Select a1 such that Uses(a1,"x") pattern a1(v, _"x"_)
+6,7,8,14,15,16
+5000
+57 - Uses(a1,'x') pattern a1('z', _)
+assign a1;
+Select a1 such that Uses(a1,"x") pattern a1("z", _)
+6,7,8,14,15,16
+5000
+58 - Uses(a1,'x') pattern a1('z', _'1'_)
+assign a1;
+Select a1 such that Uses(a1,"x") pattern a1("z", _"1"_)
+6,14
+5000
+59 - Uses(a1,'x') pattern a1('z', _'x'_)
+assign a1;
+Select a1 such that Uses(a1,"x") pattern a1("z", _"x"_)
+6,7,8,14,15,16
+5000
+60 - Modifies(a1,'z') pattern a1(_, _)
+assign a1;
+Select a1 such that Modifies(a1,"z") pattern a1(_, _)
+6,7,8,14,15,16
+5000
+61 - Modifies(a1,'z') pattern a1(_, _'1'_)
+assign a1;
+Select a1 such that Modifies(a1,"z") pattern a1(_, _"1"_)
+6,14
+5000
+62 - Modifies(a1,'z') pattern a1(_, _'x'_)
+assign a1;
+Select a1 such that Modifies(a1,"z") pattern a1(_, _"x"_)
+6,7,8,14,15,16
+5000
+63 - Modifies(a1,'z') pattern a1(v, _)
+assign a1; variable v;
+Select a1 such that Modifies(a1,"z") pattern a1(v, _)
+6,7,8,14,15,16
+5000
+64 - Modifies(a1,'z') pattern a1(v, _'1'_)
+assign a1; variable v;
+Select a1 such that Modifies(a1,"z") pattern a1(v, _"1"_)
+6,14
+5000
+65 - Modifies(a1,'z') pattern a1(v, _'x'_)
+assign a1; variable v;
+Select a1 such that Modifies(a1,"z") pattern a1(v, _"x"_)
+6,7,8,14,15,16
+5000
+66 - Modifies(a1,'z') pattern a1('z', _)
+assign a1;
+Select a1 such that Modifies(a1,"z") pattern a1("z", _)
+6,7,8,14,15,16
+5000
+67 - Modifies(a1,'z') pattern a1('z', _'1'_)
+assign a1;
+Select a1 such that Modifies(a1,"z") pattern a1("z", _"1"_)
+6,14
+5000
+68 - Modifies(a1,'z') pattern a1('z', _'x'_)
+assign a1;
+Select a1 such that Modifies(a1,"z") pattern a1("z", _"x"_)
+6,7,8,14,15,16
+5000
+69 - Uses(s,v) pattern a1(v, _)
+stmt s; assign a1; variable v;
+Select a1 such that Uses(s,v) pattern a1(v, _)
+6,7,8,14,15,16
+5000
+70 - Uses(s,v) pattern a1(v, _'1'_)
+stmt s; assign a1; variable v;
+Select a1 such that Uses(s,v) pattern a1(v, _"1"_)
+14,6
+5000
+71 - Uses(s,v) pattern a1(v, _'x'_)
+stmt s; assign a1; variable v;
+Select a1 such that Uses(s,v) pattern a1(v, _"x"_)
+6,7,8,14,15,16
+5000
+72 - Modifies(s,v) pattern a1(v, _)
+stmt s; assign a1; variable v;
+Select a1 such that Modifies(s,v) pattern a1(v, _)
+6,7,8,14,15,16,17
+5000
+73 - Modifies(s,v) pattern a1(v, _'1'_)
+stmt s; assign a1; variable v;
+Select a1 such that Modifies(s,v) pattern a1(v, _"1"_)
+14,6
+5000
+74 - Modifies(s,v) pattern a1(v, _'x'_)
+stmt s; assign a1; variable v;
+Select a1 such that Modifies(s,v) pattern a1(v, _"x"_)
+6,8,14,15,16,7
+5000

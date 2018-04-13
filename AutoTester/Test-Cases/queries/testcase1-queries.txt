@@ -1,0 +1,65 @@
+1 - Select follows
+stmt s;
+Select s such that Follows(3, s)
+4
+5000
+2 - Select all ifs
+if ifs;
+Select ifs
+5
+5000
+3 - Select all assign
+assign a;
+Select a
+1,3,4,7,8,9,10,13
+5000
+4 - Select all variables
+variable v;
+Select v
+a,b,d,c,e
+5000
+5 - Select all procedures
+procedure p;
+Select p
+a,b
+5000
+6 - Select all statements
+stmt s;
+Select s
+1,2,3,4,5,6,7,8,9,10,11,12,13
+5000
+7 - Follows
+stmt s;
+Select s such that Follows(1, s)
+2
+5000
+8 - Follows*
+stmt s;
+Select s such that Follows*(1, s)
+2,5,9
+5000
+9 - Follows*
+stmt s;
+Select s such that Follows*(10, s)
+11
+5000
+10 - Follows*
+stmt s;
+Select s such that Follows*(11, s)
+
+5000
+11 - Parent
+stmt s;
+Select s such that Parent(10, s)
+
+5000
+12 - Parent
+stmt s;
+Select s such that Parent(11, s)
+12
+5000
+13 - Parent*
+stmt s;
+Select s such that Parent*(11, s)
+12,13
+5000
