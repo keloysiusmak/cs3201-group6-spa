@@ -1309,7 +1309,7 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 							value = pkb.getProcedureName(procId);
 						}
 					} else { // Get line number
-						if (mergedTable.getParamAttr(currentParam) != PROCNAME) { // Same attr in table
+						if (mergedTable.getParamAttr(currentParam) != PROCNAME) { // Same attr in table*/
 							value = to_string(paramValue);
 						} else { // Calls.procname in table, get calls line number
 							vector<vector<int>> lineNums = pkb.getCallStatementsCallingProcedure(paramValue);
