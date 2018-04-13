@@ -1164,9 +1164,9 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 		}
 
 		// Merge directly (No consideration for calls since not in table)
+		EvaluatorHelper::addClauseParamToTable(withClauseResults, iTable);
 		if (withResults.size() > 0) {
 			withClauseResults.setResults(withResults);
-			EvaluatorHelper::addClauseParamToTable(withClauseResults, iTable);
 			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
 			return true;
 		}
