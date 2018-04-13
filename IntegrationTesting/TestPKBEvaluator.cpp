@@ -43,46 +43,46 @@ namespace PKBEvaluatorIntegrationTesting
 
 		TEST_CLASS_INITIALIZE(setup)
 		{
-			pkb.insertToTable(STATEMENT_TABLE, 1, { {1}, {2}, {1}, {1} } );
-			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1,2 },{ 3,1 },{ 2,4 },{ 2 } } );
-			pkb.insertToTable(STATEMENT_TABLE, 3,{ { 2 },{ 1 },{2},{ 1 } } );
-			pkb.insertToTable(STATEMENT_TABLE, 4, { { 2 },{  },{ },{ 4 } } );
-			pkb.insertToTable(STATEMENT_TABLE, 5, { { 1,3,5 },{ 1, 5 },{ 3,4 },{ 3 } } );
-			pkb.insertToTable(STATEMENT_TABLE, 6, { { 3,4 },{ 5 },{ 3 },{ 2 } } );
-			pkb.insertToTable(STATEMENT_TABLE, 7, { { 4 },{  },{ 3 },{ 1 } } );
-			pkb.insertToTable(STATEMENT_TABLE, 8, { { 5 }, {},{ 4 },{ 1 } } );
-			pkb.insertToTable(STATEMENT_TABLE, 9, { { 1 },{},{ 5 },{ 1 } } );
-			pkb.insertToTable(STATEMENT_TABLE, 10, { { 6 },{2},{ 1},{ 1 } } );
-			pkb.insertToTable(STATEMENT_TABLE, 11, { { 6,7 },{ 1,2 },{ 1 },{ 2 } } );
-			pkb.insertToTable(STATEMENT_TABLE, 12, { { 7,8 },{ 2 },{ 1 },{ 2 } } );
-			pkb.insertToTable(STATEMENT_TABLE, 13, { { 8 },{ },{1 },{ 1 } } );
+			pkb.insertToTable(STATEMENT_TABLE, 1, { {1}, {2}, {1}, {1} });
+			pkb.insertToTable(STATEMENT_TABLE, 2, { { 1,2 },{ 3,1 },{ 2,4 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 3, { { 2 },{ 1 },{2},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 4, { { 2 },{  },{ },{ 4 } });
+			pkb.insertToTable(STATEMENT_TABLE, 5, { { 1,3,5 },{ 1, 5 },{ 3,4 },{ 3 } });
+			pkb.insertToTable(STATEMENT_TABLE, 6, { { 3,4 },{ 5 },{ 3 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 7, { { 4 },{  },{ 3 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 8, { { 5 }, {},{ 4 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 9, { { 1 },{},{ 5 },{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 10, { { 6 },{2},{ 1},{ 1 } });
+			pkb.insertToTable(STATEMENT_TABLE, 11, { { 6,7 },{ 1,2 },{ 1 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 12, { { 7,8 },{ 2 },{ 1 },{ 2 } });
+			pkb.insertToTable(STATEMENT_TABLE, 13, { { 8 },{ },{1 },{ 1 } });
 
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { {0},{1,2,5,9}, {1}} );
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 2 },{ 3,4 },{ 2 } } );
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 5 },{ 6 },{ 3 } } );
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 4, { { 6 },{ 7 },{ 2 } } );
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 5, { { 5 },{ 8 },{ 3 } } );
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 6, { { 0 },{ 10,11 },{ 2 } } );
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 7, { { 11 },{ 12 },{ 2 } } );
-			pkb.insertToTable(STATEMENT_LIST_TABLE, 8, { { 12 },{ 13 },{ 2 } } );
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 1, { {0},{1,2,5,9}, {1} });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 2, { { 2 },{ 3,4 },{ 2 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 3, { { 5 },{ 6 },{ 3 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 4, { { 6 },{ 7 },{ 2 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 5, { { 5 },{ 8 },{ 3 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 6, { { 0 },{ 10,11 },{ 2 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 7, { { 11 },{ 12 },{ 2 } });
+			pkb.insertToTable(STATEMENT_LIST_TABLE, 8, { { 12 },{ 13 },{ 2 } });
 
-			pkb.insertToTable(PROC_INFO_TABLE, 1, {{1},{1,2,3,5},{1,2,3,4,5}} );
-			pkb.insertToTable(PROC_INFO_TABLE, 2, { { 6 },{ 1,2 },{ 1 } } );
+			pkb.insertToTable(PROC_INFO_TABLE, 1, { {1},{1,2,3,5},{1,2,3,4,5} });
+			pkb.insertToTable(PROC_INFO_TABLE, 2, { { 6 },{ 1,2 },{ 1 } });
 
-			pkb.insertToTable(USES_TABLE, 1, {{2,3,5,11}, {1,2}} );
-			pkb.insertToTable(USES_TABLE, 2, { {1,10,11, 12},{ 1,2 } } );
-			pkb.insertToTable(USES_TABLE, 3, { { 2 },{ 1 } } );
-			pkb.insertToTable(USES_TABLE, 5, { {5,6},{1} } );
+			pkb.insertToTable(USES_TABLE, 1, { {2,3,5,11}, {1,2} });
+			pkb.insertToTable(USES_TABLE, 2, { {1,10,11, 12},{ 1,2 } });
+			pkb.insertToTable(USES_TABLE, 3, { { 2 },{ 1 } });
+			pkb.insertToTable(USES_TABLE, 5, { {5,6},{1} });
 
-			pkb.insertToTable(MODIFIES_TABLE, 1, { {1,10,11,12,13},{1,2} } );
-			pkb.insertToTable(MODIFIES_TABLE, 2, { { 2,3 },{ 1 } } );
-			pkb.insertToTable(MODIFIES_TABLE, 3, { { 5,6,7 },{ 1 } } );
-			pkb.insertToTable(MODIFIES_TABLE, 4, { { 5,8 },{ 1 } } );
-			pkb.insertToTable(MODIFIES_TABLE, 5, { { 9 },{ 1 } } );
+			pkb.insertToTable(MODIFIES_TABLE, 1, { {1,10,11,12,13},{1,2} });
+			pkb.insertToTable(MODIFIES_TABLE, 2, { { 2,3 },{ 1 } });
+			pkb.insertToTable(MODIFIES_TABLE, 3, { { 5,6,7 },{ 1 } });
+			pkb.insertToTable(MODIFIES_TABLE, 4, { { 5,8 },{ 1 } });
+			pkb.insertToTable(MODIFIES_TABLE, 5, { { 9 },{ 1 } });
 
-			pkb.insertToTable(CONST_TABLE, 1, {{8, 9, 13}} );
-			pkb.insertToTable(CONST_TABLE, 4, { { 7 } } );
-			pkb.insertToTable(CONST_TABLE, 7, { { 4 } } );
+			pkb.insertToTable(CONST_TABLE, 1, { {8, 9, 13} });
+			pkb.insertToTable(CONST_TABLE, 4, { { 7 } });
+			pkb.insertToTable(CONST_TABLE, 7, { { 4 } });
 
 			pkb.insertToTable(NEXT_TABLE, 1, { { 2 } });
 			pkb.insertToTable(NEXT_TABLE, 2, { { 3,5 } });
@@ -140,6 +140,9 @@ namespace PKBEvaluatorIntegrationTesting
 			pkb.insertToNameTable(VAR_TABLE, { "c" });
 			pkb.insertToNameTable(VAR_TABLE, { "d" });
 			pkb.insertToNameTable(VAR_TABLE, { "e" });
+
+			pkb.insertToTable(PROC_NAME_CALL_NAME_TABLE, 2, { {4} });
+			pkb.insertToTable(STMT_NO_CONST_VALUE_TABLE, 4, { { 4 } });
 
 			evaluator.setPKB(pkb);
 		}
@@ -1917,6 +1920,32 @@ expected.push_back(pkb.getProcedureName(r[0]));
 
 			list<string> expected;
 			expected.push_back({ "b 4" });
+			Assert::AreEqual(true, (result == expected));
+		}
+		TEST_METHOD(PKBEvaluatorGetAllCallStatementsWithStmtNo) {
+			QueryObject q;
+			q.insertSelectStmt(CALL, "c", NONE);
+			q.insertWithClause(CALL, "c", STMT_NO, INTEGER, "4", NONE, false);
+
+			evaluator.setQueryObject(q);
+
+			list<string> result = evaluator.evaluateQuery();
+
+			list<string> expected;
+			expected.push_back({ "4" });
+			Assert::AreEqual(true, (result == expected));
+
+
+			QueryObject q1;
+			q1.insertSelectStmt(CALL, "c", NONE);
+			q1.insertWithClause(INTEGER, "4", NONE, CALL, "c", STMT_NO, false);
+
+			evaluator.setQueryObject(q1);
+
+			result = evaluator.evaluateQuery();
+
+			expected.clear();
+			expected.push_back({ "4" });
 			Assert::AreEqual(true, (result == expected));
 		}
 
