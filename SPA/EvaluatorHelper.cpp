@@ -452,3 +452,59 @@ int EvaluatorHelper::withClauseNumSyns(Clause &clause, IntermediateTable &iTable
 	return numSyns;
 };
 
+/* Generates the cross product of two vector sets of ints for universe set */
+vector<vector<int>> EvaluatorHelper::crossVectors(vector<vector<int>> &set1, vector<vector<int>> &set2) {
+
+	vector<vector<int>> crossedResults;
+
+	// Assumes nested vectors of length 1
+	for (vector<int> set1Row : set1) {
+		for (vector<int> set2Row : set2) {
+			vector<int> mergedRow;
+			mergedRow.push_back(set1Row[0]);
+			mergedRow.push_back(set2Row[0]);
+			crossedResults.push_back(mergedRow);
+		}
+	}
+	
+	return crossedResults;
+};
+
+/* Subtract from clauseResults a set of vectors given param */
+void EvaluatorHelper::subtractSetSingle(ClauseResults &clauseResults, vector<vector<int>> &setToSubtract) {
+
+	set<int> toSubtract;
+	// Add to set
+	for (vector<int> setRow : setToSubtract) {
+		toSubtract.insert(setRow[0]);
+	}
+
+	vector<vector<int>> subtractedSetResults;
+	for (vector<int> resultRow : clauseResults.results) {
+		if (toSubtract.find(resultRow[0]) == toSubtract.end()) { // Did not find it in set
+			subtractedSetResults.push_back(resultRow);
+		}
+	}
+
+	clauseResults.setResults(subtractedSetResults);
+};
+
+/* Subtract from clauseResults a set of vectors given a table of 2 params */
+void EvaluatorHelper::subtractSetDouble(ClauseResults &clauseResults, vector<vector<int>> &setToSubtract) {
+
+	// Push everything into map
+	map<vector<int>, int> toSubtract;
+	for (vector<int> setRow : setToSubtract) {
+		toSubtract[setRow] = 1;
+	}
+
+	vector<vector<int>> subtractedSetResults;
+	for (vector<int> resultRow : clauseResults.results) {
+		if (toSubtract.find(resultRow) == toSubtract.end()) { // Add in if not in set
+			subtractedSetResults.push_back(resultRow);
+		}
+	}
+
+	clauseResults.setResults(subtractedSetResults);
+
+};
