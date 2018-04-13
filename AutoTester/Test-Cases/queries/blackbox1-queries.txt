@@ -744,8 +744,8 @@ Select pl such that Modifies(pl, v) and Modifies(pl, "eight")
 13, 37, 38
 5000
 151 - 2 clause - Uses
-stmt s; variable v; 
-Select v such that Uses(s, "four") and Uses(s, "twelve")
+stmt s;
+Select s such that Uses(s, "four") and Uses(s, "twelve")
 1
 5000
 152 - 2 clause - Uses
