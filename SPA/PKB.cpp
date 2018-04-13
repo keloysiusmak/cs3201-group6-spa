@@ -145,6 +145,13 @@ int PKB::insertToNameTable(int table_id, std::vector<string> value)
 
 		/* Variable does not exist */
 		int size = static_cast<int>(table.size()) + 1;
+		if (table_id == PATTERN_TABLE) {
+			std::vector<string> output;
+			for (string s : value) {
+				output.push_back("|" + s);
+			}
+			value = output;
+		}
 		nameTables[table_id - PATTERN_TABLE].insert({size,  value });
 
 		return size;
