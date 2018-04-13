@@ -1910,17 +1910,18 @@ std::vector<std::vector<int>> PKB::getAffectsAfterStar(int stmt) {
 					next.push({ newNext[j][0] });
 				}
 				else {
-					bool needed = false;
-					std::queue<int> tempNext = next;
-					while (tempNext.size() > 0) {
-						int item = tempNext.front();
-						tempNext.pop();
-						needed = needed || PKB::checkNextStar(item, whileStack.top());
+					if (whileStack.size() > 0) {
+						bool needed = false;
+						std::queue<int> tempNext = next;
+						while (tempNext.size() > 0) {
+							int item = tempNext.front();
+							tempNext.pop();
+							needed = needed || PKB::checkNextStar(item, whileStack.top());
+						}
+						if (!needed) {
+							whileStack.pop();
+						}
 					}
-					if (!needed) {
-						whileStack.pop();
-					}
-
 				}
 			}
 		}

@@ -791,6 +791,7 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 	else if (pType == CALL) {
 		vector<vector<int>> callStmts = pkb.getAllStatementsWithType(4);
 		if (pAttr == NONE) results = callStmts;
+		else if (pAttr == STMT_NO) results = callStmts;
 		else if (pAttr == PROCNAME) {
 			for (vector<int> stmt : callStmts) {
 				vector<int> procId = pkb.getProcedureCalledByCallStatement(stmt[0])[0];
@@ -1061,7 +1062,6 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 	vector<vector<int>> withResults;
 
 	withClauseResults.instantiateClause(withClause);
-	EvaluatorHelper::addClauseParamToTable(withClauseResults, iTable);
 	if (Utils::isSynonym(lhs) || Utils::isSynonym(rhs)) {
 		// Both synonyms
 		if (Utils::isSynonym(lhs) && Utils::isSynonym(rhs)) {
@@ -1098,6 +1098,7 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 		if (withResults.size() > 0) {
 			withClauseResults.setResults(withResults);
 			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+			EvaluatorHelper::addClauseParamToTable(withClauseResults, iTable);
 			return true;
 		}
 		return false;
