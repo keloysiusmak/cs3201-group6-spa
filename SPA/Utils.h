@@ -45,7 +45,7 @@ public:
 	static void intersectSets(PKB &pkb, set<int> &s1, set<int> &s2, Param &p1, Param &p2, vector<vector<int>> &results);
 	static bool hasStringValues(Param &p1);
 	static set<string> convertStringValues(Param &p1, set<int> &oldSet, PKB &pkb);
-	static int convertIntValues(Param &p1, string &oldItem, PKB &pkb);
+	static std::vector<int> convertIntValues(Param &p1, string &oldItem, PKB &pkb);
 	static std::vector<std::vector<int>> invertTwoValues(std::vector<std::vector<int>> toInvert);
 
 };
