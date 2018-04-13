@@ -333,9 +333,16 @@ void Utils::intersectSets(PKB &pkb, set<int> &p1set, set<int> &p2set, Param &p1,
 		for (string value : p1NewSet) {
 			vector<int> withTableRow;
 			if (p2NewSet.find(value) != p2NewSet.end()) {
-				withTableRow.push_back(Utils::convertIntValues(p1, value, pkb));
-				withTableRow.push_back(Utils::convertIntValues(p2, value, pkb));
-				results.push_back(withTableRow);
+				std::vector<int> res1 = Utils::convertIntValues(p1, value, pkb);
+				std::vector<int> res2 = Utils::convertIntValues(p2, value, pkb);
+				for (int i1 : res1) {
+					for (int i2 : res2) {
+						withTableRow.clear();
+						withTableRow.push_back(i1);
+						withTableRow.push_back(i2);
+						results.push_back(withTableRow);
+					}
+				}
 			}
 		}
 	}
@@ -370,20 +377,25 @@ set<string> Utils::convertStringValues(Param &p1, set<int> &oldSet, PKB &pkb) {
 	}
 	else if (p1.type == CALL && p1.attribute == PROCNAME) {
 		for (int item : oldSet) {
-			output.insert(pkb.getProcedureName(item));
+			output.insert(to_string(item));
 		}
 	}
 	return output;
 }
 
-int Utils::convertIntValues(Param &p1, string &oldItem, PKB &pkb) {
+std::vector<int> Utils::convertIntValues(Param &p1, string &oldItem, PKB &pkb) {
 	if (p1.type == PROCEDURE) {
-		return pkb.getProcedureId(oldItem);
+		return{ pkb.getProcedureId(oldItem) };
 	}
 	else if (p1.type == VARIABLE) {
-		return pkb.getVariableId(oldItem);
+		return{ pkb.getVariableId(oldItem) };
 	}
 	else if (p1.type == CALL && p1.attribute == PROCNAME) {
-		return pkb.getProcedureId(oldItem);
+		std::vector<std::vector<int>> res = pkb.getCallStatementsCallingProcedure(stoi(oldItem));
+		std::vector<int> r;
+		for (std::vector<int> i : res) {
+			r.push_back(i[0]);
+		}
+		return r;
 	}
 }
