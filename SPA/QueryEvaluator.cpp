@@ -1166,6 +1166,7 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 		// Merge directly (No consideration for calls since not in table)
 		if (withResults.size() > 0) {
 			withClauseResults.setResults(withResults);
+			EvaluatorHelper::addClauseParamToTable(withClauseResults, iTable);
 			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
 			return true;
 		}
@@ -1311,6 +1312,7 @@ list<string> QueryEvaluator::extractParams(vector<Param> selectedParams, vector<
 					} else { // Get line number
 						if (mergedTable.getParamAttr(currentParam) != PROCNAME) { // Same attr in table*/
 							value = to_string(paramValue);
+	
 						} else { // Calls.procname in table, get calls line number
 							vector<vector<int>> lineNums = pkb.getCallStatementsCallingProcedure(paramValue);
 							for (vector<int> lineNum : lineNums) {
