@@ -266,7 +266,7 @@ seven, sixteen, six, three, ten
 54 - 1 clause - Uses c v
 call c; variable v;
 Select v such that Uses(c,v) with c.procName = "Main"
-one, two, three, four, five, six,seven, eight,night, ten,eleven, twelve, thirteen, fourteen, fifteen, sixteen
+
 5000
 55 - 1 clause - Calls
 
