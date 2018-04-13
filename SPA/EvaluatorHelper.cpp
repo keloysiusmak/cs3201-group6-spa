@@ -49,6 +49,7 @@ bool EvaluatorHelper::unsanitizedClauseInCache(Clause &clause, map<Clause, vecto
 
 /* Merges the clauseResults into the intermediate table */
 void EvaluatorHelper::mergeClauseTable(ClauseResults &clauseResults, IntermediateTable &iTable) {
+	iTable.hasResults = clauseResults.isValid();
 	if (clauseResultsParamsInTable(clauseResults, iTable)) {
 		mergeWithOverlap(clauseResults, iTable);
 	}
@@ -63,7 +64,6 @@ void EvaluatorHelper::mergeWithoutOverlap(ClauseResults &clauseResults, Intermed
 	addClauseParamToTable(clauseResults, iTable);
 
 	/* Set iTable as hasResults if clauseResults is (concrete, concrete) and true */
-	iTable.hasResults = clauseResults.isValid();
 
 	vector<vector<int>> newTable;
 	if (iTable.resultsTable.size() == 0) { // Table has no values
