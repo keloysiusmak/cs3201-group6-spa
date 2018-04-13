@@ -1,5 +1,5 @@
-1 - INVALID_TEST
+1 - DUMMY_TEST
 
 Select BOOLEAN
-false
+true
 5000
