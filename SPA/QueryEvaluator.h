@@ -61,7 +61,7 @@ public:
 	void handleWithEquateVariables(Clause &clause, IntermediateTable &iTable);
 	bool handleWithEvaluation(Clause &clause, IntermediateTable &iTable);
 	void handleCallInWithClause(Param clauseCallParam, set<string> &clauseCallValues, IntermediateTable &iTable);
-
+	
 private:
 	QueryObject queryObject;
 	PKB pkb;
