@@ -791,6 +791,7 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 	else if (pType == CALL) {
 		vector<vector<int>> callStmts = pkb.getAllStatementsWithType(4);
 		if (pAttr == NONE) results = callStmts;
+		else if (pAttr == STMT_NO) results = callStmts;
 		else if (pAttr == PROCNAME) {
 			for (vector<int> stmt : callStmts) {
 				vector<int> procId = pkb.getProcedureCalledByCallStatement(stmt[0])[0];
@@ -813,7 +814,76 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 /* Filters table for with assignment */
 void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable) {
 
-	if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 1) {
+	if ((clause.getLeftParam().attribute == STMT_NO
+		&& clause.getRightParam().type == CONSTANT) || 
+		(clause.getRightParam().attribute == STMT_NO
+			&& clause.getLeftParam().type == CONSTANT)) {
+		ClauseResults withClauseResults;
+		withClauseResults.instantiateClause(clause);
+
+		int type;
+		if (clause.getLeftParam().type == STMT) type = 0;
+		else if (clause.getLeftParam().type == ASSIGN) type = 1;
+		else if (clause.getLeftParam().type == WHILE) type = 2;
+		else if (clause.getLeftParam().type == IF) type = 3;
+		else if (clause.getLeftParam().type == CALL) type = 4;
+		vector<vector<int>> withResults = pkb.getWithStmtNoConstValue(type);
+		withClauseResults.setResults(withResults);
+		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+	}
+	else if (clause.getLeftParam().type == PROCEDURE
+		&& clause.getRightParam().type == VARIABLE) {
+		ClauseResults withClauseResults;
+		withClauseResults.instantiateClause(clause);
+		vector<vector<int>> withResults = pkb.getWithProcNameVarName();
+		withClauseResults.setResults(withResults);
+		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+	}
+	else if (clause.getLeftParam().type == PROCEDURE
+		&& clause.getRightParam().type == CALL
+		&& clause.getRightParam().attribute == PROCNAME) {
+		ClauseResults withClauseResults;
+		withClauseResults.instantiateClause(clause);
+		vector<vector<int>> withResults = pkb.getWithProcNameCallProcName();
+		withClauseResults.setResults(withResults);
+		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+	}
+	else if (clause.getLeftParam().type == VARIABLE
+		&& clause.getRightParam().type == CALL
+		&& clause.getRightParam().attribute == PROCNAME) {
+		ClauseResults withClauseResults;
+		withClauseResults.instantiateClause(clause);
+		vector<vector<int>> withResults = pkb.getWithVarNameCallProcName();
+		withClauseResults.setResults(withResults);
+		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+	}
+	else if (clause.getRightParam().type == PROCEDURE
+		&& clause.getLeftParam().type == VARIABLE) {
+		ClauseResults withClauseResults;
+		withClauseResults.instantiateClause(clause);
+		vector<vector<int>> withResults = pkb.getWithProcNameVarName();
+		withClauseResults.setResults(Utils::invertTwoValues(withResults));
+		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+	}
+	else if (clause.getRightParam().type == PROCEDURE
+		&& clause.getLeftParam().type == CALL
+		&& clause.getLeftParam().attribute == PROCNAME) {
+		ClauseResults withClauseResults;
+		withClauseResults.instantiateClause(clause);
+		vector<vector<int>> withResults = pkb.getWithProcNameCallProcName();
+		withClauseResults.setResults(Utils::invertTwoValues(withResults));
+		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+	}
+	else if (clause.getRightParam().type == VARIABLE
+		&& clause.getLeftParam().type == CALL
+		&& clause.getLeftParam().attribute == PROCNAME) {
+		ClauseResults withClauseResults;
+		withClauseResults.instantiateClause(clause);
+		vector<vector<int>> withResults = pkb.getWithVarNameCallProcName();
+		withClauseResults.setResults(Utils::invertTwoValues(withResults));
+		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+	}
+	else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 1) {
 		handleWithValueAssignment(clause, iTable);
 	}
 	else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 2) {
@@ -1061,7 +1131,6 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 	vector<vector<int>> withResults;
 
 	withClauseResults.instantiateClause(withClause);
-	EvaluatorHelper::addClauseParamToTable(withClauseResults, iTable);
 	if (Utils::isSynonym(lhs) || Utils::isSynonym(rhs)) {
 		// Both synonyms
 		if (Utils::isSynonym(lhs) && Utils::isSynonym(rhs)) {
