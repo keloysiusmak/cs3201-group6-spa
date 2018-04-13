@@ -200,61 +200,45 @@ void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResu
 	Param leftParam = clause.getLeftParam();
 	Param rightParam = clause.getRightParam();
 
+	// If same param
+	if (Utils::isSameParam(clause.getLeftParam(), clause.getRightParam())) {
+		if (clause.getIsInverted()) clauseResults.setValid(true); // Clauseresults defaults false
+	}
+
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
-			/* if (leftParam.value == rightParam.value) {
-				validQuery = false;
-				evaluateQuery();
-			} */
-			//if (clause.getIsInverted()) {
-				//vector<vector<int>> universeResults = pkb.getAllStatements() cross product pkb.getAllStatements()
-				//subtract pkb.getAllFollows() from universeResults
-				//clauseResults.setResults(universeResults);
-			//}
-			//else {
-				vector<vector<int>> results = pkb.getAllFollows();
+			vector<vector<int>> results = pkb.getAllFollows();
+			if (!clause.getIsInverted()) {
 				clauseResults.setResults(results);
-			//}
-		}
-		else { // (syn, concrete)
-			//if (clause.getIsInverted()) {
-				//vector<vector<int>> universeResults = pkb.getAllStatements() cross product pkb.getFollowsBefore(stoi(rightParam.value));
-				//subtract pkb.getFollowsBefore(stoi(rightParam.value)) from universeResults
-				//clauseResults.setResults(universeResults);
-			//}
-			//else {
-				vector<vector<int>> results = pkb.getFollowsBefore(stoi(rightParam.value));
+			} else { // NOT case
+				vector<vector<int>> universeResults = universeSet(leftParam, rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetDouble(clauseResults, results);
+			}
+		} else { // (syn, concrete)
+			vector<vector<int>> results = pkb.getFollowsBefore(stoi(rightParam.value));
+			if (!clause.getIsInverted()) {
 				clauseResults.setResults(results);
-			///}
+			} else { // NOT case
+				vector<vector<int>> universeResults = pkb.getAllFollows();
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
 		}
-	}
-	else { //concrete, 
+	} else { //concrete, 
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
-			//if (clause.getIsInverted()) {
-				//vector<vector<int>> universeResults = pkb.getFollowsAfter(stoi(leftParam.value)) cross product pkb.getAllStatements();
-				//subtract pkb.getFollowsAfter(stoi(leftParam.value)) from universeResults
-				//clauseResults.setResults(universeResults);
-			//}
-			//else {
-				vector<vector<int>> results = pkb.getFollowsAfter(stoi(leftParam.value));
+			vector<vector<int>> results = pkb.getFollowsAfter(stoi(leftParam.value));
+			if (!clause.getIsInverted()) {
 				clauseResults.setResults(results);
-			//}
+			} else { // NOT case
+				vector<vector<int>> universeResults = pkb.getAllFollows();
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
 		}
 		else { // (concrete, concrete)
-			/* if (clause.getIsInverted()) {
-				bool results = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
-				if (results) {
-					bool results = false;
-				}
-				else {
-					bool results = true;
-				}
-				clauseResults.setValid(results);
-			} */
-			//else {
-				bool results = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
-				clauseResults.setValid(results);
-			//}
+			bool results = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
+			clause.getIsInverted() ? clauseResults.setValid(!results) : clauseResults.setValid(results);
 		}
 	}
 }
@@ -266,63 +250,44 @@ void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseR
 	Param leftParam = clause.getLeftParam();
 	Param rightParam = clause.getRightParam();
 
+	// If same param
+	if (Utils::isSameParam(clause.getLeftParam(), clause.getRightParam())) {
+		if (clause.getIsInverted()) clauseResults.setValid(true); // Clause results defaults false
+	}
+
 	if (Utils::isSynonym(leftParam)) {
 		if (Utils::isSynonym(rightParam)) { // (syn, syn)
-			/* if (leftParam.value == rightParam.value) {
-				validQuery = false;
-				evaluateQuery();
-			} */
-			//else {
-				//if (clause.getIsInverted()) {
-					//vector<vector<int>> universeResults = pkb.getAllStatemnts() cross product pkb.getAllStatements();
-					//subtract pkb.getAllFollowsStar() from universeResults
-					//clauseResults.setResults(universeResults);
-				//}
-				//else {
-					vector<vector<int>> results = pkb.getAllFollowsStar();
-					clauseResults.setResults(results);
-				//}
-			//}
-		}
-		else { // (syn, concrete)
-			//if (clause.getIsInverted()) {
-				//vector<vector<int>> universeResults = pkb.getAllStatemnts() cross product pkb.getAllFollowsBeforeStar(stoi(rightParam.value));
-				//subtract pkb.getFollowsBeforeStar(stoi(rightParam.value)) from universeResults
-				//clauseResults.setResults(universeResults);
-			//}
-			//else {
-				vector<vector<int>> results = pkb.getFollowsBeforeStar(stoi(rightParam.value));
+			vector<vector<int>> results = pkb.getAllFollowsStar();
+			if (!clause.getIsInverted()) {
 				clauseResults.setResults(results);
-			//}
+			} else { // NOT case
+				vector<vector<int>> universeResults = universeSet(leftParam, rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetDouble(clauseResults, results);
+			}
+		} else { // (syn, concrete)
+			vector<vector<int>> results = pkb.getFollowsBeforeStar(stoi(rightParam.value));
+			if (!clause.getIsInverted()) {
+				clauseResults.setResults(results);
+			} else {
+				vector<vector<int>> universeResults = setValuesforParam(leftParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
 		}
-	}
-	else {
+	} else {
 		if (Utils::isSynonym(rightParam)) { // (concrete, syn)
-			//if (clause.getIsInverted()) {
-				//vector<vector<int>> universeResults = pkb.getFollowsAfterStar(stoi(leftParam.value)) cross product pkb.getAllStatements();
-				//subtract pkb.getFollowsAfterStar(stoi(leftParam.value)) from universeResults
-				//clauseResults.setResults(universeResults);
-			//}
-			//else {
-				vector<vector<int>> results = pkb.getFollowsAfterStar(stoi(leftParam.value));
+			vector<vector<int>> results = pkb.getFollowsAfterStar(stoi(leftParam.value));
+			if (!clause.getIsInverted()) {
 				clauseResults.setResults(results);
-			//}
-		}
-		else { // (concrete, concrete)
-			//if (clause.getIsInverted()) {
-				//bool results = pkb.checkFollows(stoi(leftParam.value), stoi(rightParam.value));
-				//if (results) {
-					//bool results = false;
-				//}
-				//else {
-					//bool results = true;
-				//}
-				//clauseResults.setValid(results);
-			//}
-			//else {
-				bool result = pkb.checkFollowsStar(stoi(leftParam.value), stoi(rightParam.value));
-				clauseResults.setValid(result);
-			//}
+			} else { // NOT case
+				vector<vector<int>> universeResults = setValuesforParam(rightParam);
+				clauseResults.setResults(universeResults);
+				EvaluatorHelper::subtractSetSingle(clauseResults, results);
+			}
+		} else { // (concrete, concrete)
+			bool results = pkb.checkFollowsStar(stoi(leftParam.value), stoi(rightParam.value));
+			clause.getIsInverted() ? clauseResults.setValid(!results) : clauseResults.setValid(results);
 		}
 	}
 }
