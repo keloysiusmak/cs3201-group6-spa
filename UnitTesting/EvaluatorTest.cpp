@@ -96,19 +96,19 @@ namespace EvaluatorTest {
 
 			pkbStub.insertToTable(CALL_STATEMENT_TABLE, 4, { { 2 } });
 
-			pkbStub.insertToNameTable(PATTERN_TABLE, { "a", "b|" });
+			pkbStub.insertToNameTable(PATTERN_TABLE, { "a", "|b|" });
 			pkbStub.insertToNameTable(PATTERN_TABLE, { "a" });
-			pkbStub.insertToNameTable(PATTERN_TABLE, { "b", "a|" });
+			pkbStub.insertToNameTable(PATTERN_TABLE, { "b", "|a|" });
 			pkbStub.insertToNameTable(PATTERN_TABLE, { "" });
 			pkbStub.insertToNameTable(PATTERN_TABLE, { "a" });
 			pkbStub.insertToNameTable(PATTERN_TABLE, { "e" });
-			pkbStub.insertToNameTable(PATTERN_TABLE, { "c", "4|b|+|x|a|*|+" });
-			pkbStub.insertToNameTable(PATTERN_TABLE, { "d", "1|" });
-			pkbStub.insertToNameTable(PATTERN_TABLE, { "e", "1|" });
-			pkbStub.insertToNameTable(PATTERN_TABLE, { "a", "b|" });
+			pkbStub.insertToNameTable(PATTERN_TABLE, { "c", "|4|b|+|x|a|*|+" });
+			pkbStub.insertToNameTable(PATTERN_TABLE, { "d", "|1|" });
+			pkbStub.insertToNameTable(PATTERN_TABLE, { "e", "|1|" });
+			pkbStub.insertToNameTable(PATTERN_TABLE, { "a", "|b|" });
 			pkbStub.insertToNameTable(PATTERN_TABLE, { "a" });
 			pkbStub.insertToNameTable(PATTERN_TABLE, { "b" });
-			pkbStub.insertToNameTable(PATTERN_TABLE, { "a", "1|" });
+			pkbStub.insertToNameTable(PATTERN_TABLE, { "a", "|1|" });
 
 			pkbStub.insertToNameTable(PROC_TABLE, { "a" });
 			pkbStub.insertToNameTable(PROC_TABLE, { "b" });
@@ -918,7 +918,7 @@ namespace EvaluatorTest {
 
 			actualResult = evaluator.evaluateQuery();
 			expectedResult.clear();
-			expectedResult.push_back("5");
+			expectedResult.push_back("6");
 
 			Assert::AreEqual(true, (expectedResult == actualResult));
 		}
