@@ -2160,6 +2160,7 @@ bool Preprocessor::parseWithClause(QueryContent &qc, string leftRef, string righ
 				return false;
 			}
 		}
+		break;
 		case STMT_NO: case VALUE: {
 			if (isWithString) {
 				return false;

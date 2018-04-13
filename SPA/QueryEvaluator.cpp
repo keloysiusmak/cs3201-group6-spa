@@ -96,6 +96,9 @@ list<string> QueryEvaluator::evaluateQuery() {
 					clauseDeletedIt = groupedClauses.begin() + indexOfClauseEvaluated;
 					groupedClauses.erase(clauseDeletedIt);
 				}
+				if (!iTable.tableHasResults()) {
+					break;
+				}
 			}
 
 			//for (Clause clause : groupedClauses) {

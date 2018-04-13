@@ -1206,5 +1206,253 @@ namespace EvaluatorTest {
 			Assert::AreEqual(true, (expectedResult == actualResult));
 		}
 
+		TEST_METHOD(EvaluatorEvaluateRelationshipStatementNumberModifiesVariable)
+		{
+			QueryObject qo1;
+
+			qo1.insertSelectStmt(VARIABLE, "v", NONE);
+			qo1.insertClause(Modifies, INTEGER, "1", VARIABLE, "v", false);
+
+			evaluator.setQueryObject(qo1);
+
+			list<string> actualResult = evaluator.evaluateQuery();
+			list<string> expectedResult;
+
+			expectedResult.push_back("a");
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+		}
+
+		TEST_METHOD(EvaluatorEvaluateRelationshipStatementModifiesVariable)
+		{
+			QueryObject qo1;
+
+			qo1.insertSelectStmt(STMT, "s", NONE);
+			qo1.insertClause(Modifies, STMT, "s", VARIABLE, "v", false);
+
+			evaluator.setQueryObject(qo1);
+
+			list<string> actualResult = evaluator.evaluateQuery();
+			list<string> expectedResult;
+			expectedResult.push_back("1");
+			expectedResult.push_back("10");
+			expectedResult.push_back("11");
+			expectedResult.push_back("12");
+			expectedResult.push_back("13");
+			expectedResult.push_back("2");
+			expectedResult.push_back("3");
+			expectedResult.push_back("5");
+			expectedResult.push_back("6");
+			expectedResult.push_back("7");
+			expectedResult.push_back("8");
+			expectedResult.push_back("9");
+			Assert::AreEqual(true, (expectedResult == actualResult));
+
+			QueryObject qo2;
+
+			qo2.insertSelectStmt(STMT, "s", NONE);
+			qo2.insertClause(Modifies, STMT, "s", VAR_IDENT, "b", false);
+
+			evaluator.setQueryObject(qo2);
+
+			actualResult = evaluator.evaluateQuery();
+			expectedResult.clear();
+			expectedResult.push_back("2");
+			expectedResult.push_back("3");
+			Assert::AreEqual(true, (expectedResult == actualResult));
+
+			QueryObject qo3;
+
+			qo3.insertSelectStmt(STMT, "s", NONE);
+			qo3.insertClause(Modifies, STMT, "s", VAR_IDENT, "f", false);
+
+			evaluator.setQueryObject(qo3);
+
+			actualResult = evaluator.evaluateQuery();
+			expectedResult.clear();
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+		}
+
+		TEST_METHOD(EvaluatorEvaluateRelationshipIfModifiesVariable)
+		{
+			QueryObject qo1;
+
+			qo1.insertSelectStmt(IF, "ifs", NONE);
+			qo1.insertClause(Modifies, IF, "ifs", VARIABLE, "v", false);
+
+			evaluator.setQueryObject(qo1);
+
+			list<string> actualResult = evaluator.evaluateQuery();
+			list<string> expectedResult;
+
+			expectedResult.push_back("5");
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+
+			QueryObject qo2;
+
+			qo2.insertSelectStmt(IF, "ifs", NONE);
+			qo2.insertClause(Modifies, IF, "ifs", VAR_IDENT, "c", false);
+
+			evaluator.setQueryObject(qo2);
+
+			actualResult = evaluator.evaluateQuery();
+			expectedResult.clear();
+			expectedResult.push_back("5");
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+
+			QueryObject qo3;
+
+			qo3.insertSelectStmt(IF, "ifs", NONE);
+			qo3.insertClause(Modifies, IF, "ifs", VAR_IDENT, "b", false);
+
+			evaluator.setQueryObject(qo3);
+
+			actualResult = evaluator.evaluateQuery();
+			expectedResult.clear();
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+		}
+
+		TEST_METHOD(EvaluatorEvaluateRelationshipWhileModifiesVariable)
+		{
+			QueryObject qo1;
+
+			qo1.insertSelectStmt(WHILE, "w", NONE);
+			qo1.insertClause(Modifies, WHILE, "w", VARIABLE, "v", false);
+
+			evaluator.setQueryObject(qo1);
+
+			list<string> actualResult = evaluator.evaluateQuery();
+			list<string> expectedResult;
+
+			expectedResult.push_back("11");
+			expectedResult.push_back("12");
+			expectedResult.push_back("2");
+			expectedResult.push_back("6");
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+
+			QueryObject qo2;
+
+			qo2.insertSelectStmt(WHILE, "w", NONE);
+			qo2.insertClause(Modifies, WHILE, "w", VAR_IDENT, "b", false);
+
+			evaluator.setQueryObject(qo2);
+
+			actualResult = evaluator.evaluateQuery();
+			expectedResult.clear();
+			expectedResult.push_back("2");
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+
+			QueryObject qo3;
+
+			qo3.insertSelectStmt(WHILE, "w", NONE);
+			qo3.insertClause(Modifies, WHILE, "w", VAR_IDENT, "d", false);
+
+			evaluator.setQueryObject(qo3);
+
+			actualResult = evaluator.evaluateQuery();
+			expectedResult.clear();
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+		}
+
+		TEST_METHOD(EvaluatorEvaluateRelationshipAssignModifiesVariable)
+		{
+			QueryObject qo1;
+
+			qo1.insertSelectStmt(ASSIGN, "a", NONE);
+			qo1.insertClause(Modifies, ASSIGN, "a", VARIABLE, "v", false);
+
+			evaluator.setQueryObject(qo1);
+
+			list<string> actualResult = evaluator.evaluateQuery();
+			list<string> expectedResult;
+
+			expectedResult.push_back("1");
+			expectedResult.push_back("10");
+			expectedResult.push_back("13");
+			expectedResult.push_back("3");
+			expectedResult.push_back("7");
+			expectedResult.push_back("8");
+			expectedResult.push_back("9");
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+
+			QueryObject qo2;
+
+			qo2.insertSelectStmt(ASSIGN, "a", NONE);
+			qo2.insertClause(Modifies, ASSIGN, "a", VAR_IDENT, "a", false);
+
+			evaluator.setQueryObject(qo2);
+
+			actualResult = evaluator.evaluateQuery();
+			expectedResult.clear();
+
+			expectedResult.push_back("1");
+			expectedResult.push_back("10");
+			expectedResult.push_back("13");
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+
+			QueryObject qo3;
+
+			qo3.insertSelectStmt(ASSIGN, "a", NONE);
+			qo3.insertClause(Modifies, ASSIGN, "a", VAR_IDENT, "f", false);
+
+			evaluator.setQueryObject(qo3);
+
+			actualResult = evaluator.evaluateQuery();
+			expectedResult.clear();
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+		}
+
+		TEST_METHOD(EvaluatorEvaluateRelationshipProcedureModifiesVariable)
+		{
+			QueryObject qo1;
+
+			qo1.insertSelectStmt(PROCEDURE, "p", NONE);
+			qo1.insertClause(Modifies, PROCEDURE, "p", VARIABLE, "v", false);
+
+			evaluator.setQueryObject(qo1);
+
+			list<string> actualResult = evaluator.evaluateQuery();
+			list<string> expectedResult;
+
+			expectedResult.push_back("a");
+			expectedResult.push_back("b");
+			Assert::AreEqual(true, (expectedResult == actualResult));
+
+			QueryObject qo2;
+
+			qo2.insertSelectStmt(PROCEDURE, "p", NONE);
+			qo2.insertClause(Modifies, PROCEDURE, "p", VAR_IDENT, "e", false);
+
+			evaluator.setQueryObject(qo2);
+
+			actualResult = evaluator.evaluateQuery();
+			expectedResult.clear();
+			expectedResult.push_back("a");
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+
+			QueryObject qo3;
+
+			qo3.insertSelectStmt(PROCEDURE, "p", NONE);
+			qo3.insertClause(Modifies, PROCEDURE, "p", VAR_IDENT, "f", false);
+
+			evaluator.setQueryObject(qo3);
+
+			actualResult = evaluator.evaluateQuery();
+			expectedResult.clear();
+
+			Assert::AreEqual(true, (expectedResult == actualResult));
+		}
+
 	};
 }
