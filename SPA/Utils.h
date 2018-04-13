@@ -46,6 +46,8 @@ public:
 	static bool hasStringValues(Param &p1);
 	static set<string> convertStringValues(Param &p1, set<int> &oldSet, PKB &pkb);
 	static int convertIntValues(Param &p1, string &oldItem, PKB &pkb);
+	static std::vector<std::vector<int>> invertTwoValues(std::vector<std::vector<int>> toInvert);
+
 };
 
 namespace UtilsConstants {
