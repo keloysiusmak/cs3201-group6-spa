@@ -201,7 +201,7 @@ Select <a.stmt#, calls.procName, calls.stmt#> with calls.procName="First"
 41 - 
 prog_line n;
 Select BOOLEAN with n=8
-true
+false
 5000
 42 - 
 assign a; if ifs; call calls; variable v;
