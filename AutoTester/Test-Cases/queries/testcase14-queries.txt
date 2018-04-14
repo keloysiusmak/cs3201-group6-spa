@@ -1,30 +1,30 @@
 1 - Next Test 1
-stmt a, b; 
+stmt a, b;
 Select a such that Next(a, b)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99
 5000
 2 - Next Test 2
-stmt a, b; 
+stmt a, b;
 Select b such that Next(a, b)
 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,54
 5000
 3 - Next Test 3
-stmt a, b; 
+stmt a, b;
 Select a such that Next(1, a)
 2
 5000
 4 - Next Test 4
-stmt a, b; 
+stmt a, b;
 Select a such that Next(2, a)
 3, 8
 5000
 5 - Next Test 5
-stmt a, b; 
+stmt a, b;
 Select a such that Next(14, a)
 15,17
 5000
 6 - Next Test 6
-stmt a, b; 
+stmt a, b;
 Select a such that Next(16, a)
 13
 5000
@@ -34,47 +34,47 @@ Select a such that Next(31, a)
 32
 5000
 8 - Next Test 8
-stmt a, b; 
+stmt a, b;
 Select a such that Next(37, a)
 
 5000
 9 - Next Test 9
-stmt a, b; 
+stmt a, b;
 Select a such that Next(49, a)
 51
 5000
 10 - Next Test 10
-stmt a, b; 
+stmt a, b;
 Select a such that Next(99, a)
 84
 5000
 11 - Next Test 1
-stmt a, b; 
+stmt a, b;
 Select b such that Next(48, b)
 49,50
 5000
 12 - Next Test 2
-stmt a, b; 
+stmt a, b;
 Select b such that Next(49, b)
 51
 5000
 13 - Next Test 3
-stmt a, b; 
+stmt a, b;
 Select a such that Next(50, a)
 51
 5000
 14 - Next Test 4
-stmt a, b; 
+stmt a, b;
 Select a such that Next(16, a)
 13
 5000
 15 - Next Test 5
-stmt a, b; 
+stmt a, b;
 Select a such that Next(17, a)
 13
 5000
 16 - Next Test 6
-stmt a, b; 
+stmt a, b;
 Select a such that Next(98, a)
 84
 5000
@@ -84,47 +84,47 @@ Select a such that Next(99, a)
 84
 5000
 18 - Next Test 8
-stmt a, b; 
+stmt a, b;
 Select a such that Next(58, a)
 59,60
 5000
 19 - Next Test 9
-stmt a, b; 
+stmt a, b;
 Select a such that Next(60, a)
 54
 5000
 20 - Next Test 10
-stmt a, b; 
+stmt a, b;
 Select a such that Next(66, a)
 64
 5000
 21 - Next Test 1
-stmt a, b; 
+stmt a, b;
 Select b such that Next(b, 54)
 60,64
 5000
 22 - Next Test 2
-stmt a, b; 
+stmt a, b;
 Select b such that Next(b, 49)
 48
 5000
 23 - Next Test 3
-stmt a, b; 
+stmt a, b;
 Select b such that Next(b, 50)
 48
 5000
 24 - Next Test 4
-stmt a, b; 
+stmt a, b;
 Select b such that Next(b, 16)
 15
 5000
 25 - Next Test 5
-stmt a, b; 
+stmt a, b;
 Select b such that Next(b, 17)
 14
 5000
 26 - Next Test 6
-stmt a, b; 
+stmt a, b;
 Select b such that Next(b, 98)
 97
 5000
@@ -134,47 +134,47 @@ Select b such that Next(b, 99)
 97
 5000
 28 - Next Test 8
-stmt a, b; 
+stmt a, b;
 Select b such that Next(b, 58)
 57,59
 5000
 29 - Next Test 9
-stmt a, b; 
+stmt a, b;
 Select b such that Next(b, 60)
 58
 5000
 30 - Next Test 10
-stmt a, b; 
+stmt a, b;
 Select b such that Next(b, 66)
 65
 5000
 31 - Next* Test 1
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(a, b)
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,39,40,41,42,43,44,45,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99
 5000
 32 - Next* Test 2
-stmt a, b; 
+stmt a, b;
 Select b such that Next*(a, b)
 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,54
 5000
 33 - Next* Test 3
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(1, a)
 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38
 5000
 34 - Next* Test 4
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(2, a)
 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38
 5000
 35 - Next* Test 5
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(14, a)
 11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38
 5000
 36 - Next* Test 6
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(16, a)
 11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38
 5000
@@ -184,47 +184,47 @@ Select a such that Next*(31, a)
 32,33,37
 5000
 38 - Next* Test 8
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(37, a)
 
 5000
 39 - Next* Test 9
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(38, a)
 
 5000
 40 - Next* Test 10
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(41, a)
 41,42,43,44,45,46
 5000
 41 - Next* Test 1
-stmt a, b; 
+stmt a, b;
 Select b such that Next*(48, b)
 49,50,51,52,53,47,48
 5000
 42 - Next* Test 2
-stmt a, b; 
+stmt a, b;
 Select b such that Next*(49, b)
 49,50,51,52,53,47,48
 5000
 43 - Next* Test 3
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(50, a)
 49,50,51,52,53,47,48
 5000
 44 - Next* Test 4
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(75, a)
 
 5000
 45 - Next* Test 5
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(17, a)
 11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38
 5000
 46 - Next* Test 6
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(98, a)
 84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100
 5000
@@ -234,47 +234,47 @@ Select a such that Next*(99, a)
 84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100
 5000
 48 - Next* Test 8
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(58, a)
 54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81
 5000
 49 - Next* Test 9
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(60, a)
 54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81
 5000
 50 - Next* Test 10
-stmt a, b; 
+stmt a, b;
 Select a such that Next*(66, a)
 54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81
 5000
 51 - Affects* Test 1
-stmt a, b; 
+stmt a, b;
 Select b such that Affects*(b, 54)
 
 5000
 52 - Affects* Test 2
-stmt a, b; 
+stmt a, b;
 Select b such that Affects*(b, 49)
 
 5000
 53 - Affects* Test 3
-stmt a, b; 
+stmt a, b;
 Select b such that Affects*(b, 50)
 
 5000
 54 - Affects* Test 4
-stmt a, b; 
+stmt a, b;
 Select b such that Affects*(b, 16)
 
 5000
 55 - Affects* Test 5
-stmt a, b; 
+stmt a, b;
 Select b such that Affects*(b, 17)
 5
 5000
 56 - Affects* Test 6
-stmt a, b; 
+stmt a, b;
 Select b such that Affects*(b, 98)
 94,98, 96
 5000
@@ -284,19 +284,19 @@ Select b such that Affects*(b, 99)
 83
 5000
 58 - Affects* Test 8
-stmt a, b; 
+stmt a, b;
 Select b such that Affects*(b, 59)
-62
+55,56,62,66
 5000
 59 - Affects* Test 9
-stmt a, b; 
+stmt a, b;
 Select b such that Affects*(b, 71)
 
 5000
 60 - Affects* Test 10
-stmt a, b; 
+stmt a, b;
 Select b such that Affects*(b, 74)
-55,56,59,62
+55,56,59,62,66
 5000
 61 - Pattern Test 1
 assign a; variable v;
