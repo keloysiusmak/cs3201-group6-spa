@@ -69,7 +69,7 @@ void DesignExtractor::processStatementList(PKB &pkb, int stmtListId, int prevWhi
 				nextStmtPush = stmts[1][i + 1];
 			}
 			if (type == 2) {
-				if (nextStmt != 0) {
+				if ((i + 1) == stmts[1].size() && nextStmt != 0) {
 					pkb.insertToTable(NEXT_TABLE, stmts[1][i], { { nextStmt } });
 					pkb.insertToTable(NEXT_INVERSE_TABLE, nextStmt, { { stmts[1][i] } });
 				}
