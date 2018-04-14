@@ -325,8 +325,7 @@ public:
 			qq.setQueryContent(vqc);
 			list<string> result = qq.evaluateQueries();
 			list<string> expected;
-			expected.push_back("1");
-			expected.push_back("2");
+			expected.push_back("3");
 			Assert::AreEqual(true, (result == expected));
 		}
 
