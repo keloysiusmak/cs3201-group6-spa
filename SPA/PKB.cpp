@@ -2112,8 +2112,7 @@ std::vector<std::vector<int>> PKB::getAllAffects() {
 	unordered_map<int, unordered_map<int, std::vector<int>>> allStmts;
 	std::vector<int> stmts;
 	set<int> checkedStmts;
-	stack<int> whileStack;
-	set<int> completedWhiles;
+	unordered_map<int, std::vector<int>> completedWhiles;
 
 	int currStmt;
 	int firstStmt;
@@ -2172,51 +2171,65 @@ std::vector<std::vector<int>> PKB::getAllAffects() {
 				}
 
 			}
-			else if (PKB::checkStatementHasType(currStmt, 2)) {
-				set<int>::iterator it = completedWhiles.find(currStmt);
-				if (it == completedWhiles.end()) {
-					whileStack.push(currStmt);
-				}
-			}
 
 			/* Push to next */
 			std::vector<std::vector<int>> newNext;
 
 			newNext = PKB::getNextAfter(currStmt);
 			for (int j = 0; j < newNext.size(); j++) {
-				//if (!(PKB::checkStatementHasType(currStmt, 2) && whileStack.size() > 0)) {
-					int initSize = checkedStmts.size();
-					checkedStmts.insert(newNext[j][0]);
 
-					auto result = lastModified;
-					unordered_map<int, std::vector<int>> nextLastModified = allStmts[newNext[j][0]];
-					result.insert(nextLastModified.begin(), nextLastModified.end());
-					bool edited = false;
-					for (auto it = nextLastModified.begin(); it != nextLastModified.end(); ++it) {
-						std::vector<int> alreadyInserted = result[it->first];
-						std::vector<int> toInsert = it->second;
-						for (int k = 0; k < toInsert.size(); k++) {
-							alreadyInserted.push_back(toInsert[k]);
-						}
-						std::sort(alreadyInserted.begin(), alreadyInserted.end());
-						alreadyInserted.erase(unique(alreadyInserted.begin(), alreadyInserted.end()), alreadyInserted.end());
-						result.erase(it->first);
-						result.insert({ it->first, alreadyInserted });
-					}
-
-					allStmts.erase(newNext[j][0]);
-					allStmts.insert({ newNext[j][0], result });
-
-					if (checkedStmts.size() > initSize) {
-						next.push_back({ newNext[j][0] });
-						if (whileStack.size() > 0 && whileStack.top() == newNext[j][0]) {
-							whileStack.pop();
-							completedWhiles.insert(newNext[j][0]);
+				unordered_map<int, std::vector<int>>::iterator it = completedWhiles.find(newNext[j][0]);
+				
+				if (!(PKB::checkStatementHasType(newNext[j][0], 2) && it != completedWhiles.end())) {
+					bool allow = true;
+					if (PKB::checkStatementHasType(newNext[j][0], 2)) {
+						std::vector<int> second = it->second;
+						for (int i : second) {
+							if (i == currStmt) {
+								allow = false;
+							}
 						}
 					}
-				//}
+					if (allow) {
+						int initSize = checkedStmts.size();
+						checkedStmts.insert(newNext[j][0]);
+
+						auto result = lastModified;
+						unordered_map<int, std::vector<int>> nextLastModified = allStmts[newNext[j][0]];
+						result.insert(nextLastModified.begin(), nextLastModified.end());
+						bool edited = false;
+						for (auto it = nextLastModified.begin(); it != nextLastModified.end(); ++it) {
+							std::vector<int> alreadyInserted = result[it->first];
+							std::vector<int> toInsert = it->second;
+							for (int k = 0; k < toInsert.size(); k++) {
+								alreadyInserted.push_back(toInsert[k]);
+							}
+							std::sort(alreadyInserted.begin(), alreadyInserted.end());
+							alreadyInserted.erase(unique(alreadyInserted.begin(), alreadyInserted.end()), alreadyInserted.end());
+							result.erase(it->first);
+							result.insert({ it->first, alreadyInserted });
+						}
+
+						allStmts.erase(newNext[j][0]);
+						allStmts.insert({ newNext[j][0], result });
+
+						if (checkedStmts.size() > initSize) {
+							next.push_back({ newNext[j][0] });
+							if (PKB::checkStatementHasType(newNext[j][0], 2)) {
+								it->second.push_back(currStmt);
+								completedWhiles.erase(it);
+								completedWhiles.insert({ it->first, it->second });
+								std::vector<std::vector<int>> children = PKB::getChildrenStar(it->first);
+								for (int i = 0; i < children.size(); i++) {
+									checkedStmts.erase(children[i][0]);
+									completedWhiles.erase(children[i][0]);
+								}
+							}
+						}
+					}
+				}
 			}
-
+			/*
 			while (next.size() == 0 && whileStack.size() > 0) {
 				int returnWhile = whileStack.top();
 				whileStack.pop();
@@ -2253,7 +2266,7 @@ std::vector<std::vector<int>> PKB::getAllAffects() {
 					checkedStmts.erase(returnWhile);
 					next.push_back(returnWhile);
 				}
-			}
+			}*/
 
 		}
 
