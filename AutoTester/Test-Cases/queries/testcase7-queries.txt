@@ -135,8 +135,8 @@ Select a pattern a(_, _"x*y*z"_)
 5000
 28 - 
 if ifs;
-Select ifs pattern ifs(_, _)
-
+Select ifs pattern ifs("x",_, _)
+6
 5000
 29 - 
 if ifs; variable v;
