@@ -918,6 +918,7 @@ void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable)
 		}
 
 		withClauseResults.setResults(withResults);
+		withClauseResults.setValid(true);
 		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
 	}
 	else if ((clause.getLeftParam().attribute == STMT_NO
