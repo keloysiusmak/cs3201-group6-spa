@@ -320,7 +320,7 @@ void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResul
 			}
 		} else { // (syn, concrete)
 			vector<vector<int>> results = pkb.getParent(stoi(rightParam.value));
-			if (results[0][0] == 0) {
+			if (results.size() > 0 && results[0][0] == 0) {
 				results.clear();
 			}
 			if (!clause.getIsInverted()) {
