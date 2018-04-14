@@ -71,7 +71,7 @@ Select s such that Modifies(s, "one")
 15 - modifiesS synonym and IDENT, stmt, false (IDENT var doesn't exist)
 stmt s;
 Select s such that Modifies(s, "blank")
-none
+
 5000
 16 - modifiesS synonym and IDENT, assign a, true (can only be false if IDENT var doesn't exist?)
 assign a;
@@ -86,7 +86,7 @@ one, two, z
 18 - modifiesS INTEGER and _, all unused declarations, boolean, false (stmt doesn't exist)
 stmt s, s1; variable v, v1;
 Select BOOLEAN such that Modifies(15, _)
-False
+false
 5000
 19 - modifiesS INTEGER and _, some unused declarations, diff select synonym, true
 constant c; while w; variable v;
@@ -96,12 +96,12 @@ Select c such that Modifies(9, _)
 20 - modifiesS INTEGER and IDENT, all unused declarations, boolean, true (tests nested while modifies)
 constant c; assign a; while w;
 Select BOOLEAN such that Modifies(4, "z")
-True
+true
 5000
 21 - modifiesS INTEGER and IDENT, some unused declarations, diff select synonym, false
 assign a; stmt s, s1;
 Select s such that Modifies(3, "d")
-none
+
 5000
 22 - usesS synonym and synonym, assign stmt, some unused declarations, select a, true (can test false in other source (all a = const))
 assign a; variable x, v;
@@ -146,7 +146,7 @@ Select s such that Uses(s, "two")
 30 - usesS synonym and IDENT, stmt, false
 stmt s;
 Select s such that Uses(s, "end")
-none
+
 5000
 31 - usesS synonym and IDENT, assign stmt, true
 assign a;
@@ -156,7 +156,7 @@ Select a such that Uses(a, "one")
 32 - usesS synonym and IDENT, assign stmt, false (IDENT var doesn't exist)
 assign a;
 Select a such that Uses(a, "bluff")
-none
+
 5000
 33 - usesS synonym and IDENT, while stmt, true
 while w;
@@ -166,7 +166,7 @@ Select w such that Uses(w, "z")
 34 - usesS synonym and IDENT, while stmt, false
 while w;
 Select w such that Uses(w, "d")
-none
+
 5000
 35 - usesS synonym and IDENT, prog_line as stmt arg, true
 prog_line n;
@@ -181,22 +181,22 @@ two, z
 37 - usesS INTEGER and synonym, false
 variable v;
 Select v such that Uses(1, v)
-none
+
 5000
 38 - usesS INTEGER and _, all unused declarations, boolean, true (18)
 prog_line n, n1;
 Select BOOLEAN such that Uses(5, _)
-True
+true
 5000
 39 - usesS INTEGER and _, some unused declarations, diff select synonym, false (19)
 constant c, c1; while w;
 Select w such that Uses(1, _)
-none
+
 5000
 40 - usesS INTEGER and IDENT, all unused declarations, boolean, false (stmt doesn't exist) (20)
 assign a; constant c, s, e;
 Select BOOLEAN such that Uses(0, "two")
-False
+false
 5000
 41 - usesS INTEGER and IDENT, some unused declarations, diff select synonym, true (21)
 constant r, p1; while w;
@@ -221,12 +221,12 @@ Select a such that Parent(w, a)
 45 - parent synonym and synonym, assign stmt, select a1, false (can't be true)
 assign a1, a2;
 Select a1 such that Parent(a1, a2)
-none
+
 5000
 46 - parent synonym and synonym, assign stmt, select a2, false (can't be true)
 assign a1, a2;
 Select a2 such that Parent(a1, a2)
-none
+
 5000
 47 - parent synonym and synonym, while stmt, select w1, true (tests while parent while) (can test false in other source - no nested whiles)
 while w1, w2;
@@ -246,7 +246,7 @@ Select w such that Parent(w, _)
 50 - parent synonym and _, assign stmt, false (can't be true)
 assign a;
 Select a such that Parent(a, _)
-none
+
 5000
 51 - parent synonym and INTEGER, stmt, true
 stmt s;
@@ -261,12 +261,12 @@ Select w such that Parent(w, 5)
 53 - parent synonym and INTEGER, stmt, false
 stmt s;
 Select s such that Parent(s, 2)
-none
+
 5000
 54 - parent synonym and INTEGER, while stmt, false
 while w;
 Select w such that Parent(w, 9)
-none
+
 5000
 55 - parent _ and synonym, stmt, true (can test false in other source - no container stmts)
 stmt s;
@@ -291,7 +291,7 @@ Select c1 such that Parent(_, _)
 59 - parent _ and _, all unused declarations, boolean, true (can test false in other source - no container stmts)
 stmt s, v; while w3;
 Select BOOLEAN such that Parent(_, _)
-True
+true
 5000
 60 - parent _ and INTEGER, some unused declarations, diff select synonym, true
 variable v; stmt s; prog_line n;
@@ -301,17 +301,17 @@ Select n such that Parent(_, 8)
 61 - parent _ and INTEGER, all unused declarations, boolean, false
 prog_line n, n1;
 Select BOOLEAN such that Parent(_, 3)
-False
+false
 5000
 62 - parent INTEGER and _, all unused declarations, boolean, true
 while w; assign a, b, c, d; prog_line n;
 Select BOOLEAN such that Parent(4, _)
-True
+true
 5000
 63 - parent INTEGER and _, some unused declarations, diff select synonym, false
 prog_line n, n1; assign a;
 Select n1 such that Parent(5, _)
-none
+
 5000
 64 - parent INTEGER and synonym, stmt, true
 stmt s;
@@ -331,27 +331,27 @@ Select a such that Parent(4, a)
 67 - parent INTEGER and synonym, stmt, false
 stmt s;
 Select s such that Parent(1, s)
-none
+
 5000
 68 - parent INTEGER and synonym, while stmt, false
 while w;
 Select w such that Parent(6, w)
-none
+
 5000
 69 - parent INTEGER and synonym, assign stmt, false
 assign a;
 Select a such that Parent(9, a)
-none
+
 5000
 70 - parent INTEGER and INTEGER, all unused decalarations, boolean, true
 prog_line n, t; constant c;
 Select BOOLEAN such that Parent(6, 8)
-True
+true
 5000
 71 - parent INTEGER and INTEGER, all unused declarations, boolean, false
 variable v, f; stmt x, y, z;
 Select BOOLEAN such that Parent(8, 9)
-False
+false
 5000
 72 - parent INTEGER and INTEGER, some unused declarations, diff select synonym, true (tests while parent while) (T, nested?)
 assign a, z, c, b; while k;
@@ -361,7 +361,7 @@ Select b such that Parent(4, 6)
 73 - parent INTEGER and INTEGER, some unused declarations, diff select synonym, false
 assign y; constant r, c;
 Select r such that Parent(1, 2)
-none
+
 5000
 74 - parentT synonym and synonym, stmt, select s1, true (can test false in other source - no container stmt)
 stmt s1, s2;
@@ -376,12 +376,12 @@ Select s2 such that Parent*(s1, s2)
 76 - parentT synonym and synonym, assign stmt, select a1, false (can't be true)
 assign a1, a2;
 Select a1 such that Parent*(a1, a2)
-none
+
 5000
 77 - parentT synonym and synonym, assign stmt, select a2, false (can't be true)
 assign a1, a2;
 Select a2 such that Parent*(a1, a2)
-none
+
 5000
 78 - parentT synonym and synonym, while stmt, select w1, true (tests while parent while) (can test false in other source - no nested whiles)
 while w1, w2;
@@ -401,7 +401,7 @@ Select w such that Parent*(w, _)
 81 - parentT synonym and _, assign stmt, false (can't be true)
 assign a;
 Select a such that Parent*(a, _)
-none
+
 5000
 82 - parentT synonym and INTEGER, stmt, true (tests while parentT s)
 stmt s;
@@ -416,12 +416,12 @@ Select w such that Parent*(w, 7)
 84 - parentT synonym and INTEGER, stmt, false
 stmt s;
 Select s such that Parent*(s, 2)
-none
+
 5000
 85 - parentT synonym and INTEGER, while stmt, false
 while w;
 Select w such that Parent*(w, 9)
-none
+
 5000
 86 - parentT _ and synonym, stmt, true (can test false in other source - no container stmts)
 stmt s;
@@ -446,7 +446,7 @@ Select c1 such that Parent*(_, _)
 90 - parentT _ and _, all unused declarations, boolean, true (can test false in other source - no container stmts)
 stmt s, v; while w3;
 Select BOOLEAN such that Parent*(_, _)
-True
+true
 5000
 91 - parentT _ and INTEGER, some unused declarations, diff select synonym, true
 variable v; stmt s; prog_line n;
@@ -456,17 +456,17 @@ Select n such that Parent*(_, 8)
 92 - parentT _ and INTEGER, all unused declarations, boolean, false
 prog_line n, n1;
 Select BOOLEAN such that Parent*(_, 3)
-False
+false
 5000
 93 - parentT INTEGER and _, all unused declarations, boolean, true
 while w; assign a, b, c, d; prog_line n;
 Select BOOLEAN such that Parent*(4, _)
-True
+true
 5000
 94 - parentT INTEGER and _, some unused declarations, diff select synonym, false
 prog_line n, n1; assign a;
 Select n1 such that Parent*(5, _)
-none
+
 5000
 95 - parentT INTEGER and synonym, stmt, true (tests while parentT s)
 stmt s;
@@ -486,27 +486,27 @@ Select a such that Parent*(4, a)
 98 - parentT INTEGER and synonym, stmt, false
 stmt s;
 Select s such that Parent*(1, s)
-none
+
 5000
 99 - parentT INTEGER and synonym, while stmt, false
 while w;
 Select w such that Parent*(6, w)
-none
+
 5000
 100 - parentT INTEGER and synonym, assign stmt, false
 assign a;
 Select a such that Parent*(9, a)
-none
+
 5000
 101 - parentT INTEGER and INTEGER, all unused decalarations, boolean, true (tests while parentT a)
 prog_line n, t; constant c;
 Select BOOLEAN such that Parent*(4, 8)
-True
+true
 5000
 102 - parentT INTEGER and INTEGER, all unused declarations, boolean, false
 variable v, f; stmt x, y, z;
 Select BOOLEAN such that Parent*(8, 9)
-False
+false
 5000
 103 - parentT INTEGER and INTEGER, some unused declarations, diff select synonym, true (tests while parent while) (T, nested?)
 assign a, z, c, b; while k;
@@ -516,12 +516,12 @@ Select b such that Parent*(4, 6)
 104 - parentT INTEGER and INTEGER, some unused declarations, diff select synonym, false
 assign y; constant r, c;
 Select r such that Parent*(1, 2)
-none
+
 5000
 105 - follows synonym and synonym, a w, select a, true
 assign a; while w;
 Select a such that Follows(a, w)
-5
+3, 5
 5000
 106 - follows synonym and _, while stmt, true
 while w;
@@ -541,7 +541,7 @@ Select s such that Follows(s, 10)
 109 - follows synonym and INTEGER, while stmt, false
 while w;
 Select w such that Follows(w, 10)
-none
+
 5000
 110 - follows _ and synonym, while stmt, true
 while w;
@@ -556,17 +556,17 @@ Select a such that Follows(_, a)
 112 - follows _ and INTEGER, all unused declarations, boolean, false
 assign a, b, c;
 Select BOOLEAN such that Follows(_, 1)
-False
+false
 5000
 113 - follows INTEGER and INTEGER, all unused declarations, boolean, true
 constant c; variable v, b;
 Select BOOLEAN such that Follows(1, 2)
-True
+true
 5000
 114 - follows INTEGER and INTEGER, all unused declarations, boolean, false
 stmt s, t, u, v; while r;
 Select BOOLEAN such that Follows(1, 3)
-False
+false
 5000
 115 - follows INTEGER and synonym, while stmt, true
 while w;
@@ -576,12 +576,12 @@ Select w such that Follows(5, w)
 116 - follows INTEGER and synonym, stmt, false
 stmt s;
 Select s such that Follows(10, s)
-none
+
 5000
 117 - follows INTEGER and _, all unused declarations, boolean, false
 variable v, c, b;
 Select BOOLEAN such that Follows(6, _)
-False
+false
 5000
 118 - followsT synonym and synonym, a w, select a, true
 assign a; while w;
@@ -601,22 +601,22 @@ Select a such that Follows*(a, 9)
 121 - followsT synonym and INTEGER, while stmt, false
 while w;
 Select w such that Follows*(w, 8)
-none
+
 5000
 122 - followsT _ and INTEGER, all unused declarations, boolean, false
 constant c;
 Select BOOLEAN such that Follows*(_, 7)
-False
+false
 5000
 123 - followsT INTEGER and INTEGER, all unused declarations, boolean, true
 constant c;
 Select BOOLEAN such that Follows*(2, 9)
-True
+true
 5000
 124 - followsT INTEGER and INTEGER, all unused declarations, boolean, false
 variable v;
 Select BOOLEAN such that Follows*(5, 8)
-False
+false
 5000
 125 - followsT INTEGER and synonym, while stmt, true
 while w;
@@ -631,17 +631,17 @@ Select w such that Follows*(2, a)
 127 - followsT INTEGER and synonym, assign stmt, false
 assign w;
 Select a such that Follows*(5, a)
-none
+
 5000
 128 - followsT INTEGER and synonym, while stmt, false
 while w;
 Select w such that Follows*(4, w)
-none
+
 5000
 129 - pattern synonym and _, all unused declarations, boolean, true
 while z;
 Select BOOLEAN pattern a(v, _)
-True
+true
 5000
 130 - pattern IDENT and factor, select diff synonym, true
 assign a#; constant c;
@@ -661,7 +661,7 @@ Select a1 pattern a1(_, _"two"_)
 133 - pattern synonym and factor, select v, true
 assign a; variable v;
 Select v pattern a(v, _"one"_)
-one, two
+one, two, z
 5000
 134 - pattern synonym and factor, select diff synonym, true (so far the only select diff synonym with synonym in clause)
 assign a; variable v; while w;
@@ -671,27 +671,27 @@ Select w pattern a(v, _"two"_)
 135 - pattern IDENT and factor, select a, false
 assign a;
 Select a pattern a("z", _"end"_)
-none
+
 5000
 136 - pattern _ and factor, select diff synonym, false
 assign a; variable v;
 Select v pattern a(_, _"2"_)
-none
+
 5000
 137 - pattern IDENT and factor, boolean, false
 assign a;
 Select BOOLEAN pattern a("end", _"dd"_)
-False
+false
 5000
 138 - pattern synonym and factor, select v, false
 variable v; assign a;
 Select v pattern a(v, _"3"_)
-none
+
 5000
 139 - modifiesS true (9) and pattern true (130)
 while w; variable v;
 Select v such that Modifies(w, v) pattern a(v, _"one"_)
-one, two
+one, two, z
 5000
 140 - modifiesS true (16) and pattern true (129)
 assign a;
@@ -701,17 +701,17 @@ Select a such that Modifies(a, "z") pattern a(_, _"two"_)
 141 - usesS false (30) and pattern true (128)
 stmt s; assign a;
 Select s such that Uses(s, "end") pattern a("two", _"one"_)
-none
+
 5000
 142 - usesS true (41) and pattern false (131)
 assign a;
 Select a such that Uses(10, "d") pattern a(v, _"two"_)
-none
+
 5000
 143 - parent false (73) and pattern false (132), diff select synonym
 assign a; constant r, c;
 Select r such that Parent(1, 2) pattern a("z", _"end"_)
-none
+
 5000
 144 - parent true (64) and pattern true (126), diff select synonym
 stmt s; constant c;
@@ -726,7 +726,7 @@ Select a such that Parent*(_, a) pattern a(_, _"two"_)
 146 - follows false (114) and pattern true (127), boolean
 stmt s, t, u, v; while r; assign a;
 Select BOOLEAN such that Follows(1, 3) pattern a("one", _"1"_)
-False
+false
 5000
 147 - follows true (111) and pattern true (129)
 assign a;
@@ -736,5 +736,5 @@ Select a such that Follows(_, a) pattern a(_, _"two"_)
 148 - followsT true (123) and pattern false (138), diff select synonym
 constant c; assign a; variable v;
 Select BOOLEAN such that Follows*(2, 9) pattern a(v, _"3"_)
-none
+false
 5000

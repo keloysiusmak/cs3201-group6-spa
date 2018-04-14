@@ -63,6 +63,7 @@ void ClauseResults::removeALLSyns() {
 		vector<vector<int>> newTable;
 
 		if (leftParam.type == ALL && rightParam.type == ALL) {
+			if (results.size() > 0) setValid(true);
 			clearResults();
 			clearParamsTable();
 
@@ -87,6 +88,7 @@ void ClauseResults::removeALLSyns() {
 	} else if (numParamsInResult() == 1) {
 		Param param = tableParams[0];
 		if (param.type == ALL) {
+			if (results.size() > 0) setValid(true);
 			clearResults();
 			clearParamsTable();
 		}

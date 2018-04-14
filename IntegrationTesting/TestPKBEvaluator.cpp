@@ -124,13 +124,13 @@ namespace PKBEvaluatorIntegrationTesting
 			pkb.insertToNameTable(PATTERN_TABLE, { "" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "a" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "e" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "c", "4|b|+|x|a|*|+" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "d", "1|" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "e", "1|" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "a", "b|" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "c", "|4|b|+|x|a|*|+" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "d", "|1|" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "e", "|1|" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "a", "|b|" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "a" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "b" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "a", "1|" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "a", "|1|" });
 
 			pkb.insertToNameTable(PROC_TABLE, { "a" });
 			pkb.insertToNameTable(PROC_TABLE, { "b" });
@@ -2271,7 +2271,7 @@ expected.push_back(pkb.getProcedureName(r[0]));
 		{
 			QueryObject q;
 			q.insertSelectStmt(ASSIGN, "a", NONE);
-			q.insertPattern(ASSIGN, "a", VAR_IDENT, "a", EXPR_EXACT, "1|", false);
+			q.insertPattern(ASSIGN, "a", VAR_IDENT, "a", EXPR_EXACT, "|1|", false);
 
 			evaluator.setQueryObject(q);
 
@@ -2283,7 +2283,7 @@ expected.push_back(pkb.getProcedureName(r[0]));
 			QueryObject q1;
 
 			q1.insertSelectStmt(ASSIGN, "a", NONE);
-			q1.insertPattern(ASSIGN, "a", VAR_IDENT, "f", EXPR_EXACT, "1|", false);
+			q1.insertPattern(ASSIGN, "a", VAR_IDENT, "f", EXPR_EXACT, "|1|", false);
 
 			evaluator.setQueryObject(q1);
 
@@ -2294,7 +2294,7 @@ expected.push_back(pkb.getProcedureName(r[0]));
 			QueryObject q2;
 
 			q2.insertSelectStmt(ASSIGN, "a", NONE);
-			q2.insertPattern(ASSIGN, "a", VAR_IDENT, "a", EXPR_EXACT, "13|", false);
+			q2.insertPattern(ASSIGN, "a", VAR_IDENT, "a", EXPR_EXACT, "|13|", false);
 
 			evaluator.setQueryObject(q2);
 
@@ -2308,7 +2308,7 @@ expected.push_back(pkb.getProcedureName(r[0]));
 		{
 			QueryObject q;
 			q.insertSelectStmt(ASSIGN, "a", NONE);
-			q.insertPattern(ASSIGN, "a", VAR_IDENT, "c", EXPR, "4|b|+|", false);
+			q.insertPattern(ASSIGN, "a", VAR_IDENT, "c", EXPR, "|4|b|+|", false);
 
 			evaluator.setQueryObject(q);
 
@@ -2320,7 +2320,7 @@ expected.push_back(pkb.getProcedureName(r[0]));
 			QueryObject q1;
 
 			q1.insertSelectStmt(ASSIGN, "a", NONE);
-			q1.insertPattern(ASSIGN, "a", ALL, "_", EXPR, "x|a|*|", false);
+			q1.insertPattern(ASSIGN, "a", ALL, "_", EXPR, "|x|a|*|", false);
 
 			evaluator.setQueryObject(q1);
 
@@ -2332,7 +2332,7 @@ expected.push_back(pkb.getProcedureName(r[0]));
 			QueryObject q2;
 
 			q2.insertSelectStmt(ASSIGN, "a", NONE);
-			q2.insertPattern(ASSIGN, "a", VAR_IDENT, "c", EXPR, "b|4|+|", false);
+			q2.insertPattern(ASSIGN, "a", VAR_IDENT, "c", EXPR, "|b|4|+|", false);
 
 			evaluator.setQueryObject(q2);
 
@@ -2343,7 +2343,7 @@ expected.push_back(pkb.getProcedureName(r[0]));
 			QueryObject q3;
 
 			q3.insertSelectStmt(ASSIGN, "a", NONE);
-			q3.insertPattern(ASSIGN, "a", VAR_IDENT, "c", EXPR_EXACT, "4|b|+|x|+|", false);
+			q3.insertPattern(ASSIGN, "a", VAR_IDENT, "c", EXPR_EXACT, "|4|b|+|x|+|", false);
 
 			evaluator.setQueryObject(q3);
 

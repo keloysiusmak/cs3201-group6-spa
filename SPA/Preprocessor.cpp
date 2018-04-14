@@ -74,7 +74,8 @@ const unordered_map<int, ParamType> NUMBER_MAPPING_EXPRESSION_TYPE = { { 1, EXPR
 { 2, EXPR_EXACT }, { 3, ALL } };
 
 const unordered_map<string, ParamType> REL_MAPPING_LEFT_IDENT = { { "Modifies", PROC_IDENT },
-{ "Uses", PROC_IDENT }, { "Calls", PROC_IDENT }, { "CallsT", PROC_IDENT }, { "assignpt", VAR_IDENT } };
+{ "Uses", PROC_IDENT }, { "Calls", PROC_IDENT }, { "CallsT", PROC_IDENT }, { "assignpt", VAR_IDENT },
+{ "ifpt", VAR_IDENT }, { "whilept", VAR_IDENT } };
 
 const unordered_map<string, ParamType> REL_MAPPING_RIGHT_IDENT = { { "Modifies", VAR_IDENT },
 { "Uses", VAR_IDENT },{ "Calls", PROC_IDENT },{ "CallsT", PROC_IDENT } };
@@ -2020,11 +2021,14 @@ bool Preprocessor::parsePattern(QueryContent &qc, ParamType entityType, string e
 			vector<string> exprArr = Utils::split(rightArg, SYMBOL_DOUBLE_QUOTE);
 			string expression = exprArr.at(1);
 
+			
 			rightArg = infixToPostFix(expression);
 
 			if (rightArg.compare(INVALID_EXPRESSION) == 0) {
 				return false;
 			}
+
+			rightArg = SYMBOL_DIVIDER + rightArg;
 		}
 	}
 
