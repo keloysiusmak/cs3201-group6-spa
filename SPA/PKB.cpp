@@ -2157,10 +2157,15 @@ std::vector<std::vector<int>> PKB::getAllAffects() {
 			if (whileStmts.size() > 0 && whileStmts.size() == next.size() && i == next.size()) {
 				i--;
 				whileStack.pop();
-				isPushed = false;
-			}
-			else if (i == next.size()) {
-				i--;
+				isPushed = false; std::vector<std::vector<int>> children = PKB::getChildrenStar(next[i]);
+				for (int i = 0; i < children.size(); i++) {
+					checkedStmts.erase(children[i][0]);
+					if (PKB::checkStatementHasType(children[i][0], 2)) {
+						completedWhiles.erase(children[i][0]);
+						std::vector<int> empty;
+						completedWhiles.insert({ children[i][0], empty });
+					}
+				}
 			}
 			currStmt = next[i];
 			next.erase(next.begin() + i);
@@ -2275,18 +2280,13 @@ std::vector<std::vector<int>> PKB::getAllAffects() {
 								std::vector<std::vector<int>> children = PKB::getChildrenStar(nextStmt);
 								for (int i = 0; i < children.size(); i++) {
 									checkedStmts.erase(children[i][0]);
-									if (PKB::checkStatementHasType(children[i][0], 2)) {
-										completedWhiles.erase(children[i][0]);
-										std::vector<int> empty;
-										completedWhiles.insert({ children[i][0], empty });
-									}
 								}
 							}
 							else {
 								whileStack.pop();
 								std::vector<int> replace;
 								for (int i : next) {
-									if (i != newNext[j][0]) {
+									if (i != nextStmt) {
 										replace.push_back(i);
 									}
 								}
