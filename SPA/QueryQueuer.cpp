@@ -128,10 +128,10 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 						std::vector<ClauseNode> hold1;
 						std::vector<ClauseNode> hold2;
 						for (int j = 0; j < sizeC / 2; j++) {
-							hold1.push_back(clauses[j]);
+							hold1.push_back(pattern[j]);
 						}
 						for (int j = sizeC / 2; j < sizeC; j++) {
-							hold2.push_back(clauses[j]);
+							hold2.push_back(pattern[j]);
 						}
 						pattern.clear();
 						for (int x = 0; x < hold1.size(); x++) {
