@@ -2355,6 +2355,35 @@ std::vector<std::vector<int>> PKB::getAllAffectsStar() {
 
 				}
 
+
+			}
+			/* Push to next */
+			std::vector<std::vector<int>> newNext;
+
+			newNext = PKB::getNextAfter(currStmt);
+			for (int j = 0; j < newNext.size(); j++) {
+
+
+				auto result = lastModified;
+				unordered_map<int, std::vector<int>> nextLastModified = allStmts[newNext[j][0]];
+				result.insert(nextLastModified.begin(), nextLastModified.end());
+				bool edited = false;
+				for (auto it = nextLastModified.begin(); it != nextLastModified.end(); ++it) {
+					std::vector<int> alreadyInserted = result[it->first];
+					std::vector<int> toInsert = it->second;
+					for (int k = 0; k < toInsert.size(); k++) {
+						alreadyInserted.push_back(toInsert[k]);
+					}
+					std::sort(alreadyInserted.begin(), alreadyInserted.end());
+					alreadyInserted.erase(unique(alreadyInserted.begin(), alreadyInserted.end()), alreadyInserted.end());
+					result.erase(it->first);
+					result.insert({ it->first, alreadyInserted });
+				}
+
+				allStmts.erase(newNext[j][0]);
+				allStmts.insert({ newNext[j][0], result });
+
+
 			}
 		}
 
