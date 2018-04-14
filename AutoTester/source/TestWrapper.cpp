@@ -37,7 +37,7 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
 		results = queryQueuer.evaluateQueries();
 	}
 	else {
-		results.clear()
+		results.clear();
 		std::vector<QueryContent> vqc;
 		vqc = preprocessor.getQueryContent();
 		queryQueuer.setQueryContent(vqc);
