@@ -1517,6 +1517,9 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 			else if (p.type == PROCEDURE) {
 				paramVal = pkb.getProcedureName(tableRow[paramInt]);
 			}
+			else if (p.type == CALL && p.attribute == PROCNAME) {
+				paramVal = pkb.getProcedureName(pkb.getProcedureCalledByCallStatement(tableRow[paramInt])[0][0]);
+			}
 			else {
 				paramVal = to_string(tableRow[paramInt]);
 			}
