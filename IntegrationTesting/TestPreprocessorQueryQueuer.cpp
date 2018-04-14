@@ -84,26 +84,26 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 				expectedQo8d.insertSelectStmt(ASSIGN, "a", NONE);
 				expectedQo8d.insertClause(Follows, ASSIGN, "a", INTEGER, "5", false);
 				expectedQo8d.insertClause(Follows, INTEGER, "2", INTEGER, "3", false);
-
+				
 				QueryObject expectedQo9a;
 				expectedQo9a.insertSelectStmt(WHILE, "w", NONE);
 				expectedQo9a.insertPattern(WHILE, "w", VAR_IDENT, "g", ALL, "_", false);
-				expectedQo9a.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "x", false);
+				expectedQo9a.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "|x|", false);
 
 				QueryObject expectedQo9b;
 				expectedQo9b.insertSelectStmt(WHILE, "w", NONE);
 				expectedQo9b.insertPattern(WHILE, "w", VAR_IDENT, "g", ALL, "_", false);
-				expectedQo9b.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "y", false);
+				expectedQo9b.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "|y|", false);
 
 				QueryObject expectedQo9c;
 				expectedQo9c.insertSelectStmt(WHILE, "w", NONE);
 				expectedQo9c.insertPattern(IF, "ifs", VARIABLE, "v", ALL, "_", false);
-				expectedQo9c.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "x", false);
+				expectedQo9c.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "|x|", false);
 
 				QueryObject expectedQo9d;
 				expectedQo9d.insertSelectStmt(WHILE, "w", NONE);
 				expectedQo9d.insertPattern(IF, "ifs", VARIABLE, "v", ALL, "_", false);
-				expectedQo9d.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "y", false);
+				expectedQo9d.insertPattern(ASSIGN, "a", VARIABLE, "v", EXPR, "|y|", false);
 
 				QueryContent qc;
 				std::vector<QueryContent> vqc;

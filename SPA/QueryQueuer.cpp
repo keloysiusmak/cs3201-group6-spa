@@ -211,7 +211,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 								ClauseNode newParent = ClauseNode(AND);
 								newParent.addChildren(hold1[x]);
 								newParent.addChildren(hold2[y]);
-								clauses.push_back(newParent);
+								withClauses.push_back(newParent);
 							}
 						}
 					}
@@ -266,32 +266,30 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 	int wSize = (withClauses.size() > 0) ? withClauses.size() : 1;
 	int pSize = (pattern.size() > 0) ? pattern.size() : 1;
 	int total =  cSize * wSize * pSize;
-	if (!(clauses.size() == 0 && withClauses.size() == 0 && pattern.size() == 0)) {
+	for (int i = 0; i < total; i++) {
+		QueryObject qo;
+		std::vector<Param> p = qc.getSelect();
+		for (int x = 0; x < p.size(); x++) {
+			qo.insertSelectStmt(p[x].type, p[x].value, p[x].attribute);
+		}
+		queryObjects.push_back(qo);
+	}
+	if (clauses.size() > 0) {
 		for (int i = 0; i < total; i++) {
-			QueryObject qo;
-			std::vector<Param> p = qc.getSelect();
-			for (int x = 0; x < p.size(); x++) {
-				qo.insertSelectStmt(p[x].type, p[x].value, p[x].attribute);
-			}
-			queryObjects.push_back(qo);
+			int c = i % cSize;
+			queryObjects[i].setClause(parseClauseTree(clauses[c]));
 		}
-		if (clauses.size() > 0) {
-			for (int i = 0; i < total; i++) {
-				int c = i % cSize;
-				queryObjects[i].setClause(parseClauseTree(clauses[c]));
-			}
+	}
+	if (pattern.size() > 0) {
+		for (int i = 0; i < total; i++) {
+			int c = i % pSize;
+			queryObjects[i].setPattern(parsePatternTree(pattern[c]));
 		}
-		if (pattern.size() > 0) {
-			for (int i = 0; i < total; i++) {
-				int c = i % pSize;
-				queryObjects[i].setPattern(parsePatternTree(pattern[c]));
-			}
-		}
-		if (withClauses.size() > 0) {
-			for (int i = 0; i < total; i++) {
-				int c = i % wSize;
-				queryObjects[i].setWithClause(parseWithClauseTree(withClauses[c]));
-			}
+	}
+	if (withClauses.size() > 0) {
+		for (int i = 0; i < total; i++) {
+			int c = i % wSize;
+			queryObjects[i].setWithClause(parseWithClauseTree(withClauses[c]));
 		}
 	}
 	return queryObjects;
