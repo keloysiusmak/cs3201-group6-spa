@@ -2659,21 +2659,27 @@ namespace PKBTest
 			pkb.insertToNameTable(PROC_TABLE, { "c" });
 
 			data = { { 8 },{ 7 },{ 5 },{4}, { 1 } };
+			std::sort(data.begin(), data.end());
 			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(8) == data));
 
 			data = { { 14 },{ 11 },{ 10 },{ 13 } };
+			std::sort(data.begin(), data.end());
 			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(15) == data));
 
 			data = { { 11 },{ 10 } };
+			std::sort(data.begin(), data.end());
 			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(13) == data));
 
 			data = { { 11 },{ 10 } };
+			std::sort(data.begin(), data.end());
 			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(14) == data));
 
 			data = { { 22 },{ 21 },{ 19 } };
+			std::sort(data.begin(), data.end());
 			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(19) == data));
 
 			data = { { 22 },{ 21 } ,{ 19 } };
+			std::sort(data.begin(), data.end());
 			Assert::AreEqual(true, (pkb.getAffectsBeforeStar(21) == data));
 		}
 
@@ -3284,7 +3290,7 @@ namespace PKBTest
 			pkb.insertToNameTable(PROC_TABLE, { "b" });
 			pkb.insertToNameTable(PROC_TABLE, { "c" });
 
-			data = { { 1,4 },{ 1,5 },{1,7}, { 1,8 },{ 4,4 },{ 4,5 },{ 4,7 },{ 4,8 },{ 5,4 },{ 5,5 },{ 5,7 },{ 5,8 },{ 7,8 },{ 8, 4 },{ 8,5 },{ 8,7 },{ 8,8 },{ 10, 13 },{ 10,14 },{ 10,15 },{ 11,13 },{ 11,14 },{ 11,15 },{ 13,15 },{ 14,15 },{ 19,17 },{ 19,19 },{ 19,21 },{ 19,22 },{ 21, 17 },{ 21, 19 },{ 21, 21 },{ 21, 22 },{ 22, 17 },{ 22, 19 },{ 22, 21 },{ 22, 22 } };
+			data = { { 1,4 },{ 1,5 },{1,7}, { 1,8 },{ 4,4 },{ 4,5 },{ 4,7 },{ 4,8 },{ 5,4 },{ 5,5 },{ 5,7 },{ 5,8 },{7,4}, {7,5}, {7,7}, { 7,8 },{ 8, 4 },{ 8,5 },{ 8,7 },{ 8,8 },{ 10, 13 },{ 10,14 },{ 10,15 },{ 11,13 },{ 11,14 },{ 11,15 },{ 13,15 },{ 14,15 },{ 19,17 },{ 19,19 },{ 19,21 },{ 19,22 },{ 21, 17 },{ 21, 19 },{ 21, 21 },{ 21, 22 },{ 22, 17 },{ 22, 19 },{ 22, 21 },{ 22, 22 } };
 			pkb.getAllAffectsStar();
 			Assert::AreEqual(true, (pkb.getAllAffectsStar() == data));
 		}
