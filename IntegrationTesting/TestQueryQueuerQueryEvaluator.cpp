@@ -70,6 +70,7 @@ public:
 			qq.setEvaluator(evaluator);
 		}
 
+
 		TEST_METHOD(QueryQueuerQueryEvaluatorEvaluateSingleQueryClause)
 		{
 			std::vector<QueryContent> vqc;

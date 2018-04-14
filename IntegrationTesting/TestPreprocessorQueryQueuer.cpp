@@ -37,7 +37,7 @@ namespace PreprocessorQueryQueuerIntegrationTesting
 
 				QueryObject expectedQo2;
 				expectedQo2.insertSelectStmt(ASSIGN, "a", NONE);
-				expectedQo2.insertPattern(ASSIGN, "a", VAR_IDENT, "x", EXPR, "y|1|+|", false);
+				expectedQo2.insertPattern(ASSIGN, "a", VAR_IDENT, "x", EXPR, "|y|1|+|", false);
 
 				QueryObject expectedQo3;
 				expectedQo3.insertSelectStmt(STMT, "s", NONE);

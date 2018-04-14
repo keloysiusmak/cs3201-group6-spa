@@ -910,21 +910,34 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable) {
 
 	if ((clause.getLeftParam().attribute == STMT_NO
-		&& clause.getRightParam().type == CONSTANT) || 
+		&& clause.getRightParam().type == CONSTANT) ||
 		(clause.getRightParam().attribute == STMT_NO
 			&& clause.getLeftParam().type == CONSTANT)) {
 		ClauseResults withClauseResults;
 		withClauseResults.instantiateClause(clause);
 
-		int type;
-		if (clause.getLeftParam().type == STMT) type = 0;
-		else if (clause.getLeftParam().type == ASSIGN) type = 1;
-		else if (clause.getLeftParam().type == WHILE) type = 2;
-		else if (clause.getLeftParam().type == IF) type = 3;
-		else if (clause.getLeftParam().type == CALL) type = 4;
-		vector<vector<int>> withResults = pkb.getWithStmtNoConstValue(type);
-		withClauseResults.setResults(withResults);
-		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+		if (clause.getRightParam().type == CONSTANT) {
+			int type;
+			if (clause.getLeftParam().type == STMT) type = 0;
+			else if (clause.getLeftParam().type == ASSIGN) type = 1;
+			else if (clause.getLeftParam().type == WHILE) type = 2;
+			else if (clause.getLeftParam().type == IF) type = 3;
+			else if (clause.getLeftParam().type == CALL) type = 4;
+			vector<vector<int>> withResults = pkb.getWithStmtNoConstValue(type);
+			withClauseResults.setResults(withResults);
+			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+		}
+		else {
+			int type;
+			if (clause.getRightParam().type == STMT) type = 0;
+			else if (clause.getRightParam().type == ASSIGN) type = 1;
+			else if (clause.getRightParam().type == WHILE) type = 2;
+			else if (clause.getRightParam().type == IF) type = 3;
+			else if (clause.getRightParam().type == CALL) type = 4;
+			vector<vector<int>> withResults = pkb.getWithStmtNoConstValue(type);
+			withClauseResults.setResults(withResults);
+			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+		}
 	}
 	else if (clause.getLeftParam().type == PROCEDURE
 		&& clause.getRightParam().type == VARIABLE) {
