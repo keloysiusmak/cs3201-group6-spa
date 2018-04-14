@@ -624,7 +624,7 @@ Select w such that Follows*(2, w)
 4
 5000
 126 - followsT INTEGER and synonym, assign stmt, true
-assign a;
+assign a; while w;
 Select w such that Follows*(2, a)
 3, 9, 10
 5000
@@ -639,7 +639,7 @@ Select w such that Follows*(4, w)
 
 5000
 129 - pattern synonym and _, all unused declarations, boolean, true
-while z;
+while z; assign a; variable v;
 Select BOOLEAN pattern a(v, _)
 true
 5000
@@ -689,7 +689,7 @@ Select v pattern a(v, _"3"_)
 
 5000
 139 - modifiesS true (9) and pattern true (130)
-while w; variable v;
+while w; variable v; assign a;
 Select v such that Modifies(w, v) pattern a(v, _"one"_)
 one, two, z
 5000
@@ -714,7 +714,7 @@ Select r such that Parent(1, 2) pattern a("z", _"end"_)
 
 5000
 144 - parent true (64) and pattern true (126), diff select synonym
-stmt s; constant c;
+stmt s; constant c; assign a; variable v;
 Select c such that Parent(4, s) pattern a(v, _)
 1, 6
 5000
