@@ -546,7 +546,7 @@ Select w such that Follows(w, 10)
 110 - follows _ and synonym, while stmt, true
 while w;
 Select w such that Follows(_, w)
-3, 5
+4, 6
 5000
 111 - follows _ and synonym, assign stmt, true
 assign a;
