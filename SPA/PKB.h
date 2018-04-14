@@ -130,6 +130,7 @@ public:
 	std::vector<std::vector<int>> getAffectsAfter(int);
 	std::vector<std::vector<int>> getAffectsBeforeStar(int);
 	std::vector<std::vector<int>> getAffectsAfterStar(int);
+	std::vector<int> PKB::processAffectsOrder(int);
 	bool checkAffects(int, int);
 	bool checkAffectsStar(int, int);
 	std::vector<std::vector<int>> getAllAffects();
