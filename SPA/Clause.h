@@ -33,6 +33,11 @@ public:
 	bool hasSynonymsNotALL();
 
 	bool operator<(Clause other) const {
+		/* Check inversion */
+		if (isInverted != other.isInverted) {
+			return false;
+		}
+
 		if (_relRef == other.getRelRef()) {
 			if (_leftParam == other.getLeftParam()) {
 				return _rightParam < other.getRightParam();
