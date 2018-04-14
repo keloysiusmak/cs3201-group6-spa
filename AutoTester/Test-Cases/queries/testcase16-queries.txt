@@ -61,7 +61,7 @@ pokemon
 13 - USES-boolean: generic-generic
 
 Select BOOLEAN such that Uses(_, _)
-true
+false
 5000
 14 - USES-variable: fixed-syn (regular stmt)
 variable v;
@@ -116,7 +116,7 @@ true
 24 - USES-boolean: generic-fixed
 
 Select BOOLEAN such that Uses(_, "battle3")
-true
+false
 5000
 25 - USES-assign: syn-generic
 assign a;
@@ -146,7 +146,7 @@ pokemon
 30 - USES-variable: generic-syn
 variable v;
 Select v such that Uses(_, v)
-firstStageEvolution, charmander, bulbasaur, squirtle, charmeleon, wartortle, ivysaur, battle1, battle2, battle3
+
 5000
 31 - USES-assign: pattern-right defined (match select)
 assign a;
@@ -236,7 +236,7 @@ false
 48 - USES: 2 clauses (similar) - generic-fixed, generic-fixed
 stmt s;
 Select s such that Uses(_, "battle2") and Uses(_, "battle3")
-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+
 5000
 49 - USES: 2 clauses (similar) - syn-generic, syn-generic
 if i; while w;
@@ -246,7 +246,7 @@ Select <i,w> such that Uses(i, _) and Uses(w, _)
 50 - USES: 2 clauses (similar) - generic-syn, generic-syn
 variable v1, v2;
 Select v1 such that Uses(_, v1) and Uses(_, v2)
-charmander, squirtle, bulbasaur, firstStageEvolution, charmeleon, wartortle, ivysaur, battle1, battle2, battle3
+
 5000
 51 - USES: 2 clauses (mixed) - fixed-fixed, fixed-syn
 variable v;
@@ -281,12 +281,12 @@ none
 57 - USES: 2 clauses (mixed) - generic-fixed, syn-generic
 stmt s;
 Select s such that Uses(_, "wartortle") and Uses(s, _)
-5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
+
 5000
 58 - USES: 2 clauses (mixed) - syn-generic, generic-syn
 stmt s; variable v;
 Select v such that Uses(s, _) and Uses(_, v)
-firstStageEvolution, charmander, bulbasaur, squirtle, charmeleon, wartortle, ivysaur, battle1, battle2, battle3
+
 5000
 59 - USES: 2 clauses (mixed) - generic-fixed, generic-syn
 variable v;
@@ -441,7 +441,7 @@ pokemon
 89 - MODIFIES-boolean: generic-generic
 
 Select BOOLEAN such that Modifies(_, _)
-true
+false
 5000
 90 - MODIFIES-variable: fixed-syn (regular stmt)
 variable v;
@@ -496,7 +496,7 @@ true
 100 - MODIFIES-: generic-fixed
 
 Select BOOLEAN such that Modifies(_, "battle3")
-true
+false
 5000
 101 - MODIFIES-assign: syn-generic
 assign a;
@@ -526,7 +526,7 @@ pokemon
 106 - MODIFIES-variable: generic-syn
 variable v;
 Select v such that Modifies(_, v)
-firstStageEvolution, charmander, bulbasaur, squirtle, charmeleon, wartortle, ivysaur, battle1, battle2, battle3, lastPokemon
+
 5000
 107 - MODIFIES-assign: pattern-right defined (match select)
 assign a;
@@ -616,7 +616,7 @@ true
 124 - MODIFIES: 2 clauses (similar) - generic-fixed, generic-fixed
 stmt s;
 Select s such that Modifies(_, "battle2") and Modifies(_, "battle3")
-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+
 5000
 125 - MODIFIES: 2 clauses (similar) - syn-generic, syn-generic
 if i; while w;
@@ -626,12 +626,12 @@ Select <i,w> such that Modifies(i, _) and Modifies(w, _)
 126 - MODIFIES: 2 clauses (similar) - generic-syn, generic-syn
 variable v1, v2;
 Select v1 such that Modifies(_, v1) and Modifies(_, v2)
-charmander, squirtle, bulbasaur, firstStageEvolution, charmeleon, wartortle, ivysaur, battle1, battle2, battle3, lastPokemon
+
 5000
 127 - MODIFIES: 2 clauses (mixed) - fixed-fixed, fixed-syn
 variable v;
 Select v such that Modifies(17, "ivysaur") and Modifies("18", v)
-ivysaur
+
 5000
 128 - MODIFIES: 2 clauses (mixed) - syn-syn, syn-fixed
 stmt s; variable v;
@@ -641,12 +641,12 @@ Select s such that Modifies(s, v) and Modifies(s, "lastPokemon")
 129 - MODIFIES: 2 clauses (mixed) - generic-generic, fixed-generic
 
 Select BOOLEAN such that Modifies(_, _) and Modifies(23 , _)
-true
+false
 5000
 130 - MODIFIES: 2 clauses (mixed) - fixed-syn, generic-fixed
 variable v;
 Select v such that Modifies(15, v) and Modifies(_, "lastPokemon")
-charmeleon, ivysaur, wartortle, lastPokemon
+
 5000
 131 - MODIFIES: 2 clauses (mixed) - syn-fixed, syn-generic
 stmt s;
@@ -656,17 +656,17 @@ Select s such that Modifies(s, "squirtle") and Modifies(s, _)
 132 - MODIFIES: 2 clauses (mixed) - fixed-generic, generic-syn
 variable v;
 Select v such that Modifies(23, _) and Modifies(_, v)
-charmander, squirtle, bulbasaur, firstStageEvolution, charmeleon, wartortle, ivysaur, battle1, battle2, battle3, lastPokemon
+
 5000
 133 - MODIFIES: 2 clauses (mixed) - generic-fixed, syn-generic
 stmt s;
 Select s such that Modifies(_, "wartortle") and Modifies(s, _)
-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+
 5000
 134 - MODIFIES: 2 clauses (mixed) - syn-generic, generic-syn
 stmt s; variable v;
 Select v such that Modifies(s, _) and Modifies(_, v)
-charmander, squirtle, bulbasaur, firstStageEvolution, charmeleon, wartortle, ivysaur, battle1, battle2, battle3, lastPokemon
+
 5000
 135 - MODIFIES: 2 clauses (mixed) - generic-fixed, generic-syn
 variable v;
