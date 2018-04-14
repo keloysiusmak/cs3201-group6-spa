@@ -193,7 +193,9 @@ std::vector<std::vector<int>> PKB::getFromTable(int table_id, int key_id)
 		unordered_map<int, std::vector<std::vector<int>>> table = tables[table_id - 1];
 		std::vector<std::vector<int>> data;
 		for (auto it = table.begin(); it != table.end(); ++it) {
-			data.push_back({it->first, it->second[0][0]});
+			for (int i : it->second[0]) {
+				data.push_back({ it->first, i });
+			}
 		}
 		return data;
 	}
