@@ -908,8 +908,19 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 
 /* Filters table for with assignment */
 void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable) {
+	if (Utils::compareParam(clause.getLeftParam(), clause.getRightParam())) {
+		ClauseResults withClauseResults;
+		withClauseResults.instantiateClause(clause);
+		vector<vector<int>> withResults;
+		set<int> results = getParamSet(clause.getLeftParam());
+		for (int i : results) {
+			withResults.push_back({ i });
+		}
 
-	if ((clause.getLeftParam().attribute == STMT_NO
+		withClauseResults.setResults(withResults);
+		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+	}
+	else if ((clause.getLeftParam().attribute == STMT_NO
 		&& clause.getRightParam().type == CONSTANT) ||
 		(clause.getRightParam().attribute == STMT_NO
 			&& clause.getLeftParam().type == CONSTANT)) {
@@ -1294,11 +1305,16 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 			set<int> lhsParamSet = getParamSet(lhs);
 
 			for (int value : lhsParamSet) {
-				vector<int> withTableRow;
-				withTableRow.clear();
 				if (value == getId(rhs, lhs.type, lhs.attribute)) {
-					withTableRow.push_back(value);
-					withResults.push_back(withTableRow);
+					if (lhs.type == CALL && lhs.attribute == PROCNAME) {
+						std::vector<std::vector<int>> r = pkb.getCallStatementsCallingProcedure(value);
+						for (std::vector<int> v : r) {
+							withResults.push_back({ v[0] });
+						}
+					}
+					else {
+						withResults.push_back({ value });
+					}
 				}
 			}
 
@@ -1308,8 +1324,15 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 			for (int value : rhsParamSet) {
 				vector<int> withTableRow;
 				if (value == getId(lhs, rhs.type, rhs.attribute)) {
-					withTableRow.push_back(value);
-					withResults.push_back(withTableRow);
+					if (rhs.type == CALL && rhs.attribute == PROCNAME) {
+						std::vector<std::vector<int>> r = pkb.getCallStatementsCallingProcedure(value);
+						for (std::vector<int> v : r) {
+							withResults.push_back({ v[0] });
+						}
+					}
+					else {
+						withResults.push_back({ value });
+					}
 				}
 			}
 		}
