@@ -1616,7 +1616,7 @@ Select a such that Follows(a, _) pattern a(v, _"69"_)
 324 - FOLLOWS-while: pattern (match select)
 while w;
 Select w such that Follows(w, _) pattern w("f", _)
-
+11
 5000
 325 - FOLLOWS-while: pattern (does not match select)
 stmt s; while w;
