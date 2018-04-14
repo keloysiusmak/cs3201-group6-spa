@@ -266,7 +266,7 @@ std::vector<QueryObject> QueryQueuer::parseQueryContent(QueryContent qc) {
 	int wSize = (withClauses.size() > 0) ? withClauses.size() : 1;
 	int pSize = (pattern.size() > 0) ? pattern.size() : 1;
 	int total =  cSize * wSize * pSize;
-	if (!(clauses.size() == 0 && withClauses.size() && pattern.size())) {
+	if (!(clauses.size() == 0 && withClauses.size() == 0 && pattern.size() == 0)) {
 		for (int i = 0; i < total; i++) {
 			QueryObject qo;
 			std::vector<Param> p = qc.getSelect();

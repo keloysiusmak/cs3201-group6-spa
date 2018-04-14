@@ -124,13 +124,13 @@ namespace PKBEvaluatorIntegrationTesting
 			pkb.insertToNameTable(PATTERN_TABLE, { "" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "a" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "e" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "c", "|4|b|+|x|a|*|+" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "d", "|1|" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "e", "|1|" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "a", "|b|" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "c", "4|b|+|x|a|*|+" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "d", "1|" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "e", "1|" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "a", "b|" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "a" });
 			pkb.insertToNameTable(PATTERN_TABLE, { "b" });
-			pkb.insertToNameTable(PATTERN_TABLE, { "a", "|1|" });
+			pkb.insertToNameTable(PATTERN_TABLE, { "a", "1|" });
 
 			pkb.insertToNameTable(PROC_TABLE, { "a" });
 			pkb.insertToNameTable(PROC_TABLE, { "b" });

@@ -518,13 +518,13 @@ public:
 
 		Param expectedRightParam;
 		expectedRightParam.type = EXPR_EXACT;
-		expectedRightParam.value = "x|3|+|";
+		expectedRightParam.value = "|x|3|+|";
 		expectedRightParam.attribute = NONE;
 
 		Pattern expectedPattern1(expectedEntity, expectedLeftParam, expectedRightParam, false);
 
 		expectedRightParam.type = EXPR_EXACT;
-		expectedRightParam.value = "x|";
+		expectedRightParam.value = "|x|";
 		expectedRightParam.attribute = NONE;
 
 		Pattern expectedPattern2(expectedEntity, expectedLeftParam, expectedRightParam, false);
@@ -632,7 +632,7 @@ public:
 
 		Param expectedRightParam;
 		expectedRightParam.type = EXPR;
-		expectedRightParam.value = "3|";
+		expectedRightParam.value = "|3|";
 		expectedRightParam.attribute = NONE;
 
 		Pattern expectedPattern1(expectedEntity, expectedLeftParam, expectedRightParam, false);
@@ -650,7 +650,7 @@ public:
 		expectedLeftParam.attribute = NONE;
 
 		expectedRightParam.type = EXPR;
-		expectedRightParam.value = "x|y|+|z|*|";
+		expectedRightParam.value = "|x|y|+|z|*|";
 		expectedRightParam.attribute = NONE;
 
 		Pattern expectedPattern2(expectedEntity, expectedLeftParam, expectedRightParam, false);
@@ -664,7 +664,7 @@ public:
 		preprocessor.parsePattern(qc, ASSIGN, entity, arg1, arg2, false);
 
 		expectedRightParam.type = EXPR_EXACT;
-		expectedRightParam.value = "x|y|+|1|-|";
+		expectedRightParam.value = "|x|y|+|1|-|";
 		expectedRightParam.attribute = NONE;
 
 		Pattern expectedPattern3(expectedEntity, expectedLeftParam, expectedRightParam, false);
