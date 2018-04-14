@@ -203,8 +203,8 @@ void QueryEvaluator::evaluateFollows(Clause & clause, ClauseResults & clauseResu
 	Param leftParam = clause.getLeftParam();
 	Param rightParam = clause.getRightParam();
 
-	// If same param
-	if (Utils::isSameParam(clause.getLeftParam(), clause.getRightParam())) {
+	// If same param (not ALL)
+	if (Utils::isSameParam(leftParam, rightParam) && leftParam.type != ALL && rightParam.type != ALL) {
 		if (clause.getIsInverted()) clauseResults.setValid(true); // Clauseresults defaults false
 		return;
 	}
@@ -253,9 +253,9 @@ void QueryEvaluator::evaluateFollowStar(Clause & clause, ClauseResults & clauseR
 	Param leftParam = clause.getLeftParam();
 	Param rightParam = clause.getRightParam();
 
-	// If same param
-	if (Utils::isSameParam(clause.getLeftParam(), clause.getRightParam())) {
-		if (clause.getIsInverted()) clauseResults.setValid(true); // Clause results defaults false
+	// If same param (not ALL)
+	if (Utils::isSameParam(leftParam, rightParam) && leftParam.type != ALL && rightParam.type != ALL) {
+		if (clause.getIsInverted()) clauseResults.setValid(true); // Clauseresults defaults false
 		return;
 	}
 
@@ -302,9 +302,9 @@ void QueryEvaluator::evaluateParent(Clause & clause, ClauseResults & clauseResul
 	Param leftParam = clause.getLeftParam();
 	Param rightParam = clause.getRightParam();
 
-	// If same param
-	if (Utils::isSameParam(clause.getLeftParam(), clause.getRightParam())) {
-		if (clause.getIsInverted()) clauseResults.setValid(true); // Clause results defaults false
+	// If same param (not ALL)
+	if (Utils::isSameParam(leftParam, rightParam) && leftParam.type != ALL && rightParam.type != ALL) {
+		if (clause.getIsInverted()) clauseResults.setValid(true); // Clauseresults defaults false
 		return;
 	}
 
@@ -351,9 +351,9 @@ void QueryEvaluator::evaluateParentStar(Clause & clause, ClauseResults & clauseR
 	Param leftParam = clause.getLeftParam();
 	Param rightParam = clause.getRightParam();
 
-	// If same param
-	if (Utils::isSameParam(clause.getLeftParam(), clause.getRightParam())) {
-		if (clause.getIsInverted()) clauseResults.setValid(true); // Clause results defaults false
+	// If same param (not ALL)
+	if (Utils::isSameParam(leftParam, rightParam) && leftParam.type != ALL && rightParam.type != ALL) {
+		if (clause.getIsInverted()) clauseResults.setValid(true); // Clauseresults defaults false
 		return;
 	}
 
