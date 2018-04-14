@@ -912,7 +912,9 @@ void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable)
 		ClauseResults withClauseResults;
 		withClauseResults.instantiateClause(clause);
 		vector<vector<int>> withResults;
-		set<int> results = getParamSet(clause.getLeftParam());
+		Param p = clause.getLeftParam();
+		p.attribute = NONE;
+		set<int> results = getParamSet(p);
 		for (int i : results) {
 			withResults.push_back({ i });
 		}
@@ -1516,6 +1518,10 @@ list<string> QueryEvaluator::paramToStringList(Param p, IntermediateTable &iTabl
 			}
 			else if (p.type == PROCEDURE) {
 				paramVal = pkb.getProcedureName(tableRow[paramInt]);
+			}
+			else if (p.type == CALL && p.attribute == PROCNAME) {
+				std::vector<std::vector<int>> px = pkb.getProcedureCalledByCallStatement(tableRow[paramInt]);
+				paramVal = pkb.getProcedureName(px[0][0]);
 			}
 			else {
 				paramVal = to_string(tableRow[paramInt]);
