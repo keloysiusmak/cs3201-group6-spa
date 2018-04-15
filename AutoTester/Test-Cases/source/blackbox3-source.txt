@@ -1,9 +1,12 @@
 procedure First {
-    k = k - e;
-    o = b + i * 6 + c - n * m;
-    b = p - y - 3;
-    h = p - c * q - l;
-    i = d - 2 + n + 27 - 10 - 24;
-    u = m * f - f - m + f;
-    u = j;
+    if a then {
+        k = k - e;
+        o = b + i * 6 + c - n * m;
+        b = p - y - 3;
+        h = p - c * q - l;
+    } else {
+        i = d - 2 + n + 27 - 10 - 24;
+        u = m * f - f - m + f;
+        u = j;
+    }
 }

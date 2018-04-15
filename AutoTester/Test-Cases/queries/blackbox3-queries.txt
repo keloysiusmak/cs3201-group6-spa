@@ -1,12 +1,12 @@
 1 -
 stmt s;
 Select BOOLEAN with s.stmt# = s.stmt#
-false
+true
 5000
 2 -
 if ifs;
 Select BOOLEAN with ifs.stmt# = ifs.stmt#
-false
+true
 5000
 3 -
 while w;
