@@ -399,14 +399,10 @@ bool Parser::statement() {
 
 
 bool Parser::statementList() {
-	bool first = true;
-	// only push to StatementListStack 1 time
-	if (first) {
-		stmListIdStack.push(nextStmListId);
-		nextStmListId++;
-		first = false;
-	}
 
+	stmListIdStack.push(nextStmListId);
+	nextStmListId++;
+	
 	statement();
 
 	while (nextToken != "}") {
