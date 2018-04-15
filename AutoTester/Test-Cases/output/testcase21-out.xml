@@ -1,0 +1,1044 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>FINAL-CS3201</name><parsing_time_taken>19.000000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="all statements">1</id><querystr><![CDATA[stmt s; Select s]]></querystr>
+<stuans>1,10,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10</correct>
+<time_taken>320.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="all assign statements, IDENT format">2</id><querystr><![CDATA[assign a1; Select a1]]></querystr>
+<stuans>1,10,2,3,5,7,8,9</stuans>
+<correct>1,2,3,5,7,8,9,10</correct>
+<time_taken>105.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="all while statements, IDENT format">3</id><querystr><![CDATA[while w#2; Select w#2]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>96.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="all variables">4</id><querystr><![CDATA[variable v; Select v]]></querystr>
+<stuans>d,end,one,two,z</stuans>
+<correct>d,end,one,two,z</correct>
+<time_taken>136.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="all constants">5</id><querystr><![CDATA[constant c; Select c]]></querystr>
+<stuans>1,6</stuans>
+<correct>1,6</correct>
+<time_taken>105.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" CondNum="2" RelNum="0" comment="all program lines">6</id><querystr><![CDATA[prog_line l; Select l;]]></querystr>
+<stuans>1,10,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10</correct>
+<time_taken>109.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="modifiesS synonym and synonym, stmt, prog_line used as stmt arg, select v, true">7</id><querystr><![CDATA[prog_line n; variable v; Select v such that Modifies(n, v)]]></querystr>
+<stuans>d,end,one,two,z</stuans>
+<correct>d,end,one,two,z</correct>
+<time_taken>124.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="modifiesS synonym and synonym, stmt, select s, true (cannot be false)">8</id><querystr><![CDATA[stmt s; variable v; Select s such that Modifies(s, v)]]></querystr>
+<stuans>1,10,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10</correct>
+<time_taken>106.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="modifiesS synonym and synonym, while stmt, true (can test false + select w later on - no while stmts)">9</id><querystr><![CDATA[while w; variable v; Select v such that Modifies(w, v)]]></querystr>
+<stuans>one,two,z</stuans>
+<correct>one,two,z</correct>
+<time_taken>123.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="modifiesS synonym and synonym, assign stmt, select a, true (can't be false)">10</id><querystr><![CDATA[assign a; variable v; Select a such that Modifies(a, v)]]></querystr>
+<stuans>1,10,2,3,5,7,8,9</stuans>
+<correct>1,2,3,5,7,8,9,10</correct>
+<time_taken>102.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="modifiesS synonym and synonym, assign stmt, select v, true (can't be false)">11</id><querystr><![CDATA[assign a; variable v; Select v such that Modifies(a, v)]]></querystr>
+<stuans>d,end,one,two,z</stuans>
+<correct>d,end,one,two,z</correct>
+<time_taken>113.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="modifiesS synonym and _, assign stmt, true (can't be false, add stmt s + while later on)">12</id><querystr><![CDATA[assign a; Select a such that Modifies(a, _)]]></querystr>
+<stuans>1,10,2,3,5,7,8,9</stuans>
+<correct>1,2,3,5,7,8,9,10</correct>
+<time_taken>134.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="modifiesS synonym and IDENT, while stmt, true (tests nested while modifies)(can test false in other source - no while stmts)">13</id><querystr><![CDATA[while w; Select w such that Modifies(w, "two")]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>117.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="modifiesS synonym and IDENT, stmt, true (can only be false if IDENT var doesn't exist?)">14</id><querystr><![CDATA[stmt s; Select s such that Modifies(s, "one")]]></querystr>
+<stuans>1,4,5</stuans>
+<correct>1,4,5</correct>
+<time_taken>96.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="modifiesS synonym and IDENT, stmt, false (IDENT var doesn't exist)">15</id><querystr><![CDATA[stmt s; Select s such that Modifies(s, "blank")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>121.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="modifiesS synonym and IDENT, assign a, true (can only be false if IDENT var doesn't exist?)">16</id><querystr><![CDATA[assign a; Select a such that Modifies(a, "z")]]></querystr>
+<stuans>3,8</stuans>
+<correct>3,8</correct>
+<time_taken>102.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="modifiesS INTEGER and synonym, true (tests nested while modifies)(can't be false)">17</id><querystr><![CDATA[variable v; Select v such that Modifies(4, v)]]></querystr>
+<stuans>one,two,z</stuans>
+<correct>one,two,z</correct>
+<time_taken>98.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="modifiesS INTEGER and _, all unused declarations, boolean, false (stmt doesn't exist)">18</id><querystr><![CDATA[stmt s, s1; variable v, v1; Select BOOLEAN such that Modifies(15, _)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>140.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="modifiesS INTEGER and _, some unused declarations, diff select synonym, true">19</id><querystr><![CDATA[constant c; while w; variable v; Select c such that Modifies(9, _)]]></querystr>
+<stuans>1,6</stuans>
+<correct>1,6</correct>
+<time_taken>102.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="modifiesS INTEGER and IDENT, all unused declarations, boolean, true (tests nested while modifies)">20</id><querystr><![CDATA[constant c; assign a; while w; Select BOOLEAN such that Modifies(4, "z")]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>120.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="modifiesS INTEGER and IDENT, some unused declarations, diff select synonym, false">21</id><querystr><![CDATA[assign a; stmt s, s1; Select s such that Modifies(3, "d")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>129.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and synonym, assign stmt, some unused declarations, select a, true (can test false in other source (all a = const))">22</id><querystr><![CDATA[assign a; variable x, v; Select a such that Uses(a, v)]]></querystr>
+<stuans>10,2,3,5,7,8,9</stuans>
+<correct>2,3,5,7,8,9,10</correct>
+<time_taken>109.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and synonym, assign stmt, select v, true">23</id><querystr><![CDATA[assign a; variable v; Select v such that Uses(a, v)]]></querystr>
+<stuans>d,one,two,z</stuans>
+<correct>d,one,two,z</correct>
+<time_taken>142.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and synonym, while stmt, true (can't be false)">24</id><querystr><![CDATA[while w; variable v; Select v such that Uses(w, v)]]></querystr>
+<stuans>one,two,z</stuans>
+<correct>one,two,z</correct>
+<time_taken>102.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and synonym, stmt, true (can test selct v in other source, for both assign stmt and stmt s - used in while but not in assign)">25</id><querystr><![CDATA[stmt s; variable v; Select s such that Uses(s, v)]]></querystr>
+<stuans>10,2,3,4,5,6,7,8,9</stuans>
+<correct>2,3,4,5,6,7,8,9,10</correct>
+<time_taken>101.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Uses="1" SuchThat="1" CondNum="4" RelNum="1" comment="usesS synonym and _, while stmt, true (can't be false)">26</id><querystr><![CDATA[while w; Select w such that Uses(w, _)]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>127.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and IDENT, stmt, true">27</id><querystr><![CDATA[stmt s; Select s such that Uses(s, "one")]]></querystr>
+<stuans>2,3,4,5,6,7</stuans>
+<correct>2,3,4,5,6,7</correct>
+<time_taken>99.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and IDENT, stmt, true (tests var used in while condition and not container)">28</id><querystr><![CDATA[stmt s; Select s such that Uses(s, "z")]]></querystr>
+<stuans>4,9</stuans>
+<correct>4,9</correct>
+<time_taken>87.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and IDENT, stmt, true (tests var used in while container and not condition) (tests nested while uses)">29</id><querystr><![CDATA[stmt s; Select s such that Uses(s, "two")]]></querystr>
+<stuans>3,4,6,8,9</stuans>
+<correct>3,4,6,8,9</correct>
+<time_taken>82.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and IDENT, stmt, false">30</id><querystr><![CDATA[stmt s; Select s such that Uses(s, "end")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>101.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and IDENT, assign stmt, true">31</id><querystr><![CDATA[assign a; Select a such that Uses(a, "one")]]></querystr>
+<stuans>2,3,5,7</stuans>
+<correct>2,3,5,7</correct>
+<time_taken>87.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and IDENT, assign stmt, false (IDENT var doesn't exist)">32</id><querystr><![CDATA[assign a; Select a such that Uses(a, "bluff")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>84.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and IDENT, while stmt, true">33</id><querystr><![CDATA[while w; Select w such that Uses(w, "z")]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>92.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS synonym and IDENT, while stmt, false">34</id><querystr><![CDATA[while w; Select w such that Uses(w, "d")]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>116.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Uses="1" SuchThat="1" CondNum="4" RelNum="1" comment="usesS synonym and IDENT, prog_line as stmt arg, true">35</id><querystr><![CDATA[prog_line n; Select n such that Uses(n, "two")]]></querystr>
+<stuans>3,4,6,8,9</stuans>
+<correct>3,4,6,8,9</correct>
+<time_taken>97.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS INTEGER and synonym, true">36</id><querystr><![CDATA[variable v; Select v such that Uses(9, v)]]></querystr>
+<stuans>two,z</stuans>
+<correct>two,z</correct>
+<time_taken>96.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS INTEGER and synonym, false">37</id><querystr><![CDATA[variable v; Select v such that Uses(1, v)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>110.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="2" Uses="1" SuchThat="1" CondNum="5" RelNum="1" comment="usesS INTEGER and _, all unused declarations, boolean, true (18)">38</id><querystr><![CDATA[prog_line n, n1; Select BOOLEAN such that Uses(5, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>96.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Uses="1" SuchThat="1" CondNum="4" RelNum="1" comment="usesS INTEGER and _, some unused declarations, diff select synonym, false (19)">39</id><querystr><![CDATA[constant c, c1; while w; Select w such that Uses(1, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>114.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS INTEGER and IDENT, all unused declarations, boolean, false (stmt doesn't exist) (20)">40</id><querystr><![CDATA[assign a; constant c, s, e; Select BOOLEAN such that Uses(0, "two")]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>138.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="usesS INTEGER and IDENT, some unused declarations, diff select synonym, true (21)">41</id><querystr><![CDATA[constant r, p1; while w; Select w such that Uses(10, "d")]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>84.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent synonym and synonym, stmt, select s1, true (can test false in other source - no container stmt)">42</id><querystr><![CDATA[stmt s1, s2; Select s1 such that Parent(s1, s2)]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>119.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent synonym and synonym, stmt, select s2, true">43</id><querystr><![CDATA[stmt s1, s2; Select s2 such that Parent(s1, s2)]]></querystr>
+<stuans>5,6,7,8</stuans>
+<correct>5,6,7,8</correct>
+<time_taken>144.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent synonym and synonym, w a, select a, true">44</id><querystr><![CDATA[while w; assign a; Select a such that Parent(w, a)]]></querystr>
+<stuans>5,7,8</stuans>
+<correct>5,7,8</correct>
+<time_taken>125.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent synonym and synonym, assign stmt, select a1, false (can't be true)">45</id><querystr><![CDATA[assign a1, a2; Select a1 such that Parent(a1, a2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>150.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent synonym and synonym, assign stmt, select a2, false (can't be true)">46</id><querystr><![CDATA[assign a1, a2; Select a2 such that Parent(a1, a2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>135.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent synonym and synonym, while stmt, select w1, true (tests while parent while) (can test false in other source - no nested whiles)">47</id><querystr><![CDATA[while w1, w2; Select w1 such that Parent(w1, w2)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>123.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent synonym and synonym, while stmt, select w2, true (tests while parent while) (can test false in other source - no nested whiles)">48</id><querystr><![CDATA[while w1, w2; Select w2 such that Parent(w1, w2)]]></querystr>
+<stuans>6</stuans>
+<correct>6</correct>
+<time_taken>137.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parent synonym and _, while stmt, true (can test false in other source - no while stmt)">49</id><querystr><![CDATA[while w; Select w such that Parent(w, _)]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>120.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parent synonym and _, assign stmt, false (can't be true)">50</id><querystr><![CDATA[assign a; Select a such that Parent(a, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>172.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent synonym and INTEGER, stmt, true">51</id><querystr><![CDATA[stmt s; Select s such that Parent(s, 8)]]></querystr>
+<stuans>6</stuans>
+<correct>6</correct>
+<time_taken>136.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent synonym and INTEGER, while stmt, true">52</id><querystr><![CDATA[while w; Select w such that Parent(w, 5)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>163.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent synonym and INTEGER, stmt, false">53</id><querystr><![CDATA[stmt s; Select s such that Parent(s, 2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>132.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent synonym and INTEGER, while stmt, false">54</id><querystr><![CDATA[while w; Select w such that Parent(w, 9)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>123.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parent _ and synonym, stmt, true (can test false in other source - no container stmts)">55</id><querystr><![CDATA[stmt s; Select s such that Parent(_, s)]]></querystr>
+<stuans>5,6,7,8</stuans>
+<correct>5,6,7,8</correct>
+<time_taken>126.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parent _ and synonym, while stmt, true (can test false in other source - no nested whiles)">56</id><querystr><![CDATA[while w; Select w such that Parent(_, w)]]></querystr>
+<stuans>6</stuans>
+<correct>6</correct>
+<time_taken>94.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parent _ and synonym, assign stmt, true (can test false in other source - no container stmts)">57</id><querystr><![CDATA[assign a; Select a such that Parent(_, a)]]></querystr>
+<stuans>5,7,8</stuans>
+<correct>5,7,8</correct>
+<time_taken>116.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="3" SuchThat="1" CondNum="6" RelNum="1" comment="parent _ and _, some unused declarations, diff select synonym, true (can test false in other source - no container stmts)">58</id><querystr><![CDATA[prog_line n, n1; constant c, cc, c1, c2; Select c1 such that Parent(_, _)]]></querystr>
+<stuans>1,6</stuans>
+<correct>1,6</correct>
+<time_taken>132.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Parent="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="parent _ and _, all unused declarations, boolean, true (can test false in other source - no container stmts)">59</id><querystr><![CDATA[stmt s, v; while w3; Select BOOLEAN such that Parent(_, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>155.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="parent _ and INTEGER, some unused declarations, diff select synonym, true">60</id><querystr><![CDATA[variable v; stmt s; prog_line n; Select n such that Parent(_, 8)]]></querystr>
+<stuans>1,10,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10</correct>
+<time_taken>109.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Parent="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="parent _ and INTEGER, all unused declarations, boolean, false">61</id><querystr><![CDATA[prog_line n, n1; Select BOOLEAN such that Parent(_, 3)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>111.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Parent="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="parent INTEGER and _, all unused declarations, boolean, true">62</id><querystr><![CDATA[while w; assign a, b, c, d; prog_line n; Select BOOLEAN such that Parent(4, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>95.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="parent INTEGER and _, some unused declarations, diff select synonym, false">63</id><querystr><![CDATA[prog_line n, n1; assign a; Select n1 such that Parent(5, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>136.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent INTEGER and synonym, stmt, true">64</id><querystr><![CDATA[stmt s; Select s such that Parent(4, s)]]></querystr>
+<stuans>5,6</stuans>
+<correct>5,6</correct>
+<time_taken>130.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent INTEGER and synonym, while stmt, true">65</id><querystr><![CDATA[while w; Select w such that Parent(4, w)]]></querystr>
+<stuans>6</stuans>
+<correct>6</correct>
+<time_taken>104.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent INTEGER and synonym, assign stmt, true">66</id><querystr><![CDATA[assign a; Select a such that Parent(4, a)]]></querystr>
+<stuans>5</stuans>
+<correct>5</correct>
+<time_taken>111.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent INTEGER and synonym, stmt, false">67</id><querystr><![CDATA[stmt s; Select s such that Parent(1, s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>122.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent INTEGER and synonym, while stmt, false">68</id><querystr><![CDATA[while w; Select w such that Parent(6, w)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>103.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent INTEGER and synonym, assign stmt, false">69</id><querystr><![CDATA[assign a; Select a such that Parent(9, a)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>134.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Parent="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parent INTEGER and INTEGER, all unused decalarations, boolean, true">70</id><querystr><![CDATA[prog_line n, t; constant c; Select BOOLEAN such that Parent(6, 8)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>149.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent INTEGER and INTEGER, all unused declarations, boolean, false">71</id><querystr><![CDATA[variable v, f; stmt x, y, z; Select BOOLEAN such that Parent(8, 9)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>134.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent INTEGER and INTEGER, some unused declarations, diff select synonym, true (tests while parent while) (T, nested?)">72</id><querystr><![CDATA[assign a, z, c, b; while k; Select b such that Parent(4, 6)]]></querystr>
+<stuans>1,10,2,3,5,7,8,9</stuans>
+<correct>1,2,3,5,7,8,9,10</correct>
+<time_taken>156.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="parent INTEGER and INTEGER, some unused declarations, diff select synonym, false">73</id><querystr><![CDATA[assign y; constant r, c; Select r such that Parent(1, 2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>136.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT synonym and synonym, stmt, select s1, true (can test false in other source - no container stmt)">74</id><querystr><![CDATA[stmt s1, s2; Select s1 such that Parent*(s1, s2)]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>142.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT synonym and synonym, stmt, select s2, true">75</id><querystr><![CDATA[stmt s1, s2; Select s2 such that Parent*(s1, s2)]]></querystr>
+<stuans>5,6,7,8</stuans>
+<correct>5,6,7,8</correct>
+<time_taken>127.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT synonym and synonym, assign stmt, select a1, false (can't be true)">76</id><querystr><![CDATA[assign a1, a2; Select a1 such that Parent*(a1, a2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>122.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT synonym and synonym, assign stmt, select a2, false (can't be true)">77</id><querystr><![CDATA[assign a1, a2; Select a2 such that Parent*(a1, a2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>147.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT synonym and synonym, while stmt, select w1, true (tests while parent while) (can test false in other source - no nested whiles)">78</id><querystr><![CDATA[while w1, w2; Select w1 such that Parent*(w1, w2)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>125.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT synonym and synonym, while stmt, select w2, true (tests while parent while) (can test false/more w2 in other sources - no nested whiles)">79</id><querystr><![CDATA[while w1, w2; Select w2 such that Parent*(w1, w2)]]></querystr>
+<stuans>6</stuans>
+<correct>6</correct>
+<time_taken>156.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parentT synonym and _, while stmt, true (can test false in other source - no while stmt)">80</id><querystr><![CDATA[while w; Select w such that Parent*(w, _)]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>138.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parentT synonym and _, assign stmt, false (can't be true)">81</id><querystr><![CDATA[assign a; Select a such that Parent*(a, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>156.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT synonym and INTEGER, stmt, true (tests while parentT s)">82</id><querystr><![CDATA[stmt s; Select s such that Parent*(s, 8)]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>136.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT synonym and INTEGER, while stmt, true (tests while parentT s)">83</id><querystr><![CDATA[while w; Select w such that Parent*(w, 7)]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>126.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT synonym and INTEGER, stmt, false">84</id><querystr><![CDATA[stmt s; Select s such that Parent*(s, 2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>150.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT synonym and INTEGER, while stmt, false">85</id><querystr><![CDATA[while w; Select w such that Parent*(w, 9)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>128.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parentT _ and synonym, stmt, true (can test false in other source - no container stmts)">86</id><querystr><![CDATA[stmt s; Select s such that Parent*(_, s)]]></querystr>
+<stuans>5,6,7,8</stuans>
+<correct>5,6,7,8</correct>
+<time_taken>153.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parentT _ and synonym, while stmt, true (can test false/more w in other sources - no nested whiles)">87</id><querystr><![CDATA[while w; Select w such that Parent*(_, w)]]></querystr>
+<stuans>6</stuans>
+<correct>6</correct>
+<time_taken>131.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parentT _ and synonym, assign stmt, true (can test false in other source - no container stmts)">88</id><querystr><![CDATA[assign a; Select a such that Parent*(_, a)]]></querystr>
+<stuans>5,7,8</stuans>
+<correct>5,7,8</correct>
+<time_taken>145.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="3" SuchThat="1" CondNum="6" RelNum="1" comment="parentT _ and _, some unused declarations, diff select synonym, true (can test false in other source - no container stmts)">89</id><querystr><![CDATA[prog_line n, n1; constant c, cc, c1, c2; Select c1 such that Parent*(_, _)]]></querystr>
+<stuans>1,6</stuans>
+<correct>1,6</correct>
+<time_taken>141.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Parentstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="parentT _ and _, all unused declarations, boolean, true (can test false in other source - no container stmts)">90</id><querystr><![CDATA[stmt s, v; while w3; Select BOOLEAN such that Parent*(_, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>137.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="parentT _ and INTEGER, some unused declarations, diff select synonym, true">91</id><querystr><![CDATA[variable v; stmt s; prog_line n; Select n such that Parent*(_, 8)]]></querystr>
+<stuans>1,10,2,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10</correct>
+<time_taken>169.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Parentstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="parentT _ and INTEGER, all unused declarations, boolean, false">92</id><querystr><![CDATA[prog_line n, n1; Select BOOLEAN such that Parent*(_, 3)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>128.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Parentstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="parentT INTEGER and _, all unused declarations, boolean, true">93</id><querystr><![CDATA[while w; assign a, b, c, d; prog_line n; Select BOOLEAN such that Parent*(4, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>160.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="parentT INTEGER and _, some unused declarations, diff select synonym, false">94</id><querystr><![CDATA[prog_line n, n1; assign a; Select n1 such that Parent*(5, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>140.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT INTEGER and synonym, stmt, true (tests while parentT s)">95</id><querystr><![CDATA[stmt s; Select s such that Parent*(4, s)]]></querystr>
+<stuans>5,6,7,8</stuans>
+<correct>5,6,7,8</correct>
+<time_taken>154.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT INTEGER and synonym, while stmt, true (can test more w in other source)">96</id><querystr><![CDATA[while w; Select w such that Parent*(4, w)]]></querystr>
+<stuans>6</stuans>
+<correct>6</correct>
+<time_taken>130.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT INTEGER and synonym, assign stmt, true (tests while parentT a) (can test more nested in other source)">97</id><querystr><![CDATA[assign a; Select a such that Parent*(4, a)]]></querystr>
+<stuans>5,7,8</stuans>
+<correct>5,7,8</correct>
+<time_taken>112.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT INTEGER and synonym, stmt, false">98</id><querystr><![CDATA[stmt s; Select s such that Parent*(1, s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>123.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT INTEGER and synonym, while stmt, false">99</id><querystr><![CDATA[while w; Select w such that Parent*(6, w)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>100.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT INTEGER and synonym, assign stmt, false">100</id><querystr><![CDATA[assign a; Select a such that Parent*(9, a)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>123.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Parentstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="parentT INTEGER and INTEGER, all unused decalarations, boolean, true (tests while parentT a)">101</id><querystr><![CDATA[prog_line n, t; constant c; Select BOOLEAN such that Parent*(4, 8)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>118.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT INTEGER and INTEGER, all unused declarations, boolean, false">102</id><querystr><![CDATA[variable v, f; stmt x, y, z; Select BOOLEAN such that Parent*(8, 9)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>98.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT INTEGER and INTEGER, some unused declarations, diff select synonym, true (tests while parent while) (T, nested?)">103</id><querystr><![CDATA[assign a, z, c, b; while k; Select b such that Parent*(4, 6)]]></querystr>
+<stuans>1,10,2,3,5,7,8,9</stuans>
+<correct>1,2,3,5,7,8,9,10</correct>
+<time_taken>111.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="parentT INTEGER and INTEGER, some unused declarations, diff select synonym, false">104</id><querystr><![CDATA[assign y; constant r, c; Select r such that Parent*(1, 2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>147.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="follows synonym and synonym, a w, select a, true">105</id><querystr><![CDATA[assign a; while w; Select a such that Follows(a, w)]]></querystr>
+<stuans>3,5</stuans>
+<correct>3,5</correct>
+<time_taken>115.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="follows synonym and _, while stmt, true">106</id><querystr><![CDATA[while w; Select w such that Follows(w, _)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>149.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="follows synonym and _, assign stmt, true">107</id><querystr><![CDATA[assign a; Select a such that Follows(a, _)]]></querystr>
+<stuans>1,2,3,5,7,9</stuans>
+<correct>1,2,3,5,7,9</correct>
+<time_taken>129.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="follows synonym and INTEGER, stmt, true">108</id><querystr><![CDATA[stmt s; Select s such that Follows(s, 10)]]></querystr>
+<stuans>9</stuans>
+<correct>9</correct>
+<time_taken>110.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="follows synonym and INTEGER, while stmt, false">109</id><querystr><![CDATA[while w; Select w such that Follows(w, 10)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>140.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="follows _ and synonym, while stmt, true">110</id><querystr><![CDATA[while w; Select w such that Follows(_, w)]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>153.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="follows _ and synonym, assign stmt, true">111</id><querystr><![CDATA[assign a; Select a such that Follows(_, a)]]></querystr>
+<stuans>10,2,3,8,9</stuans>
+<correct>2,3,8,9,10</correct>
+<time_taken>150.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Follows="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="follows _ and INTEGER, all unused declarations, boolean, false">112</id><querystr><![CDATA[assign a, b, c; Select BOOLEAN such that Follows(_, 1)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>157.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="follows INTEGER and INTEGER, all unused declarations, boolean, true">113</id><querystr><![CDATA[constant c; variable v, b; Select BOOLEAN such that Follows(1, 2)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>157.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="follows INTEGER and INTEGER, all unused declarations, boolean, false">114</id><querystr><![CDATA[stmt s, t, u, v; while r; Select BOOLEAN such that Follows(1, 3)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>154.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="follows INTEGER and synonym, while stmt, true">115</id><querystr><![CDATA[while w; Select w such that Follows(5, w)]]></querystr>
+<stuans>6</stuans>
+<correct>6</correct>
+<time_taken>112.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="follows INTEGER and synonym, stmt, false">116</id><querystr><![CDATA[stmt s; Select s such that Follows(10, s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>183.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Follows="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="follows INTEGER and _, all unused declarations, boolean, false">117</id><querystr><![CDATA[variable v, c, b; Select BOOLEAN such that Follows(6, _)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>148.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="followsT synonym and synonym, a w, select a, true">118</id><querystr><![CDATA[assign a; while w; Select a such that Follows*(a, w)]]></querystr>
+<stuans>1,2,3,5</stuans>
+<correct>1,2,3,5</correct>
+<time_taken>168.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="followsT synonym and synonym, w a, select a, true">119</id><querystr><![CDATA[while w; assign a; Select a such that Follows*(w, a)]]></querystr>
+<stuans>10,9</stuans>
+<correct>9,10</correct>
+<time_taken>159.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="followsT synonym and INTEGER, assign stmt, true (tests a followsT a)">120</id><querystr><![CDATA[assign a; Select a such that Follows*(a, 9)]]></querystr>
+<stuans>1,2,3</stuans>
+<correct>1,2,3</correct>
+<time_taken>195.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="followsT synonym and INTEGER, while stmt, false">121</id><querystr><![CDATA[while w; Select w such that Follows*(w, 8)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>286.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Followsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="followsT _ and INTEGER, all unused declarations, boolean, false">122</id><querystr><![CDATA[constant c; Select BOOLEAN such that Follows*(_, 7)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>183.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="followsT INTEGER and INTEGER, all unused declarations, boolean, true">123</id><querystr><![CDATA[constant c; Select BOOLEAN such that Follows*(2, 9)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>161.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="followsT INTEGER and INTEGER, all unused declarations, boolean, false">124</id><querystr><![CDATA[variable v; Select BOOLEAN such that Follows*(5, 8)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>155.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="followsT INTEGER and synonym, while stmt, true">125</id><querystr><![CDATA[while w; Select w such that Follows*(2, w)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>122.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="followsT INTEGER and synonym, assign stmt, true">126</id><querystr><![CDATA[assign a; while w; Select w such that Follows*(2, a)]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>130.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="followsT INTEGER and synonym, assign stmt, false">127</id><querystr><![CDATA[assign w; Select a such that Follows*(5, a)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>115.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="followsT INTEGER and synonym, while stmt, false">128</id><querystr><![CDATA[while w; Select w such that Follows*(4, w)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>124.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="pattern synonym and _, all unused declarations, boolean, true">129</id><querystr><![CDATA[while z; assign a; variable v; Select BOOLEAN pattern a(v, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>171.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="pattern IDENT and factor, select diff synonym, true">130</id><querystr><![CDATA[assign a#; constant c; Select c pattern a#("one", _"1"_)]]></querystr>
+<stuans>1,6</stuans>
+<correct>1,6</correct>
+<time_taken>111.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="pattern IDENT and factor, select a, true">131</id><querystr><![CDATA[assign a; Select a pattern a("two", _"one"_)]]></querystr>
+<stuans>2,7</stuans>
+<correct>2,7</correct>
+<time_taken>132.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="pattern IDENT and factor, select a1, true">132</id><querystr><![CDATA[assign a1; Select a1 pattern a1(_, _"two"_)]]></querystr>
+<stuans>3,8,9</stuans>
+<correct>3,8,9</correct>
+<time_taken>169.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="pattern synonym and factor, select v, true">133</id><querystr><![CDATA[assign a; variable v; Select v pattern a(v, _"one"_)]]></querystr>
+<stuans>one,two,z</stuans>
+<correct>one,two,z</correct>
+<time_taken>148.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="pattern synonym and factor, select diff synonym, true (so far the only select diff synonym with synonym in clause)">134</id><querystr><![CDATA[assign a; variable v; while w; Select w pattern a(v, _"two"_)]]></querystr>
+<stuans>4,6</stuans>
+<correct>4,6</correct>
+<time_taken>161.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="pattern IDENT and factor, select a, false">135</id><querystr><![CDATA[assign a; Select a pattern a("z", _"end"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>147.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="pattern _ and factor, select diff synonym, false">136</id><querystr><![CDATA[assign a; variable v; Select v pattern a(_, _"2"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>160.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="pattern IDENT and factor, boolean, false">137</id><querystr><![CDATA[assign a; Select BOOLEAN pattern a("end", _"dd"_)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>152.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="pattern synonym and factor, select v, false">138</id><querystr><![CDATA[variable v; assign a; Select v pattern a(v, _"3"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>176.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="1" Pattern="1" SuchThat="1" CondNum="5" RelNum="1" comment="modifiesS true (9) and pattern true (130)">139</id><querystr><![CDATA[while w; variable v; assign a; Select v such that Modifies(w, v) pattern a(v, _"one"_)]]></querystr>
+<stuans>one,two,z</stuans>
+<correct>one,two,z</correct>
+<time_taken>171.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="modifiesS true (16) and pattern true (129)">140</id><querystr><![CDATA[assign a; Select a such that Modifies(a, "z") pattern a(_, _"two"_)]]></querystr>
+<stuans>3,8</stuans>
+<correct>3,8</correct>
+<time_taken>165.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Uses="1" Pattern="1" SuchThat="1" CondNum="5" RelNum="1" comment="usesS false (30) and pattern true (128)">141</id><querystr><![CDATA[stmt s; assign a; Select s such that Uses(s, "end") pattern a("two", _"one"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>147.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Uses="1" Pattern="1" SuchThat="1" CondNum="5" RelNum="1" comment="usesS true (41) and pattern false (131)">142</id><querystr><![CDATA[assign a; Select a such that Uses(10, "d") pattern a(v, _"two"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>194.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="1" Pattern="1" SuchThat="1" CondNum="5" RelNum="1" comment="parent false (73) and pattern false (132), diff select synonym">143</id><querystr><![CDATA[assign a; constant r, c; Select r such that Parent(1, 2) pattern a("z", _"end"_)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>166.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" UnnamedVar="1" Pattern="1" SuchThat="1" CondNum="5" RelNum="1" comment="parent true (64) and pattern true (126), diff select synonym">144</id><querystr><![CDATA[stmt s; constant c; assign a; variable v; Select c such that Parent(4, s) pattern a(v, _)]]></querystr>
+<stuans>1,6</stuans>
+<correct>1,6</correct>
+<time_taken>189.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" UnnamedVar="3" Pattern="1" SuchThat="1" CondNum="7" RelNum="1" comment="parentT true (88) and pattern true (129)">145</id><querystr><![CDATA[assign a; Select a such that Parent*(_, a) pattern a(_, _"two"_)]]></querystr>
+<stuans>8</stuans>
+<correct>8</correct>
+<time_taken>169.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Follows="1" UnnamedVar="1" Pattern="1" SuchThat="1" CondNum="5" RelNum="1" comment="follows false (114) and pattern true (127), boolean">146</id><querystr><![CDATA[stmt s, t, u, v; while r; assign a; Select BOOLEAN such that Follows(1, 3) pattern a("one", _"1"_)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>184.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" UnnamedVar="3" Pattern="1" SuchThat="1" CondNum="7" RelNum="1" comment="follows true (111) and pattern true (129)">147</id><querystr><![CDATA[assign a; Select a such that Follows(_, a) pattern a(_, _"two"_)]]></querystr>
+<stuans>3,8,9</stuans>
+<correct>3,8,9</correct>
+<time_taken>143.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Followsstar="1" UnnamedVar="1" Pattern="1" SuchThat="1" CondNum="5" RelNum="1" comment="followsT true (123) and pattern false (138), diff select synonym">148</id><querystr><![CDATA[constant c; assign a; variable v; Select BOOLEAN such that Follows*(2, 9) pattern a(v, _"3"_)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>167.000000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>

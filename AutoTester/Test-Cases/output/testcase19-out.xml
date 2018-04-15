@@ -1,0 +1,155 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>FINAL-CS3201</name><parsing_time_taken>59.000000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: capitalised synonym declaration">1</id><querystr><![CDATA[Stmt s1; Select s1 such that Next(14, 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>71.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="INVALID: underscore as synonym">2</id><querystr><![CDATA[stmt s1, _; Select _ such that Next(14, 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>89.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: lower cap select">3</id><querystr><![CDATA[stmt s; select s such that Next(14, 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>93.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: declaration spelled wrongly">4</id><querystr><![CDATA[smt s; Select s such that Next(14, 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>100.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: synonym used is a synonym type">5</id><querystr><![CDATA[stmt s, constant; Select constant such that Next(14, 21)]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51</correct>
+<time_taken>145.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" Next="1" SuchThat="1" CondNum="4" RelNum="2" comment="INVALID: synonym used is a clause">6</id><querystr><![CDATA[stmt s, Affects; Select Affects such that Next(14, 21)]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51</correct>
+<time_taken>106.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: synonym used is a asterik">7</id><querystr><![CDATA[stmt s, *; Select * such that Next(14, 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>92.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: synonym used to crash program">8</id><querystr><![CDATA[stmt ^C; Select ^C such that Next(14, 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>93.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: semi-colon at end of query">9</id><querystr><![CDATA[stmt s; Select s such that Next(14, 21);]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51</correct>
+<time_taken>120.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" With="1" CondNum="3" RelNum="1" comment="INVALID: use with instead of such that">10</id><querystr><![CDATA[stmt s; Select s with Next(14, 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>80.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: synonym used is an integer">11</id><querystr><![CDATA[stmt papa, mama, 22; Select 22 such that Next(14, 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>102.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: synonym repeated in declaration">12</id><querystr><![CDATA[stmt s; assign s; Select s such that Next(14, 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>106.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="INVALID: clause spelled wrongly">13</id><querystr><![CDATA[stmt s; Select s such that nxt(14, 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>71.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="INVALID: clause capitalised">14</id><querystr><![CDATA[stmt s; Select s such that NEXT(14, 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>74.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="INVALID: spacing issues in query">15</id><querystr><![CDATA[stmt s; Select      			s			such			that						Next(14 , 21)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>117.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: repeated synonym in clause">16</id><querystr><![CDATA[stmt s; Select s such that Next(s,s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>125.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: repeated synonym in clause">17</id><querystr><![CDATA[stmt s; Select s such that Follows(s,s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>96.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: repeated synonym in clause">18</id><querystr><![CDATA[stmt s; Select s such that Follows*(s,s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>122.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: repeated synonym in clause">19</id><querystr><![CDATA[stmt s; Select s such that Parent(s,s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>105.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: repeated synonym in clause">20</id><querystr><![CDATA[stmt s; Select s such that Parent*(s,s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>98.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="INVALID: variable synonym same as souce procedure name">21</id><querystr><![CDATA[variable hihi; Select hihi such that Uses("hihi", hihi);]]></querystr>
+<stuans>a1,apple,b2,blah,bot,c3,car,choc,dark,dog,egg,fish,goat,hi,hot,lion,new,panda,rob,snake,throw,tomato,wee,xmen,zip</stuans>
+<correct>a1,apple,b2,blah,bot,c3,car,choc,dark,dog,egg,fish,goat,hi,hot,lion,new,panda,rob,snake,throw,tomato,wee,xmen,zip</correct>
+<time_taken>174.000000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>
