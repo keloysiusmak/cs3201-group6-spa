@@ -911,10 +911,15 @@ set<int> QueryEvaluator::getParamSet(Param p) {
 
 /* Filters table for with assignment */
 void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable) {
+
+	ClauseResults withClauseResults;
+	withClauseResults.instantiateClause(clause);
+	vector<vector<int>> withResults;
+	bool withPrecomputated = false;
+
+	// If params are exactly the same
 	if (Utils::compareParam(clause.getLeftParam(), clause.getRightParam())) {
-		ClauseResults withClauseResults;
-		withClauseResults.instantiateClause(clause);
-		vector<vector<int>> withResults;
+
 		Param p = clause.getLeftParam();
 		p.attribute = NONE;
 		set<int> results = getParamSet(p);
@@ -922,16 +927,12 @@ void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable)
 			withResults.push_back({ i });
 		}
 
-		withClauseResults.setResults(withResults);
 		withClauseResults.setValid(true);
+		withClauseResults.setResults(withResults);
 		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-	}
-	else if ((clause.getLeftParam().attribute == STMT_NO
-		&& clause.getRightParam().type == CONSTANT) ||
-		(clause.getRightParam().attribute == STMT_NO
-			&& clause.getLeftParam().type == CONSTANT)) {
-		ClauseResults withClauseResults;
-		withClauseResults.instantiateClause(clause);
+
+	} else if ((clause.getLeftParam().attribute == STMT_NO && clause.getRightParam().type == CONSTANT) ||
+		(clause.getRightParam().attribute == STMT_NO && clause.getLeftParam().type == CONSTANT)) {
 
 		if (clause.getRightParam().type == CONSTANT) {
 			int type;
@@ -940,125 +941,95 @@ void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable)
 			else if (clause.getLeftParam().type == WHILE) type = 2;
 			else if (clause.getLeftParam().type == IF) type = 3;
 			else if (clause.getLeftParam().type == CALL) type = 4;
-			vector<vector<int>> withResults = pkb.getWithStmtNoConstValue(type);
-			withClauseResults.setResults(withResults);
-			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-		}
-		else {
+			withResults = pkb.getWithStmtNoConstValue(type);
+		} else {
 			int type;
 			if (clause.getRightParam().type == STMT) type = 0;
 			else if (clause.getRightParam().type == ASSIGN) type = 1;
 			else if (clause.getRightParam().type == WHILE) type = 2;
 			else if (clause.getRightParam().type == IF) type = 3;
 			else if (clause.getRightParam().type == CALL) type = 4;
-			vector<vector<int>> withResults = pkb.getWithStmtNoConstValue(type);
-			withClauseResults.setResults(withResults);
-			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
+			withResults = pkb.getWithStmtNoConstValue(type);
 		}
-	}
-	else if (clause.getLeftParam().type == PROCEDURE
-		&& clause.getRightParam().type == VARIABLE) {
-		ClauseResults withClauseResults;
-		withClauseResults.instantiateClause(clause);
-		vector<vector<int>> withResults = pkb.getWithProcNameVarName();
-		withClauseResults.setResults(withResults);
-		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-	}
-	else if (clause.getLeftParam().type == PROCEDURE
-		&& clause.getRightParam().type == CALL
+		withPrecomputated = true;
+
+	} else if (clause.getLeftParam().type == PROCEDURE && clause.getRightParam().type == VARIABLE) {
+		withResults = pkb.getWithProcNameVarName();
+		withPrecomputated = true;
+
+	} else if (clause.getLeftParam().type == PROCEDURE && clause.getRightParam().type == CALL
 		&& clause.getRightParam().attribute == PROCNAME) {
-		ClauseResults withClauseResults;
-		withClauseResults.instantiateClause(clause);
-		vector<vector<int>> withResults = pkb.getWithProcNameCallProcName();
-		withClauseResults.setResults(withResults);
-		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-	}
-	else if (clause.getLeftParam().type == VARIABLE
-		&& clause.getRightParam().type == CALL
+		withResults = pkb.getWithProcNameCallProcName();
+		withPrecomputated = true;
+
+	} else if (clause.getLeftParam().type == VARIABLE && clause.getRightParam().type == CALL
 		&& clause.getRightParam().attribute == PROCNAME) {
-		ClauseResults withClauseResults;
-		withClauseResults.instantiateClause(clause);
-		vector<vector<int>> withResults = pkb.getWithVarNameCallProcName();
-		withClauseResults.setResults(withResults);
-		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-	}
-	else if (clause.getRightParam().type == PROCEDURE
-		&& clause.getLeftParam().type == VARIABLE) {
-		ClauseResults withClauseResults;
-		withClauseResults.instantiateClause(clause);
-		vector<vector<int>> withResults = pkb.getWithProcNameVarName();
-		withClauseResults.setResults(Utils::invertTwoValues(withResults));
-		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-	}
-	else if (clause.getRightParam().type == PROCEDURE
-		&& clause.getLeftParam().type == CALL
+		withResults = pkb.getWithVarNameCallProcName();
+		withPrecomputated = true;
+
+	} else if (clause.getRightParam().type == PROCEDURE && clause.getLeftParam().type == VARIABLE) {
+		withResults = Utils::invertTwoValues(pkb.getWithProcNameVarName());
+		withPrecomputated = true;
+
+	} else if (clause.getRightParam().type == PROCEDURE && clause.getLeftParam().type == CALL
 		&& clause.getLeftParam().attribute == PROCNAME) {
-		ClauseResults withClauseResults;
-		withClauseResults.instantiateClause(clause);
-		vector<vector<int>> withResults = pkb.getWithProcNameCallProcName();
-		withClauseResults.setResults(Utils::invertTwoValues(withResults));
-		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-	}
-	else if (clause.getRightParam().type == VARIABLE
-		&& clause.getLeftParam().type == CALL
+		withResults = Utils::invertTwoValues(pkb.getWithProcNameCallProcName());
+		withPrecomputated = true;
+
+	} else if (clause.getRightParam().type == VARIABLE && clause.getLeftParam().type == CALL
 		&& clause.getLeftParam().attribute == PROCNAME) {
-		ClauseResults withClauseResults;
-		withClauseResults.instantiateClause(clause);
-		vector<vector<int>> withResults = pkb.getWithVarNameCallProcName();
-		withClauseResults.setResults(Utils::invertTwoValues(withResults));
-		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-	}
-	else if (clause.getLeftParam().attribute == STMT_NO
-		&& clause.getRightParam().attribute == STMT_NO) {
-		if (clause.getLeftParam().type != STMT
-			&& clause.getRightParam().type != STMT) {
-			ClauseResults withClauseResults;
-			withClauseResults.instantiateClause(clause);
-			vector<vector<int>> withResults;
-			withClauseResults.setResults(withResults);
-			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-		}
-		else if (clause.getLeftParam().type == STMT) {
-			ClauseResults withClauseResults;
-			withClauseResults.instantiateClause(clause);
+		withResults = Utils::invertTwoValues(pkb.getWithVarNameCallProcName());
+		withPrecomputated = true;
+
+	} else if (clause.getLeftParam().attribute == STMT_NO &&
+		clause.getRightParam().attribute == STMT_NO) {
+
+		if (clause.getLeftParam().type != STMT && clause.getRightParam().type != STMT) {
+			;
+		} else if (clause.getLeftParam().type == STMT) {
+
 			int type = 0;
 			if (clause.getRightParam().type == ASSIGN) type = 1;
 			else if (clause.getRightParam().type == WHILE) type = 2;
 			else if (clause.getRightParam().type == IF) type = 3;
 			else if (clause.getRightParam().type == CALL) type = 4;
-			vector<vector<int>> withResults = pkb.getAllStatementsWithType(type);
-			vector<vector<int>> newWithResults;
-			for (vector<int> i : withResults) {
-				newWithResults.push_back({ i[0], i[0] });
+			vector<vector<int>> intermediateResults = pkb.getAllStatementsWithType(type);
+			for (vector<int> i : intermediateResults) {
+				withResults.push_back({ i[0], i[0] });
 			}
-			withClauseResults.setResults(newWithResults);
-			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
-		}
-		else if (clause.getRightParam().type == STMT) {
-			ClauseResults withClauseResults;
-			withClauseResults.instantiateClause(clause);
+		} else if (clause.getRightParam().type == STMT) {
+
 			int type = 0;
 			if (clause.getLeftParam().type == ASSIGN) type = 1;
 			else if (clause.getLeftParam().type == WHILE) type = 2;
 			else if (clause.getLeftParam().type == IF) type = 3;
 			else if (clause.getLeftParam().type == CALL) type = 4;
-			vector<vector<int>> withResults = pkb.getAllStatementsWithType(type);
-			vector<vector<int>> newWithResults;
-			for (vector<int> i : withResults) {
-				newWithResults.push_back({ i[0], i[0] });
+			vector<vector<int>> intermediateResults = pkb.getAllStatementsWithType(type);
+			for (vector<int> i : intermediateResults) {
+				withResults.push_back({ i[0], i[0] });
 			}
-			withClauseResults.setResults(newWithResults);
-			EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
 		}
-	}
-	else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 1) {
+		withPrecomputated = true;
+
+	} else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 1) {
 		handleWithValueAssignment(clause, iTable);
-	}
-	else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 2) {
+	} else if (EvaluatorHelper::withClauseNumSyns(clause, iTable) == 2) {
 		handleWithEquateVariables(clause, iTable);
-	}
-	else { // Evaluate and store into with table
+	} else { // Evaluate and store into with table
 		iTable.hasResults = handleWithEvaluation(clause, iTable);
+	}
+
+	/* If precomputed by pkb */
+	if (withPrecomputated) {
+		if (!clause.getIsInverted()) {
+			withClauseResults.setResults(withResults);
+		} else { // NOT
+			vector<vector<int>> universeResults = universeSet(clause.getLeftParam(),
+				clause.getRightParam());
+			withClauseResults.setResults(universeResults);
+			EvaluatorHelper::subtractSetDouble(withClauseResults, withResults);
+		}
+		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
 	}
 };
 
@@ -1082,18 +1053,20 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 	int valueOfParam;
 	if (paramInTable.attribute == PROCNAME) { // Constant is procedure name
 		valueOfParam = pkb.getProcedureId(paramWithValue.value);
-	}
-	else if (paramInTable.attribute == VARNAME) { // Constant is variable name
+	} else if (paramInTable.attribute == VARNAME) { // Constant is variable name
 		valueOfParam = pkb.getVariableId(paramWithValue.value);
-	}
-	else { // Constant is integer
+	} else { // Constant is integer
 		valueOfParam = stoi(paramWithValue.value);
 	}
 
 	vector<vector<int>> updatedTable;
 	if (paramInTable.type != CALL) { // Normal filtering
 		for (vector<int> tableRow : iTable.resultsTable) {
-			if (tableRow[paramIndex] == valueOfParam) updatedTable.push_back(tableRow);
+			if (!clause.getIsInverted()) {
+				if (tableRow[paramIndex] == valueOfParam) updatedTable.push_back(tableRow);
+			} else { // NOT
+				if (!(tableRow[paramIndex] == valueOfParam)) updatedTable.push_back(tableRow);
+			}
 		}
 		iTable.setResultsTable(updatedTable);
 	} else { // CALL case,
@@ -1106,16 +1079,20 @@ void QueryEvaluator::handleWithValueAssignment(Clause &clause, IntermediateTable
 			clauseCallParam = clause.getRightParam();
 			clauseCallValues.insert(clause.getLeftParam().value);
 		}
-		handleCallInWithClause(clauseCallParam, clauseCallValues, iTable);
+		handleCallInWithClause(clause.getIsInverted(), clauseCallParam, clauseCallValues, iTable);
 	}
 };
 
 /* Filters table for with equating two variables */
 void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable &iTable) {
+	bool isInverted = clause.getIsInverted();
 	Param lhs = clause.getLeftParam();
 	Param rhs = clause.getRightParam();
 	int firstParamTableIndex = iTable.getParamIndex(lhs);
 	int secondParamTableIndex = iTable.getParamIndex(rhs);
+
+	vector<vector<int>> firstParamUniverseSet = setValuesforParam(lhs);
+	vector<vector<int>> secondParamUniverseSet = setValuesforParam(rhs);
 
 	if (lhs.type == CONSTANT && rhs.type == CONSTANT) {
 		vector<vector<int>> updatedTable;
@@ -1125,38 +1102,58 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 				int lhsIntValue = tableRow[firstParamTableIndex];
 				int rhsIntValue = tableRow[secondParamTableIndex];
 
-				if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
+				if (!isInverted && tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) {
 					updatedTable.push_back(tableRow);
 				}
-				else { ; }
+				if (isInverted && tableRow[firstParamTableIndex] != tableRow[secondParamTableIndex]) {
+					updatedTable.push_back(tableRow);
+				}
 			}
-		}
-		else if (firstParamTableIndex == -1) {
-			//firstParam does not exist in table
+
+		} else if (firstParamTableIndex == -1) { // firstParam does not exist in table
 			lhs.attribute = NONE;
 			iTable.addTableParams(lhs);
 			for (vector<int> tableRow : iTable.resultsTable) {
 				int rhsIntValue = tableRow[secondParamTableIndex];
-				tableRow.push_back(rhsIntValue);
-				updatedTable.push_back(tableRow);
+				if (!isInverted) {
+					tableRow.push_back(rhsIntValue);
+					updatedTable.push_back(tableRow);
+				} else { // NOT: Cross product of all non-overlapping
+					for (vector<int> lhsParamValue : firstParamUniverseSet) {
+						vector<int> newRow = tableRow;
+						if (lhsParamValue[0] != rhsIntValue) {
+							newRow.push_back(lhsParamValue[0]);
+							updatedTable.push_back(newRow);
+						}
+					}
+				}
 			}
-		}
-		else if (secondParamTableIndex == -1) {
-			//secondParam does not exist in table
+
+		} else if (secondParamTableIndex == -1) { // secondParam does not exist in table
 			rhs.attribute = NONE;
 			iTable.addTableParams(rhs);
 			for (vector<int> tableRow : iTable.resultsTable) {
 				int lhsIntValue = tableRow[firstParamTableIndex];
-				tableRow.push_back(lhsIntValue);
-				updatedTable.push_back(tableRow);
+				if (!isInverted) {
+					tableRow.push_back(lhsIntValue);
+					updatedTable.push_back(tableRow);
+				} else { // NOT: Cross product of all non-overlapping
+					for (vector<int> rhsParamValue : secondParamUniverseSet) {
+						vector<int> newRow = tableRow;
+						if (rhsParamValue[0] != lhsIntValue) {
+							newRow.push_back(rhsParamValue[0]);
+							updatedTable.push_back(newRow);
+						}
+					}
+				}
 			}
 		}
 		iTable.setResultsTable(updatedTable);
-	}
-	else if (lhs.type == CONSTANT || rhs.type == CONSTANT) {
+
+	} else if (lhs.type == CONSTANT || rhs.type == CONSTANT) {
 		vector<vector<int>> updatedTable;
 		if (lhs.type == CONSTANT) {
-			if (firstParamTableIndex > -1) { // lhs is in params
+			if (firstParamTableIndex > -1) { // lhs is in table
 				rhs.attribute = NONE;
 				iTable.addTableParams(rhs);
 				for (vector<int> tableRow : iTable.resultsTable) {
@@ -1167,13 +1164,20 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 					else if (rhs.type == WHILE) type = 2;
 					else if (rhs.type == IF) type = 3;
 					else if (rhs.type == CALL) type = 4;
-					if (pkb.checkStatementHasType(lhsIntValue, type)) {
+					if (!isInverted && pkb.checkStatementHasType(lhsIntValue, type)) {
 						tableRow.push_back(lhsIntValue);
 						updatedTable.push_back(tableRow);
+					} else { // NOT: Cross all those not of the same type
+						for (vector<int> rhsParamValue : secondParamUniverseSet) {
+							vector<int> newRow = tableRow;
+							if (pkb.checkStatementHasType(rhsParamValue[0], type)) {
+								newRow.push_back(rhsParamValue[0]);
+								updatedTable.push_back(newRow);
+							}
+						}
 					}
 				}
-			}
-			else if (secondParamTableIndex > -1) { // lhs is in params
+			} else if (secondParamTableIndex > -1) { // rhs is in table
 				lhs.attribute = NONE;
 				iTable.addTableParams(lhs);
 				for (vector<int> tableRow : iTable.resultsTable) {
@@ -1186,14 +1190,17 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 							break;
 						}
 					}
-					if (hasConst) {
+					if (!isInverted && hasConst) {
+						tableRow.push_back(rhsIntValue);
+						updatedTable.push_back(tableRow);
+					}
+					if (isInverted && !hasConst) {
 						tableRow.push_back(rhsIntValue);
 						updatedTable.push_back(tableRow);
 					}
 				}
 			}
-		}
-		else if (rhs.type == CONSTANT) {
+		} else if (rhs.type == CONSTANT) {
 			if (secondParamTableIndex > -1) { // lhs is in params
 				lhs.attribute = NONE;
 				iTable.addTableParams(lhs);
@@ -1205,13 +1212,20 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 					else if (lhs.type == WHILE) type = 2;
 					else if (lhs.type == IF) type = 3;
 					else if (lhs.type == CALL) type = 4;
-					if (pkb.checkStatementHasType(rhsIntValue, type)) {
+					if (!isInverted && pkb.checkStatementHasType(rhsIntValue, type)) {
 						tableRow.push_back(rhsIntValue);
 						updatedTable.push_back(tableRow);
+					} else { // NOT: cross all those not of the same type
+						for (vector<int> rhsParamValue : secondParamUniverseSet) {
+							vector<int> newRow = tableRow;
+							if (pkb.checkStatementHasType(rhsParamValue[0], type)) {
+								newRow.push_back(rhsParamValue[0]);
+								updatedTable.push_back(newRow);
+							}
+						}
 					}
 				}
-			}
-			else if (firstParamTableIndex > -1) { // lhs is in params
+			} else if (firstParamTableIndex > -1) { // lhs is in params
 				rhs.attribute = NONE;
 				iTable.addTableParams(rhs);
 				for (vector<int> tableRow : iTable.resultsTable) {
@@ -1224,7 +1238,11 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 							break;
 						}
 					}
-					if (hasConst) {
+					if (!isInverted && hasConst) {
+						tableRow.push_back(lhsIntValue);
+						updatedTable.push_back(tableRow);
+					}
+					if (isInverted && !hasConst) {
 						tableRow.push_back(lhsIntValue);
 						updatedTable.push_back(tableRow);
 					}
@@ -1232,28 +1250,35 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 			}
 		}
 		iTable.setResultsTable(updatedTable);
-	}
-	else if (lhs.type != CALL && rhs.type != CALL) {
+
+	} else if (lhs.type != CALL && rhs.type != CALL) {
 		vector<vector<int>> updatedTable;
 		for (vector<int> tableRow : iTable.resultsTable) {
 			int lhsIntValue = tableRow[firstParamTableIndex];
 			int rhsIntValue = tableRow[secondParamTableIndex];
 
 			if (lhs.attribute == PROCNAME || lhs.attribute == VARNAME) { // Compare string value
-				if (getProcOrVarName(lhs.attribute, lhsIntValue) ==
+				if (!isInverted && 
+					getProcOrVarName(lhs.attribute, lhsIntValue) ==
 					getProcOrVarName(rhs.attribute, rhsIntValue)) {
 					updatedTable.push_back(tableRow);
 				}
-			}
-			else if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
+				if (isInverted &&
+					getProcOrVarName(lhs.attribute, lhsIntValue) !=
+					getProcOrVarName(rhs.attribute, rhsIntValue)) { // NOT
+					updatedTable.push_back(tableRow);
+				}
+
+			} else if (!isInverted && tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
 				updatedTable.push_back(tableRow);
-			}
-			else { ; }
+			} else if (isInverted && tableRow[firstParamTableIndex] != tableRow[secondParamTableIndex]) { // NOT
+				updatedTable.push_back(tableRow);
+			} else { ; }
 
 		}
 		iTable.setResultsTable(updatedTable);
-	}
-	else { // CALL
+
+	} else { // CALL
 		vector<vector<int>> updatedTable;
 		if (firstParamTableIndex > -1 && secondParamTableIndex > -1) {
 			//both exist in the table and need to be intersected
@@ -1261,30 +1286,50 @@ void QueryEvaluator::handleWithEquateVariables(Clause &clause, IntermediateTable
 				int lhsIntValue = tableRow[firstParamTableIndex];
 				int rhsIntValue = tableRow[secondParamTableIndex];
 
-				if (tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) { // Compare int value
+				if (!isInverted && tableRow[firstParamTableIndex] == tableRow[secondParamTableIndex]) {
 					updatedTable.push_back(tableRow);
 				}
-				else { ; }
+				if (isInverted && tableRow[firstParamTableIndex] != tableRow[secondParamTableIndex]) { // NOT
+					updatedTable.push_back(tableRow);
+				}
 			}
-		}
-		else if (firstParamTableIndex == -1) {
-			//firstParam does not exist in table
+			
+		} else if (firstParamTableIndex == -1) { //firstParam does not exist in table
 			lhs.attribute = NONE;
 			iTable.addTableParams(lhs);
 			for (vector<int> tableRow : iTable.resultsTable) {
 				int rhsIntValue = tableRow[secondParamTableIndex];
-				tableRow.push_back(rhsIntValue);
-				updatedTable.push_back(tableRow);
+				if (!isInverted) {
+					tableRow.push_back(rhsIntValue);
+					updatedTable.push_back(tableRow);
+				} else { // NOT: Cross product of all non-overlapping
+					for (vector<int> lhsParamValue : firstParamUniverseSet) {
+						vector<int> newRow = tableRow;
+						if (lhsParamValue[0] != rhsIntValue) {
+							newRow.push_back(lhsParamValue[0]);
+							updatedTable.push_back(newRow);
+						}
+					}
+				}
 			}
-		}
-		else if (secondParamTableIndex == -1) {
-			//secondParam does not exist in table
+		} else if (secondParamTableIndex == -1) { //secondParam does not exist in table
 			rhs.attribute = NONE;
 			iTable.addTableParams(rhs);
 			for (vector<int> tableRow : iTable.resultsTable) {
 				int lhsIntValue = tableRow[firstParamTableIndex];
-				tableRow.push_back(lhsIntValue);
-				updatedTable.push_back(tableRow);
+				if (!isInverted) {
+					tableRow.push_back(lhsIntValue);
+					updatedTable.push_back(tableRow);
+				} else {
+					for (vector<int> rhsParamValue : secondParamUniverseSet) {
+						vector<int> newRow = tableRow;
+						if (rhsParamValue[0] != lhsIntValue) {
+							newRow.push_back(rhsParamValue[0]);
+							updatedTable.push_back(newRow);
+						}
+					}
+
+				}
 			}
 		}
 		iTable.setResultsTable(updatedTable);
@@ -1356,7 +1401,7 @@ bool QueryEvaluator::handleWithEvaluation(Clause &withClause, IntermediateTable 
 };
 
 /* Handles Calls in With Clause */
-void QueryEvaluator::handleCallInWithClause(Param clauseCallParam, set<string> &clauseCallValues, IntermediateTable &iTable) {
+void QueryEvaluator::handleCallInWithClause(bool isInverted, Param clauseCallParam, set<string> &clauseCallValues, IntermediateTable &iTable) {
 
 	int paramTableIndex = iTable.getParamIndex(clauseCallParam);
 	Param tableCallParam = iTable.getParamFromIndex(paramTableIndex);
@@ -1367,26 +1412,38 @@ void QueryEvaluator::handleCallInWithClause(Param clauseCallParam, set<string> &
 		for (string callValue : clauseCallValues) {
 			int intCallValue = (clauseCallParam.attribute == PROCNAME) ?
 				pkb.getProcedureId(callValue) : stoi(callValue);
-			if (clauseCallParam.attribute == tableCallParam.attribute) { // Trivial merge
-				if (intCallValue == tableRow[paramTableIndex]) {
+
+			if (clauseCallParam.attribute == tableCallParam.attribute) { // Trivial merge, both same att
+				if (!isInverted && intCallValue == tableRow[paramTableIndex]) {
 					filteredResults.push_back(tableRow);
 				}
+				if (isInverted && intCallValue != tableRow[paramTableIndex]) { // NOT
+					filteredResults.push_back(tableRow);
+				}
+
 			} else if (clauseCallParam.attribute != PROCNAME) { // clause PROG_LINE, table STMT_NO
 
 				/* Get all statements numbers from called procedure in row and check equality with clause
 				program line. Replaces p.procname with p.prog_line (more limiting) */
 				vector<vector<int>> progLines = pkb.getCallStatementsCallingProcedure(tableRow[paramTableIndex]);
 				for (vector<int> progLine : progLines) {
-					if (progLine[0] == intCallValue) {
+					if (!isInverted && progLine[0] == intCallValue) {
 						tableRow[paramTableIndex] = intCallValue;
 						filteredResults.push_back(tableRow);
+					}
+					if (isInverted && progLine[0] != intCallValue) { // NOT
+							tableRow[paramTableIndex] = intCallValue;
+							filteredResults.push_back(tableRow);
 					}
 				}
 
 			} else { // clause PROCNAME, table STMT_NO
 				vector<vector<int>> progLines = pkb.getCallStatementsCallingProcedure(intCallValue);
 				for (vector<int> progLine : progLines) {
-					if (progLine[0] == tableRow[paramTableIndex]) {
+					if (!isInverted && progLine[0] == tableRow[paramTableIndex]) {
+						filteredResults.push_back(tableRow);
+					} 
+					if (isInverted && progLine[0] != tableRow[paramTableIndex]) { // NOT
 						filteredResults.push_back(tableRow);
 					}
 				}
@@ -1582,12 +1639,18 @@ vector<vector<int>> QueryEvaluator::setValuesforParam(Param p) {
 	} else if (p.type == IF) {
 		return pkb.getAllStatementsWithType(3);
 	} else if (p.type == CALL) {
-		return pkb.getAllStatementsWithType(4);
+		if (p.attribute != PROCNAME) { // Call statements
+			return pkb.getAllStatementsWithType(4);
+		} else { // Procedure IDs
+			return pkb.getAllProcedures();
+		}
 	} else if (p.type == VARIABLE) { // Variable IDs
 		return pkb.getAllVariables();
 	} else if (p.type == CONSTANT) {
 		return pkb.getAllConstants();
 	} else if (p.type == PROCEDURE) { // Procedure IDs
 		return pkb.getAllProcedures();
+	} else { // Not a synonym
+		;
 	}
 };
