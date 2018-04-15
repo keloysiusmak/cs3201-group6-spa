@@ -10,7 +10,7 @@ Select s such that Follows(s, (Select a such that Uses(a, "x")))
 5000
 3 - 
 stmt s; assign a;
-Select BOOLEAN such that Follows((Select s such that Modifies(s, "x"), (Select a such that Uses(a, "x")))
+Select BOOLEAN such that Follows((Select s such that Modifies(s, "x")), (Select a such that Uses(a, "x")))
 false
 5000
 4 - 
