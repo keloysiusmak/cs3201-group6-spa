@@ -1,0 +1,85 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>FINAL-CS3201</name><parsing_time_taken>312.000000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="">1</id><querystr><![CDATA[stmt s; Select s such that Follows(s, s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>73.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="">2</id><querystr><![CDATA[stmt s; Select s such that Parent(s, s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>73.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="">3</id><querystr><![CDATA[stmt s; Select s such that Next(s,s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>70.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="">4</id><querystr><![CDATA[stmt s; Select s such that Follows(1,1)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>115.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="">5</id><querystr><![CDATA[stmt s; Select s such that Follows(1,1)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>76.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="">6</id><querystr><![CDATA[stmt s; Select s such that Parent(1,1)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>69.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="">7</id><querystr><![CDATA[stmt s; Select s such that Next(1,1)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>95.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="">8</id><querystr><![CDATA[stmt s; Select s such that Follows(5, 2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>97.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="">9</id><querystr><![CDATA[stmt s; Select s such that Parent(7, 4)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>71.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="">10</id><querystr><![CDATA[stmt s; Select s such that Next(8,3)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>90.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="">11</id><querystr><![CDATA[stmtLst sl; Select sl]]></querystr>
+<stuans>1,107,18,21,22,25,26,27,29,31,33,54,7,74,9</stuans>
+<correct>1,107,18,21,22,25,26,27,29,31,33,54,7,74,9</correct>
+<time_taken>121.000000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>

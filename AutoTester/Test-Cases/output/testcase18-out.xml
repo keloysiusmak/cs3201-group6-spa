@@ -1,0 +1,1149 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>FINAL-CS3201</name><parsing_time_taken>75.000000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnBoolean="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-boolean: fixed-fixed (regular)">1</id><querystr><![CDATA[ Select BOOLEAN such that Next(20, 18)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>180.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-stmt: fixed-fixed (after if)">2</id><querystr><![CDATA[stmt s; Select s such that Next(14, 21)]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51</correct>
+<time_taken>121.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-boolean: fixed-fixed (loop while stmt)">3</id><querystr><![CDATA[ Select BOOLEAN such that Next(36, 30)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>88.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-boolean: fixed-fixed (skip while)">4</id><querystr><![CDATA[ Select BOOLEAN such that Next(12, 25)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>79.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-boolean: fixed-fixed (if stmt to else block)">5</id><querystr><![CDATA[ Select BOOLEAN such that Next(44, 48)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>71.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-stmt: fixed-fixed (false)">6</id><querystr><![CDATA[stmt s; Select s such that Next(46, 49)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>86.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-stmt: syn-syn (tuple)">7</id><querystr><![CDATA[stmt s1, s2; Select <s1,s2> such that Next(s1, s2)]]></querystr>
+<stuans>1 2,10 11,11 12,12 13,12 25,13 14,14 15,14 21,15 16,16 17,17 18,18 19,18 24,19 20,2 3,20 18,21 22,22 23,23 24,24 12,25 26,26 27,28 29,29 30,3 4,3 6,30 31,30 38,31 32,32 33,32 37,33 34,34 35,35 36,36 30,37 30,38 39,39 40,4 5,41 42,42 43,43 44,44 45,44 48,45 46,45 47,46 51,47 51,48 49,48 50,49 51,5 10,50 51,6 7,7 8,8 9,9 10</stuans>
+<correct>1 2,2 3,3 4,4 5,3 6,6 7,7 8,8 9,5 10,9 10,10 11,11 12,12 13,13 14,14 15,15 16,16 17,17 18,18 19,19 20,20 18,14 21,21 22,22 23,18 24,23 24,24 12,12 25,25 26,26 27,28 29,29 30,30 31,31 32,32 33,33 34,34 35,35 36,36 30,32 37,37 30,30 38,38 39,39 40,41 42,42 43,43 44,44 45,45 46,45 47,44 48,48 49,48 50,46 51,47 51,49 51,50 51</correct>
+<time_taken>229.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-assign: syn-syn">8</id><querystr><![CDATA[assign a1, a2; Select a1 such that Next(a1, a2)]]></querystr>
+<stuans>1,10,15,16,19,21,22,23,26,28,33,34,35,41,42,46,47,49,5,50,6,7,8,9</stuans>
+<correct>1,5,6,7,8,9,10,15,16,19,21,22,23,26,28,33,34,35,41,42,46,47,49,50</correct>
+<time_taken>160.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-while: syn-syn">9</id><querystr><![CDATA[while w; if i; Select w such that Next(i, w)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>103.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-if: syn-syn">10</id><querystr><![CDATA[if i; stmt s; Select i such that Next(i, s)]]></querystr>
+<stuans>14,3,32,44,45,48</stuans>
+<correct>3,14,32,44,45,48</correct>
+<time_taken>143.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-call: syn-syn">11</id><querystr><![CDATA[call c; stmt s; Select c such that Next(c, s)]]></querystr>
+<stuans>25,39,4</stuans>
+<correct>4,25,39</correct>
+<time_taken>126.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Next="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="NEXT-boolean: generic-generic">12</id><querystr><![CDATA[ Select BOOLEAN such that Next(_, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>91.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-stmt: fixed-syn (while stmt 1)">13</id><querystr><![CDATA[stmt s; Select s such that Next(20, s)]]></querystr>
+<stuans>18</stuans>
+<correct>18</correct>
+<time_taken>104.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-assign: fixed-syn (while stmt 2)">14</id><querystr><![CDATA[assign a; while w; Select a such that Next(17, w)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,20,21,22,23,24,26,27,28,29,31,33,34,35,36,37,38,40,41,42,43,46,47,49,5,50,51,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,20,21,22,23,24,26,27,28,29,31,33,34,35,36,37,38,40,41,42,43,46,47,49,50,51</correct>
+<time_taken>140.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-while: fixed-syn (fail)">15</id><querystr><![CDATA[while w; stmt s; Select w such that Next(27, s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>106.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-stmt: syn-fixed">16</id><querystr><![CDATA[stmt s; Select s such that Next(s, 24)]]></querystr>
+<stuans>18,23</stuans>
+<correct>18,23</correct>
+<time_taken>109.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-assign: syn-fixed-fail">17</id><querystr><![CDATA[assign a; Select a such that Next(a, 47)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>142.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-while: syn-fixed">18</id><querystr><![CDATA[while w; Select w such that Next(w, 25)]]></querystr>
+<stuans>12</stuans>
+<correct>12</correct>
+<time_taken>104.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-if: syn-fixed">19</id><querystr><![CDATA[if i; Select i such that Next(i, 49)]]></querystr>
+<stuans>48</stuans>
+<correct>48</correct>
+<time_taken>96.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-call: syn-fixed">20</id><querystr><![CDATA[call c; Select c such that Next(c, 5)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>139.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT-boolean: fixed-generic">21</id><querystr><![CDATA[ Select BOOLEAN such that Next(20, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>107.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT-boolean: generic-fixed">22</id><querystr><![CDATA[ Select BOOLEAN such that Next(_, 50)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>104.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT-assign: syn-generic">23</id><querystr><![CDATA[assign a; Select a such that Next(a, _)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,20,21,22,23,24,26,28,29,31,33,34,35,36,37,38,41,42,43,46,47,49,5,50,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,20,21,22,23,24,26,28,29,31,33,34,35,36,37,38,41,42,43,46,47,49,50</correct>
+<time_taken>197.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT-while: syn-generic">24</id><querystr><![CDATA[while w; Select w such that Next(w, _)]]></querystr>
+<stuans>12,18,30</stuans>
+<correct>12,18,30</correct>
+<time_taken>98.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT-if: syn-generic">25</id><querystr><![CDATA[if i; Select i such that Next(i, _)]]></querystr>
+<stuans>14,3,32,44,45,48</stuans>
+<correct>3,14,32,44,45,48</correct>
+<time_taken>134.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT-call: syn-generic">26</id><querystr><![CDATA[call c; Select c such that Next(c, _)]]></querystr>
+<stuans>25,39,4</stuans>
+<correct>4,25,39</correct>
+<time_taken>151.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT-stmt: generic-syn">27</id><querystr><![CDATA[stmt s; Select s such that Next(_, s)]]></querystr>
+<stuans>10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,29,3,30,31,32,33,34,35,36,37,38,39,4,40,42,43,44,45,46,47,48,49,5,50,51,6,7,8,9</stuans>
+<correct>2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,29,30,31,32,33,34,35,36,37,38,39,40,42,43,44,45,46,47,48,49,50,51</correct>
+<time_taken>155.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT-while: generic-syn">28</id><querystr><![CDATA[while w; Select w such that Next(_, w)]]></querystr>
+<stuans>12,18,30</stuans>
+<correct>12,30,18</correct>
+<time_taken>174.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT-if: generic-syn">29</id><querystr><![CDATA[if i; Select i such that Next(_, i)]]></querystr>
+<stuans>14,3,32,44,45,48</stuans>
+<correct>3,14,32,44,45,48</correct>
+<time_taken>111.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT-call: generic-syn">30</id><querystr><![CDATA[call c; Select c such that Next(_, c)]]></querystr>
+<stuans>25,39,4</stuans>
+<correct>4,25,39</correct>
+<time_taken>138.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-assign">31</id><querystr><![CDATA[assign a; while w; Select a such that Next(a, w)]]></querystr>
+<stuans>11,17,20,24,29,36,37</stuans>
+<correct>11,17,20,24,29,36,37</correct>
+<time_taken>135.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="2" Pattern="1" SuchThat="1" CondNum="6" RelNum="1" comment="NEXT-while:">32</id><querystr><![CDATA[while w; assign a; Select w such that Next(w, a) pattern a(_, _"apple"_)]]></querystr>
+<stuans>12,18,30</stuans>
+<correct>12,18,30</correct>
+<time_taken>100.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-assign: assign-if">33</id><querystr><![CDATA[assign a; if i; Select a such that Next(a, i)]]></querystr>
+<stuans>13,2,31,43</stuans>
+<correct>2,13,31,43</correct>
+<time_taken>89.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-if: if-if (test nested if)">34</id><querystr><![CDATA[if i1; if i2; Select i2 such that Next(i1, i2)]]></querystr>
+<stuans>45,48</stuans>
+<correct>45,48</correct>
+<time_taken>143.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-statement: (test while loop)">35</id><querystr><![CDATA[while w; stmt s; Select s such that Next(s, w) ]]></querystr>
+<stuans>11,17,20,24,29,36,37</stuans>
+<correct>11,17,20,24,29,36,37</correct>
+<time_taken>102.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-if: syn-fixed">36</id><querystr><![CDATA[stmt s; Select s such that Next(s, 51) ]]></querystr>
+<stuans>46,47,49,50</stuans>
+<correct>46,47,49,50</correct>
+<time_taken>101.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-if: fixed-syn">37</id><querystr><![CDATA[stmt s; Select s such that Next(44, s)]]></querystr>
+<stuans>45,48</stuans>
+<correct>45,48</correct>
+<time_taken>128.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-while: fixed-syn">38</id><querystr><![CDATA[assign a; Select a such that Next(30, a)]]></querystr>
+<stuans>31,38</stuans>
+<correct>31,38</correct>
+<time_taken>92.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-if: syn-syn">39</id><querystr><![CDATA[if i; Select i such that Next(i, w)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>94.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-while: fixed-syn">40</id><querystr><![CDATA[stmt s; Select s such that Next(12, s)]]></querystr>
+<stuans>13,25</stuans>
+<correct>13,25</correct>
+<time_taken>168.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT-while: syn-fixed">41</id><querystr><![CDATA[stmt s; Select s such that Next(s, 12)]]></querystr>
+<stuans>11,24</stuans>
+<correct>11,24</correct>
+<time_taken>154.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Next="2" SuchThat="1" CondNum="4" RelNum="2" comment="NEXT: 2 clauses (similar) - fixed-fixed, fixed-fixed">42</id><querystr><![CDATA[ Select BOOLEAN such that Next(3, 4) and Next(20, 18)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>95.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" SuchThat="1" CondNum="4" RelNum="2" comment="NEXT: 2 clauses (similar) - syn-syn, syn-syn">43</id><querystr><![CDATA[if i1; if i2; stmt s; Select <s, i1> such that Next(s, i2) and Next(i1, i2)]]></querystr>
+<stuans>44 44</stuans>
+<correct>44 44</correct>
+<time_taken>165.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" SuchThat="1" CondNum="4" RelNum="2" comment="NEXT: 2 clauses (similar) - fixed-syn, fixed-syn">44</id><querystr><![CDATA[stmt s; Select s such that Next(36, s) and Next(37, s)]]></querystr>
+<stuans>30</stuans>
+<correct>30</correct>
+<time_taken>99.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" SuchThat="1" CondNum="4" RelNum="2" comment="NEXT: 2 clauses (similar) - syn-fixed, syn-fixed">45</id><querystr><![CDATA[assign a; while w; Select a such that Next(a, 17) and Next (w, 13)]]></querystr>
+<stuans>16</stuans>
+<correct>16</correct>
+<time_taken>131.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Next="2" UnnamedVar="2" SuchThat="1" CondNum="6" RelNum="2" comment="NEXT: 2 clauses (similar) - fixed-generic, fixed-generic- fail">46</id><querystr><![CDATA[ Select BOOLEAN such that Next(27, _) and Next(40, _)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>122.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" UnnamedVar="1" SuchThat="1" CondNum="5" RelNum="2" comment="NEXT: 2 clauses (similar) - generic-fixed, generic-fixed">47</id><querystr><![CDATA[stmt s; while w; call c; Select s such that Next(c, s) and Next(_, w)]]></querystr>
+<stuans>26,40,5</stuans>
+<correct>5,26,40</correct>
+<time_taken>129.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" UnnamedVar="2" SuchThat="1" CondNum="6" RelNum="2" comment="NEXT: 2 clauses (similar) - syn-generic, syn-generic">48</id><querystr><![CDATA[assign a; if i; Select i such that Next(a, _) and Next(i, _)]]></querystr>
+<stuans>14,3,32,44,45,48</stuans>
+<correct>3,14,32,44,45,48</correct>
+<time_taken>155.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" UnnamedVar="2" SuchThat="1" CondNum="6" RelNum="2" comment="NEXT: 2 clauses (similar) - generic-syn, generic-syn">49</id><querystr><![CDATA[assign a; while w; Select w such that Next(_, a) and Next(_, w)]]></querystr>
+<stuans>12,18,30</stuans>
+<correct>12,18,30</correct>
+<time_taken>130.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" SuchThat="1" CondNum="4" RelNum="2" comment="NEXT: 2 clauses (mixed) - fixed-fixed, fixed-syn">50</id><querystr><![CDATA[stmt s; Select s such that Next(14, 21) and Next(32, s)]]></querystr>
+<stuans>33,37</stuans>
+<correct>33,37</correct>
+<time_taken>136.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" SuchThat="1" CondNum="4" RelNum="2" comment="NEXT: 2 clauses (mixed) - syn-syn, syn-fixed">51</id><querystr><![CDATA[assign a; if i; Select a such that Next(i, a) and Next(44, i)]]></querystr>
+<stuans>46,47,49,50</stuans>
+<correct>46,47,49,50</correct>
+<time_taken>125.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Next="2" UnnamedVar="3" SuchThat="1" CondNum="7" RelNum="2" comment="NEXT: 2 clauses (mixed) - generic-generic, fixed-generic">52</id><querystr><![CDATA[ Select BOOLEAN such that Next(_, _) and Next(30, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>136.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" UnnamedVar="1" SuchThat="1" CondNum="5" RelNum="2" comment="NEXT: 2 clauses (mixed) - fixed-syn, generic-fixed">53</id><querystr><![CDATA[while w; Select w such that Next(36, w) and Next(_, w)]]></querystr>
+<stuans>30</stuans>
+<correct>30</correct>
+<time_taken>156.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" UnnamedVar="1" SuchThat="1" CondNum="5" RelNum="2" comment="NEXT: 2 clauses (mixed) - syn-fixed, syn-generic">54</id><querystr><![CDATA[stmt s; Select s such that Next(s, 30) and Next(s, _)]]></querystr>
+<stuans>29,36,37</stuans>
+<correct>29,36,37</correct>
+<time_taken>120.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" UnnamedVar="1" SuchThat="1" CondNum="5" RelNum="2" comment="NEXT: 2 clauses (mixed) - fixed-generic, generic-syn">55</id><querystr><![CDATA[assign a; if i; Select a such that Next(23, _) and Next(i, a)]]></querystr>
+<stuans>15,21,33,37,46,47,49,50,6</stuans>
+<correct>6,15,21,33,37,46,47,49,50</correct>
+<time_taken>130.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" UnnamedVar="1" SuchThat="1" CondNum="5" RelNum="2" comment="NEXT: 2 clauses (mixed) - syn-syn, syn-generic">56</id><querystr><![CDATA[while w, if i; Select w such that Next(w, i) and Next(w, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>127.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" UnnamedVar="2" SuchThat="1" CondNum="6" RelNum="2" comment="NEXT: 2 clauses (mixed) - syn-generic, generic-syn">57</id><querystr><![CDATA[while w1; while w2; Select <w1,w2> such that Next(w1, _) and Next(_, w2)]]></querystr>
+<stuans>12 12,12 18,12 30,18 12,18 18,18 30,30 12,30 18,30 30</stuans>
+<correct>12 12,12 18,12 30,18 12,18 18,18 30,30 12,30 18,30 30</correct>
+<time_taken>150.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="2" UnnamedVar="2" SuchThat="1" CondNum="6" RelNum="2" comment="NEXT: 2 clauses (mixed) - generic-fixed, generic-syn">58</id><querystr><![CDATA[stmt s; Select  such that Next(_, 28) and Next(_, s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>132.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT: stmt# - select clause (has results)">59</id><querystr><![CDATA[assign a; if i; Select a.stmt# such that Next(a, i)]]></querystr>
+<stuans>13,2,31,43</stuans>
+<correct>2,13,31,43</correct>
+<time_taken>113.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT: stmt# - select clause (no results)">60</id><querystr><![CDATA[assign a; call c; Select c.stmt# such that Next(a, c)]]></querystr>
+<stuans>39</stuans>
+<correct>39</correct>
+<time_taken>120.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT: while while">61</id><querystr><![CDATA[while w1, w2; Select w1 such that Next(w1, w2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>136.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" >62</id><querystr><![CDATA[stmt s; Select s such that Next(s, s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>117.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT: prog_line">63</id><querystr><![CDATA[prog_line n; if i; Select n such that Next(n, i)]]></querystr>
+<stuans>13,2,31,43,44</stuans>
+<correct>2,13,31,43,44</correct>
+<time_taken>153.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT: stmt overflow">64</id><querystr><![CDATA[variable v; Select v such that Next(52, v)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>121.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT: stmt underflow">65</id><querystr><![CDATA[variable v; Select v such that Next(-1, v)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>138.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT: invalid type">66</id><querystr><![CDATA[variable v; Select v such that Next(v, 2)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>123.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT: invalid type">67</id><querystr><![CDATA[procedure p; Select p such that Next(10, p)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>109.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-boolean: fixed-fixed (regular)">68</id><querystr><![CDATA[ Select BOOLEAN such that Next*(6, 9)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>148.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-stmt: fixed-fixed (after if)">69</id><querystr><![CDATA[stmt s; Select s such that Next*(14, 23)]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,28,29,3,30,31,32,33,34,35,36,37,38,39,4,40,41,42,43,44,45,46,47,48,49,5,50,51,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51</correct>
+<time_taken>155.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-boolean: fixed-fixed (loop while stmt)">70</id><querystr><![CDATA[ Select BOOLEAN such that Next*(35, 32)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>128.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-boolean: fixed-fixed (skip while)">71</id><querystr><![CDATA[ Select BOOLEAN such that Next*(30, 38)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>125.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-boolean: fixed-fixed (if stmt to else block)">72</id><querystr><![CDATA[ Select BOOLEAN such that Next*(44, 48)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>115.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-stmt: fixed-fixed (false)">73</id><querystr><![CDATA[stmt s; Select s such that Next*(51, 49)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>130.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-stmt: syn-syn (tuple)">74</id><querystr><![CDATA[stmt s1, s2; Select <s1,s2> such that Next*(s1, s2)]]></querystr>
+<stuans>1 10,1 11,1 12,1 13,1 14,1 15,1 16,1 17,1 18,1 19,1 2,1 20,1 21,1 22,1 23,1 24,1 25,1 26,1 27,1 3,1 4,1 5,1 6,1 7,1 8,1 9,10 11,10 12,10 13,10 14,10 15,10 16,10 17,10 18,10 19,10 20,10 21,10 22,10 23,10 24,10 25,10 26,10 27,11 12,11 13,11 14,11 15,11 16,11 17,11 18,11 19,11 20,11 21,11 22,11 23,11 24,11 25,11 26,11 27,12 12,12 13,12 14,12 15,12 16,12 17,12 18,12 19,12 20,12 21,12 22,12 23,12 24,12 25,12 26,12 27,13 12,13 13,13 14,13 15,13 16,13 17,13 18,13 19,13 20,13 21,13 22,13 23,13 24,13 25,13 26,13 27,14 12,14 13,14 14,14 15,14 16,14 17,14 18,14 19,14 20,14 21,14 22,14 23,14 24,14 25,14 26,14 27,15 12,15 13,15 14,15 15,15 16,15 17,15 18,15 19,15 20,15 21,15 22,15 23,15 24,15 25,15 26,15 27,16 12,16 13,16 14,16 15,16 16,16 17,16 18,16 19,16 20,16 21,16 22,16 23,16 24,16 25,16 26,16 27,17 12,17 13,17 14,17 15,17 16,17 17,17 18,17 19,17 20,17 21,17 22,17 23,17 24,17 25,17 26,17 27,18 12,18 13,18 14,18 15,18 16,18 17,18 18,18 19,18 20,18 21,18 22,18 23,18 24,18 25,18 26,18 27,19 12,19 13,19 14,19 15,19 16,19 17,19 18,19 19,19 20,19 21,19 22,19 23,19 24,19 25,19 26,19 27,2 10,2 11,2 12,2 13,2 14,2 15,2 16,2 17,2 18,2 19,2 20,2 21,2 22,2 23,2 24,2 25,2 26,2 27,2 3,2 4,2 5,2 6,2 7,2 8,2 9,20 12,20 13,20 14,20 15,20 16,20 17,20 18,20 19,20 20,20 21,20 22,20 23,20 24,20 25,20 26,20 27,21 12,21 13,21 14,21 15,21 16,21 17,21 18,21 19,21 20,21 21,21 22,21 23,21 24,21 25,21 26,21 27,22 12,22 13,22 14,22 15,22 16,22 17,22 18,22 19,22 20,22 21,22 22,22 23,22 24,22 25,22 26,22 27,23 12,23 13,23 14,23 15,23 16,23 17,23 18,23 19,23 20,23 21,23 22,23 23,23 24,23 25,23 26,23 27,24 12,24 13,24 14,24 15,24 16,24 17,24 18,24 19,24 20,24 21,24 22,24 23,24 24,24 25,24 26,24 27,25 26,25 27,26 27,28 29,28 30,28 31,28 32,28 33,28 34,28 35,28 36,28 37,28 38,28 39,28 40,29 30,29 31,29 32,29 33,29 34,29 35,29 36,29 37,29 38,29 39,29 40,3 10,3 11,3 12,3 13,3 14,3 15,3 16,3 17,3 18,3 19,3 20,3 21,3 22,3 23,3 24,3 25,3 26,3 27,3 4,3 5,3 6,3 7,3 8,3 9,30 30,30 31,30 32,30 33,30 34,30 35,30 36,30 37,30 38,30 39,30 40,31 30,31 31,31 32,31 33,31 34,31 35,31 36,31 37,31 38,31 39,31 40,32 30,32 31,32 32,32 33,32 34,32 35,32 36,32 37,32 38,32 39,32 40,33 30,33 31,33 32,33 33,33 34,33 35,33 36,33 37,33 38,33 39,33 40,34 30,34 31,34 32,34 33,34 34,34 35,34 36,34 37,34 38,34 39,34 40,35 30,35 31,35 32,35 33,35 34,35 35,35 36,35 37,35 38,35 39,35 40,36 30,36 31,36 32,36 33,36 34,36 35,36 36,36 37,36 38,36 39,36 40,37 30,37 31,37 32,37 33,37 34,37 35,37 36,37 37,37 38,37 39,37 40,38 39,38 40,39 40,4 10,4 11,4 12,4 13,4 14,4 15,4 16,4 17,4 18,4 19,4 20,4 21,4 22,4 23,4 24,4 25,4 26,4 27,4 5,41 42,41 43,41 44,41 45,41 46,41 47,41 48,41 49,41 50,41 51,42 43,42 44,42 45,42 46,42 47,42 48,42 49,42 50,42 51,43 44,43 45,43 46,43 47,43 48,43 49,43 50,43 51,44 45,44 46,44 47,44 48,44 49,44 50,44 51,45 46,45 47,45 51,46 51,47 51,48 49,48 50,48 51,49 51,5 10,5 11,5 12,5 13,5 14,5 15,5 16,5 17,5 18,5 19,5 20,5 21,5 22,5 23,5 24,5 25,5 26,5 27,50 51,6 10,6 11,6 12,6 13,6 14,6 15,6 16,6 17,6 18,6 19,6 20,6 21,6 22,6 23,6 24,6 25,6 26,6 27,6 7,6 8,6 9,7 10,7 11,7 12,7 13,7 14,7 15,7 16,7 17,7 18,7 19,7 20,7 21,7 22,7 23,7 24,7 25,7 26,7 27,7 8,7 9,8 10,8 11,8 12,8 13,8 14,8 15,8 16,8 17,8 18,8 19,8 20,8 21,8 22,8 23,8 24,8 25,8 26,8 27,8 9,9 10,9 11,9 12,9 13,9 14,9 15,9 16,9 17,9 18,9 19,9 20,9 21,9 22,9 23,9 24,9 25,9 26,9 27</stuans>
+<correct>1 2,1 3,1 4,1 5,1 6,1 7,1 8,1 9,1 10,1 11,1 12,1 13,1 14,1 15,1 16,1 17,1 18,1 19,1 20,1 21,1 22,1 23,1 24,1 25,1 26,1 27,2 3,2 4,2 5,2 6,2 7,2 8,2 9,2 10,2 11,2 12,2 13,2 14,2 15,2 16,2 17,2 18,2 19,2 20,2 21,2 22,2 23,2 24,2 25,2 26,2 27,3 4,3 5,3 6,3 7,3 8,3 9,3 10,3 11,3 12,3 13,3 14,3 15,3 16,3 17,3 18,3 19,3 20,3 21,3 22,3 23,3 24,3 25,3 26,3 27,4 5,4 10,4 11,4 12,4 13,4 14,4 15,4 16,4 17,4 18,4 19,4 20,4 21,4 22,4 23,4 24,4 25,4 26,4 27,5 10,5 11,5 12,5 13,5 14,5 15,5 16,5 17,5 18,5 19,5 20,5 21,5 22,5 23,5 24,5 25,5 26,5 27,6 7,6 8,6 9,6 10,6 11,6 12,6 13,6 14,6 15,6 16,6 17,6 18,6 19,6 20,6 21,6 22,6 23,6 24,6 25,6 26,6 27,7 8,7 9,7 10,7 11,7 12,7 13,7 14,7 15,7 16,7 17,7 18,7 19,7 20,7 21,7 22,7 23,7 24,7 25,7 26,7 27,8 9,8 10,8 11,8 12,8 13,8 14,8 15,8 16,8 17,8 18,8 19,8 20,8 21,8 22,8 23,8 24,8 25,8 26,8 27,9 10,9 11,9 12,9 13,9 14,9 15,9 16,9 17,9 18,9 19,9 20,9 21,9 22,9 23,9 24,9 25,9 26,9 27,10 11,10 12,10 13,10 14,10 15,10 16,10 17,10 18,10 19,10 20,10 21,10 22,10 23,10 24,10 25,10 26,10 27,11 12,11 13,11 14,11 15,11 16,11 17,11 18,11 19,11 20,11 21,11 22,11 23,11 24,11 25,11 26,11 27,12 12,12 13,12 14,12 15,12 16,12 17,12 18,12 19,12 20,12 21,12 22,12 23,12 24,12 25,12 26,12 27,13 12,13 13,13 14,13 15,13 16,13 17,13 18,13 19,13 20,13 21,13 22,13 23,13 24,13 25,13 26,13 27,14 12,14 13,14 14,14 15,14 16,14 17,14 18,14 19,14 20,14 21,14 22,14 23,14 24,14 25,14 26,14 27,15 12,15 13,15 14,15 15,15 16,15 17,15 18,15 19,15 20,15 21,15 22,15 23,15 24,15 25,15 26,15 27,16 12,16 13,16 14,16 15,16 16,16 17,16 18,16 19,16 20,16 21,16 22,16 23,16 24,16 25,16 26,16 27,17 12,17 13,17 14,17 15,17 16,17 17,17 18,17 19,17 20,17 21,17 22,17 23,17 24,17 25,17 26,17 27,18 12,18 13,18 14,18 15,18 16,18 17,18 18,18 19,18 20,18 21,18 22,18 23,18 24,18 25,18 26,18 27,19 12,19 13,19 14,19 15,19 16,19 17,19 18,19 19,19 20,19 21,19 22,19 23,19 24,19 25,19 26,19 27,20 12,20 13,20 14,20 15,20 16,20 17,20 18,20 19,20 20,20 21,20 22,20 23,20 24,20 25,20 26,20 27,21 12,21 13,21 14,21 15,21 16,21 17,21 18,21 19,21 20,21 21,21 22,21 23,21 24,21 25,21 26,21 27,22 12,22 13,22 14,22 15,22 16,22 17,22 18,22 19,22 20,22 21,22 22,22 23,22 24,22 25,22 26,22 27,23 12,23 13,23 14,23 15,23 16,23 17,23 18,23 19,23 20,23 21,23 22,23 23,23 24,23 25,23 26,23 27,24 12,24 13,24 14,24 15,24 16,24 17,24 18,24 19,24 20,24 21,24 22,24 23,24 24,24 25,24 26,24 27,25 26,25 27,26 27,28 29,28 30,28 31,28 32,28 33,28 34,28 35,28 36,28 37,28 38,28 39,28 40,29 30,29 31,29 32,29 33,29 34,29 35,29 36,29 37,29 38,29 39,29 40,30 30,30 31,30 32,30 33,30 34,30 35,30 36,30 37,30 38,30 39,30 40,31 30,31 31,31 32,31 33,31 34,31 35,31 36,31 37,31 38,31 39,31 40,32 30,32 31,32 32,32 33,32 34,32 35,32 36,32 37,32 38,32 39,32 40,33 30,33 31,33 32,33 33,33 34,33 35,33 36,33 37,33 38,33 39,33 40,34 30,34 31,34 32,34 33,34 34,34 35,34 36,34 37,34 38,34 39,34 40,35 30,35 31,35 32,35 33,35 34,35 35,35 36,35 37,35 38,35 39,35 40,36 30,36 31,36 32,36 33,36 34,36 35,36 36,36 37,36 38,36 39,36 40,37 30,37 31,37 32,37 33,37 34,37 35,37 36,37 37,37 38,37 39,37 40,38 39,38 40,39 40,41 42,41 43,41 44,41 45,41 46,41 47,41 48,41 49,41 50,41 51,42 43,42 44,42 45,42 46,42 47,42 48,42 49,42 50,42 51,43 44,43 45,43 46,43 47,43 48,43 49,43 50,43 51,44 45,44 46,44 47,44 48,44 49,44 50,44 51,45 46,45 47,45 51,46 51,47 51,48 49,48 50,48 51,49 51,50 51</correct>
+<time_taken>1245.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-assign: syn-syn">75</id><querystr><![CDATA[assign a1, a2; Select a1 such that Next*(a1, a2)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,20,21,22,23,24,26,28,29,31,33,34,35,36,37,38,41,42,43,46,47,49,5,50,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,20,21,22,23,24,26,28,29,31,33,34,35,36,37,38,41,42,43,46,47,49,50</correct>
+<time_taken>157.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-while: syn-syn">76</id><querystr><![CDATA[while w; if i; Select w such that Next*(i, w)]]></querystr>
+<stuans>12,18,30</stuans>
+<correct>12,18,30</correct>
+<time_taken>104.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-if: syn-syn">77</id><querystr><![CDATA[if i; stmt s; Select i such that Next*(i, s)]]></querystr>
+<stuans>14,3,32,44,45,48</stuans>
+<correct>3,14,32,44,45,48</correct>
+<time_taken>148.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-call: syn-syn">78</id><querystr><![CDATA[call c; stmt s; Select c such that Next*(c, s)]]></querystr>
+<stuans>25,39,4</stuans>
+<correct>4,25,39</correct>
+<time_taken>135.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Nextstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="NEXT*-boolean: generic-generic">79</id><querystr><![CDATA[ Select BOOLEAN such that Next*(_, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>106.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-stmt: fixed-syn (while stmt 1)">80</id><querystr><![CDATA[stmt s; Select s such that Next*(20, s)]]></querystr>
+<stuans>12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27</stuans>
+<correct>12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27</correct>
+<time_taken>146.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-assign: fixed-syn (while stmt 2)">81</id><querystr><![CDATA[assign a; while w; Select a such that Next*(17, w)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,20,21,22,23,24,26,27,28,29,31,33,34,35,36,37,38,40,41,42,43,46,47,49,5,50,51,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,20,21,22,23,24,26,27,28,29,31,33,34,35,36,37,38,40,41,42,43,46,47,49,50,51</correct>
+<time_taken>171.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-while: fixed-syn (fail)">82</id><querystr><![CDATA[while w; stmt s; Select w such that Next*(27, s)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>149.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-stmt: syn-fixed">83</id><querystr><![CDATA[stmt s; Select s such that Next*(s, 24)]]></querystr>
+<stuans>1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,3,4,5,6,7,8,9</stuans>
+<correct>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</correct>
+<time_taken>122.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-assign: syn-fixed-fail">84</id><querystr><![CDATA[assign a; Select a such that Next*(a, 41)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>133.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-while: syn-fixed">85</id><querystr><![CDATA[while w; Select w such that Next*(w, 25)]]></querystr>
+<stuans>12,18</stuans>
+<correct>12,18</correct>
+<time_taken>154.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-if: syn-fixed">86</id><querystr><![CDATA[if i; Select i such that Next*(i, 49)]]></querystr>
+<stuans>44,48</stuans>
+<correct>44,48</correct>
+<time_taken>109.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-call: syn-fixed">87</id><querystr><![CDATA[call c; Select c such that Next*(c, 5)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>115.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT*-boolean: fixed-generic">88</id><querystr><![CDATA[ Select BOOLEAN such that Next*(20, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>161.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnBoolean="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT*-boolean: generic-fixed">89</id><querystr><![CDATA[ Select BOOLEAN such that Next*(_, 50)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>107.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT*-assign: syn-generic">90</id><querystr><![CDATA[assign a; Select a such that Next*(a, _)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,20,21,22,23,24,26,28,29,31,33,34,35,36,37,38,41,42,43,46,47,49,5,50,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,20,21,22,23,24,26,28,29,31,33,34,35,36,37,38,41,42,43,46,47,49,50</correct>
+<time_taken>145.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT*-while: syn-generic">91</id><querystr><![CDATA[while w; Select w such that Next*(w, _)]]></querystr>
+<stuans>12,18,30</stuans>
+<correct>12,18,30</correct>
+<time_taken>154.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT*-if: syn-generic">92</id><querystr><![CDATA[if i; Select i such that Next*(i, _)]]></querystr>
+<stuans>14,3,32,44,45,48</stuans>
+<correct>3,14,32,44,45,48</correct>
+<time_taken>138.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT*-call: syn-generic">93</id><querystr><![CDATA[call c; Select c such that Next*(c, _)]]></querystr>
+<stuans>25,39,4</stuans>
+<correct>4,25,39</correct>
+<time_taken>168.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT*-stmt: generic-syn">94</id><querystr><![CDATA[stmt s; Select s such that Next*(_, s)]]></querystr>
+<stuans>10,11,12,13,14,15,16,17,18,19,2,20,21,22,23,24,25,26,27,29,3,30,31,32,33,34,35,36,37,38,39,4,40,42,43,44,45,46,47,48,49,5,50,51,6,7,8,9</stuans>
+<correct>2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,29,30,31,32,33,34,35,36,37,38,39,40,42,43,44,45,46,47,48,49,50,51</correct>
+<time_taken>177.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT*-while: generic-syn">95</id><querystr><![CDATA[while w; Select w such that Next*(_, w)]]></querystr>
+<stuans>12,18,30</stuans>
+<correct>12,30,18</correct>
+<time_taken>165.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT*-if: generic-syn">96</id><querystr><![CDATA[if i; Select i such that Next*(_, i)]]></querystr>
+<stuans>14,3,32,44,45,48</stuans>
+<correct>3,14,32,44,45,48</correct>
+<time_taken>112.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="NEXT*-call: generic-syn">97</id><querystr><![CDATA[call c; Select c such that Next*(_, c)]]></querystr>
+<stuans>25,39,4</stuans>
+<correct>4,25,39</correct>
+<time_taken>151.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="NEXT*-assign">98</id><querystr><![CDATA[assign a; while w; Select a such that Next*(a, w)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,20,21,22,23,24,28,29,31,33,34,35,36,37,5,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,20,21,22,23,24,28,29,31,33,34,35,36,37</correct>
+<time_taken>123.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-boolean: fixed-fixed">99</id><querystr><![CDATA[ Select BOOLEAN such that Affects(33, 36)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>116.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-stmt: fixed-fixed (non-assign stmt)">100</id><querystr><![CDATA[stmt s; Select s such that Affects(27, 28)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>164.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-boolean: fixed-fixed (indirect affects)">101</id><querystr><![CDATA[ Select BOOLEAN such that Affects(8, 21)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>146.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-boolean: fixed-fixed (false)">102</id><querystr><![CDATA[ Select BOOLEAN such that Affects(44, 45)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>146.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-assign: syn-syn (tuple)">103</id><querystr><![CDATA[assign a1, a2; Select <a1,a2> such that Affects(a1, a2)]]></querystr>
+<stuans>1 11,1 13,1 5,1 6,10 13,10 27,11 13,11 17,13 21,15 15,16 13,16 24,16 27,17 20,19 16,19 26,2 10,2 17,2 7,21 15,22 13,22 24,22 27,23 16,23 26,33 36,34 33,34 38,35 34,36 35,37 33,37 38,41 42,42 43,46 51,47 51,49 51,5 10,5 16,5 26,50 51,6 10,6 16,6 26,7 17,7 19,7 22,7 8,8 10,8 17,9 16,9 26</stuans>
+<correct>1 5,1 6,1 11,1 13,2 7,2 10,2 17,5 10,5 16,5 26,6 10,6 16,6 26,7 8,7 17,7 19,7 22,8 10,8 17,9 16,9 26,10 13,10 27,11 13,11 17,13 21,15 15,16 13,16 24,16 27,17 20,19 16,19 26,21 15,22 13,22 24,22 27,23 16,23 26,33 36,34 33,34 38,35 34,36 35,37 33,37 38,41 42,42 43,46 51,47 51,49 51,50 51</correct>
+<time_taken>172.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-assign: syn-syn (non-assign stmt)">104</id><querystr><![CDATA[while w; assign a; Select a such that Affects(w, a)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>149.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-stmt: syn-syn (regular stmt)">105</id><querystr><![CDATA[stmt s1, s2; Select s1 such that Affects(s1, s2)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,21,22,23,33,34,35,36,37,41,42,46,47,49,5,50,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,21,22,23,33,34,35,36,37,41,42,46,47,49,50</correct>
+<time_taken>139.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-prog_line: syn-syn (prog_line)">106</id><querystr><![CDATA[prog_line n1, n2; Select n2 such that Affects(n1, n2)]]></querystr>
+<stuans>10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,5,51,6,7,8</stuans>
+<correct>5,6,7,8,10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,51</correct>
+<time_taken>159.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="AFFECTS-boolean: generic-generic">107</id><querystr><![CDATA[ Select BOOLEAN such that Affects(_, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>162.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-assign: fixed-syn">108</id><querystr><![CDATA[assign a; Select a such that Affects(22, a)]]></querystr>
+<stuans>13,24,27</stuans>
+<correct>13,24,27</correct>
+<time_taken>134.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-stmt: fixed-syn (regular stmt)">109</id><querystr><![CDATA[stmt s; Select s such that Affects(9, s)]]></querystr>
+<stuans>16,26</stuans>
+<correct>16,26</correct>
+<time_taken>174.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-prog_line: fixed-syn (prog_line)">110</id><querystr><![CDATA[prog_line n; Select n such that Affects(16, n)]]></querystr>
+<stuans>13,24,27</stuans>
+<correct>13,24,27</correct>
+<time_taken>149.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-boolean: fixed-syn (non-assign stmt)">111</id><querystr><![CDATA[if i; Select BOOLEAN such that Affects(31, i)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>170.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-assign: syn-fixed">112</id><querystr><![CDATA[assign a; Select a such that Affects(a, 51)]]></querystr>
+<stuans>46,47,49,50</stuans>
+<correct>46,47,49,50</correct>
+<time_taken>141.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-stmt: syn-fixed (regular stmt)">113</id><querystr><![CDATA[stmt s; Select s such that Affects(s, 15)]]></querystr>
+<stuans>15,21</stuans>
+<correct>15,21</correct>
+<time_taken>170.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-prog_line: syn-fixed (prog_line)">114</id><querystr><![CDATA[prog_line n; Select n such that Affects(n, 26)]]></querystr>
+<stuans>19,23,5,6,9</stuans>
+<correct>5,6,9,19,23</correct>
+<time_taken>173.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS-boolean: syn-fixed (non-assign stmt)">115</id><querystr><![CDATA[while w; Select BOOLEAN such that Affects(w, 30)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>150.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-boolean: fixed-generic (assign)">116</id><querystr><![CDATA[ Select BOOLEAN such that Affects(1, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>153.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-boolean: fixed-generic (non-assign stmt)">117</id><querystr><![CDATA[ Select BOOLEAN such that Affects(32, _)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>191.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-boolean: fixed-generic (false)">118</id><querystr><![CDATA[ Select BOOLEAN such that Affects(51, _)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>176.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-boolean: generic-fixed (assign)">119</id><querystr><![CDATA[ Select BOOLEAN such that Affects(_, 26)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>201.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-boolean: generic-fixed (non-assign stmt)">120</id><querystr><![CDATA[ Select BOOLEAN such that Affects(_, 18)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>138.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affects="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-boolean: generic-fixed (false)">121</id><querystr><![CDATA[ Select BOOLEAN such that Affects(_, 37)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>150.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-assign: syn-generic">122</id><querystr><![CDATA[assign a; Select a such that Affects(a, _)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,21,22,23,33,34,35,36,37,41,42,46,47,49,5,50,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,21,22,23,33,34,35,36,37,41,42,46,47,49,50</correct>
+<time_taken>173.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-stmt: syn-generic">123</id><querystr><![CDATA[stmt s; Select s such that Affects(s, _)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,21,22,23,33,34,35,36,37,41,42,46,47,49,5,50,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,21,22,23,33,34,35,36,37,41,42,46,47,49,50</correct>
+<time_taken>210.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-while: syn-generic">124</id><querystr><![CDATA[while w; Select w such that Affects(w, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>142.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-if: syn-generic">125</id><querystr><![CDATA[if i; Select i such that Affects(i, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>144.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-call: syn-generic">126</id><querystr><![CDATA[call c; Select c such that Affects(c, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>173.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-assign: generic-syn">127</id><querystr><![CDATA[assign a; Select a such that Affects(_, a)]]></querystr>
+<stuans>10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,5,51,6,7,8</stuans>
+<correct>5,6,7,8,10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,51</correct>
+<time_taken>186.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-stmt: generic-syn">128</id><querystr><![CDATA[stmt s; Select s such that Affects(_, s)]]></querystr>
+<stuans>10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,5,51,6,7,8</stuans>
+<correct>5,6,7,8,10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,51</correct>
+<time_taken>206.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-while: generic-syn">129</id><querystr><![CDATA[while w; Select w such that Affects(_, w)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>171.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-if: generic-syn">130</id><querystr><![CDATA[if i; Select i such that Affects(_, i)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>213.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affects="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS-call: generic-syn">131</id><querystr><![CDATA[call c; Select c such that Affects(_, c)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>207.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-boolean: fixed-fixed">132</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(33, 38)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>166.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-stmt: fixed-fixed (non-assign stmt)">133</id><querystr><![CDATA[stmt s; Select s such that Affects*(27, 28)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>203.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-boolean: fixed-fixed (false)">134</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(51, 50)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>190.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-assign: syn-syn (tuple)">135</id><querystr><![CDATA[assign a1, a2; Select <a1,a2> such that Affects*(a1, a2)]]></querystr>
+<stuans>1 10,1 11,1 13,1 15,1 16,1 17,1 20,1 21,1 24,1 26,1 27,1 5,1 6,10 13,10 15,10 21,10 27,11 13,11 15,11 17,11 20,11 21,13 15,13 21,15 15,16 13,16 15,16 21,16 24,16 27,17 20,19 13,19 15,19 16,19 21,19 24,19 26,19 27,2 10,2 13,2 15,2 16,2 17,2 19,2 20,2 21,2 22,2 24,2 26,2 27,2 7,2 8,21 15,22 13,22 15,22 21,22 24,22 27,23 13,23 15,23 16,23 21,23 24,23 26,23 27,33 33,33 34,33 35,33 36,33 38,34 33,34 34,34 35,34 36,34 38,35 33,35 34,35 35,35 36,35 38,36 33,36 34,36 35,36 36,36 38,37 33,37 34,37 35,37 36,37 38,41 42,41 43,42 43,46 51,47 51,49 51,5 10,5 13,5 15,5 16,5 21,5 24,5 26,5 27,50 51,6 10,6 13,6 15,6 16,6 21,6 24,6 26,6 27,7 10,7 13,7 15,7 16,7 17,7 19,7 20,7 21,7 22,7 24,7 26,7 27,7 8,8 10,8 13,8 15,8 17,8 20,8 21,8 27,9 13,9 15,9 16,9 21,9 24,9 26,9 27</stuans>
+<correct>1 5,1 6,1 10,1 11,1 13,1 15,1 16,1 17,1 20,1 21,1 24,1 26,1 27,2 7,2 8,2 10,2 13,2 15,2 16,2 17,2 19,2 20,2 21,2 22,2 24,2 26,2 27,5 10,5 13,5 15,5 16,5 21,5 24,5 26,5 27,6 10,6 13,6 15,6 16,6 21,6 24,6 26,6 27,7 8,7 10,7 13,7 15,7 16,7 17,7 19,7 20,7 21,7 22,7 24,7 26,7 27,8 10,8 13,8 15,8 17,8 20,8 21,8 27,9 13,9 15,9 16,9 21,9 24,9 26,9 27,10 13,10 15,10 21,10 27,11 13,11 15,11 17,11 20,11 21,13 15,13 21,15 15,16 13,16 15,16 21,16 24,16 27,17 20,19 13,19 15,19 16,19 21,19 24,19 26,19 27,21 15,22 13,22 15,22 21,22 24,22 27,23 13,23 15,23 16,23 21,23 24,23 26,23 27,33 33,33 34,33 35,33 36,33 38,34 33,34 34,34 35,34 36,34 38,35 33,35 34,35 35,35 36,35 38,36 33,36 34,36 35,36 36,36 38,37 33,37 34,37 35,37 36,37 38,41 42,41 43,42 43,46 51,47 51,49 51,50 51</correct>
+<time_taken>480.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-assign: syn-syn (non-assign stmt)">136</id><querystr><![CDATA[while w; assign a; Select a such that Affects*(w, a)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>250.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-stmt: syn-syn (regular stmt)">137</id><querystr><![CDATA[stmt s1, s2; Select s1 such that Affects*(s1, s2)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,21,22,23,33,34,35,36,37,41,42,46,47,49,5,50,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,21,22,23,33,34,35,36,37,41,42,46,47,49,50</correct>
+<time_taken>279.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-prog_line: syn-syn (prog_line)">138</id><querystr><![CDATA[prog_line n1, n2; Select n2 such that Affects*(n1, n2)]]></querystr>
+<stuans>10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,5,51,6,7,8</stuans>
+<correct>5,6,7,8,10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,51</correct>
+<time_taken>247.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="AFFECTS*-boolean: generic-generic">139</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(_, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>214.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-assign: fixed-syn">140</id><querystr><![CDATA[assign a; Select a such that Affects*(22, a)]]></querystr>
+<stuans>13,15,21,24,27</stuans>
+<correct>13,15,21,24,27</correct>
+<time_taken>245.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-stmt: fixed-syn (regular stmt)">141</id><querystr><![CDATA[stmt s; Select s such that Affects*(9, s)]]></querystr>
+<stuans>13,15,16,21,24,26,27</stuans>
+<correct>13,15,16,21,24,26,27</correct>
+<time_taken>215.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-prog_line: fixed-syn (prog_line)">142</id><querystr><![CDATA[prog_line n; Select n such that Affects*(16, n)]]></querystr>
+<stuans>13,15,21,24,27</stuans>
+<correct>13,15,21,24,27</correct>
+<time_taken>213.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-boolean: fixed-syn (non-assign stmt)">143</id><querystr><![CDATA[if i; Select BOOLEAN such that Affects*(30, i)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>203.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-assign: syn-fixed">144</id><querystr><![CDATA[assign a; Select a such that Affects*(a, 51)]]></querystr>
+<stuans>46,47,49,50</stuans>
+<correct>46,47,49,50</correct>
+<time_taken>204.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-stmt: syn-fixed (regular stmt)">145</id><querystr><![CDATA[stmt s; Select s such that Affects*(s, 15)]]></querystr>
+<stuans>1,10,11,13,15,16,19,2,21,22,23,5,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,19,21,22,23</correct>
+<time_taken>238.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-prog_line: syn-fixed (prog_line)">146</id><querystr><![CDATA[prog_line n; Select n such that Affects*(n, 26)]]></querystr>
+<stuans>1,19,2,23,5,6,7,9</stuans>
+<correct>1,2,5,6,7,9,19,23</correct>
+<time_taken>209.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" SuchThat="1" CondNum="3" RelNum="1" comment="AFFECTS*-boolean: syn-fixed (non-assign stmt)">147</id><querystr><![CDATA[while w; Select BOOLEAN such that Affects*(w, 30)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>188.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-boolean: fixed-generic (assign)">148</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(1, _)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>176.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-boolean: fixed-generic (non-assign stmt)">149</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(32, _)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>178.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-boolean: fixed-generic (false)">150</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(51, _)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>206.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-boolean: generic-fixed (assign)">151</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(_, 26)]]></querystr>
+<stuans>true</stuans>
+<correct>true</correct>
+<time_taken>168.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-boolean: generic-fixed (non-assign stmt)">152</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(_, 18)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>230.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id Affectsstar="1" ReturnBoolean="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-boolean: generic-fixed (false)">153</id><querystr><![CDATA[ Select BOOLEAN such that Affects*(_, 37)]]></querystr>
+<stuans>false</stuans>
+<correct>false</correct>
+<time_taken>168.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-assign: syn-generic">154</id><querystr><![CDATA[assign a; Select a such that Affects*(a, _)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,21,22,23,33,34,35,36,37,41,42,46,47,49,5,50,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,21,22,23,33,34,35,36,37,41,42,46,47,49,50</correct>
+<time_taken>244.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-stmt: syn-generic">155</id><querystr><![CDATA[stmt s; Select s such that Affects*(s, _)]]></querystr>
+<stuans>1,10,11,13,15,16,17,19,2,21,22,23,33,34,35,36,37,41,42,46,47,49,5,50,6,7,8,9</stuans>
+<correct>1,2,5,6,7,8,9,10,11,13,15,16,17,19,21,22,23,33,34,35,36,37,41,42,46,47,49,50</correct>
+<time_taken>229.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-while: syn-generic">156</id><querystr><![CDATA[while w; Select w such that Affects*(w, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>221.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-if: syn-generic">157</id><querystr><![CDATA[if i; Select i such that Affects*(i, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>254.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-call: syn-generic">158</id><querystr><![CDATA[call c; Select c such that Affects*(c, _)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>217.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-assign: generic-syn">159</id><querystr><![CDATA[assign a; Select a such that Affects*(_, a)]]></querystr>
+<stuans>10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,5,51,6,7,8</stuans>
+<correct>5,6,7,8,10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,51</correct>
+<time_taken>252.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-stmt: generic-syn">160</id><querystr><![CDATA[stmt s; Select s such that Affects*(_, s)]]></querystr>
+<stuans>10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,5,51,6,7,8</stuans>
+<correct>5,6,7,8,10,11,13,15,16,17,19,20,21,22,24,26,27,33,34,35,36,38,42,43,51</correct>
+<time_taken>245.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-while: generic-syn">161</id><querystr><![CDATA[while w; Select w such that Affects*(_, w)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>215.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-if: generic-syn">162</id><querystr><![CDATA[if i; Select i such that Affects*(_, i)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>232.000000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Affectsstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="AFFECTS*-call: generic-syn">163</id><querystr><![CDATA[call c; Select c such that Affects*(_, c)]]></querystr>
+<stuans></stuans>
+<correct></correct>
+<time_taken>193.000000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>
