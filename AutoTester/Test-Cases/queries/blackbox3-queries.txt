@@ -38,3 +38,8 @@ while w;
 Select BOOLEAN such that Follows(2,3) with w.stmt# = w.stmt#
 false
 5000
+9 -
+stmt stmt;
+Select BOOLEAN such that Follows(2,3) with stmt.stmt# = stmt.stmt#
+true
+5000
