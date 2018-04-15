@@ -34,8 +34,8 @@ public:
 
 	bool operator<(Clause other) const {
 		/* Check inversion */
-		if (isInverted != other.isInverted) {
-			return false;
+		if (isInverted != other.getIsInverted()) {
+			return isInverted < other.getIsInverted();
 		}
 
 		if (_relRef == other.getRelRef()) {
