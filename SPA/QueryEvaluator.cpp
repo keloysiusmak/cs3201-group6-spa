@@ -926,8 +926,9 @@ void QueryEvaluator::handleWithClause(Clause &clause, IntermediateTable &iTable)
 		for (int i : results) {
 			withResults.push_back({ i });
 		}
-
-		withClauseResults.setValid(true);
+		if (withResults.size() > 0 || p.type == INTEGER || p.type == VAR_IDENT || p.type == PROC_IDENT) {
+			withClauseResults.setValid(true);
+		}
 		withClauseResults.setResults(withResults);
 		EvaluatorHelper::mergeClauseTable(withClauseResults, iTable);
 
