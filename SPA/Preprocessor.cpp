@@ -125,6 +125,7 @@ void Preprocessor::preprocessQuery(string query) {
 
 	subQueryMapping.clear();
 
+
 	//Clear the contents of vector<QueryContent>
 	vqc.clear();
 
@@ -240,6 +241,21 @@ bool Preprocessor::isValidQuery(string query) {
 
 	QueryContent queryContent;
 	vector<string> queryArr = Utils::explode(q + SYMBOL_SPACE, DELIM_STRING, DELIMITERS_QUERY);
+
+	//Check whether the number of open bracket matches the number of close bracket
+	int countNumOfMatchBracket = 0;
+	for (string tempElem : queryArr) {
+		if (tempElem.at(0) == SYMBOL_OPEN_BRACKET) {
+			countNumOfMatchBracket++;
+		}
+		else if (tempElem.at(0) == SYMBOL_CLOSE_BRACKET) {
+			countNumOfMatchBracket--;
+		}
+	}
+
+	if (countNumOfMatchBracket != 0) {
+		return false;
+	}
 
 	//Check if Select word exists and if there's at least 2 elements in the query (e.g. "select", "s")
 	if (queryArr.at(0).compare(SELECT_WORD) != 0 || queryArr.size() < 2) {
