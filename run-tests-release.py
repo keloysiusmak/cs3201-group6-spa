@@ -20,7 +20,7 @@ while (i <= 2):
 i = 1
 print "---\nCompleted Blackbox"
 print "\nStarting Extension\n---"
-while (i <= 2):
+while (i <= 3):
     print "Running Extension "+str(i)
     os.system("Release\\AutoTester AutoTester\\Test-Cases\\source\\extension"+str(i)+"-source.txt AutoTester\\Test-Cases\queries\\extension"+str(i)+"-queries.txt AutoTester\\Test-Cases\\output\\extension"+str(i)+"-out.xml")
     i = i + 1
