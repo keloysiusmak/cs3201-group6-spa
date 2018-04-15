@@ -1876,7 +1876,7 @@ expected.push_back(pkb.getProcedureName(r[0]));
 
 			result = evaluator.evaluateQuery();
 			list<string> expected;
-			expected.push_back({ "2" });
+			expected.push_back({ "4" });
 			Assert::AreEqual(true, (result == expected));
 		}
 		TEST_METHOD(PKBEvaluatorGetProcedureCalledByCallStatement) {

@@ -918,7 +918,6 @@ namespace EvaluatorTest {
 
 			actualResult = evaluator.evaluateQuery();
 			expectedResult.clear();
-			expectedResult.push_back("6");
 
 			Assert::AreEqual(true, (expectedResult == actualResult));
 		}

@@ -123,6 +123,8 @@ unordered_map<string, string> Preprocessor::getDeclarationMap() {
 
 void Preprocessor::preprocessQuery(string query) {
 
+	subQueryMapping.clear();
+
 	//Clear the contents of vector<QueryContent>
 	vqc.clear();
 

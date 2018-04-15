@@ -296,5 +296,5 @@ Three, Four
 60 - Multiple
 stmt s1, s2; assign a1, a2; if i1, i2; while w1, w2; call c1,c2; prog_line p1, p2; procedure proc1, proc2; variable v1, v2; constant con1, con2;
 Select <v1, v2, c1> with v1.varName = proc1.procName and c1.procName = proc1.procName such that Follows*(c1, a1) and Modifies(a1, v2)
-
+Two a 61,Two x 66,Two x 67,Two y 66,Two y 67,Two yolo 66,Two yolo 67
 5000 
