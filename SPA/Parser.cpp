@@ -8,7 +8,7 @@ using namespace std;
 Parser::Parser() {
 }
 
-// tokenize content
+/* tokenize operations */
 void Parser::tokenize(string content)
 {
 	content = Utils::sanitise(content);
@@ -34,6 +34,45 @@ string Parser::getWord()
 	string result = nextToken;
 	nextToken = getToken();
 	return result;
+}
+
+/* expression operations */
+
+void Parser::parseFactor()
+{
+	expressionQueue.push(word + "|");
+}
+
+void Parser::parseOperator()
+{
+	//while there is an operator token, o2, at the top of the operator stack and the current operator o1 has precedence less than or equal that of o2,
+	while (!operationStack.empty() && Utils::isValidOperator(operationStack.top()) && UtilsConstants::OPERATOR_PRIORITIES.at(word) <= UtilsConstants::OPERATOR_PRIORITIES.at(operationStack.top())) {
+		//then pop o2 off the operator stack, onto the output queue;
+		expressionQueue.push(operationStack.top() + "|");
+		operationStack.pop();
+	}
+	//push o1 onto the operator stack.
+	operationStack.push(word);
+}
+
+void Parser::parseOpenBracket()
+{
+	operationStack.push(word);
+}
+
+void Parser::parseCloseBracket()
+{
+	while (!operationStack.empty()) {
+		if (Utils::isOpenBracket(operationStack.top())) {
+			operationStack.pop();
+			return;
+		}
+		else {
+			expressionQueue.push(operationStack.top()+"|");
+			operationStack.pop();
+		}
+	}
+	throw InvalidExpressionException("Invalid Expression!");
 }
 
 queue<string> Parser::getRPN(queue<string> expr)
@@ -107,42 +146,6 @@ queue<string> Parser::getRPN(queue<string> expr)
 	return expressionQueue;
 }
 
-void Parser::parseFactor()
-{
-	expressionQueue.push(word + "|");
-}
-
-void Parser::parseOperator()
-{
-	//while there is an operator token, o2, at the top of the operator stack and the current operator o1 has precedence less than or equal that of o2,
-	while (!operationStack.empty() && Utils::isValidOperator(operationStack.top()) && UtilsConstants::OPERATOR_PRIORITIES.at(word) <= UtilsConstants::OPERATOR_PRIORITIES.at(operationStack.top())) {
-		//then pop o2 off the operator stack, onto the output queue;
-		expressionQueue.push(operationStack.top() + "|");
-		operationStack.pop();
-	}
-	//push o1 onto the operator stack.
-	operationStack.push(word);
-}
-
-void Parser::parseOpenBracket()
-{
-	operationStack.push(word);
-}
-
-void Parser::parseCloseBracket()
-{
-	while (!operationStack.empty()) {
-		if (Utils::isOpenBracket(operationStack.top())) {
-			operationStack.pop();
-			return;
-		}
-		else {
-			expressionQueue.push(operationStack.top()+"|");
-			operationStack.pop();
-		}
-	}
-	throw InvalidExpressionException("Invalid Expression!");
-}
 
 queue<string> Parser::getExpression()
 {
@@ -172,6 +175,20 @@ queue<string> Parser::getExpression()
 	return rpn;
 }
 
+void Parser::expression() {
+	getExpression();
+}
+
+string Parser::getExpressionQueueString() {
+	std::stringstream ss;
+	while (expressionQueue.size() != 0) {
+		ss << expressionQueue.front();
+		expressionQueue.pop();
+	}
+	return ss.str();
+}
+
+/* parsing of SIMPLE source code operations */
 // check if token matches nextToken
 bool Parser::match(string token, bool isVar = false) {
 	if (isVar == false) {
@@ -195,12 +212,6 @@ bool Parser::match(string token, bool isVar = false) {
 	}
 }
 
-
-
-
-void Parser::expression() {
-	getExpression();
-}
 
 bool Parser::ifStatement() {
 	int currentIfNum = currentStmNum;
@@ -289,14 +300,6 @@ bool Parser::whileStatement() {
 	return true;
 }
 
-string Parser::getExpressionQueueString() {
-	std::stringstream ss;
-	while (expressionQueue.size() != 0) {
-		ss << expressionQueue.front();
-		expressionQueue.pop();
-	}
-	return ss.str();
-}
 
 bool Parser::assignmentStatement() {
 	int curStmListId = stmListIdStack.top();
@@ -399,14 +402,10 @@ bool Parser::statement() {
 
 
 bool Parser::statementList() {
-	bool first = true;
-	// only push to StatementListStack 1 time
-	if (first) {
-		stmListIdStack.push(nextStmListId);
-		nextStmListId++;
-		first = false;
-	}
 
+	stmListIdStack.push(nextStmListId);
+	nextStmListId++;
+	
 	statement();
 
 	while (nextToken != "}") {
