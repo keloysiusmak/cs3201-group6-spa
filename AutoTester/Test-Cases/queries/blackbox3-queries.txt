@@ -1,0 +1,30 @@
+1 -
+stmt s;
+Select BOOLEAN with s.stmt# = s.stmt#
+false
+5000
+2 -
+if ifs;
+Select BOOLEAN with ifs.stmt# = ifs.stmt#
+false
+5000
+3 -
+while w;
+Select BOOLEAN with w.stmt# = w.stmt#
+false
+5000
+4 -
+call c;
+Select BOOLEAN with c.stmt# = c.stmt#
+false
+5000
+5 -
+procedure p;
+Select BOOLEAN with p.procName = p.procName
+true
+5000
+6 -
+stmt stmt;
+Select BOOLEAN with stmt.stmt# = stmt.stmt#
+true
+5000
